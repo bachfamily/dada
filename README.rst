@@ -35,7 +35,7 @@ If you want to improve *dada* or add other modules, you'll need some libraries:
 * The `bach library <http://www.bachproject.net>`_ 
 * The `bach 0.8 SDK <http://www.bachproject.net/download-2/>`_
 * `Simple Matrix <https://sites.google.com/site/simpmatrix/>`_ library (v4.1), used for multidimensional scaling in the dada.distances module
-* The Boost library, used for graph placement algorithms in the dada.graph module
+* The `Boost <http://www.boost.org>`_ library, used for graph placement algorithms in the dada.graph module
 
 The Max documentation for all modules is compiled from the sources by running `Doctor Max <https://github.com/danieleghisi/DoctorMax>`_ with the preferences stored in the file "docs/dada_DoctorMax_settings.txt"
 

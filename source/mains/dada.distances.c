@@ -61,7 +61,7 @@
 #define DADA_DISTANCES_MAX_CONTENTFIELDS 10
 #define DADA_DISTANCES_MAX_CONVEXCOMB 32
 
-////////////////////////// structures
+//////////////////////////// structures
 
 enum {
 	kOutletParameterNames = 0,

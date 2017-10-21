@@ -28,8 +28,10 @@ If you only need to use **dada**, you can download it from www.bachproject.net/d
 
 You can start by having a look at the dada.overview patcher inside the Extras menu in Max ("dada library" submenu). Every module has help files and reference sheets that document its behavior.
 
-If you want to improve *dada* or add other modules, you'll need two more libraries:
+If you want to improve *dada* or add other modules, you'll need some libraries:
 
+* The `bach library <http://www.bachproject.net>`_ 
+* The `bach 0.8 SDK <http://www.bachproject.net/download-2/>`_
 * `Simple Matrix <https://sites.google.com/site/simpmatrix/>`_ library (v4.1), used for multidimensional scaling in the dada.distances module
 * The Boost library, used for graph placement algorithms in the dada.graph module
 

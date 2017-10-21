@@ -1,0 +1,4 @@
+( ( wavenumber 64 ) ( wavelength 1.04 ) )
+( ( wavenumber 124 ) ( wavelength 1.14 ) )
+( ( wavenumber 2 ) ( wavelength 8.14 ) )
+( ( wavenumber 9 ) ( wavelength 128.14 ) )

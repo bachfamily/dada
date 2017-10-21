@@ -1,0 +1,1461 @@
+/**
+	@file
+	dada.object.c
+	Function to handle a dada object
+
+	by Daniele Ghisi
+*/
+
+
+#include "dada.object.h"
+#include "dada.cursors.h"
+#include "dada.interface.h"
+#include "dada.popupmenu.h"
+#include "dada.undo.h"
+
+void dada_atomic_lock(t_dadaobj *r_ob)
+{
+	t_dada_atomic_lock *lock = &r_ob->l_lock;
+	while (ATOMIC_INCREMENT_32(lock) > 1)
+		ATOMIC_DECREMENT_BARRIER_32(lock);
+}
+
+void dada_atomic_unlock(t_dadaobj *r_ob)
+{
+	t_dada_atomic_lock *lock = &r_ob->l_lock;
+	ATOMIC_DECREMENT_BARRIER(lock);
+}
+
+void dada_interface_setup(t_interface_manager *man, long changebang_outlet, long notification_outlet)
+{
+	man->changebang_out_num = changebang_outlet;
+    man->notifications_out_num = notification_outlet;
+	man->continuously_send_changebang = false;
+	man->send_bang_from_messages = false;
+	man->send_bang_upon_undo = true;
+	man->mousedown_item = man->mousemove_item = NULL;
+	man->mousedown_item_identifier.type = DADAITEM_TYPE_NONE;
+	man->mousemove_item_identifier.type = DADAITEM_TYPE_NONE;
+	man->selection = llll_get();
+	man->preselection = llll_get();
+}
+
+void dada_undo_setup(t_undo_manager *man)
+{
+	man->undo = llll_get();
+	man->redo = llll_get();
+	man->need_push_marker = NULL;
+	man->post_process_fn = NULL;
+	man->dirty_items = llll_get();
+}
+
+void dada_tools_setup(t_tool_manager *man, const char *tools, long flags)
+{
+	strncpy_zero(man->allowed_tools, tools, 50);
+	man->curr_tool = DADA_TOOL_ARROW;
+	
+	if ((flags & DADAOBJ_ZOOM) && strlen(man->allowed_tools) < 50 && !strchr(man->allowed_tools, 'z')) {
+		long len = strlen(man->allowed_tools);
+		man->allowed_tools[len] = 'z';
+		man->allowed_tools[len+1] = 0;
+	}
+	if ((flags & DADAOBJ_CENTEROFFSET) && strlen(man->allowed_tools) < 50 && !strchr(man->allowed_tools, 'x')) {
+		long len = strlen(man->allowed_tools);
+		man->allowed_tools[len] = 'x';
+		man->allowed_tools[len+1] = 0;
+	}
+}
+
+
+long get_mousedown_obj_type(void *rob)
+{
+    t_dadaobj *r_ob = (t_dadaobj *)rob;
+    return r_ob->m_interface.mousedown_item ? r_ob->m_interface.mousedown_item->type : NULL;
+}
+
+void *get_mousedown_ptr(void *rob)
+{
+    t_dadaobj *r_ob = (t_dadaobj *)rob;
+    return r_ob->m_interface.mousedown_item;
+}
+
+long get_mousedown_ptr_index(void *rob)
+{
+    t_dadaobj *r_ob = (t_dadaobj *)rob;
+    return r_ob->m_interface.mousedown_item ? dadaitem_get_index(r_ob, r_ob->m_interface.mousedown_item) : 0;
+}
+
+void dadaobj_setup(t_object *ob, t_dadaobj *r_ob, long flags, t_pt zoom_static_additional,
+				   long playout_outlet, long changebang_outlet, long notification_outlet, invalidate_and_redraw_fn invalidate_and_redraw,
+				   const char *tools, 
+				   long stores, const char *outlets, ...)
+{
+    va_list args;
+    va_start(args, outlets);
+	
+	r_ob->orig_obj = ob;
+    r_ob->invalidate_and_redraw = invalidate_and_redraw;
+	
+	systhread_mutex_new_debug(&r_ob->l_mutex, 0);
+	
+	// Object flags
+	r_ob->flags = flags;
+	
+	t_bach_attr_manager *man = r_ob->m_inspector.attr_manager = (t_bach_attr_manager *)bach_newptrclear(sizeof(t_bach_attr_manager));
+	initialize_attr_manager(man);
+
+	if (flags & DADAOBJ_INSPECTOR) {
+		r_ob->m_inspector.bach_managing = false; // inspector is NOT stanard release bach inspecto
+		bach_inspector_ui_classinit();
+
+		r_ob->m_inspector.attr_manager->inspector_header = (bach_inspector_header_fn)dada_default_inspector_header_fn;
+		r_ob->m_inspector.attr_manager->inspector_image = (bach_inspector_image_fn)dada_inspector_get_icon_surface_fn;
+		r_ob->m_inspector.owner = ob;
+        r_ob->m_inspector.thing = r_ob;
+        
+        r_ob->m_inspector.attr_manager->adapt_image = true;
+        r_ob->m_inspector.attr_manager->adapt_image_max_ratio = 2.;
+        
+        r_ob->m_inspector.get_custom_mousedown_obj_type = get_mousedown_obj_type;
+        r_ob->m_inspector.get_custom_mousedown_ptr = get_mousedown_ptr;
+        r_ob->m_inspector.get_custom_mousedown_ptr_index = get_mousedown_ptr_index;
+	}
+		
+	r_ob->m_zoom.zoom_perc = 100;
+	r_ob->m_zoom.zoom_static_additional = zoom_static_additional;
+	r_ob->m_zoom.zoom = zoom_static_additional;
+	r_ob->m_zoom.max_zoom_perc = build_pt(DADA_MAX_ZOOM_PERC, DADA_MAX_ZOOM_PERC); 
+	r_ob->m_zoom.min_zoom_perc = build_pt(DADA_MIN_ZOOM_PERC, DADA_MIN_ZOOM_PERC); 
+	
+	// interface
+	dada_interface_setup(&r_ob->m_interface, changebang_outlet, notification_outlet);
+	
+	// Object tools
+	dada_tools_setup(&r_ob->m_tools, tools, flags);
+	
+	// Dadaitem classes
+	r_ob->m_classes.num_di_classes = 0;
+	
+	// clock and play
+	r_ob->m_play.play_out_num = playout_outlet;
+	r_ob->m_play.has_solos = false;
+	
+	
+	// undo
+	dada_undo_setup(&r_ob->m_undo);
+	
+	initialize_popup_menus(r_ob);
+	
+	r_ob->m_cursors.curr_cursor = BACH_CURSOR_DEFAULT;
+	load_cursors(r_ob);
+	
+	// hash table
+	r_ob->IDtable = shashtable_new(1);
+}
+
+void dadaobj_jbox_setup(t_dadaobj_jbox *b_ob, long flags, t_pt zoom_static_additional,
+						long playout_outlet, long changebang_outlet, long notification_outlet, invalidate_and_redraw_fn invalidate_and_redraw,
+						const char *tools, long stores, const char *outlets, ...)
+{
+	va_list args;
+    va_start(args, outlets);
+
+	llllobj_jbox_setup((t_llllobj_jbox *)b_ob, stores, outlets, args);
+	dadaobj_setup((t_object *)b_ob, &b_ob->d_ob, flags, zoom_static_additional, playout_outlet, changebang_outlet, notification_outlet, invalidate_and_redraw, tools, stores, outlets, args);
+}
+
+void dadaobj_pxjbox_setup(t_dadaobj_pxjbox *b_ob, long flags, t_pt zoom_static_additional,
+						long playout_outlet, long changebang_outlet, long notification_outlet, invalidate_and_redraw_fn invalidate_and_redraw,
+						const char *tools, long stores, const char *outlets, ...)
+{
+	va_list args;
+    va_start(args, outlets);
+	
+	llllobj_pxjbox_setup((t_llllobj_pxjbox *)b_ob, stores, outlets, args);
+	dadaobj_setup((t_object *)b_ob, &b_ob->d_ob, flags, zoom_static_additional, playout_outlet, changebang_outlet, notification_outlet, invalidate_and_redraw, tools, stores, outlets, args);
+}
+
+void dadaobj_addfunctions(t_dadaobj *d_ob, dada_mousemove_fn mousemove_fn, method clock_task, method undo_postprocess, 
+						  get_state_fn get_state, set_state_fn set_state, pixel_to_dadaitem_fn pixel_to_dadaitem, 
+						  preselect_items_in_rectangle_fn preselect_items_in_rectangle, dadanotify_fn dadanotify)
+{
+	d_ob->m_tools.mousemove_fn = mousemove_fn;
+	if (clock_task) {
+		d_ob->m_play.setclock = gensym("");
+		d_ob->m_play.m_clock = clock_task ? clock_new_debug(d_ob->orig_obj, (method) clock_task) : NULL; 
+	} else {
+		d_ob->m_play.m_clock = d_ob->m_play.setclock = NULL;
+	}
+	d_ob->m_undo.post_process_fn = undo_postprocess;
+	d_ob->get_state = get_state;
+	d_ob->set_state = set_state;
+	d_ob->m_interface.pixel_to_dadaitem = pixel_to_dadaitem;
+	d_ob->m_interface.preselect_items_in_rectangle = preselect_items_in_rectangle;
+	d_ob->dadanotify = dadanotify;
+}
+
+
+void dadaobj_free(t_dadaobj *r_ob)
+{
+	free_cursors(r_ob);
+	free_popup_menus(r_ob);
+	
+	llll_free(r_ob->m_interface.selection);
+	llll_free(r_ob->m_interface.preselection);
+	
+	// free lllls of allocated class
+	long i;
+	for (i = 0; i < r_ob->m_classes.num_di_classes; i++) {
+        if (r_ob->m_classes.di_class[i].alloc_type == DADA_ITEM_ALLOC_OBJLLLL)
+            llll_free(*((t_llll **)(((long)(r_ob->orig_obj)) + r_ob->m_classes.di_class[i].struct_offset)));
+		llll_free(r_ob->m_classes.di_class[i].data_get_args);
+		llll_free(r_ob->m_classes.di_class[i].data_set_args);
+	}
+	
+	if (r_ob->m_play.m_clock)
+		object_free_debug(r_ob->m_play.m_clock);
+	
+	if (r_ob->flags & DADAOBJ_UNDO) {
+		undo_redo_free_all_ticks(&r_ob->m_undo, DADA_UNDO);
+		undo_redo_free_all_ticks(&r_ob->m_undo, DADA_REDO);
+		llll_free(r_ob->m_undo.undo);
+		llll_free(r_ob->m_undo.redo);
+		llll_free(r_ob->m_undo.dirty_items);
+	}
+	
+    if (r_ob->m_bg.bg_surface) {
+        jgraphics_surface_destroy(r_ob->m_bg.bg_surface);
+        r_ob->m_bg.bg_surface = NULL;
+    }
+    
+	if (r_ob->l_mutex)
+		systhread_mutex_free_debug(r_ob->l_mutex);
+	
+	shashtable_free(r_ob->IDtable);
+}
+
+void dadaobj_jbox_free(t_dadaobj_jbox *b_ob)
+{
+	dadaobj_free(&b_ob->d_ob);
+    jbox_free(&b_ob->r_ob.l_box);
+	llllobj_jbox_free((t_llllobj_jbox *)b_ob);
+}
+
+void dadaobj_pxjbox_free(t_dadaobj_pxjbox *b_ob)
+{
+	dadaobj_free(&b_ob->d_ob);
+	llllobj_pxjbox_free((t_llllobj_pxjbox *)b_ob);
+	jbox_free((t_jbox *)b_ob);
+}
+
+void dadaobj_send_changedbang(t_dadaobj *r_ob, e_llllobj_obj_types type)
+{
+	if (r_ob->flags & DADAOBJ_CHANGEDBANG && (!r_ob->curr_change_is_from_message || r_ob->m_interface.send_bang_from_messages))
+		llllobj_outlet_bang(r_ob->orig_obj, type, r_ob->m_interface.changebang_out_num);
+}
+
+void dadaobj_send_notification_sym(t_dadaobj *r_ob, t_symbol *sym, e_llllobj_obj_types type)
+{
+    if (r_ob->flags & DADAOBJ_NOTIFICATIONS && r_ob->m_interface.send_notifications) {
+        t_llll *temp = llll_get();
+        llll_appendsym(temp, sym);
+        llllobj_outlet_llll(r_ob->orig_obj, type, r_ob->m_interface.notifications_out_num, temp);
+        llll_free(temp);
+    }
+}
+
+// will also free the ll, destructive.
+void dadaobj_send_notification_llll(t_dadaobj *r_ob, t_llll *ll, e_llllobj_obj_types type)
+{
+    if (r_ob->flags & DADAOBJ_NOTIFICATIONS && r_ob->m_interface.send_notifications) {
+        llllobj_outlet_llll(r_ob->orig_obj, type, r_ob->m_interface.notifications_out_num, ll);
+        llll_free(ll);
+    }
+}
+
+
+void dadaobj_jbox_send_changebang(t_dadaobj *r_ob)
+{
+	llllobj_outlet_bang(r_ob->orig_obj, LLLL_OBJ_UI, r_ob->m_interface.changebang_out_num);
+}
+
+
+void dadaobj_invalidate_and_redraw(t_dadaobj *d_ob)
+{
+    if (!d_ob->dont_repaint) {
+        if (d_ob->invalidate_and_redraw)
+            d_ob->invalidate_and_redraw(d_ob->orig_obj);
+        else
+            jbox_redraw((t_jbox *)d_ob->orig_obj);
+    }
+}
+
+t_max_err dadaobj_setattr_zoom(t_dadaobj *d_ob, t_object *attr, long ac, t_atom *av)
+{
+	if (ac && av && is_atom_number(av)) {
+		double zoom_perc = atom_getfloat(av);
+        CLIP_ASSIGN(zoom_perc, d_ob->m_zoom.min_zoom_perc.x, d_ob->m_zoom.max_zoom_perc.x);
+		d_ob->m_zoom.zoom_perc = zoom_perc;
+		if (d_ob->flags & DADAOBJ_SPLITXYZOOM)
+			d_ob->m_zoom.zoom = build_pt(d_ob->m_zoom.zoom_static_additional.x * d_ob->m_zoom.zoom_perc / 100., d_ob->m_zoom.zoom_static_additional.y * d_ob->m_zoom.zoom_y_perc / 100.);
+		else
+			d_ob->m_zoom.zoom = pt_number_prod(d_ob->m_zoom.zoom_static_additional, d_ob->m_zoom.zoom_perc / 100.);
+        dadaobj_invalidate_and_redraw(d_ob);
+	}
+	return MAX_ERR_NONE;
+}
+
+
+t_max_err dadaobj_setattr_vzoom(t_dadaobj *d_ob, t_object *attr, long ac, t_atom *av)
+{
+	if (ac && av && is_atom_number(av)) {
+		double zoom_y_perc = atom_getfloat(av);
+        CLIP_ASSIGN(zoom_y_perc, d_ob->m_zoom.min_zoom_perc.y, d_ob->m_zoom.max_zoom_perc.y);
+		d_ob->m_zoom.zoom_y_perc = zoom_y_perc;
+		if (d_ob->flags & DADAOBJ_SPLITXYZOOM)
+			d_ob->m_zoom.zoom = build_pt(d_ob->m_zoom.zoom_static_additional.x * d_ob->m_zoom.zoom_perc / 100., d_ob->m_zoom.zoom_static_additional.y * d_ob->m_zoom.zoom_y_perc / 100.);
+		else
+			d_ob->m_zoom.zoom = pt_number_prod(d_ob->m_zoom.zoom_static_additional, d_ob->m_zoom.zoom_perc / 100.);
+        dadaobj_invalidate_and_redraw(d_ob);
+	}
+	return MAX_ERR_NONE;
+}
+
+
+t_max_err dadaobj_setattr_grid(t_dadaobj *d_ob, t_object *attr, long ac, t_atom *av)
+{
+    if (ac && av && is_atom_number(av)) {
+        d_ob->m_grid.grid_size.x = atom_getfloat(av);
+        d_ob->m_grid.grid_size.y = ac > 1 ? atom_getfloat(av + 1) : atom_getfloat(av);
+        jbox_invalidate_layer(d_ob->orig_obj, NULL, gensym("grid"));
+        jbox_redraw((t_jbox *)d_ob->orig_obj);
+    }
+    return MAX_ERR_NONE;
+}
+
+t_max_err dadaobj_setattr_showgrid(t_dadaobj *d_ob, t_object *attr, long ac, t_atom *av)
+{
+    if (ac && av && is_atom_number(av)) {
+        d_ob->m_grid.show_grid = atom_getlong(av);
+        jbox_invalidate_layer(d_ob->orig_obj, NULL, gensym("grid"));
+        jbox_redraw((t_jbox *)d_ob->orig_obj);
+    }
+    return MAX_ERR_NONE;
+}
+
+t_max_err dadaobj_setattr_gridcolor(t_dadaobj *d_ob, t_object *attr, long ac, t_atom *av)
+{
+    if (ac >= 3) {
+        d_ob->m_grid.j_gridcolor.red = atom_getfloat(av);
+        d_ob->m_grid.j_gridcolor.green = atom_getfloat(av+1);
+        d_ob->m_grid.j_gridcolor.blue = atom_getfloat(av+2);
+        d_ob->m_grid.j_gridcolor.alpha = ac >= 4 ? atom_getfloat(av+3) : 1.;
+        jbox_invalidate_layer(d_ob->orig_obj, NULL, gensym("grid"));
+        jbox_redraw((t_jbox *)d_ob->orig_obj);
+    }
+    return MAX_ERR_NONE;
+}
+
+t_max_err dadaobj_setattr_showaxeslabels(t_dadaobj *d_ob, t_object *attr, long ac, t_atom *av)
+{
+    if (ac && av && is_atom_number(av)) {
+        d_ob->m_grid.show_axes_labels = atom_getlong(av);
+        jbox_invalidate_layer(d_ob->orig_obj, NULL, gensym("grid"));
+        jbox_redraw((t_jbox *)d_ob->orig_obj);
+    }
+    return MAX_ERR_NONE;
+}
+
+t_max_err dadaobj_setattr_axeslabelscolor(t_dadaobj *d_ob, t_object *attr, long ac, t_atom *av)
+{
+    if (ac >= 3) {
+        d_ob->m_grid.j_axeslabelscolor.red = atom_getfloat(av);
+        d_ob->m_grid.j_axeslabelscolor.green = atom_getfloat(av+1);
+        d_ob->m_grid.j_axeslabelscolor.blue = atom_getfloat(av+2);
+        d_ob->m_grid.j_axeslabelscolor.alpha = ac >= 4 ? atom_getfloat(av+3) : 1.;
+        jbox_invalidate_layer(d_ob->orig_obj, NULL, gensym("grid"));
+        jbox_redraw((t_jbox *)d_ob->orig_obj);
+    }
+    return MAX_ERR_NONE;
+}
+
+
+t_max_err dadaobj_setattr_xlabel(t_dadaobj *d_ob, t_object *attr, long ac, t_atom *av)
+{
+    if (ac && av && atom_gettype(av) == A_SYM)
+        d_ob->m_grid.x_label = atom_getsym(av);
+    else
+        d_ob->m_grid.x_label = _llllobj_sym_empty_symbol;
+    jbox_invalidate_layer(d_ob->orig_obj, NULL, gensym("grid"));
+    jbox_redraw((t_jbox *)d_ob->orig_obj);
+    return MAX_ERR_NONE;
+}
+
+t_max_err dadaobj_setattr_ylabel(t_dadaobj *d_ob, t_object *attr, long ac, t_atom *av)
+{
+    if (ac && av && atom_gettype(av) == A_SYM)
+        d_ob->m_grid.y_label = atom_getsym(av);
+    else
+        d_ob->m_grid.y_label = _llllobj_sym_empty_symbol;
+    jbox_invalidate_layer(d_ob->orig_obj, NULL, gensym("grid"));
+    jbox_redraw((t_jbox *)d_ob->orig_obj);
+    return MAX_ERR_NONE;
+}
+
+t_max_err dadaobj_setattr_showaxes(t_dadaobj *d_ob, t_object *attr, long ac, t_atom *av)
+{
+    if (ac && av && is_atom_number(av)) {
+        d_ob->m_grid.show_axes = atom_getlong(av);
+        jbox_invalidate_layer(d_ob->orig_obj, NULL, gensym("grid"));
+        jbox_redraw((t_jbox *)d_ob->orig_obj);
+    }
+    return MAX_ERR_NONE;
+}
+
+t_max_err dadaobj_setattr_axescolor(t_dadaobj *d_ob, t_object *attr, long ac, t_atom *av)
+{
+    if (ac >= 3) {
+        d_ob->m_grid.j_axescolor.red = atom_getfloat(av);
+        d_ob->m_grid.j_axescolor.green = atom_getfloat(av+1);
+        d_ob->m_grid.j_axescolor.blue = atom_getfloat(av+2);
+        d_ob->m_grid.j_axescolor.alpha = ac >= 4 ? atom_getfloat(av+3) : 1.;
+        jbox_invalidate_layer(d_ob->orig_obj, NULL, gensym("grid"));
+        jbox_redraw((t_jbox *)d_ob->orig_obj);
+    }
+    return MAX_ERR_NONE;
+}
+
+t_max_err dadaobj_setattr_showgridlabels(t_dadaobj *d_ob, t_object *attr, long ac, t_atom *av)
+{
+    if (ac && av && is_atom_number(av)) {
+        d_ob->m_grid.show_labels = atom_getlong(av);
+        jbox_invalidate_layer(d_ob->orig_obj, NULL, gensym("grid"));
+        jbox_redraw((t_jbox *)d_ob->orig_obj);
+    }
+    return MAX_ERR_NONE;
+}
+
+t_max_err dadaobj_setattr_gridlabelscolor(t_dadaobj *d_ob, t_object *attr, long ac, t_atom *av)
+{
+    if (ac >= 3) {
+        d_ob->m_grid.j_labelscolor.red = atom_getfloat(av);
+        d_ob->m_grid.j_labelscolor.green = atom_getfloat(av+1);
+        d_ob->m_grid.j_labelscolor.blue = atom_getfloat(av+2);
+        d_ob->m_grid.j_labelscolor.alpha = ac >= 4 ? atom_getfloat(av+3) : 1.;
+        jbox_invalidate_layer(d_ob->orig_obj, NULL, gensym("grid"));
+        jbox_redraw((t_jbox *)d_ob->orig_obj);
+    }
+    return MAX_ERR_NONE;
+}
+
+t_max_err dadaobj_setattr_gridlabelsfontsize(t_dadaobj *d_ob, t_object *attr, long ac, t_atom *av)
+{
+    if (ac && av && is_atom_number(av)) {
+        d_ob->m_grid.labelsfontsize = atom_getfloat(av);
+        jbox_invalidate_layer(d_ob->orig_obj, NULL, gensym("grid"));
+        jbox_redraw((t_jbox *)d_ob->orig_obj);
+    }
+    return MAX_ERR_NONE;
+}
+
+t_max_err dadaobj_setattr_axeslabelsfontsize(t_dadaobj *d_ob, t_object *attr, long ac, t_atom *av)
+{
+    if (ac && av && is_atom_number(av)) {
+        d_ob->m_grid.axeslabelsfontsize = atom_getfloat(av);
+        jbox_invalidate_layer(d_ob->orig_obj, NULL, gensym("grid"));
+        jbox_redraw((t_jbox *)d_ob->orig_obj);
+    }
+    return MAX_ERR_NONE;
+}
+
+
+
+
+t_max_err dadaobj_setattr_maxundosteps(t_dadaobj *d_ob, t_object *attr, long ac, t_atom *av)
+{
+	if (ac && av && is_atom_number(av)) {
+		d_ob->m_undo.max_num_steps = atom_getlong(av);
+		undo_check_max_num_steps(&d_ob->m_undo);
+	}
+	return MAX_ERR_NONE;
+}
+
+
+
+t_max_err dadaobj_setattr_bgimage(t_dadaobj *d_ob, t_object *attr, long ac, t_atom *av)
+{
+    if (d_ob->m_bg.bg_surface) {
+        jgraphics_surface_destroy(d_ob->m_bg.bg_surface);
+        d_ob->m_bg.bg_surface = NULL;
+    }
+    
+    if (ac > 0 && atom_gettype(av) == A_SYM && atom_getsym(av) != _llllobj_sym_none && atom_getsym(av) != _llllobj_sym_empty_symbol) {
+        d_ob->m_bg.bg_surface = get_surface_from_file(atom_getsym(av));
+        //jgraphics_surface_destroy(sky);
+        d_ob->m_bg.bg_image = atom_getsym(av);
+    } else {
+        d_ob->m_bg.bg_image = _llllobj_sym_none;
+    }
+    
+    return MAX_ERR_NONE;
+}
+
+
+t_max_err dadaobj_jbox_setattr_bgimage(t_dadaobj_jbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+    return dadaobj_setattr_bgimage(&b_ob->d_ob, attr, ac, av);
+}
+
+t_max_err dadaobj_jbox_setattr_zoom(t_dadaobj_jbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+	return dadaobj_setattr_zoom(&b_ob->d_ob, attr, ac, av);
+}
+
+
+t_max_err dadaobj_jbox_setattr_vzoom(t_dadaobj_jbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+	return dadaobj_setattr_vzoom(&b_ob->d_ob, attr, ac, av);
+}
+
+t_max_err dadaobj_jbox_setattr_grid(t_dadaobj_jbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+    return dadaobj_setattr_grid(&b_ob->d_ob, attr, ac, av);
+}
+
+t_max_err dadaobj_jbox_setattr_showgrid(t_dadaobj_jbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+    return dadaobj_setattr_showgrid(&b_ob->d_ob, attr, ac, av);
+}
+
+
+t_max_err dadaobj_jbox_setattr_gridcolor(t_dadaobj_jbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+    return dadaobj_setattr_gridcolor(&b_ob->d_ob, attr, ac, av);
+}
+
+t_max_err dadaobj_jbox_setattr_showaxeslabels(t_dadaobj_jbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+    return dadaobj_setattr_showaxeslabels(&b_ob->d_ob, attr, ac, av);
+}
+
+
+t_max_err dadaobj_jbox_setattr_axeslabelscolor(t_dadaobj_jbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+    return dadaobj_setattr_axeslabelscolor(&b_ob->d_ob, attr, ac, av);
+}
+
+t_max_err dadaobj_jbox_setattr_xlabel(t_dadaobj_jbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+    return dadaobj_setattr_xlabel(&b_ob->d_ob, attr, ac, av);
+}
+
+t_max_err dadaobj_jbox_setattr_ylabel(t_dadaobj_jbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+    return dadaobj_setattr_ylabel(&b_ob->d_ob, attr, ac, av);
+}
+
+t_max_err dadaobj_jbox_setattr_showaxes(t_dadaobj_jbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+    return dadaobj_setattr_showaxes(&b_ob->d_ob, attr, ac, av);
+}
+
+
+t_max_err dadaobj_jbox_setattr_axescolor(t_dadaobj_jbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+    return dadaobj_setattr_axescolor(&b_ob->d_ob, attr, ac, av);
+}
+
+t_max_err dadaobj_jbox_setattr_showgridlabels(t_dadaobj_jbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+    return dadaobj_setattr_showgridlabels(&b_ob->d_ob, attr, ac, av);
+}
+
+
+t_max_err dadaobj_jbox_setattr_gridlabelscolor(t_dadaobj_jbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+    return dadaobj_setattr_gridlabelscolor(&b_ob->d_ob, attr, ac, av);
+}
+
+
+t_max_err dadaobj_jbox_setattr_gridlabelsfontsize(t_dadaobj_jbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+    return dadaobj_setattr_gridlabelsfontsize(&b_ob->d_ob, attr, ac, av);
+}
+
+
+t_max_err dadaobj_jbox_setattr_axeslabelsfontsize(t_dadaobj_jbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+    return dadaobj_setattr_axeslabelsfontsize(&b_ob->d_ob, attr, ac, av);
+}
+
+t_max_err dadaobj_jbox_setattr_maxundosteps(t_dadaobj_jbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+	return dadaobj_setattr_maxundosteps(&b_ob->d_ob, attr, ac, av);
+}
+
+
+t_max_err dadaobj_pxjbox_setattr_bgimage(t_dadaobj_pxjbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+    return dadaobj_setattr_bgimage(&b_ob->d_ob, attr, ac, av);
+}
+
+
+t_max_err dadaobj_pxjbox_setattr_zoom(t_dadaobj_pxjbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+	return dadaobj_setattr_zoom(&b_ob->d_ob, attr, ac, av);
+}
+
+
+t_max_err dadaobj_pxjbox_setattr_grid(t_dadaobj_pxjbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+	return dadaobj_setattr_grid(&b_ob->d_ob, attr, ac, av);
+}
+
+t_max_err dadaobj_pxjbox_setattr_showgrid(t_dadaobj_pxjbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+    return dadaobj_setattr_showgrid(&b_ob->d_ob, attr, ac, av);
+}
+
+t_max_err dadaobj_pxjbox_setattr_gridcolor(t_dadaobj_pxjbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+    return dadaobj_setattr_gridcolor(&b_ob->d_ob, attr, ac, av);
+}
+
+
+t_max_err dadaobj_pxjbox_setattr_showaxeslabels(t_dadaobj_pxjbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+    return dadaobj_setattr_showaxeslabels(&b_ob->d_ob, attr, ac, av);
+}
+
+t_max_err dadaobj_pxjbox_setattr_axeslabelscolor(t_dadaobj_pxjbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+    return dadaobj_setattr_axeslabelscolor(&b_ob->d_ob, attr, ac, av);
+}
+
+t_max_err dadaobj_pxjbox_setattr_xlabel(t_dadaobj_pxjbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+    return dadaobj_setattr_xlabel(&b_ob->d_ob, attr, ac, av);
+}
+
+t_max_err dadaobj_pxjbox_setattr_ylabel(t_dadaobj_pxjbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+    return dadaobj_setattr_ylabel(&b_ob->d_ob, attr, ac, av);
+}
+
+
+t_max_err dadaobj_pxjbox_setattr_showaxes(t_dadaobj_pxjbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+    return dadaobj_setattr_showaxes(&b_ob->d_ob, attr, ac, av);
+}
+
+t_max_err dadaobj_pxjbox_setattr_axescolor(t_dadaobj_pxjbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+    return dadaobj_setattr_axescolor(&b_ob->d_ob, attr, ac, av);
+}
+
+t_max_err dadaobj_pxjbox_setattr_showgridlabels(t_dadaobj_pxjbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+    return dadaobj_setattr_showgridlabels(&b_ob->d_ob, attr, ac, av);
+}
+
+t_max_err dadaobj_pxjbox_setattr_gridlabelscolor(t_dadaobj_pxjbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+    return dadaobj_setattr_gridlabelscolor(&b_ob->d_ob, attr, ac, av);
+}
+
+t_max_err dadaobj_pxjbox_setattr_gridlabelsfontsize(t_dadaobj_pxjbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+    return dadaobj_setattr_gridlabelsfontsize(&b_ob->d_ob, attr, ac, av);
+}
+
+t_max_err dadaobj_pxjbox_setattr_axeslabelsfontsize(t_dadaobj_pxjbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+    return dadaobj_setattr_axeslabelsfontsize(&b_ob->d_ob, attr, ac, av);
+}
+
+
+
+t_max_err dadaobj_pxjbox_setattr_vzoom(t_dadaobj_pxjbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+    return dadaobj_setattr_vzoom(&b_ob->d_ob, attr, ac, av);
+}
+t_max_err dadaobj_pxjbox_setattr_maxundosteps(t_dadaobj_pxjbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+	return dadaobj_setattr_maxundosteps(&b_ob->d_ob, attr, ac, av);
+}
+
+
+void dadaobj_class_init(t_class *c, e_llllobj_obj_types type, long flags)
+{
+
+    if (flags & DADAOBJ_BORDER) {
+        DADAOBJ_CLASS_ATTR_CHAR_SUBSTRUCTURE(c,type, "showborder", 0, t_dadaobj, m_bg, t_bg_manager, show_border);
+        CLASS_ATTR_STYLE_LABEL(c, "showborder", 0, "onoff", "Show Border");
+        CLASS_ATTR_DEFAULT_SAVE_PAINT(c, "showborder", 0, flags & DADAOBJ_BORDER_SHOWDEFAULT ? "1" : "0");
+        CLASS_ATTR_CATEGORY(c, "showborder", 0, "Appearance");
+        // @description Sets the color of the border.
+        // @includeifflagged DADAOBJ_BORDER
+
+        
+        DADAOBJ_CLASS_ATTR_RGBA_SUBSTRUCTURE(c,type, "bordercolor", 0, t_dadaobj, m_bg, t_bg_manager, bordercolor);
+        CLASS_ATTR_DEFAULT_SAVE_PAINT(c, "bordercolor", 0, "0. 0. 0. 1.");
+        CLASS_ATTR_STYLE_LABEL(c, "bordercolor", 0, "rgba", "Border Color");
+        CLASS_ATTR_CATEGORY(c, "bordercolor", 0, "Color");
+        // @description Sets the color of the border.
+        // @includeifflagged DADAOBJ_BORDER
+        
+        DADAOBJ_CLASS_ATTR_CHAR_SUBSTRUCTURE(c,type, "showfocus", 0, t_dadaobj, m_bg, t_bg_manager, show_focus);
+        CLASS_ATTR_STYLE_LABEL(c, "showfocus", 0, "onoff", "Show Focus");
+        CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"showfocus",0,"1");
+        CLASS_ATTR_CATEGORY(c, "showfocus", 0, "Appearance");
+        // @description Toggles the ability to draw a thicker border when the object has the focus.
+        // @includeifflagged DADAOBJ_BORDER
+    }
+
+    if (flags & DADAOBJ_BG) {
+        DADAOBJ_CLASS_ATTR_RGBA_SUBSTRUCTURE(c,type, "bgcolor", 0, t_dadaobj, m_bg, t_bg_manager, bgcolor);
+        CLASS_ATTR_DEFAULT_SAVE_PAINT(c, "bgcolor", 0, "1. 1. 1. 1.");
+        CLASS_ATTR_STYLE_LABEL(c, "bgcolor", 0, "rgba", "Background Color");
+        CLASS_ATTR_CATEGORY(c, "bgcolor", 0, "Color");
+        CLASS_ATTR_BASIC(c, "bgcolor", 0);
+        // @description Sets the color of the background.
+        // @includeifflagged DADAOBJ_BG
+    }
+
+    if (flags & DADAOBJ_BGIMAGE) {
+        DADAOBJ_CLASS_ATTR_SYM_SUBSTRUCTURE(c,type, "bgimage", 0, t_dadaobj, m_bg, t_bg_manager, bg_image);
+        CLASS_ATTR_DEFAULT_SAVE_PAINT(c, "bgimage", 0, "none");
+        CLASS_ATTR_STYLE_LABEL(c, "bgimage", 0, "text", "Background Image");
+        CLASS_ATTR_ACCESSORS(c, "bgimage", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_bgimage : (method)dadaobj_pxjbox_setattr_bgimage);
+        CLASS_ATTR_CATEGORY(c, "bgimage", 0, "Appearance");
+        CLASS_ATTR_BASIC(c, "bgimage", 0);
+        // @description Sets a background image texture, tiling the plane. Use "" or "none" to remove the image.
+        // @includeifflagged DADAOBJ_BGIMAGE
+    }
+
+    
+    if (flags & DADAOBJ_ZOOM) {
+		DADAOBJ_CLASS_ATTR_DOUBLE_SUBSTRUCTURE(c, type, "zoom", 0, t_dadaobj, m_zoom, t_zoom_manager, zoom_perc);
+		CLASS_ATTR_STYLE_LABEL(c, "zoom", 0, "text", flags & DADAOBJ_SPLITXYZOOM ? "Horizontal Zoom %" : "Zoom %");
+		CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"zoom",0,"100");
+		CLASS_ATTR_BASIC(c, "zoom", 0);
+		CLASS_ATTR_CATEGORY(c, "zoom", 0, "Appearance");
+		CLASS_ATTR_ACCESSORS(c, "zoom", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_zoom : (method)dadaobj_pxjbox_setattr_zoom);
+		// @description Sets the object zoom percentage (or horizontal zoom, if the object is separately zoommable on horizontal and on vertical axis).
+		// @includeifflagged DADAOBJ_ZOOMX+DADAOBJ_ZOOMY+DADAOBJ_SPLITXYZOOM
+        
+		if (flags & DADAOBJ_SPLITXYZOOM) {
+			DADAOBJ_CLASS_ATTR_DOUBLE_SUBSTRUCTURE(c, type, "vzoom", 0, t_dadaobj, m_zoom, t_zoom_manager, zoom_y_perc);
+			CLASS_ATTR_STYLE_LABEL(c, "vzoom", 0, "text", "Vertical Zoom %");
+			CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"vzoom",0,"100");
+			CLASS_ATTR_BASIC(c, "vzoom", 0);
+			CLASS_ATTR_CATEGORY(c, "vzoom", 0, "Appearance");
+			CLASS_ATTR_ACCESSORS(c, "vzoom", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_vzoom : (method)dadaobj_pxjbox_setattr_vzoom);
+			// @description Sets the object vertical zoom percentage
+			// @includeifflagged DADAOBJ_ZOOMX+DADAOBJ_ZOOMY+DADAOBJ_SPLITXYZOOM
+		}
+		
+		DADAOBJ_CLASS_ATTR_CHAR_SUBSTRUCTURE(c, type, "allowzoom", 0, t_dadaobj, m_zoom, t_zoom_manager, allow_zoom);
+		CLASS_ATTR_STYLE_LABEL(c, "allowzoom", 0, "onoff", "Allow Zoom");
+		CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"allowzoom",0,"1");
+		CLASS_ATTR_FILTER_CLIP(c, "allowzoom", 0, 1);
+		CLASS_ATTR_CATEGORY(c, "allowzoom", 0, "Behavior");
+		// @description Toggles the ability to allow zooming
+		// @includeifflagged DADAOBJ_ZOOMX+DADAOBJ_ZOOMY
+	}
+	
+	if (flags & DADAOBJ_CENTEROFFSET) {
+		DADAOBJ_CLASS_ATTR_DOUBLE_ARRAY_SUBSTRUCTURE(c, type, "center", 0, t_dadaobj, m_zoom, t_zoom_manager, center_offset, 2);
+		CLASS_ATTR_STYLE_LABEL(c, "center", 0, "text", "Center Coordinates");
+		CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"center",0,"0 0");
+		CLASS_ATTR_CATEGORY(c, "center", 0, "Appearance");
+		// @description Sets the coordinate of the center
+		// @includeifflagged DADAOBJ_CENTEROFFSET
+
+		DADAOBJ_CLASS_ATTR_CHAR_SUBSTRUCTURE(c, type, "allowcentershift", 0, t_dadaobj, m_zoom, t_zoom_manager, allow_center_shifting);
+		CLASS_ATTR_STYLE_LABEL(c, "allowcentershift", 0, "onoff", "Allow Center Shifting");
+		CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"allowcentershift",0,"1");
+		CLASS_ATTR_FILTER_CLIP(c, "allowcentershift", 0, 1);
+		CLASS_ATTR_CATEGORY(c, "allowcentershift", 0, "Behavior");
+		// @description Toggles the ability to allow the center to shift.
+		// @includeifflagged DADAOBJ_CENTEROFFSET
+	}
+	
+	if (flags & DADAOBJ_CHANGEDBANG) {
+		DADAOBJ_CLASS_ATTR_CHAR_SUBSTRUCTURE(c, type, "messagebang",0,  t_dadaobj, m_interface, t_interface_manager, send_bang_from_messages);
+		CLASS_ATTR_STYLE_LABEL(c,"messagebang",0,"onoff","Send bang Upon Messages");
+		CLASS_ATTR_DEFAULT_SAVE(c,"messagebang",0,"0");
+		CLASS_ATTR_CATEGORY(c, "messagebang", 0, "Behavior");
+		// @description Toggles the ability to send the changed bang also when changes happen via messages.
+		// @includeifflagged DADAOBJ_CHANGEDBANG
+
+        DADAOBJ_CLASS_ATTR_CHAR_SUBSTRUCTURE(c, type, "continuousbang",0,  t_dadaobj, m_interface, t_interface_manager, continuously_send_changebang);
+        CLASS_ATTR_STYLE_LABEL(c,"continuousbang",0,"onoff","Continuously Output bang if Changed ");
+        CLASS_ATTR_DEFAULT_SAVE(c,"continuousbang",0,"0");
+        CLASS_ATTR_CATEGORY(c, "continuousbang", 0, "Behavior");
+        // @description Toggles the ability to send the changed bang continuously during mousedrag actions.
+        // @includeifflagged DADAOBJ_CHANGEDBANG
+
+		if (flags & DADAOBJ_UNDO) {
+			DADAOBJ_CLASS_ATTR_CHAR_SUBSTRUCTURE(c, type, "undobang",0,  t_dadaobj, m_interface, t_interface_manager, send_bang_upon_undo);
+			CLASS_ATTR_STYLE_LABEL(c,"undobang",0,"onoff","Send bang Upon Undo");
+			CLASS_ATTR_DEFAULT_SAVE(c,"undobang",0,"1");
+			CLASS_ATTR_CATEGORY(c, "undobang", 0, "Behavior");
+			// @description Toggles the ability to send the changed bang also when changes happen via messages.
+			// @includeifflagged DADAOBJ_CHANGEDBANG+DADAOBJ_UNDO
+		}
+	}
+	
+	
+	if (flags & DADAOBJ_UNDO) {
+		DADAOBJ_CLASS_ATTR_LONG_SUBSTRUCTURE(c, type, "maxundosteps",0, t_dadaobj, m_undo, t_undo_manager, max_num_steps);
+		CLASS_ATTR_STYLE_LABEL(c,"maxundosteps",0,"text","Maximum Number Of Undo Steps");
+		CLASS_ATTR_DEFAULT_SAVE(c,"maxundosteps",0,"50");
+		CLASS_ATTR_CATEGORY(c, "maxundosteps", 0, "Behavior");
+		CLASS_ATTR_ACCESSORS(c, "maxundosteps", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_maxundosteps : (method)dadaobj_pxjbox_setattr_maxundosteps);
+		// @description Sets the maximum number of undo steps (0 being: no undo).
+		// @includeifflagged DADAOBJ_UNDO
+
+		DADAOBJ_CLASS_ATTR_CHAR_SUBSTRUCTURE(c, type, "verboseundo",0, t_dadaobj, m_undo, t_undo_manager, verbose_undo);
+		CLASS_ATTR_STYLE_LABEL(c,"verboseundo",0,"onoff","Post Undo/Redo Steps");
+		CLASS_ATTR_DEFAULT_SAVE(c,"verboseundo",0,"0");
+		CLASS_ATTR_CATEGORY(c, "verboseundo", 0, "Behavior");
+		// @description Toggles the ability to post undo/redo steps in the Max window.
+		// @includeifflagged DADAOBJ_UNDO
+        
+        if (flags & DADAOBJ_PLAY) {
+            DADAOBJ_CLASS_ATTR_CHAR_SUBSTRUCTURE(c, type, "undobeforeplay",0, t_dadaobj, m_undo, t_undo_manager, undo_before_play);
+            CLASS_ATTR_STYLE_LABEL(c,"undobeforeplay",0,"onoff","Save State For Undo Before Playing");
+            CLASS_ATTR_DEFAULT_SAVE(c,"undobeforeplay",0,"1");
+            CLASS_ATTR_CATEGORY(c, "undobeforeplay", 0, "Behavior");
+            // @description Toggles the ability to save the state for an undo step before playing
+            // @includeifflagged DADAOBJ_UNDO+DADAOBJ_PLAY
+        }
+	}
+	
+	if (flags & DADAOBJ_EMBED) {
+		DADAOBJ_CLASS_ATTR_CHAR(c, type, "embed",0, t_dadaobj, save_data_with_patcher);
+		CLASS_ATTR_STYLE_LABEL(c,"embed",0,"onoff","Save Data With Patcher");
+		CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"embed",0,"1");
+		CLASS_ATTR_BASIC(c,"embed",0);
+		CLASS_ATTR_CATEGORY(c, "embed", 0, "Behavior");
+		// @description Toggles the ability to embed the state of the object within the patcher.
+		// @includeifflagged DADAOBJ_UNDO
+	}
+	
+	if (flags & DADAOBJ_MOUSEHOVER) {
+		DADAOBJ_CLASS_ATTR_CHAR_SUBSTRUCTURE(c, type, "mousehover", 0, t_dadaobj, m_interface, t_interface_manager, allow_mouse_hover);
+		CLASS_ATTR_STYLE_LABEL(c, "mousehover", 0, "onoff", "Allow Mouse Hovering");
+		CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"mousehover",0,"1");
+		CLASS_ATTR_CATEGORY(c, "mousehover", 0, "Behavior");
+		// @description Toggles mouse hovering capabilities.
+		// @includeifflagged DADAOBJ_MOUSEHOVER
+    }
+    
+    
+    if (flags & DADAOBJ_NOTIFICATIONS) {
+        DADAOBJ_CLASS_ATTR_CHAR_SUBSTRUCTURE(c, type, "notify", 0, t_dadaobj, m_interface, t_interface_manager, send_notifications);
+        CLASS_ATTR_STYLE_LABEL(c, "notify", 0, "enumindex", "Send Notifications");
+        CLASS_ATTR_ENUMINDEX(c,"notify", 0, "Don't Basic Verbose");
+        CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"notify",0,"0");
+        CLASS_ATTR_CATEGORY(c, "notify", 0, "Behavior");
+        CLASS_ATTR_BASIC(c, "notify", 0);
+        // @description Toggles the ability to send notifications for interface activities (such as clicks, mousehovers, etc.).
+        // Notifications are sent through the dedicated outlet. If the "Verbose" mode is set, whenever meaningful, the state
+        // of the notified element will be also output.
+        // @includeifflagged DADAOBJ_NOTIFICATIONS
+    }
+
+    
+    if (flags & DADAOBJ_GRID) {
+        
+        if (flags & DADAOBJ_SNAPTOGRID) {
+            DADAOBJ_CLASS_ATTR_CHAR_SUBSTRUCTURE(c, type, "snaptogrid",0, t_dadaobj, m_grid, t_grid_manager, snap_to_grid);
+            CLASS_ATTR_STYLE_LABEL(c,"snaptogrid",0,"onoff","Snap To Grid");
+            CLASS_ATTR_DEFAULT_SAVE(c,"snaptogrid",0,"0");
+            CLASS_ATTR_CATEGORY(c, "snaptogrid", 0, "Axes And Grid");
+            // @description Toggles the ability to snap items to the grid.
+            // @includeifflagged DADAOBJ_GRID+DADAOBJ_SNAPTOGRID
+        }
+        
+        DADAOBJ_CLASS_ATTR_DOUBLE_ARRAY_SUBSTRUCTURE(c, type, "grid",0, t_dadaobj, m_grid, t_grid_manager, grid_size, 2);
+		CLASS_ATTR_STYLE_LABEL(c, "grid", 0, "text", "Grid Size");
+		CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"grid",0,"10 10");
+		CLASS_ATTR_CATEGORY(c, "grid", 0, "Axes And Grid");
+        CLASS_ATTR_ACCESSORS(c, "grid", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_grid : (method)dadaobj_pxjbox_setattr_grid);
+		// @description Sets the grid size, in coordinates.
+		// @includeifflagged DADAOBJ_GRID
+
+		DADAOBJ_CLASS_ATTR_CHAR_SUBSTRUCTURE(c, type, "showgrid",0, t_dadaobj, m_grid, t_grid_manager, show_grid);
+		CLASS_ATTR_STYLE_LABEL(c,"showgrid",0,"onoff","Show Grid");
+        CLASS_ATTR_DEFAULT_SAVE(c,"showgrid",0, flags & DADAOBJ_GRID_SHOWDEFAULT ? "1" : "0");
+		CLASS_ATTR_CATEGORY(c, "showgrid", 0, "Axes And Grid");
+        CLASS_ATTR_ACCESSORS(c, "showgrid", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_showgrid : (method)dadaobj_pxjbox_setattr_showgrid);
+		// @description Toggles the display of the grid.
+		// @includeifflagged DADAOBJ_GRID
+
+		DADAOBJ_CLASS_ATTR_RGBA_SUBSTRUCTURE(c,type, "gridcolor", 0, t_dadaobj, m_grid, t_grid_manager, j_gridcolor);
+		CLASS_ATTR_DEFAULT_SAVE_PAINT(c, "gridcolor", 0, "0. 0. 0. 0.1");
+		CLASS_ATTR_STYLE_LABEL(c, "gridcolor", 0, "rgba", "Grid Color");
+		CLASS_ATTR_CATEGORY(c, "gridcolor", 0, "Color");
+        CLASS_ATTR_ACCESSORS(c, "gridcolor", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_gridcolor : (method)dadaobj_pxjbox_setattr_gridcolor);
+		// @description Sets the grid color.
+		// @includeifflagged DADAOBJ_GRID
+	}
+
+    if (flags & DADAOBJ_AXES) {
+        DADAOBJ_CLASS_ATTR_CHAR_SUBSTRUCTURE(c, type, "showaxes",0, t_dadaobj, m_grid, t_grid_manager, show_axes);
+        CLASS_ATTR_STYLE_LABEL(c,"showaxes",0,"onoff","Show Axes");
+        CLASS_ATTR_DEFAULT_SAVE(c,"showaxes",0, flags & DADAOBJ_AXES_SHOWDEFAULT ? "1" : "0");
+        CLASS_ATTR_CATEGORY(c, "showaxes", 0, "Axes And Grid");
+        CLASS_ATTR_ACCESSORS(c, "showaxes", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_showaxes : (method)dadaobj_pxjbox_setattr_showaxes);
+        // @description Toggles the display of the x and y axes.
+        // @includeifflagged DADAOBJ_AXES
+        
+        DADAOBJ_CLASS_ATTR_RGBA_SUBSTRUCTURE(c,type, "axescolor", 0, t_dadaobj, m_grid, t_grid_manager, j_axescolor);
+        CLASS_ATTR_DEFAULT_SAVE_PAINT(c, "axescolor", 0, "0.4 0.4 0.4 1.");
+        CLASS_ATTR_STYLE_LABEL(c, "axescolor", 0, "rgba", "Axes Color");
+        CLASS_ATTR_ACCESSORS(c, "axescolor", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_axescolor : (method)dadaobj_pxjbox_setattr_axescolor);
+        CLASS_ATTR_CATEGORY(c, "axescolor", 0, "Color");
+        // @description Sets the color of the x and y axes.
+        // @includeifflagged DADAOBJ_AXES
+    }
+    
+    if (flags & DADAOBJ_LABELS) {
+        DADAOBJ_CLASS_ATTR_CHAR_SUBSTRUCTURE(c, type, "showgridlabels",0, t_dadaobj, m_grid, t_grid_manager, show_labels);
+        CLASS_ATTR_STYLE_LABEL(c,"showgridlabels",0,"onoff","Show Grid Labels");
+        CLASS_ATTR_DEFAULT_SAVE(c,"showgridlabels",0, flags & DADAOBJ_LABELS_SHOWDEFAULT ? "1" : "0");
+        CLASS_ATTR_CATEGORY(c, "showgridlabels", 0, "Axes And Grid");
+        CLASS_ATTR_ACCESSORS(c, "showgridlabels", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_showgridlabels : (method)dadaobj_pxjbox_setattr_showgridlabels);
+        // @description Toggles the display of the grid labels.
+        // @includeifflagged DADAOBJ_LABELS
+        
+        DADAOBJ_CLASS_ATTR_RGBA_SUBSTRUCTURE(c,type, "gridlabelscolor", 0, t_dadaobj, m_grid, t_grid_manager, j_labelscolor);
+        CLASS_ATTR_DEFAULT_SAVE_PAINT(c, "gridlabelscolor", 0, "0.4 0.4 0.4 1.");
+        CLASS_ATTR_STYLE_LABEL(c, "gridlabelscolor", 0, "rgba", "Grid Labels Color");
+        CLASS_ATTR_ACCESSORS(c, "gridlabelscolor", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_gridlabelscolor : (method)dadaobj_pxjbox_setattr_gridlabelscolor);
+        CLASS_ATTR_CATEGORY(c, "gridlabelscolor", 0, "Color");
+        // @description Sets the color of the grid labels.
+        // @includeifflagged DADAOBJ_LABELS
+
+        
+        DADAOBJ_CLASS_ATTR_DOUBLE_SUBSTRUCTURE(c, type, "gridlabelsfontsize",0, t_dadaobj, m_grid, t_grid_manager, labelsfontsize);
+        CLASS_ATTR_STYLE_LABEL(c,"gridlabelsfontsize",0,"text","Grid Labels Font Size");
+        CLASS_ATTR_DEFAULT_SAVE(c,"gridlabelsfontsize",0, "8.");
+        CLASS_ATTR_CATEGORY(c, "gridlabelsfontsize", 0, "Axes And Grid");
+        CLASS_ATTR_ACCESSORS(c, "gridlabelsfontsize", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_gridlabelsfontsize : (method)dadaobj_pxjbox_setattr_gridlabelsfontsize);
+        // @description Sets the size of the grid labels font.
+        // @includeifflagged DADAOBJ_LABELS
+        
+        
+        DADAOBJ_CLASS_ATTR_CHAR_SUBSTRUCTURE(c, type, "showaxeslabels",0, t_dadaobj, m_grid, t_grid_manager, show_axes_labels);
+        CLASS_ATTR_STYLE_LABEL(c,"showaxeslabels",0,"onoff","Show Axes Labels");
+        CLASS_ATTR_DEFAULT_SAVE(c,"showaxeslabels",0, "0");
+        CLASS_ATTR_CATEGORY(c, "showaxeslabels", 0, "Axes And Grid");
+        CLASS_ATTR_ACCESSORS(c, "showaxeslabels", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_showaxeslabels : (method)dadaobj_pxjbox_setattr_showaxeslabels);
+        // @description Toggles the display of the x and y axes labels.
+        // @includeifflagged DADAOBJ_AXES+DADAOBJ_LABELS
+        
+        DADAOBJ_CLASS_ATTR_RGBA_SUBSTRUCTURE(c,type, "axeslabelscolor", 0, t_dadaobj, m_grid, t_grid_manager, j_axeslabelscolor);
+        CLASS_ATTR_DEFAULT_SAVE_PAINT(c, "axeslabelscolor", 0, "0.4 0.4 0.4 1.");
+        CLASS_ATTR_STYLE_LABEL(c, "axeslabelscolor", 0, "rgba", "Axes Labels Color");
+        CLASS_ATTR_ACCESSORS(c, "axeslabelscolor", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_axeslabelscolor : (method)dadaobj_pxjbox_setattr_axeslabelscolor);
+        CLASS_ATTR_CATEGORY(c, "axeslabelscolor", 0, "Color");
+        // @description Sets the color of the x and y axes labels.
+        // @includeifflagged DADAOBJ_AXES+DADAOBJ_LABELS
+        
+        DADAOBJ_CLASS_ATTR_DOUBLE_SUBSTRUCTURE(c, type, "axeslabelsfontsize",0, t_dadaobj, m_grid, t_grid_manager, axeslabelsfontsize);
+        CLASS_ATTR_STYLE_LABEL(c,"axeslabelsfontsize",0,"text","Axes Labels Font Size");
+        CLASS_ATTR_DEFAULT_SAVE(c,"axeslabelsfontsize",0, "10.");
+        CLASS_ATTR_CATEGORY(c, "axeslabelsfontsize", 0, "Axes And Grid");
+        CLASS_ATTR_ACCESSORS(c, "axeslabelsfontsize", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_axeslabelsfontsize : (method)dadaobj_pxjbox_setattr_axeslabelsfontsize);
+        // @description Sets the size of the axes labels font.
+        // @includeifflagged DADAOBJ_LABELS
+        
+        DADAOBJ_CLASS_ATTR_SYM_SUBSTRUCTURE(c,type, "xlabel", 0, t_dadaobj, m_grid, t_grid_manager, x_label);
+        CLASS_ATTR_DEFAULT_SAVE_PAINT(c, "xlabel", 0, "");
+        CLASS_ATTR_STYLE_LABEL(c, "xlabel", 0, "text", "X Axis Label");
+        CLASS_ATTR_ACCESSORS(c, "xlabel", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_xlabel : (method)dadaobj_pxjbox_setattr_xlabel);
+        CLASS_ATTR_CATEGORY(c, "xlabel", 0, "Axes And Grid");
+        // @description Sets the label for the x axis.
+        // @includeifflagged DADAOBJ_AXES+DADAOBJ_LABELS
+        
+        DADAOBJ_CLASS_ATTR_SYM_SUBSTRUCTURE(c,type, "ylabel", 0, t_dadaobj, m_grid, t_grid_manager, y_label);
+        CLASS_ATTR_DEFAULT_SAVE_PAINT(c, "ylabel", 0, "");
+        CLASS_ATTR_STYLE_LABEL(c, "ylabel", 0, "text", "Y Axis Label");
+        CLASS_ATTR_ACCESSORS(c, "ylabel", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_ylabel : (method)dadaobj_pxjbox_setattr_ylabel);
+        CLASS_ATTR_CATEGORY(c, "ylabel", 0, "Axes And Grid");
+        // @description Sets the label for the y axis.
+        // @includeifflagged DADAOBJ_AXES+DADAOBJ_LABELS
+        
+    }
+    
+
+	if (flags & DADAOBJ_PLAY) {
+		DADAOBJ_CLASS_ATTR_DOUBLE_SUBSTRUCTURE(c,type,"playstep",0, t_dadaobj, m_play, t_play_manager, play_step_ms);
+		CLASS_ATTR_STYLE_LABEL(c,"playstep",0,"text","Play Step (ms)");
+		CLASS_ATTR_DEFAULT_SAVE(c,"playstep",0,"50");
+		CLASS_ATTR_CATEGORY(c, "playstep", 0, "Behavior");
+		// @description Sets the play step interval in milliseconds.
+		// @includeifflagged DADAOBJ_PLAY
+        
+        if (flags & DADAOBJ_BORDER) {
+            DADAOBJ_CLASS_ATTR_RGBA_SUBSTRUCTURE(c,type, "playcolor", 0, t_dadaobj, m_play, t_play_manager, play_color);
+            CLASS_ATTR_DEFAULT_SAVE_PAINT(c, "playcolor", 0, "0.34 0.87 0.20 1.");
+            CLASS_ATTR_STYLE_LABEL(c, "playcolor", 0, "rgba", "Play Color");
+            CLASS_ATTR_CATEGORY(c, "playcolor", 0, "Color");
+            // @description Sets the playing color.
+            // @includeifflagged DADAOBJ_PLAY+DADAOBJ_BORDER
+        }
+	}  
+}
+
+void dadaobj_mutex_lock(t_dadaobj *r_ob)
+{
+	systhread_mutex_lock(r_ob->l_mutex);
+}
+
+void dadaobj_mutex_unlock(t_dadaobj *r_ob)
+{
+	systhread_mutex_unlock(r_ob->l_mutex);
+}
+
+
+t_object *dadaobj_get_patcher(t_dadaobj *r_ob)
+{
+    t_object *mypatcher = NULL;
+    object_obex_lookup(r_ob->orig_obj, gensym("#P"), &mypatcher);
+    return mypatcher;
+}
+
+
+t_object *dadaobj_get_firstview(t_dadaobj *r_ob)
+{
+    t_object *mypatcher = dadaobj_get_patcher(r_ob);
+    if (mypatcher)
+        return jpatcher_get_firstview(mypatcher);
+    else
+        return NULL;
+}
+
+long dadaobj_anything_handle_domain_or_range(t_dadaobj *r_ob, t_symbol *router, t_llll *args, long outletnum)
+{
+    if (outletnum < 0)
+        outletnum = r_ob->m_interface.notifications_out_num;
+    
+    if (router == gensym("getdomain")) {
+        // set the displayed domain (only works for first view)
+        t_object *view = jpatcher_get_firstview((t_object *)gensym("#P")->s_thing);
+        double min, max;
+        t_llll *res = llll_get();
+        dadaobj_getdomain(r_ob, view, &min, &max);
+        
+        llll_appendsym(res, _llllobj_sym_domain);
+        llll_appenddouble(res, min);
+        llll_appenddouble(res, max);
+        llllobj_outlet_llll(r_ob->orig_obj, LLLL_OBJ_UI, outletnum, res);
+        llll_free(res);
+        return 1;
+        
+    } else if (router == gensym("getrange")) {
+        // set the displayed domain (only works for first view)
+        t_object *view = jpatcher_get_firstview((t_object *)gensym("#P")->s_thing);
+        double min, max;
+        t_llll *res = llll_get();
+        dadaobj_getrange(r_ob, view, &min, &max);
+        
+        llll_appendsym(res, _llllobj_sym_range);
+        llll_appenddouble(res, min);
+        llll_appenddouble(res, max);
+        llllobj_outlet_llll(r_ob->orig_obj, LLLL_OBJ_UI, outletnum, res);
+        llll_free(res);
+        return 1;
+        
+    } else if (router == _llllobj_sym_domain && args->l_size >= 2 && is_hatom_number(&args->l_head->l_hatom) && is_hatom_number(&args->l_head->l_next->l_hatom)) {
+        // set the displayed domain
+        double min = hatom_getdouble(&args->l_head->l_hatom);
+        double max = hatom_getdouble(&args->l_head->l_next->l_hatom);
+        
+        FOR_ALL_VIEWS(r_ob)
+            dadaobj_setdomain(r_ob, view, min, max);
+        return 1;
+
+    } else if (router == _llllobj_sym_domain && args->l_size >= 2 && hatom_gettype(&args->l_head->l_hatom) == H_SYM && is_hatom_number(&args->l_head->l_next->l_hatom)) {
+        // set the displayed domain start
+        double min, max;
+        double new_val = hatom_getdouble(&args->l_head->l_next->l_hatom);
+        
+        if (hatom_getsym(&args->l_head->l_hatom) == _llllobj_sym_start) {
+            FOR_ALL_VIEWS(r_ob) {
+                dadaobj_getdomain(r_ob, view, &min, &max);
+                dadaobj_setdomain(r_ob, view, new_val, new_val + (max - min));
+            }
+            return 1;
+        } else if (hatom_getsym(&args->l_head->l_hatom) == _llllobj_sym_end) {
+            FOR_ALL_VIEWS(r_ob) {
+                dadaobj_getdomain(r_ob, view, &min, &max);
+                dadaobj_setdomain(r_ob, view, new_val - (max - min), new_val);
+            }
+            return 1;
+        } else
+            return 0;
+
+    } else if (router == _llllobj_sym_range && args->l_size >= 2 && is_hatom_number(&args->l_head->l_hatom) && is_hatom_number(&args->l_head->l_next->l_hatom)) {
+        // set the displayed range
+        double min = hatom_getdouble(&args->l_head->l_hatom);
+        double max = hatom_getdouble(&args->l_head->l_next->l_hatom);
+        FOR_ALL_VIEWS(r_ob) dadaobj_setrange(r_ob, view, min, max);
+        return 1;
+
+    } else if (router == _llllobj_sym_range && args->l_size >= 2 && hatom_gettype(&args->l_head->l_hatom) == H_SYM && is_hatom_number(&args->l_head->l_next->l_hatom)) {
+        // set the displayed domain start
+        double min, max;
+        double new_val = hatom_getdouble(&args->l_head->l_next->l_hatom);
+        
+        if (hatom_getsym(&args->l_head->l_hatom) == _llllobj_sym_start) {
+            FOR_ALL_VIEWS(r_ob) {
+                dadaobj_getrange(r_ob, view, &min, &max);
+                dadaobj_setrange(r_ob, view, new_val, new_val + (max - min));
+            }
+            return 1;
+        } else if (hatom_getsym(&args->l_head->l_hatom) == _llllobj_sym_end) {
+            FOR_ALL_VIEWS(r_ob) {
+                dadaobj_getrange(r_ob, view, &min, &max);
+                dadaobj_setrange(r_ob, view, new_val - (max - min), new_val);
+            }
+            return 1;
+        } else
+            return 0;
+    
+    }
+    return 0;
+}
+
+
+
+
+// warning: also modifies <ll>
+long dadaobj_parse_export_png_syntax(t_dadaobj *r_ob, t_object *view, t_llll *ll, t_symbol **filename, long *dpi, double *width, double *height, t_pt *exportcenter)
+{
+    long canceled = 0;
+    *dpi = 72;
+    *filename = NULL;
+    
+    double domain_min = 0, domain_max = 100, range_min = 0, range_max = 100;
+    if (!view)
+        view = jpatcher_get_firstview((t_object *)gensym("#P")->s_thing);
+    dadaobj_getdomain(r_ob, view, &domain_min, &domain_max);
+    dadaobj_getrange(r_ob, view, &range_min, &range_max);
+    t_pt w = delta_coord_to_delta_pix(r_ob, build_pt(domain_max - domain_min, range_max - range_min));
+    
+    *width = w.x;
+    *height = fabs(w.y);
+
+    *exportcenter = build_pt(-(domain_min + domain_max)/2., -(range_min + range_max)/2.);
+    
+    t_llll *exportcenter_ll = NULL;
+    if (ll->l_head && hatom_gettype(&ll->l_head->l_hatom) == H_SYM) {
+        *filename = hatom_getsym(&ll->l_head->l_hatom);
+        llll_behead(ll);
+    }
+    llll_parseargs(r_ob->orig_obj, ll, "siddl", gensym("filename"), &filename, gensym("dpi"), &dpi, gensym("width"), &width, gensym("height"), &height, gensym("center"), &exportcenter_ll);
+    if (exportcenter_ll)
+        *exportcenter = llll_to_pt(exportcenter_ll);
+    
+    if (!(*filename) || (*filename) == gensym("")) {      // if no argument supplied, ask for file
+        char buf[MAX_PATH_CHARS], fullbuf[MAX_PATH_CHARS];
+        short path;
+        t_fourcc outtype = 0;
+        t_fourcc filetype[] = {'PNG ', 'PNGf'};
+        fullbuf[0] = 0;
+        strncpy_zero(buf, "export.png", MAX_PATH_CHARS);
+        if (saveasdialog_extended(buf, &path, &outtype, filetype, 3)) {    // non-zero: user cancelled
+            canceled = 1;
+        } else {
+            path_topotentialname(path, buf, fullbuf, false);
+        }
+        if (!strchr(fullbuf, '.')) {
+            strncat_zero(fullbuf, ".png", MAX_PATH_CHARS);
+        }
+        *filename = gensym(fullbuf);
+    }
+
+    llll_free(exportcenter_ll);
+    
+    return canceled;
+}
+
+
+void dadaobj_paint_background(t_dadaobj *r_ob, t_jgraphics *g, t_rect *rect)
+{
+    t_pt center_pix = coord_to_pix(r_ob, build_pt(rect->width/2., rect->height/2.), r_ob->m_zoom.center_offset);
+    
+    paint_background(r_ob->orig_obj, g, rect, &r_ob->m_bg.bgcolor, 0.);
+
+    if (r_ob->m_bg.bg_surface) {
+        t_jpattern *pat = jgraphics_pattern_create_for_surface(r_ob->m_bg.bg_surface);
+        double width = jgraphics_image_surface_get_width(r_ob->m_bg.bg_surface);
+        double height = jgraphics_image_surface_get_height(r_ob->m_bg.bg_surface);
+        t_jmatrix m;
+        jgraphics_matrix_init_translate(&m, -center_pix.x, -center_pix.y);
+        jgraphics_matrix_scale(&m, 1./r_ob->m_zoom.zoom.x, 1./r_ob->m_zoom.zoom.y);
+        jgraphics_pattern_set_matrix(pat, &m);
+        jgraphics_matrix_translate(&m, width/2, height/2.);
+        jgraphics_set_source(g, pat);
+        jgraphics_paint(g);
+        jgraphics_pattern_destroy(pat);
+    }
+}
+
+
+void dadaobj_paint_border(t_dadaobj *r_ob, t_jgraphics *g, t_rect *rect)
+{
+    if (r_ob->m_bg.show_border) {
+        paint_border(r_ob->orig_obj, g, rect, r_ob->m_play.is_playing ? &r_ob->m_play.play_color : &r_ob->m_bg.bordercolor, (r_ob->m_interface.has_focus && r_ob->m_bg.show_focus) ? 2.5 : 1, 0.);
+    }
+}
+
+
+// buf mus be sized at least 16 chars
+void dadaobj_double_to_string(double val, char *buf, int max_decimals, char also_remove_dots_for_ints)
+{
+    char thisnum[32];
+    long j;
+    
+    if (max_decimals == -1)
+        snprintf_zero(thisnum, 32, "%f", val);
+    else
+        snprintf_zero(thisnum, 32, "%.*f", max_decimals, val);
+    
+    for (j = MIN(31, strlen(thisnum) - 1); j >= 0; j--) {
+        if (thisnum[j] == '0')
+            thisnum[j] = 0;
+        else if (thisnum[j] == '.' && also_remove_dots_for_ints) {
+            thisnum[j] = 0;
+            break;
+        } else
+            break;
+    }
+    
+    snprintf_zero(buf, 16, "%s", thisnum);
+}
+
+
+
+void dadaobj_paint_grid(t_dadaobj *r_ob, t_object *view, t_rect rect, t_pt center)
+{
+    if (!r_ob->m_grid.show_grid && !r_ob->m_grid.show_axes && !r_ob->m_grid.show_labels)
+        return;
+        
+    t_jgraphics *g = jbox_start_layer(r_ob->orig_obj, view, gensym("grid"), rect.width, rect.height);
+    
+    if (g) {
+        if (r_ob->m_grid.show_grid) {
+            
+            double pix;
+            t_pt pix_step = build_pt(r_ob->m_grid.grid_size.x * r_ob->m_zoom.zoom.x, r_ob->m_grid.grid_size.y * r_ob->m_zoom.zoom.y);
+            
+            if (pix_step.x <= 0) pix_step.x = 1;
+            if (pix_step.y <= 0) pix_step.y = 1;
+            
+            for (pix = center.x; pix < rect.width; pix += pix_step.x)
+                if (pix > 0 && pix < rect.width)
+                    paint_line_fast(g, r_ob->m_grid.j_gridcolor, pix, 0, pix, rect.height, 1);
+            
+            for (pix = center.x - pix_step.x; pix > 0; pix -= pix_step.x)
+                if (pix > 0 && pix < rect.width)
+                    paint_line_fast(g, r_ob->m_grid.j_gridcolor, pix, 0, pix, rect.height, 1);
+            
+            for (pix = center.y; pix < rect.height; pix += pix_step.y)
+                if (pix > 0 && pix < rect.height)
+                    paint_line_fast(g, r_ob->m_grid.j_gridcolor, 0, pix, rect.width, pix, 1);
+            
+            for (pix = center.y - pix_step.y; pix > 0; pix -= pix_step.y)
+                if (pix > 0 && pix < rect.height)
+                    paint_line_fast(g, r_ob->m_grid.j_gridcolor, 0, pix, rect.width, pix, 1);
+        }
+        
+        if (r_ob->m_grid.show_axes) {
+            t_pt origin = get_center_pix(r_ob, view, NULL);
+            const double PAD = 10, PAD_2 = 3;
+            
+            if (origin.x > -PAD && origin.x < rect.width + PAD)
+                paint_arrow(g, r_ob->m_grid.j_axescolor, origin.x, rect.height, origin.x, 0 + PAD_2, 1, DADA_AXIS_ARROW_SIZE, DADA_AXIS_ARROW_SIZE);
+
+            if (origin.y > -PAD && origin.y < rect.height + PAD)
+                paint_arrow(g, r_ob->m_grid.j_axescolor, 0, origin.y, rect.width - PAD_2, origin.y, 1, DADA_AXIS_ARROW_SIZE, DADA_AXIS_ARROW_SIZE);
+        }
+        
+        if (r_ob->m_grid.show_labels || (r_ob->m_grid.show_axes && r_ob->m_grid.show_axes_labels)) {
+            t_pt origin = get_center_pix(r_ob, view, NULL);
+            t_pt coord = build_pt(0, 0);
+            t_pt pix_step = build_pt(r_ob->m_grid.grid_size.x * r_ob->m_zoom.zoom.x, r_ob->m_grid.grid_size.y * r_ob->m_zoom.zoom.y);
+            t_jfont *jf_labels = jfont_create_debug("Arial", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL, r_ob->m_grid.labelsfontsize);
+            double pix;
+            char text[16];
+            char labels_are_on_axes = r_ob->m_grid.show_axes;
+            
+            const double PIX_THRESH = 5 * r_ob->m_grid.labelsfontsize;
+            double AXIS_PAD = 3;
+            
+            double y_pos = CLAMP(origin.y, 0, rect.height);
+            double x_pos = CLAMP(origin.x, 0, rect.width);
+            long y_align = (y_pos > rect.height/2 ? -1 : 1);
+            long x_align = (x_pos > rect.width/2 ? -1 : 1);
+            
+            if (!labels_are_on_axes) {
+                y_pos = rect.height;
+                y_align = -1;
+                x_pos = 0;
+                x_align = 1;
+            }
+            
+            
+            if (r_ob->m_grid.show_labels) {
+                long x_step = pix_step.x <= 0.01 ? 0 : (pix_step.x < PIX_THRESH ? PIX_THRESH/pix_step.x : 1);
+                long y_step = pix_step.y <= 0.01 ? 0 : (pix_step.y < PIX_THRESH ? PIX_THRESH/pix_step.y : 1);
+                
+                pix_step.x *= x_step;
+                pix_step.y *= y_step;
+                
+                if (pix_step.x > 0) {
+                    for (pix = center.x + pix_step.x * labels_are_on_axes, coord = build_pt(x_step * r_ob->m_grid.grid_size.x * labels_are_on_axes, 0); pix < rect.width; pix += pix_step.x, coord.x += x_step * r_ob->m_grid.grid_size.x)
+                        if (pix > 0 && pix < rect.width) {
+                            dadaobj_double_to_string(coord.x, text, 4, true);
+                            write_text(g, jf_labels, r_ob->m_grid.j_labelscolor, text, pix - 100, y_pos - (y_align < 0) * 100 + (y_align < 0 ? -AXIS_PAD : AXIS_PAD), 200, 100, JGRAPHICS_TEXT_JUSTIFICATION_HCENTERED | (y_align < 0 ? JGRAPHICS_TEXT_JUSTIFICATION_BOTTOM : JGRAPHICS_TEXT_JUSTIFICATION_TOP), true, false);
+                        }
+                    
+                    for (pix = center.x - pix_step.x, coord = build_pt(-x_step * r_ob->m_grid.grid_size.x, 0); pix > 0; pix -= pix_step.x, coord.x -= x_step * r_ob->m_grid.grid_size.x)
+                        if (pix > 0 && pix < rect.width) {
+                            dadaobj_double_to_string(coord.x, text, 4, true);
+                            write_text(g, jf_labels, r_ob->m_grid.j_labelscolor, text, pix - 100, y_pos - (y_align < 0) * 100 + (y_align < 0 ? -AXIS_PAD : AXIS_PAD), 200, 100, JGRAPHICS_TEXT_JUSTIFICATION_HCENTERED | (y_align < 0 ? JGRAPHICS_TEXT_JUSTIFICATION_BOTTOM : JGRAPHICS_TEXT_JUSTIFICATION_TOP), true, false);
+                        }
+                }
+                
+                if (pix_step.y > 0) {
+                    for (pix = center.y + pix_step.y * labels_are_on_axes, coord = build_pt(0, -y_step * r_ob->m_grid.grid_size.y * labels_are_on_axes); pix < rect.height; pix += pix_step.y, coord.y -= y_step * r_ob->m_grid.grid_size.y)
+                        if (pix > 0 && pix < rect.height) {
+                            dadaobj_double_to_string(coord.y, text, 4, true);
+                            write_text(g, jf_labels, r_ob->m_grid.j_labelscolor, text, x_pos - (x_align < 0) * 100 + (x_align < 0 ? -AXIS_PAD : AXIS_PAD), pix - 100, 100, 200, JGRAPHICS_TEXT_JUSTIFICATION_VCENTERED | (x_align < 0 ? JGRAPHICS_TEXT_JUSTIFICATION_RIGHT : JGRAPHICS_TEXT_JUSTIFICATION_LEFT), true, false);
+                        }
+                    
+                    for (pix = center.y - pix_step.y, coord = build_pt(0, y_step * r_ob->m_grid.grid_size.y); pix > 0; pix -= pix_step.y, coord.y += y_step * r_ob->m_grid.grid_size.y)
+                        if (pix > 0 && pix < rect.height) {
+                            dadaobj_double_to_string(coord.y, text, 4, true);
+                            write_text(g, jf_labels, r_ob->m_grid.j_labelscolor, text, x_pos - (x_align < 0) * 100 + (x_align < 0 ? -AXIS_PAD : AXIS_PAD), pix - 100, 100, 200, JGRAPHICS_TEXT_JUSTIFICATION_VCENTERED | (x_align < 0 ? JGRAPHICS_TEXT_JUSTIFICATION_RIGHT : JGRAPHICS_TEXT_JUSTIFICATION_LEFT), true, false);
+                        }
+                }
+                
+                jfont_destroy(jf_labels);
+            }
+            
+            if (r_ob->m_grid.show_axes && r_ob->m_grid.show_axes_labels) {
+                t_jfont *jf_labels = jfont_create_debug("Arial", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL, r_ob->m_grid.axeslabelsfontsize);
+                if (r_ob->m_grid.x_label && r_ob->m_grid.x_label->s_name && strlen(r_ob->m_grid.x_label->s_name) > 0)
+                    write_text(g, jf_labels, r_ob->m_grid.j_axeslabelscolor, r_ob->m_grid.x_label->s_name, 0, y_align < 0 ? y_pos + AXIS_PAD : 0, rect.width  - AXIS_PAD, y_align < 0 ? rect.height - (y_pos + AXIS_PAD) : y_pos - AXIS_PAD, JGRAPHICS_TEXT_JUSTIFICATION_RIGHT | (y_align < 0 ? JGRAPHICS_TEXT_JUSTIFICATION_TOP : JGRAPHICS_TEXT_JUSTIFICATION_BOTTOM), true, true);
+                if (r_ob->m_grid.y_label && r_ob->m_grid.y_label->s_name && strlen(r_ob->m_grid.y_label->s_name) > 0)
+                    write_text_in_vertical(g, jf_labels, r_ob->m_grid.j_axeslabelscolor, r_ob->m_grid.y_label->s_name, x_align > 0 ? 0 : x_pos + AXIS_PAD, AXIS_PAD, x_align > 0 ? x_pos - AXIS_PAD : rect.width - (x_pos + AXIS_PAD), rect.height - AXIS_PAD, JGRAPHICS_TEXT_JUSTIFICATION_TOP | (x_align > 0 ? JGRAPHICS_TEXT_JUSTIFICATION_RIGHT : JGRAPHICS_TEXT_JUSTIFICATION_LEFT), 1.);
+                jfont_destroy(jf_labels);
+            }
+        }
+        
+        
+        jbox_end_layer(r_ob->orig_obj, view, gensym("grid"));
+    }
+    jbox_paint_layer(r_ob->orig_obj, view, gensym("grid"), 0., 0.);	// position of the layer
+}
+
+void dadaobj_jbox_set_state_and_free_llll(t_object *x, t_llll *ll)
+{
+    t_dadaobj *r_ob = &((t_dadaobj_jbox *)x)->d_ob;
+    r_ob->set_state(x, ll);
+    llll_free(ll);
+}
+
+void dadaobj_jbox_read(t_dadaobj_jbox *x, t_symbol *s, long argc, t_atom *argv)
+{
+    t_dadaobj *r_ob = &x->d_ob;
+    if (r_ob->set_state) {
+        t_symbol *filename = NULL;
+        if ((argc >= 1) && (atom_gettype(argv) == A_SYM))
+            filename = atom_getsym(argv);
+        llll_read(r_ob->orig_obj, filename, (read_fn)dadaobj_jbox_set_state_and_free_llll);
+        jbox_invalidate_layer(r_ob->orig_obj, NULL, gensym("room"));
+    } else {
+        object_error(r_ob->orig_obj, "Read method is not supported.");
+    }
+}
+
+
+void dadaobj_jbox_write(t_dadaobj_jbox *x, t_symbol *s, long argc, t_atom *argv)
+{
+    t_dadaobj *r_ob = &x->d_ob;
+    if (r_ob->get_state) {
+        t_llll *ll;
+        t_symbol *filename = NULL;
+        if ((argc >= 1) && (atom_gettype(argv) == A_SYM))
+            filename = atom_getsym(argv);
+        ll =  r_ob->get_state(r_ob->orig_obj);
+        llll_writenative(r_ob->orig_obj, filename, ll);
+    } else {
+        object_error(r_ob->orig_obj, "Writing methods are not supported.");
+    }
+}
+
+void dadaobj_jbox_writetxt(t_dadaobj_jbox *x, t_symbol *s, long argc, t_atom *argv)
+{
+    t_dadaobj *r_ob = &x->d_ob;
+    if (r_ob->get_state) {
+        t_llll *arguments = llllobj_parse_llll((t_object *) x, LLLL_OBJ_VANILLA, NULL, argc, argv, LLLL_PARSE_CLONE);
+        t_llll *state_ll = r_ob->get_state(r_ob->orig_obj);
+        llll_writetxt(r_ob->orig_obj, state_ll, arguments);
+    } else {
+        object_error(r_ob->orig_obj, "Writing methods are not supported.");
+    }
+}
+
+void dadaobj_jbox_readsinglesymbol(t_dadaobj_jbox *x, t_symbol *s, long argc, t_atom *argv)
+{
+    t_atom a;
+    char *text = NULL;
+    long size;
+    atom_gettext_debug(argc, argv, &size, &text, 0);
+    if (size > 0) {
+        t_symbol *s = gensym(text);
+        atom_setsym(&a, s);
+        bach_freeptr(text);
+        dadaobj_jbox_read(x, NULL, 1, &a);
+    }
+}
+
+
+t_atom_long dadaobj_jbox_acceptsdrag(t_dadaobj_jbox *x, t_object *drag, t_object *view)
+{
+    if (jdrag_matchdragrole(drag, gensym("imagefile"), 0) && x->d_ob.flags & DADAOBJ_BGIMAGE) {
+        jdrag_box_add(drag, (t_object *)x, gensym("bgimage"));
+        return true;
+    } else if (true) {
+        jdrag_box_add(drag, (t_object *)x, gensym("readsinglesymbol"));
+        return true;
+    }
+    return false;
+}
+
+
+long dadaitem_identifier_eq(t_dadaitem_identifier id1, t_dadaitem_identifier id2)
+{
+    if (id1.type != id2.type)
+        return 0;
+    
+    if (id1.idx != id2.idx)
+        return 0;
+    
+    if (id1.secondary_idx != id2.secondary_idx)
+        return 0;
+
+    if (id1.tertiary_idx != id2.tertiary_idx)
+        return 0;
+    
+    return 1;
+}
+

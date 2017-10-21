@@ -1,0 +1,643 @@
+{
+  "dada.base": {
+    "digest": "SQLite database",
+    "module": "dada",
+    "category": [
+      "dada",
+      "dada storage",
+      "dada corpus-based tools"
+    ],
+    "keywords": [
+      "database",
+      "llll",
+      "storage"
+    ],
+    "seealso": [
+      "bach.shelf",
+      "dada.segment",
+      "dada.catart",
+      "dada.distances"
+    ]
+  },
+  "dada.bodies": {
+    "digest": "Music via gravitation",
+    "module": "dada",
+    "category": [
+      "dada",
+      "dada interfaces",
+      "dada geometry"
+    ],
+    "keywords": [
+      "body",
+      "bodies",
+      "gravity",
+      "attract",
+      "law",
+      "Newton",
+      "universe",
+      "test",
+      "play"
+    ],
+    "seealso": [
+      "dada.bounce",
+      "dada.kaleido",
+      "dada.life"
+    ]
+  },
+  "dada.boids": {
+    "digest": "Swarm intelligence modeling",
+    "module": "dada",
+    "category": [
+      "dada",
+      "dada interfaces",
+      "dada rule-based systems"
+    ],
+    "keywords": [
+      "boids",
+      "spat",
+      "spatialization",
+      "label",
+      "text",
+      "icon",
+      "orchestra",
+      "instrument",
+      "mixer",
+      "mix"
+    ],
+    "seealso": [
+      "bach.wordcloud"
+    ]
+  },
+  "dada.bounce": {
+    "digest": "Bounce balls in 2D chambers",
+    "module": "dada",
+    "category": [
+      "dada",
+      "dada interfaces",
+      "dada geometry"
+    ],
+    "keywords": [
+      "bounce",
+      "wall",
+      "chamber"
+    ],
+    "seealso": [
+      "dada.kaleido",
+      "dada.bodies"
+    ]
+  },
+  "dada.catart": {
+    "digest": "Symbolic concatenative synthesis interface",
+    "module": "dada",
+    "category": [
+      "dada",
+      "dada interfaces",
+      "dada corpus-based tools",
+      "dada geometry"
+    ],
+    "keywords": [
+      "catart",
+      "corpus",
+      "database",
+      "concatenative",
+      "synthesis",
+      "exploration"
+    ],
+    "seealso": [
+      "dada.base",
+      "dada.segment",
+      "dada.distances"
+    ]
+  },
+  "dada.distances": {
+    "digest": "Distance-based representation of points",
+    "module": "dada",
+    "category": [
+      "dada",
+      "dada interfaces",
+      "dada corpus-based tools",
+      "dada geometry"
+    ],
+    "keywords": [
+      "distances",
+      "corpus",
+      "database",
+      "map",
+      "scaling",
+      "graph",
+      "exploration"
+    ],
+    "seealso": [
+      "dada.base",
+      "dada.segment",
+      "dada.catart"
+    ]
+  },
+  "dada.kaleido": {
+    "digest": "Kaleidoscope interface",
+    "module": "dada",
+    "category": [
+      "dada",
+      "dada interfaces",
+      "dada geometry"
+    ],
+    "keywords": [
+      "kaleidoscope",
+      "reflection",
+      "mirror",
+      "virtual",
+      "chamber"
+    ],
+    "seealso": [
+      "dada.bounce",
+      "dada.bodies",
+      "bach.tonnetz"
+    ]
+  },
+  "dada.life": {
+    "digest": "2D cellular automata",
+    "module": "dada",
+    "category": [
+      "dada",
+      "dada interfaces",
+      "dada rule-based systems"
+    ],
+    "keywords": [
+      "life",
+      "Conway",
+      "cellular automaton",
+      "cellular automata"
+    ],
+    "seealso": [
+      "dada.life.info",
+      "bach.tonnetz",
+      "cage.life",
+      "dada.kaleido"
+    ]
+  },
+  "dada.machines": {
+    "digest": "Machine networks",
+    "module": "dada",
+    "category": [
+      "dada",
+      "dada interfaces",
+      "dada rule-based systems"
+    ],
+    "keywords": [
+      "graph",
+      "network",
+      "label",
+      "node",
+      "machine",
+      "modify",
+      "change",
+      "roll",
+      "score"
+    ],
+    "seealso": [
+      "cage.bounce"
+    ]
+  },
+  "dada.multibrot": {
+    "digest": "Mandelbrot set and its generalizations",
+    "module": "dada",
+    "category": [
+      "dada",
+      "dada interfaces",
+      "dada rule-based systems"
+    ],
+    "keywords": [
+      "surface",
+      "multibrot",
+      "fractal",
+      "mandelbrot",
+      "set",
+      "julia",
+      "series",
+      "converge",
+      "convergence",
+      "diverge",
+      "divergence"
+    ],
+    "seealso": [
+      "bach.nodes"
+    ]
+  },
+  "dada.music~": {
+    "digest": "The discotheque of Babel",
+    "module": "dada",
+    "category": [
+      "dada interfaces",
+      "dada audio"
+    ],
+    "keywords": [
+      "music~",
+      "music",
+      "babel",
+      "disco",
+      "discoteque",
+      "browse",
+      "combinatorics",
+      "exploration"
+    ],
+    "seealso": [
+      "dada.terrain~"
+    ]
+  },
+  "dada.nodes": {
+    "digest": "Interpolate pitches with a 2D interface",
+    "module": "dada",
+    "category": [
+      "dada",
+      "dada interfaces",
+      "dada geometry"
+    ],
+    "keywords": [
+      "node",
+      "distance",
+      "surface",
+      "pitch",
+      "explore",
+      "node",
+      "interpolate"
+    ],
+    "seealso": [
+      "bach.tonnetz",
+      "nodes"
+    ]
+  },
+  "dada.platform": {
+    "digest": "2D platform games interface",
+    "module": "dada",
+    "category": [
+      "dada",
+      "dada interfaces",
+      "dada rule-based systems"
+    ],
+    "keywords": [
+      "platform",
+      "game",
+      "videogame",
+      "video",
+      "sprite",
+      "coin",
+      "block"
+    ],
+    "seealso": [
+      "dada.kaleido"
+    ]
+  },
+  "dada.segment": {
+    "digest": "Score segmentation",
+    "module": "dada",
+    "category": [
+      "dada segmentation",
+      "dada corpus-based tools"
+    ],
+    "keywords": [
+      "score",
+      "segment",
+      "chunk",
+      "grain",
+      "split"
+    ],
+    "seealso": [
+      "dada.match",
+      "dada.catart",
+      "dada.base",
+      "dada.analysis.centroid",
+      "dada.analysis.loudness",
+      "dada.analysis.count",
+      "dada.analysis.spread"
+    ]
+  },
+  "dada.stage": {
+    "digest": "Spatial mixer representation",
+    "module": "dada",
+    "category": [
+      "dada interfaces",
+      "dada geometry"
+    ],
+    "keywords": [
+      "stage",
+      "spat",
+      "spatialization",
+      "label",
+      "text",
+      "icon",
+      "orchestra",
+      "instrument",
+      "mixer",
+      "mix"
+    ],
+    "seealso": [
+      "bach.wordcloud"
+    ]
+  },
+  "dada.terrain~": {
+    "digest": "Wave-terrain synthesis",
+    "module": "dada",
+    "category": [
+      "dada interfaces",
+      "dada geometry",
+      "dada audio"
+    ],
+    "keywords": [
+      "terrain~",
+      "wave",
+      "audio",
+      "terrain",
+      "interpolation"
+    ],
+    "seealso": [
+      "dada.terrain.ellipse~",
+      "dada.terrain.rect~",
+      "dada.terrain.segment~",
+      "dada.terrain.spiral~"
+    ]
+  },
+  "dada.analysis.centroid": {
+    "digest": "Symbolic centroid",
+    "module": "dada",
+    "category": [
+      "dada",
+      "dada abstractions",
+      "dada analysis"
+    ],
+    "keywords": [
+      "centroid",
+      "analysis",
+      "pitch",
+      "average"
+    ],
+    "seealso": [
+      "dada.segment",
+      "dada.catart",
+      "dada.analysis.spread"
+    ]
+  },
+  "dada.analysis.chroma": {
+    "digest": "Symbolic chroma",
+    "module": "dada",
+    "category": [
+      "dada",
+      "dada abstractions",
+      "dada analysis"
+    ],
+    "keywords": [
+      "analysis",
+      "chroma",
+      "vector",
+      "pitch class"
+    ],
+    "seealso": [
+      "dada.segment",
+      "dada.catart"
+    ]
+  },
+  "dada.analysis.count": {
+    "digest": "Count items",
+    "module": "dada",
+    "category": [
+      "dada",
+      "dada abstractions",
+      "dada analysis"
+    ],
+    "keywords": [
+      "analysis",
+      "count",
+      "notes",
+      "chords",
+      "measures",
+      "voices",
+      "items"
+    ],
+    "seealso": [
+      "dada.segment",
+      "dada.catart"
+    ]
+  },
+  "dada.analysis.duration": {
+    "digest": "Duration",
+    "module": "dada",
+    "category": [
+      "dada",
+      "dada abstractions",
+      "dada analysis"
+    ],
+    "keywords": [
+      "analysis",
+      "duration",
+      "milliseconds",
+      "total",
+      "time"
+    ],
+    "seealso": [
+      "dada.segment",
+      "dada.catart",
+      "dada.analysis.count"
+    ]
+  },
+  "dada.analysis.loudness": {
+    "digest": "Symbolic loudness",
+    "module": "dada",
+    "category": [
+      "dada",
+      "dada abstractions",
+      "dada analysis"
+    ],
+    "keywords": [
+      "analysis",
+      "loudness",
+      "velocity",
+      "duration",
+      "sum"
+    ],
+    "seealso": [
+      "dada.segment",
+      "dada.catart",
+      "dada.analysis.centroid",
+      "dada.analysis.spread"
+    ]
+  },
+  "dada.analysis.minmax": {
+    "digest": "Minimum and maximum of a parameter",
+    "module": "dada",
+    "category": [
+      "dada",
+      "dada abstractions",
+      "dada analysis"
+    ],
+    "keywords": [
+      "analysis",
+      "minimum",
+      "maximum",
+      "min",
+      "max",
+      "minima",
+      "maxima",
+      "cents",
+      "pitch",
+      "velocity",
+      "velocities",
+      "duration",
+      "onset"
+    ],
+    "seealso": [
+      "dada.segment",
+      "dada.catart"
+    ]
+  },
+  "dada.analysis.rhythmdistrib": {
+    "digest": "Rhythmic energy distribution",
+    "module": "dada",
+    "category": [
+      "dada",
+      "dada abstractions",
+      "dada analysis"
+    ],
+    "keywords": [
+      "analysis",
+      "onset",
+      "rhythm",
+      "distribution",
+      "normalize",
+      "region",
+      "energy",
+      "velocity"
+    ],
+    "seealso": [
+      "dada.segment",
+      "dada.catart"
+    ]
+  },
+  "dada.analysis.spread": {
+    "digest": "Symbolic spread",
+    "module": "dada",
+    "category": [
+      "dada",
+      "dada abstractions"
+    ],
+    "keywords": [
+      "spread",
+      "analysis",
+      "pitch",
+      "standard deviation",
+      "variance"
+    ],
+    "seealso": [
+      "dada.segment",
+      "dada.catart",
+      "dada.analysis.centroid"
+    ]
+  },
+  "dada.life.info": {
+    "digest": "Pattern information in 2D cellular automata",
+    "module": "dada",
+    "category": [
+      "dada",
+      "dada abstractions"
+    ],
+    "keywords": [
+      "life",
+      "Conway",
+      "cellular automaton",
+      "cellular automata",
+      "pattern",
+      "information"
+    ],
+    "seealso": [
+      "dada.life"
+    ]
+  },
+  "dada.terrain.ellipse~": {
+    "digest": "Paths along circles or ellipses",
+    "module": "dada",
+    "category": [
+      "dada",
+      "dada abstractions"
+    ],
+    "keywords": [
+      "terrain",
+      "coordinate",
+      "ellipse",
+      "line",
+      "sample",
+      "path",
+      "circle"
+    ],
+    "seealso": [
+      "dada.terrain~",
+      "dada.terrain.rect~",
+      "dada.terrain.segment~",
+      "dada.terrain.spiral~"
+    ]
+  },
+  "dada.terrain.rect~": {
+    "digest": "Paths along rectangles",
+    "module": "dada",
+    "category": [
+      "dada",
+      "dada abstractions"
+    ],
+    "keywords": [
+      "terrain",
+      "coordinate",
+      "rectangle",
+      "line",
+      "sample",
+      "path"
+    ],
+    "seealso": [
+      "dada.terrain~",
+      "dada.terrain.ellipse~",
+      "dada.terrain.segment~",
+      "dada.terrain.spiral~"
+    ]
+  },
+  "dada.terrain.segment~": {
+    "digest": "Paths along lines",
+    "module": "dada",
+    "category": [
+      "dada",
+      "dada abstractions"
+    ],
+    "keywords": [
+      "terrain",
+      "coordinate",
+      "segment",
+      "line",
+      "sample",
+      "path"
+    ],
+    "seealso": [
+      "dada.terrain~",
+      "dada.terrain.ellipse~",
+      "dada.terrain.rect~",
+      "dada.terrain.spiral~"
+    ]
+  },
+  "dada.terrain.spiral~": {
+    "digest": "Paths along spirals",
+    "module": "dada",
+    "category": [
+      "dada",
+      "dada abstractions"
+    ],
+    "keywords": [
+      "terrain",
+      "coordinate",
+      "spiral",
+      "line",
+      "sample",
+      "path",
+      "circle"
+    ],
+    "seealso": [
+      "dada.terrain~",
+      "dada.terrain.rect~",
+      "dada.terrain.segment~",
+      "dada.terrain.ellipse~"
+    ]
+  }
+}

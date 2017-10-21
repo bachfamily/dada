@@ -1,0 +1,4 @@
+{
+	"data_0000000000" : [ "(", "(", "wavenumber", 64, ")", "(", "wavelength", "_x_x_x_x_bach_float64_x_x_x_x_", 28836, 1072735191, ")", ")", "(", "(", "wavenumber", 124, ")", "(", "wavelength", "_x_x_x_x_bach_float64_x_x_x_x_", 2621, 1072840048, ")", ")", "(", "(", "wavenumber", 2, ")", "(", "wavelength", "_x_x_x_x_bach_float64_x_x_x_x_", 57672, 1075857326, ")", ")", "(", "(", "wavenumber", 9, ")", "(", "wavelength", "_x_x_x_x_bach_float64_x_x_x_x_", 44564, 1080034426, ")", ")" ],
+	"data_count" : [ 1 ]
+}

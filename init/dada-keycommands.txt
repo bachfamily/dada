@@ -1,0 +1,2 @@
+max definecommand D patcher inserttextobj dada.;
+max definecommandinstructions patcher D "dada object";

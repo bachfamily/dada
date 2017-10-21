@@ -30,3 +30,44 @@
 *.exe
 *.out
 *.app
+
+
+# Compiled source #
+###################
+*.mxo
+*.mxe
+*.mxe64
+*.a
+
+
+# OS generated files #
+######################
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+
+# XCode User Data #
+###################
+source/xcproj/bach.xcodeproj/project.xcworkspace
+source/xcproj/bach.xcodeproj/xcuserdata
+source/xcproj/bach.xcodeproj/*.pbxuser
+source/xcproj/bach.xcodeproj/*.mode*
+
+
+
+# Emacs temp files for .gitignore and .gitattributes #
+#########
+.g*~
+
+
+# Folders #
+###########
+source/lib/SimpleMatrix_v4.1
+source/lib/SimpleMatrix_v4.1/*
+
+
+

@@ -13,6 +13,7 @@ Acknowledgments
 ===================
 
 **dada** is part of Daniele Ghisi's PhD project, supported by:
+
 * `Ircam <http://www.ircam.fr>`_ (Paris, France)
 * `Université Pierre et Marie Curie <http://www.upmc.fr>`_ (UPMC Paris, France)
 * `Sorbonne Universités <http://www.sorbonne-university.com/>`_ (Paris, France)

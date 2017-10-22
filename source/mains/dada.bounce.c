@@ -133,10 +133,7 @@ typedef struct _bounce
 	char			show_room;
 	char			show_speed;
 	double			speed_display_factor;
-	long			middleC_octave;			///< Octave of the middle C. By default this is 4 (anglosaxon, so middle C = C4)
-											///  Only used if notes are displayed by name
-	char			note_names_style;
-	t_jrgba			j_roomcolor;
+    t_jrgba			j_roomcolor;
 
 	// blinking while playing
     long            hit_edge;
@@ -924,22 +921,10 @@ int C74_EXPORT main(void)
     // appropriate interpolation of the vertices' pitches.
 	
     
-	CLASS_ATTR_LONG(c,"middlecoctave",0, t_bounce, middleC_octave);
-	CLASS_ATTR_STYLE_LABEL(c,"middlecoctave",0,"text","Middle C Octave");
-	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"middlecoctave", 0, "4");
-	// @description Sets the octave number of the middle C. By default this is 4 (meaning that C4 = Do4 is the middle C);
-	// values of 3 and 5 are also encountered. This value is used if <m>showbounce</m> is set to "Note Name".
-
     CLASS_ATTR_CHAR(c,"indexaschannel",0, t_bounce, use_ball_idx_as_channel);
     CLASS_ATTR_STYLE_LABEL(c,"indexaschannel",0,"onoff","Use Ball Index As Channel");
     CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"indexaschannel",0,"0");
     // @description If active, the output MIDI channel is NOT the ball midichannel, rather the ball index.
-
-	CLASS_ATTR_CHAR(c,"notenamesstyle",0, t_bounce, note_names_style);
-	CLASS_ATTR_STYLE_LABEL(c,"notenamesstyle",0,"enumindex","Note Names Style");
-	CLASS_ATTR_ENUMINDEX(c,"notenamesstyle", 0, "Latin Anglo-Saxon");
-	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"notenamesstyle",0,"1");
-	// @description @copy BACH_DOC_NOTENAMESSTYLE
 
 	CLASS_ATTR_CHAR(c, "tonedivision", 0, t_bounce, tonedivision);
     CLASS_ATTR_STYLE_LABEL(c, "tonedivision", 0, "text", "Microtonal Division");

@@ -124,9 +124,6 @@ typedef struct _nodes
 	char			show_testers;
 	double			min_pitch;	///< Minimum displayed pitch in midicents (associated with the #min_color)
 	double			max_pitch;	///< Maximum displayed pitch in midicents (associated with the #max_color)
-	long			middleC_octave;			///< Octave of the middle C. By default this is 4 (anglosaxon, so middle C = C4)
-											///  Only used if notes are displayed by name
-	char			note_names_style;
 	char			show_velocity;
 
 	//	behavior
@@ -691,18 +688,6 @@ int C74_EXPORT main(void)
     CLASS_ATTR_STYLE_LABEL(c, "maxpitch", 0, "text", "Maximum Pitch");
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"maxpitch",0,"8400");
     // @description Sets the pitch corresponding to the violet color.
-
-	CLASS_ATTR_LONG(c,"middlecoctave",0, t_nodes, middleC_octave);
-	CLASS_ATTR_STYLE_LABEL(c,"middlecoctave",0,"text","Middle C Octave");
-	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"middlecoctave", 0, "4");
-	// @description Sets the octave number of the middle C. By default this is 4 (meaning that C4 = Do4 is the middle C);
-	// values of 3 and 5 are also encountered. This value is used if <m>shownodes</m> is set to "Note Name".
-
-	CLASS_ATTR_CHAR(c,"notenamesstyle",0, t_nodes, note_names_style);
-	CLASS_ATTR_STYLE_LABEL(c,"notenamesstyle",0,"enumindex","Note Names Style");
-	CLASS_ATTR_ENUMINDEX(c,"notenamesstyle", 0, "Latin Anglo-Saxon");
-	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"notenamesstyle",0,"1");
-	// @description @copy BACH_DOC_NOTENAMESSTYLE
 
 	CLASS_STICKY_ATTR_CLEAR(c, "category");
 
@@ -1517,7 +1502,7 @@ void nodes_paint(t_nodes *x, t_object *view){
 				t_jrgba color2 = build_jrgba(1, 1, 1, 0.9), color1 = get_grey(0.3);
 				t_jfont *jf = jfont_create_debug("Arial", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL, x->node_size * 6 * x->b_ob.d_ob.m_zoom.zoom.x);
 
-				ezmidicents2notename(x->middleC_octave, x->nodes[i].pitch_mc, x->note_names_style, true, &buf, x->tonedivision);
+				ezmidicents2notename(5, x->nodes[i].pitch_mc, k_NOTE_NAMES_ANGLOSAXON, true, &buf, x->tonedivision);
 				jfont_text_measure(jf, buf, &w, &h);
 				
 				paint_rectangle_rounded(g, color1, change_alpha(color2, x->b_ob.d_ob.m_interface.mousemove_item_identifier.type == DADA_NODES_ELEMENT_NODE && x->b_ob.d_ob.m_interface.mousemove_item_identifier.idx == i ? 1 : 0.7), pix.x - w/2 - 3, pix.y - h/2 - 3, w + 6, h + 6, 1, DADA_DEFAULT_RECT_ROUNDNESS, DADA_DEFAULT_RECT_ROUNDNESS);

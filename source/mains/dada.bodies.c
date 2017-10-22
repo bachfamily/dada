@@ -144,8 +144,6 @@ typedef struct _bodies
     
 
 	long		tone_division;
-	char		note_names_style;
-	long		middle_c_octave;
 	
 	// colors
 	char		show_bodies_id;
@@ -689,18 +687,6 @@ int C74_EXPORT main(void)
     // @description Sets the integration algorithm (approximation method). The choice is between
     // Euler, Leapfrog and Runge-Kutta 4.
 	
-	CLASS_ATTR_CHAR(c,"notenamesstyle",0, t_bodies, note_names_style);
-	CLASS_ATTR_STYLE_LABEL(c,"notenamesstyle",0,"enumindex","Note Names Style");
-	CLASS_ATTR_ENUMINDEX(c,"notenamesstyle", 0, "Latin Anglo-Saxon");
-	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"notenamesstyle",0,"1");
-    // @description @copy BACH_DOC_NOTENAMESSTYLE
-
-	
-	CLASS_ATTR_LONG(c, "middlecoctave", 0, t_bodies, middle_c_octave); 
-	CLASS_ATTR_STYLE_LABEL(c,"middlecoctave",0,"text","Middle C Octave");
-	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"middlecoctave",0,"4");
-    // @description @copy BACH_DOC_MIDDLECOCTAVE
-
 	CLASS_ATTR_CHAR(c,"hidewhileplaying",0, t_bodies, hide_while_running);
 	CLASS_ATTR_STYLE_LABEL(c,"hidewhileplaying",0,"onoff","Hide While Playing");
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"hidewhileplaying",0,"0");
@@ -951,7 +937,7 @@ void compute_label_for_arrownote(t_bodies *x, long body_id, long arrownote_id){
 		t_jfont *jf_notes = jfont_create("Arial", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL, 11);
 		t_rational screen_acc = long2rat(0);
 		mc_to_screen_approximations_do(x->tone_division, k_ACC_AUTO, x->body[body_id].arrownote[arrownote_id].midicents, &screen_mc, &screen_acc, NULL, NULL);
-		midicents2notename(x->middle_c_octave, screen_mc, screen_acc, x->note_names_style, true, &notename);
+		midicents2notename(5, screen_mc, screen_acc, k_NOTE_NAMES_ANGLOSAXON, true, &notename);
 		jfont_text_measure(jf_notes, notename, &width, &height);
 		t_pt textpt = get_topleft_angle_for_writing_around_the_clock(build_pt(x->body[body_id].r_it.coord.x, x->body[body_id].r_it.coord.y),
 																	 x->body[body_id].radius + DADA_BODIES_ARROWNOTE_ADDITIONAL_RADIUS + 2, x->body[body_id].arrownote[arrownote_id].angle, width, height);

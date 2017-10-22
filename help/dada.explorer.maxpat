@@ -9,7 +9,7 @@
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 444.0, 208.0, 500.0, 476.0 ],
+		"rect" : [ 444.0, 208.0, 758.0, 512.0 ],
 		"bgcolor" : [ 1.0, 1.0, 1.0, 0.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 1,
@@ -38,18 +38,6 @@
 		"style" : "",
 		"subpatcher_template" : "",
 		"boxes" : [ 			{
-				"box" : 				{
-					"id" : "obj-67",
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 491.0, 205.0, 50.0, 22.0 ],
-					"style" : ""
-				}
-
-			}
-, 			{
 				"box" : 				{
 					"fontname" : "Arial",
 					"fontsize" : 12.0,
@@ -271,11 +259,11 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ -24.5, 1328.5, 587.0, 320.0 ],
+					"patching_rect" : [ -24.5, 1328.5, 489.778137, 267.0 ],
 					"textcolor" : [ 0.25, 0.25, 0.25, 1.0 ],
 					"valign" : 3,
 					"vscatter" : 0.5,
-					"whole_wordcloud_data_0000000000" : [ "(", "analysis", "attract", "audio", "average", "babel", "block", "bodies", "body", "boids", "bounce", "browse", "catart", "cellular automata", "cellular automaton", "centroid", "cents", "chamber", "change", "chords", "chroma", "chunk", "circle", "coin", "concatenative", "converge", "convergence", "Conway", "coordinate", "corpus", "count", "database", "disco", "discoteque", "distance", "distances", "distribution", "diverge", "divergence", "duration", "ellipse", "energy", "explore", "fractal", "game", "grain", "graph", "gravity", "icon", "information", "instrument", "interpolate", "interpolation", "items", "julia", "kaleidoscope", "label", "law", "life", "line", "llll", "loudness", "machine", "mandelbrot", "map", "max", "maxima", "maximum", "measures", "milliseconds", "min", "minima", "minimum", "mirror", "mix", "mixer", "modify", "multibrot", "music", "music~", "network", "Newton", "node", "normalize", "notes", "onset", "orchestra", "path", "pattern", "pitch", "pitch class", "platform", "play", "rectangle", "reflection", "region", "rhythm", "roll", "sample", "scaling", "score", "segment", "series", "spat", "spatialization", "spiral", "split", "spread", "sprite", "stage", "standard deviation", "storage", "sum", "surface", "synthesis", "terrain", "terrain~", "test", "text", "time", "total", "universe", "variance", "vector", "velocities", "velocity", "video", "videogame", "virtual", "voices", "wall", "wave", ")", "(", 8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 1, 1, 1, 1, 2, 1, 1, 1, 1, 2, 4, 2, 1, 3, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 3, 1, 2, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 3, 1, 1, 2, 2, 4, 1, 4, 1, 1, 1, 1, 1, 1, 1, 1, 4, 1, 2, 2, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 5, 1, 1, 2, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, ")" ],
+					"whole_wordcloud_data_0000000000" : [ "(", "analysis", "attract", "audio", "average", "babel", "block", "bodies", "body", "boids", "bounce", "browse", "catart", "cellular automata", "cellular automaton", "centroid", "cents", "chamber", "change", "chords", "chroma", "chunk", "circle", "coin", "combinatorics", "concatenative", "converge", "convergence", "Conway", "coordinate", "corpus", "count", "database", "disco", "discoteque", "distance", "distances", "distribution", "diverge", "divergence", "duration", "ellipse", "energy", "exploration", "explore", "fractal", "game", "grain", "graph", "gravity", "icon", "information", "instrument", "interpolate", "interpolation", "items", "julia", "kaleidoscope", "label", "law", "life", "line", "llll", "loudness", "machine", "mandelbrot", "map", "max", "maxima", "maximum", "measures", "milliseconds", "min", "minima", "minimum", "mirror", "mix", "mixer", "modify", "multibrot", "music", "music~", "network", "Newton", "node", "normalize", "notes", "onset", "orchestra", "path", "pattern", "pitch", "pitch class", "platform", "play", "rectangle", "reflection", "region", "rhythm", "roll", "sample", "scaling", "score", "segment", "series", "spat", "spatialization", "spiral", "split", "spread", "sprite", "stage", "standard deviation", "storage", "sum", "surface", "synthesis", "terrain", "terrain~", "test", "text", "time", "total", "universe", "variance", "vector", "velocities", "velocity", "video", "videogame", "virtual", "voices", "wall", "wave", ")", "(", 8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 4, 2, 1, 3, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 3, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 3, 1, 2, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 3, 1, 1, 2, 2, 4, 1, 4, 1, 1, 1, 1, 1, 1, 1, 1, 4, 1, 2, 2, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 5, 1, 1, 2, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, ")" ],
 					"whole_wordcloud_data_count" : [ 1 ]
 				}
 
@@ -598,8 +586,9 @@
 					"fontface" : 0,
 					"fontname" : "Arial",
 					"fontsize" : 13.0,
-					"hyperlinkcolor" : [ 0.086275, 0.309804, 0.52549, 1.0 ],
+					"hyperlinkcolor" : [ 0.0, 0.0, 0.0, 0.0 ],
 					"id" : "obj-20",
+					"ignoreclick" : 1,
 					"linkstart" : [ "O" ],
 					"maxclass" : "bach.hypercomment",
 					"numinlets" : 1,
@@ -819,7 +808,6 @@
 					"numoutlets" : 0,
 					"patching_rect" : [ 377.0, 205.0, 171.0, 21.0 ],
 					"style" : "",
-					"text" : "abstraction",
 					"textcolor" : [ 0.25, 0.25, 0.25, 1.0 ]
 				}
 
@@ -867,7 +855,6 @@
 					"numoutlets" : 0,
 					"patching_rect" : [ 341.0, 205.0, 46.0, 21.0 ],
 					"style" : "",
-					"text" : "Type:",
 					"textcolor" : [ 0.5, 0.5, 0.5, 1.0 ]
 				}
 
@@ -3092,7 +3079,6 @@
 					"presentation" : 1,
 					"presentation_rect" : [ 311.0, 237.0, 207.0, 21.0 ],
 					"style" : "",
-					"text" : "Keywords:",
 					"textcolor" : [ 0.5, 0.5, 0.5, 1.0 ]
 				}
 
@@ -3110,8 +3096,7 @@
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 341.0, 254.0, 474.0, 21.0 ],
 					"presentation" : 1,
-					"presentation_rect" : [ 311.0, 254.0, 594.0, 21.0 ],
-					"text" : "#analysis, #chroma, #vector, #pitch+class"
+					"presentation_rect" : [ 311.0, 254.0, 594.0, 21.0 ]
 				}
 
 			}
@@ -3166,7 +3151,6 @@
 					"filename" : "helpdetails.js",
 					"id" : "obj-7",
 					"ignoreclick" : 1,
-					"jsarguments" : [ "dada.analysis.chroma", 80 ],
 					"maxclass" : "jsui",
 					"numinlets" : 1,
 					"numoutlets" : 1,
@@ -4309,7 +4293,7 @@
 					"presentation_rect" : [ 133.714844, 9.0, 147.228943, 21.0 ],
 					"style" : "",
 					"text" : "Filter by keyword...",
-					"textcolor" : [ 0.0, 0.0, 0.0, 0.2 ]
+					"textcolor" : [ 1.0, 1.0, 1.0, 0.0 ]
 				}
 
 			}
@@ -9319,6 +9303,7 @@
 					"presentation_rect" : [ 134.714844, 11.0, 147.0, 19.0 ],
 					"rounded" : 0.0,
 					"style" : "",
+					"text" : "velocity",
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 					"wordwrap" : 0
 				}
@@ -9336,7 +9321,6 @@
 					"presentation" : 1,
 					"presentation_rect" : [ 311.0, 344.0, 207.0, 21.0 ],
 					"style" : "",
-					"text" : "You might be also interested in:",
 					"textcolor" : [ 0.5, 0.5, 0.5, 1.0 ]
 				}
 
@@ -9355,8 +9339,7 @@
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 341.0, 361.0, 474.0, 21.0 ],
 					"presentation" : 1,
-					"presentation_rect" : [ 311.0, 361.0, 594.0, 21.0 ],
-					"text" : "dada.segment, dada.catart"
+					"presentation_rect" : [ 311.0, 361.0, 594.0, 21.0 ]
 				}
 
 			}
@@ -10420,7 +10403,7 @@
 					"preventedit" : 1,
 					"textcolor" : [ 0.25, 0.25, 0.25, 1.0 ],
 					"textdecayfactor" : 0.94,
-					"whole_tree_data_0000000000" : [ "{", "dada analysis", "dada.analysis.centroid", "dada.analysis.chroma", "dada.analysis.count", "dada.analysis.duration", "dada.analysis.loudness", "dada.analysis.minmax", "dada.analysis.rhythmdistrib", "}", "{", "dada audio", "dada.music~", "dada.terrain~", "}", "{", "dada corpus-based tools", "dada.base", "dada.catart", "dada.distances", "dada.segment", "}", "{", "dada geometry", "dada.bodies", "dada.bounce", "dada.catart", "dada.distances", "dada.kaleido", "dada.nodes", "dada.stage", "dada.terrain~", "}", "{", "dada interfaces", "dada.bodies", "dada.boids", "dada.bounce", "dada.catart", "dada.distances", "dada.kaleido", "dada.life", "dada.machines", "dada.multibrot", "dada.music~", "dada.nodes", "dada.platform", "dada.stage", "dada.terrain~", "}", "{", "dada rule-based systems", "dada.boids", "dada.life", "dada.machines", "dada.multibrot", "dada.platform", "}", "{", "dada segmentation", "dada.segment", "}", "{", "dada storage", "dada.base", "}" ],
+					"whole_tree_data_0000000000" : [ "(", "dada analysis", "dada.analysis.loudness", "dada.analysis.minmax", "dada.analysis.rhythmdistrib", ")" ],
 					"whole_tree_data_count" : [ 1 ]
 				}
 
@@ -10435,7 +10418,7 @@
 					"id" : "obj-43",
 					"lockeddragscroll" : 0,
 					"maxclass" : "bpatcher",
-					"name" : "dada.explorer.empty.maxpat",
+					"name" : "dada.explorer.welcome.maxpat",
 					"numinlets" : 0,
 					"numoutlets" : 0,
 					"offset" : [ 0.0, 0.0 ],

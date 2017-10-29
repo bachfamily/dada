@@ -682,12 +682,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../mains/dada.bounce.c"
-            timestampString = "527360205.256225"
+            timestampString = "530388875.425465"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1946"
-            endingLineNumber = "1946"
-            landmarkName = "show_edge_popup_menu()"
+            startingLineNumber = "1954"
+            endingLineNumber = "1954"
+            landmarkName = "show_vertex_popup_menu()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

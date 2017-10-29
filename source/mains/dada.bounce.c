@@ -243,7 +243,7 @@ void send_all_noteoffs(t_bounce *x)
     }
 }
 
-void send_playout_pitchnvel_data(t_bounce *x, double midicents, long velocity, long MIDIchannel, long ball_idx, t_pt hit_pt, long edge_id, long connected_component_id)
+void append_playout_pitchnvel_data(t_bounce *x, t_llll *outlet2, t_llll *outlet3, double midicents, long velocity, long MIDIchannel, long ball_idx, t_pt hit_pt, long edge_id, long connected_component_id)
 {
     double currently_played_note;
     if (x->send_noteoffs && MIDIchannel < DADA_BOUNCE_MAX_MIDICHANNELS && (currently_played_note = x->currently_played_note[MIDIchannel])) {
@@ -252,8 +252,9 @@ void send_playout_pitchnvel_data(t_bounce *x, double midicents, long velocity, l
         llll_appenddouble(ll, currently_played_note, 0, WHITENULL_llll);
         llll_appendlong(ll, 0, 0, WHITENULL_llll);
         llll_appendlong(ll, MIDIchannel, 0, WHITENULL_llll);
-        llllobj_outlet_llll((t_object *)x, LLLL_OBJ_UI, 3, ll);
-        llll_free(ll);
+        llll_appendobj(outlet3, ll);
+//        llllobj_outlet_llll((t_object *)x, LLLL_OBJ_UI, 3, ll);
+//        llll_free(ll);
         x->currently_played_note[MIDIchannel] = 0;
     }
     
@@ -261,8 +262,10 @@ void send_playout_pitchnvel_data(t_bounce *x, double midicents, long velocity, l
 	llll_appenddouble(ll, midicents, 0, WHITENULL_llll);
 	llll_appendlong(ll, velocity, 0, WHITENULL_llll);
 	llll_appendlong(ll, MIDIchannel, 0, WHITENULL_llll);
-    llllobj_outlet_llll((t_object *)x, LLLL_OBJ_UI, 3, ll);
-    llll_free(ll);
+    llll_appendobj(outlet3, ll);
+//    llllobj_outlet_llll((t_object *)x, LLLL_OBJ_UI, 3, ll);
+//    llll_free(ll);
+  
     if (MIDIchannel < DADA_BOUNCE_MAX_MIDICHANNELS)
         x->currently_played_note[MIDIchannel] = midicents;
 
@@ -284,16 +287,19 @@ void send_playout_pitchnvel_data(t_bounce *x, double midicents, long velocity, l
 
         llll_appendllll(bounceinfo, symbol_and_long_to_llll(gensym("edge"), edge_id + 1));
         llll_appendllll(bounceinfo, symbol_and_long_to_llll(gensym("component"), connected_component_id + 1));
-        llllobj_outlet_llll((t_object *)x, LLLL_OBJ_UI, 2, bounceinfo);
-        llll_free(bounceinfo);
+
+        llll_appendobj(outlet2, bounceinfo);
+//        llllobj_outlet_llll((t_object *)x, LLLL_OBJ_UI, 2, bounceinfo);
+//        llll_free(bounceinfo);
     }
 }
 
 // will also free score
-void send_playout_score_data(t_bounce *x, t_llll *score, long ball_idx, t_pt hit_pt, long edge_id, long connected_component_id)
+void append_playout_score_data(t_bounce *x, t_llll *outlet2, t_llll *outlet3, t_llll *score, long ball_idx, t_pt hit_pt, long edge_id, long connected_component_id)
 {
-    llllobj_outlet_llll((t_object *)x, LLLL_OBJ_UI, 3, score);
-    llll_free(score);
+    llll_appendobj(outlet3, score);
+//    llllobj_outlet_llll((t_object *)x, LLLL_OBJ_UI, 3, score);
+//    llll_free(score);
     
     if (x->output_bounce_data) {
         t_llll *bounceinfo = llll_get();
@@ -313,8 +319,10 @@ void send_playout_score_data(t_bounce *x, t_llll *score, long ball_idx, t_pt hit
         
         llll_appendllll(bounceinfo, symbol_and_long_to_llll(gensym("edge"), edge_id + 1));
         llll_appendllll(bounceinfo, symbol_and_long_to_llll(gensym("component"), connected_component_id + 1));
-        llllobj_outlet_llll((t_object *)x, LLLL_OBJ_UI, 2, bounceinfo);
-        llll_free(bounceinfo);
+        
+        llll_appendobj(outlet2, bounceinfo);
+//        llllobj_outlet_llll((t_object *)x, LLLL_OBJ_UI, 2, bounceinfo);
+//        llll_free(bounceinfo);
     }
 }
 
@@ -2632,7 +2640,10 @@ void bounce_bang(t_bounce *x)
 	long i, j;
 	double delta_t = x->b_ob.d_ob.m_play.play_step_ms;
 	long num_balls = dadaitem_class_get_num_items(&x->b_ob.d_ob.m_classes, DADAITEM_TYPE_BALL);
+
+    t_llll *to_out2 = llll_get(), *to_out3 = llll_get();
     
+    dadaobj_mutex_lock(dadaobj_cast(x));
     for (i = 0; i < num_balls; i++) {
 		
 		if (x->balls[i].r_it.flags & D_INACTIVE)
@@ -2741,14 +2752,16 @@ void bounce_bang(t_bounce *x)
                         
                         schedule_fdefer((t_object *)x, (method)bounce_unset_played_elem, x->blink_time, NULL, 0, NULL);
                         
-                        send_playout_pitchnvel_data(x, midicents, velocity, x->use_ball_idx_as_channel ? i+1 : x->balls[i].channel, i, collision_pt,
-                                          collision_idx, x->room_graph.vertices[x->room_graph.edges[collision_idx].start].connected_component_idx);
+//                        dadaobj_mutex_unlock(dadaobj_cast(x));
+                        append_playout_pitchnvel_data(x, to_out2, to_out3, midicents, velocity, x->use_ball_idx_as_channel ? i+1 : x->balls[i].channel, i, collision_pt, collision_idx, x->room_graph.vertices[x->room_graph.edges[collision_idx].start].connected_component_idx);
+//                        dadaobj_mutex_lock(dadaobj_cast(x));
                     } else { // scores
                         t_llll *score = x->room_graph.edges[collision_idx].data.m_llllscore.ll;
                         x->hit_edge = collision_idx;
                         schedule_fdefer((t_object *)x, (method)bounce_unset_played_elem, x->blink_time, NULL, 0, NULL);
-                        send_playout_score_data(x, score ? llll_clone(score) : llll_get(), i, collision_pt,
-                                                collision_idx, x->room_graph.vertices[x->room_graph.edges[collision_idx].start].connected_component_idx);
+//                        dadaobj_mutex_unlock(dadaobj_cast(x));
+                        append_playout_score_data(x, to_out2, to_out3, score ? llll_clone(score) : llll_get(), i, collision_pt, collision_idx, x->room_graph.vertices[x->room_graph.edges[collision_idx].start].connected_component_idx);
+//                        dadaobj_mutex_lock(dadaobj_cast(x));
                     }
 				}
 				
@@ -2773,8 +2786,25 @@ void bounce_bang(t_bounce *x)
 		for (elem = collisions->l_head; elem; elem = elem->l_next)
 			x->room_graph.edges[elem->l_hatom.h_w.w_long].flag &= ~8192;
 		llll_free(collisions);
-		
 	}
+    dadaobj_mutex_unlock(dadaobj_cast(x));
+    
+    for (t_llllelem *elem = to_out3->l_head; elem; elem = elem->l_next) {
+        if (hatom_gettype(&elem->l_hatom) == H_OBJ) {
+            t_llll *ll = (t_llll *)hatom_getobj(&elem->l_hatom);
+            llllobj_outlet_llll((t_object *)x, LLLL_OBJ_UI, 3, ll);
+            llll_free(ll);
+        }
+    }
+    for (t_llllelem *elem = to_out2->l_head; elem; elem = elem->l_next) {
+        if (hatom_gettype(&elem->l_hatom) == H_OBJ) {
+            t_llll *ll = (t_llll *)hatom_getobj(&elem->l_hatom);
+            llllobj_outlet_llll((t_object *)x, LLLL_OBJ_UI, 2, ll);
+            llll_free(ll);
+        }
+    }
+    llll_free(to_out3);
+    llll_free(to_out2);
 	jbox_redraw((t_jbox *)x);
 }
 

@@ -1726,9 +1726,6 @@ t_max_err rebuild_database(t_xbase *b)
 	xbase_free_lllls(b);
 	db_close(&b->d_db);
 
-    //    b->d_db = NULL;
-//	err = db_open(b->d_name, "/Users/danieleghisi/Documents/aucache.db3", &b->d_db);
-    
     if (filename) {
         short outpath = 0;
         t_symbol *filename_resolved = dada_ezresolve_file(filename, &outpath);

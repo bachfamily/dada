@@ -179,6 +179,8 @@
 		1ED646EC1DAD4023003CA9B1 /* icon_portal.png in Resources */ = {isa = PBXBuildFile; fileRef = 1ED646E71DAD4011003CA9B1 /* icon_portal.png */; };
 		1EE2A75E1982FDEE00B335ED /* lib_dada.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED9C9B1190D1224001973B8 /* lib_dada.a */; };
 		1EE2A7811982FE0000B335ED /* dada.life.c in Sources */ = {isa = PBXBuildFile; fileRef = 1EE2A7801982FE0000B335ED /* dada.life.c */; };
+		1EED25AB1FC3B0650054B33A /* alterparser.h in Headers */ = {isa = PBXBuildFile; fileRef = 1EED25AA1FC3B0650054B33A /* alterparser.h */; };
+		1EED25AD1FC3B09B0054B33A /* bach_parser.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 1EED25AC1FC3B09B0054B33A /* bach_parser.hpp */; };
 		1EFE4CCA1F5A0CF100C0AB6F /* bach_pitch.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 1EFE4CC71F5A0CF100C0AB6F /* bach_pitch.hpp */; };
 		1EFE4CCB1F5A0CF100C0AB6F /* bach_rat.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 1EFE4CC81F5A0CF100C0AB6F /* bach_rat.hpp */; };
 		1EFE4CCC1F5A0CF100C0AB6F /* bach_urrat.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 1EFE4CC91F5A0CF100C0AB6F /* bach_urrat.hpp */; };
@@ -539,6 +541,8 @@
 		1EDCC52D196AEC8B00638665 /* commonsyms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = commonsyms.c; path = "../../../max-sdk-7.3.3/source/c74support/max-includes/common/commonsyms.c"; sourceTree = SOURCE_ROOT; };
 		1EE2A7631982FDEE00B335ED /* dada.life.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dada.life.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		1EE2A7801982FE0000B335ED /* dada.life.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.life.c; path = ../mains/dada.life.c; sourceTree = SOURCE_ROOT; };
+		1EED25AA1FC3B0650054B33A /* alterparser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = alterparser.h; path = ../../../bach/source/commons/aa/alterparser/alterparser.h; sourceTree = SOURCE_ROOT; };
+		1EED25AC1FC3B09B0054B33A /* bach_parser.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = bach_parser.hpp; path = ../../../bach/source/commons/aa/bach_parser.hpp; sourceTree = SOURCE_ROOT; };
 		1EFC44C1196AEF9C000BDFBF /* bach.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bach.h; path = ../../../bach/source/commons/bach.h; sourceTree = SOURCE_ROOT; };
 		1EFC44C3196AEFB9000BDFBF /* bach_128bit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bach_128bit.h; path = ../../../bach/source/commons/aa/bach_128bit.h; sourceTree = SOURCE_ROOT; };
 		1EFC44C4196AEFB9000BDFBF /* bach_doc_commons_aa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bach_doc_commons_aa.h; path = ../../../bach/source/commons/aa/bach_doc_commons_aa.h; sourceTree = SOURCE_ROOT; };
@@ -913,6 +917,8 @@
 		1EFC4441196AEF65000BDFBF /* aa */ = {
 			isa = PBXGroup;
 			children = (
+				1EED25AA1FC3B0650054B33A /* alterparser.h */,
+				1EED25AC1FC3B09B0054B33A /* bach_parser.hpp */,
 				1EFE4CC71F5A0CF100C0AB6F /* bach_pitch.hpp */,
 				1EFE4CC81F5A0CF100C0AB6F /* bach_rat.hpp */,
 				1EFE4CC91F5A0CF100C0AB6F /* bach_urrat.hpp */,
@@ -1081,6 +1087,7 @@
 				1EA5947719767BD000D3BFFC /* bach_math_utilities.h in Headers */,
 				1EA5947819767BD000D3BFFC /* bach_threads.h in Headers */,
 				1EFE4CCC1F5A0CF100C0AB6F /* bach_urrat.hpp in Headers */,
+				1EED25AB1FC3B0650054B33A /* alterparser.h in Headers */,
 				1EA5947919767BD000D3BFFC /* collector.h in Headers */,
 				1EA5947A19767BD000D3BFFC /* hatom.h in Headers */,
 				1EA5947B19767BD000D3BFFC /* lexpr.h in Headers */,
@@ -1123,6 +1130,7 @@
 				1E0E01A01B136A1E00F88916 /* spectral.h in Headers */,
 				1E0E01B31B136A3900F88916 /* _kiss_fft_guts.h in Headers */,
 				1E0E01B51B136A3900F88916 /* kiss_fft.h in Headers */,
+				1EED25AD1FC3B09B0054B33A /* bach_parser.hpp in Headers */,
 				1E0E01B61B136A3900F88916 /* kissfft.hh in Headers */,
 				1E0E01B91B136A3900F88916 /* kfc.h in Headers */,
 				1E0E01BC1B136A3900F88916 /* kiss_fftnd.h in Headers */,

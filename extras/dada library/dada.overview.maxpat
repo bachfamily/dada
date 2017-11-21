@@ -307,10 +307,9 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 253.0, 3643.0, 309.0, 35.0 ],
-									"presentation_rect" : [ 264.0, 3629.0, 0.0, 0.0 ],
+									"patching_rect" : [ 253.0, 3643.0, 303.0, 35.0 ],
 									"style" : "",
-									"text" : ";\rmax launchbrowser https://github.com/danieleghisi/dada"
+									"text" : ";\rmax launchbrowser https://github.com/bachfamily/dada"
 								}
 
 							}
@@ -359,7 +358,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 7.0, 3405.0, 362.0, 65.0 ],
-									"text" : "The official web page is http://www.bachproject.net/dada\nThe official repository is https://github.com/danieleghisi/dada\n\n© 2017 • Daniele Ghisi",
+									"text" : "The official web page is http://www.bachproject.net/dada\nThe official repository is https://github.com/bachfamily/dada\n\n© 2017 • Daniele Ghisi",
 									"textcolor" : [ 0.25, 0.25, 0.25, 1.0 ]
 								}
 

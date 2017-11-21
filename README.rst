@@ -8,7 +8,7 @@ dada
 
 The official website is www.bachproject.net/dada
 
-The official repository is https://github.com/danieleghisi/dada
+The official repository is https://github.com/bachfamily/dada
 
 
 Acknowledgments

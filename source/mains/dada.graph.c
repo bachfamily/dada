@@ -1933,7 +1933,7 @@ void uigraph_paint_nodes(t_uigraph *x, t_object *view, t_rect rect, t_pt center)
                         }
                         ezpaint_note_with_staff((t_object *)x, g, view, midicents, k_ACC_AUTO,
                                                 x->tonedivision, build_pt(upperleft_corner.x, upperleft_corner.y + fontsize * 1.4),
-                                                width, fontsize * 2, upperleft_corner.x + 31, false, &text_color, &text_color, &text_color);
+                                                width, fontsize * 2, upperleft_corner.x + 31 * fontsize/12., false, &text_color, &text_color, &text_color);
                     }
                         break;
                        

@@ -437,7 +437,8 @@ void base_dblclick(t_base *x)
     
     char *buf = NULL;
     t_llll *ll = db_to_llll(x->xbase, true);
-    llll_to_text_buf_pretty(ll, &buf, 0, BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, 0, NULL);
+    llll_to_text_buf_pretty(ll, &buf, 0, BACH_DEFAULT_MAXDECIMALS, BACH_DEFAULT_EDITOR_LLLL_WRAP, "\t", -1, LLLL_T_BACKTICKS, NULL);
+//    llll_to_text_buf_pretty(ll, &buf, 0, BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, 0, NULL);
 //    llll_to_text_buf(ll, &buf);
     object_method(x->m_editor, gensym("settext"), buf, gensym("utf-8"));
     object_attr_setsym(x->m_editor, gensym("title"), gensym("Database as llll"));

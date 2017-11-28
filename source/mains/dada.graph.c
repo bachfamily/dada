@@ -362,8 +362,8 @@ int C74_EXPORT main(void)
 	
 	srand(time(NULL)); 
 
-	if (llllobj_check_version(BACH_LLLL_VERSION) || llllobj_test()) {
-		error("bach: bad installation");
+	if (llllobj_check_version(bach_get_current_llll_version()) || llllobj_test()) {
+		dada_error_bachcheck;
 		return 1;
 	}
 
@@ -1704,7 +1704,7 @@ void uigraph_recompute_nodes_width_height(t_uigraph *x)
                 case DADA_GRAPH_NODEFORMAT_TEXT:
                 {
                     char *buf = NULL;
-                    llll_to_text_buf(x->network_graph.vertices[i].data.m_llllnode.ll, &buf, 0, BACH_DEFAULT_MAXDECIMALS, 0, NULL);
+                    llll_to_text_buf(x->network_graph.vertices[i].data.m_llllnode.ll, &buf, 0, BACH_DEFAULT_MAXDECIMALS, LLLL_T_NONE, LLLL_TE_NONE, LLLL_TB_NONE, NULL);
                     jfont_text_measure(jf, buf, &x->network_graph.vertices[i].data.m_llllnode.width, &x->network_graph.vertices[i].data.m_llllnode.height);
                     bach_freeptr(buf);
                 }
@@ -1908,7 +1908,7 @@ void uigraph_paint_nodes(t_uigraph *x, t_object *view, t_rect rect, t_pt center)
                     case DADA_GRAPH_NODEFORMAT_TEXT:
                     {
                         char *label = NULL;
-                        llll_to_text_buf(x->network_graph.vertices[i].data.m_llllnode.ll, &label, 0, BACH_DEFAULT_MAXDECIMALS, 0, NULL);
+                        llll_to_text_buf(x->network_graph.vertices[i].data.m_llllnode.ll, &label, 0, BACH_DEFAULT_MAXDECIMALS, LLLL_T_NONE, LLLL_TE_NONE, LLLL_TB_NONE, NULL);
                         if (label) {
                             write_text(g, jf, text_color, label, upperleft_corner.x, upperleft_corner.y,
                                        width+1, height+1, JGRAPHICS_TEXT_JUSTIFICATION_CENTERED, true, false);
@@ -1920,7 +1920,7 @@ void uigraph_paint_nodes(t_uigraph *x, t_object *view, t_rect rect, t_pt center)
                     case DADA_GRAPH_NODEFORMAT_NOTE:
                     {
                         char *label = NULL;
-                        llll_to_text_buf(x->network_graph.vertices[i].data.m_llllnode.ll, &label, 0, BACH_DEFAULT_MAXDECIMALS, 0, NULL);
+                        llll_to_text_buf(x->network_graph.vertices[i].data.m_llllnode.ll, &label, 0, BACH_DEFAULT_MAXDECIMALS, LLLL_T_NONE, LLLL_TE_NONE, LLLL_TB_NONE, NULL);
                         long midicents = 6000;
                         if (x->network_graph.vertices[i].data.m_llllnode.ll && x->network_graph.vertices[i].data.m_llllnode.ll->l_head) {
                             if (is_hatom_number(&x->network_graph.vertices[i].data.m_llllnode.ll->l_head->l_hatom))

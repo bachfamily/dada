@@ -604,8 +604,8 @@ void ext_main(void *moduleRef)
 	
 	srand(time(NULL));
 
-	if (llllobj_check_version(BACH_LLLL_VERSION) || llllobj_test()) {
-		error("bach: bad installation");
+	if (llllobj_check_version(bach_get_current_llll_version()) || llllobj_test()) {
+		dada_error_bachcheck;
 		return;
 	}
 
@@ -3300,7 +3300,7 @@ void show_bg_popup_menu(t_platform *x, t_object *patcherview, t_pt pt, long modi
     llll_appendllll(structure, structure_portal);
 
     char *buf = NULL;
-    llll_to_text_buf(structure, &buf);
+    llll_to_text_buf(structure, &buf, 0, BACH_DEFAULT_MAXDECIMALS, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART, NULL);
     
     ezdisplay_popup_menu(dadaobj_cast(x), patcherview,
                          buf, "0 0 0 0", "", "", "", "",

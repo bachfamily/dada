@@ -336,8 +336,8 @@ int C74_EXPORT main(void)
 	llllobj_common_symbols_init();
 	
 
-	if (llllobj_check_version(BACH_LLLL_VERSION) || llllobj_test()) {
-		error("bach: bad installation");
+	if (llllobj_check_version(bach_get_current_llll_version()) || llllobj_test()) {
+		dada_error_bachcheck;
 		return 1;
 	}
 
@@ -1477,7 +1477,7 @@ void distances_setturtle(t_distances *x, t_llll *args)
         char *valuestr = NULL;
         t_symbol *tablename = hatom_getsym(&args->l_head->l_hatom);
         llll_behead(args);
-        llll_to_text_buf(args, &valuestr, 0, 6, LLLL_T_FORCE_SINGLE_QUOTES);
+        llll_to_text_buf(args, &valuestr, 0, BACH_DEFAULT_MAXDECIMALS, LLLL_T_NONE, LLLL_TE_SQL_STYLE, LLLL_TB_SQL_STYLE, NULL);
         distances_set_turtledgrain(x, distances_get_grain_from_field_value(x, tablename, valuestr));
         bach_freeptr(valuestr);
     }

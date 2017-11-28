@@ -928,8 +928,8 @@ int C74_EXPORT main(void)
 	
 	srand(time(NULL)); // needed for the shake function
 
-	if (llllobj_check_version(BACH_LLLL_VERSION) || llllobj_test()) {
-		error("bach: bad installation");
+	if (llllobj_check_version(bach_get_current_llll_version()) || llllobj_test()) {
+		dada_error_bachcheck;
 		return 1;
 	}
 
@@ -3389,7 +3389,7 @@ void show_shape_popup_menu(t_kaleido *x, t_object *patcherview, t_pt pt, long mo
 				hatom_setlong(&elem->l_hatom, 1);
 		}
 	}
-	llll_to_text_buf(checked, &checked_buf, 0, 0, 0, NULL);
+	llll_to_text_buf(checked, &checked_buf, 0, BACH_DEFAULT_MAXDECIMALS, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART, NULL);
 	
     ezdisplay_popup_menu_for_dadaitem(dadaobj_cast(x), patcherview, (t_dadaitem *)&x->shapes[x->b_ob.d_ob.m_interface.mousedown_item_identifier.idx],
                                       D_SOLO | D_MUTE | D_INACTIVE,

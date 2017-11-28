@@ -138,8 +138,8 @@ int C74_EXPORT main(void)
 	common_symbols_init();
 	llllobj_common_symbols_init();
 
-	if (llllobj_check_version(BACH_LLLL_VERSION) || llllobj_test()) {
-		error("bach: bad installation");
+	if (llllobj_check_version(bach_get_current_llll_version()) || llllobj_test()) {
+        dada_error_bachcheck();
 		return 1;
 	}
 	
@@ -437,7 +437,8 @@ void base_dblclick(t_base *x)
     
     char *buf = NULL;
     t_llll *ll = db_to_llll(x->xbase, true);
-    llll_to_text_buf_pretty(ll, &buf, 0, BACH_DEFAULT_MAXDECIMALS, BACH_DEFAULT_EDITOR_LLLL_WRAP, "\t", -1, LLLL_T_BACKTICKS, NULL);
+
+    llll_to_text_buf_pretty(ll, &buf, 0, BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART, NULL);
 //    llll_to_text_buf_pretty(ll, &buf, 0, BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, 0, NULL);
 //    llll_to_text_buf(ll, &buf);
     object_method(x->m_editor, gensym("settext"), buf, gensym("utf-8"));
@@ -501,7 +502,7 @@ void base_appendtodictionary(t_base *x, t_dictionary *d)
         else { // textual
             t_llll *args = llll_get();
             llll_appendsym(args, x->xbase->d_filename);
-            llll_writetxt((t_object *) x, ll, args);
+            llll_writetxt((t_object *) x, ll, args, BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART);
             llll_free(args);
         }
 	}
@@ -511,7 +512,7 @@ void base_appendtodictionary(t_base *x, t_dictionary *d)
             t_llll *ll = xbase_get_all_table_headers(x->xbase);
             t_llll *arguments = llll_get();
             llll_appendsym(arguments, filename_to_metafilename(x->xbase->d_filename));
-            llll_writetxt((t_object *)x, ll, arguments);
+            llll_writetxt((t_object *)x, ll, arguments, BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART);
         }
     }
 }
@@ -552,7 +553,7 @@ t_base* base_new(t_symbol *s, short argc, t_atom *argv)
                 x->d_filename = atom_getsym(argv + 1); //dada_ezlocate_file(atom_getsym(argv + 1), &x->d_filetype);
                 if (filename_is_not_sql_file(x->d_filename)) {
                     if (!dada_ezlocate_file(x->d_filename, &x->d_filetype)) { // create one!
-                        llll_writetxt((t_object *)x, llll_get(), symbol2llll(x->d_filename));
+                        llll_writetxt((t_object *)x, llll_get(), symbol2llll(x->d_filename), BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART);
                         x->d_filename = dada_ezlocate_file(x->d_filename, &x->d_filetype);
                     }
                 }
@@ -749,7 +750,7 @@ void xbase_entry_create_do(t_xbase *b, t_symbol *table_name, t_llllelem *specs_h
                                         t_llll *temp_ll = llll_get();
                                         char *buf = NULL;
                                         llll_appendrat(temp_ll, ll->l_head->l_next ? hatom_getrational(&ll->l_head->l_next->l_hatom) : genrat(0,1), 0, WHITENULL_llll);
-                                        llll_to_text_buf(temp_ll, &buf, 0, 0, 0, NULL);
+                                        llll_to_text_buf(temp_ll, &buf, 0, BACH_DEFAULT_MAXDECIMALS, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART, NULL);
                                         this_values_size = snprintf_zero(values + values_cur, VALUES_ALLOC - values_size, firstname ? "%s" : ", %s", buf);
                                         bach_freeptr(buf);
                                         llll_free(temp_ll);
@@ -803,7 +804,7 @@ void xbase_entry_create_do(t_xbase *b, t_symbol *table_name, t_llllelem *specs_h
                                             llll_appendobj(b->table[tableidx].lllls, newll, 0, WHITENULL_llll);
                                         } else {
                                             char *deparsed = NULL;
-                                            llll_to_text_buf(newll, &deparsed);
+                                            llll_to_text_buf(newll, &deparsed, 0, BACH_DEFAULT_MAXDECIMALS, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART, NULL);
                                             
                                             while (deparsed && values_size + strlen(deparsed) + SAFETY_SIZE > VALUES_ALLOC) {
                                                 VALUES_ALLOC += STEP_SIZE;
@@ -1435,7 +1436,7 @@ void base_write(t_base *x, t_symbol *s, long argc, t_atom *argv){
 void base_writetxt(t_base *x, t_symbol *s, long argc, t_atom *argv){
     t_llll *arguments = llllobj_parse_llll((t_object *) x, LLLL_OBJ_VANILLA, NULL, argc, argv, LLLL_PARSE_CLONE);
     t_llll *state_ll = db_to_llll(x->xbase, true);
-    llll_writetxt((t_object *) x, state_ll, arguments);
+    llll_writetxt((t_object *) x, state_ll, arguments, BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART);
 }
 
 
@@ -1592,7 +1593,10 @@ t_llll *xbase_db_query_from_llll(t_xbase *b, t_llll *query, char output_fieldnam
 {
     char *buf = NULL;
     t_llll *res = NULL;
-    long textsize = llll_to_text_buf(query, &buf, 0, BACH_DEFAULT_MAXDECIMALS, LLLL_T_NO_DOUBLE_QUOTES, NULL);
+    
+    // we had LLLL_T_NO_DOUBLE_QUOTES here!!!
+//    long textsize = llll_to_text_buf(query, &buf, 0, BACH_DEFAULT_MAXDECIMALS, LLLL_T_NO_DOUBLE_QUOTES, NULL);
+    long textsize = llll_to_text_buf(query, &buf, 0, BACH_DEFAULT_MAXDECIMALS, LLLL_T_NONE, LLLL_TE_NONE, LLLL_TB_NONE, NULL);
     if (textsize)
         res = xbase_db_query(b, buf, output_fieldnames);
     bach_freeptr(buf);
@@ -1747,7 +1751,7 @@ t_max_err rebuild_database(t_xbase *b)
             t_llll *ll = xbase_get_all_table_headers(b);
             t_llll *arguments = llll_get();
             llll_appendsym(arguments, metafile);
-            llll_writetxt((t_object *)b, ll, arguments);
+            llll_writetxt((t_object *)b, ll, arguments, BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART);
         } else {
             error("No file attached!");
         }

@@ -610,6 +610,7 @@ typedef struct dadaobj_pxjbox
 
 
 
+void dada_error_bachcheck();
 void dada_atomic_lock(t_dadaobj *r_ob);
 void dada_atomic_unlock(t_dadaobj *r_ob);
 

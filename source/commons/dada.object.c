@@ -13,6 +13,16 @@
 #include "dada.popupmenu.h"
 #include "dada.undo.h"
 
+void dada_error_bachcheck()
+{
+    if (!gensym("bach")->s_thing) {
+        error("error: dada needs bach to be installed in order to work (www.bachproject.net).");
+    } else {
+        error("error: your bach version (%s) is not supported by this dada version.", bach_get_current_version_string_verbose());
+        error("   to fix this, please upgrade both bach and dada to their latest version.");
+    }
+}
+
 void dada_atomic_lock(t_dadaobj *r_ob)
 {
 	t_dada_atomic_lock *lock = &r_ob->l_lock;
@@ -1367,9 +1377,13 @@ void dadaobj_paint_grid(t_dadaobj *r_ob, t_object *view, t_rect rect, t_pt cente
 
 void dadaobj_jbox_set_state_and_free_llll(t_object *x, t_llll *ll)
 {
-    t_dadaobj *r_ob = &((t_dadaobj_jbox *)x)->d_ob;
-    r_ob->set_state(x, ll);
-    llll_free(ll);
+    if (ll) {
+        t_dadaobj *r_ob = &((t_dadaobj_jbox *)x)->d_ob;
+        r_ob->set_state(x, ll);
+        llll_free(ll);
+    } else {
+        object_error(x, "Can't set object state.");
+    }
 }
 
 void dadaobj_jbox_read(t_dadaobj_jbox *x, t_symbol *s, long argc, t_atom *argv)
@@ -1408,7 +1422,7 @@ void dadaobj_jbox_writetxt(t_dadaobj_jbox *x, t_symbol *s, long argc, t_atom *ar
     if (r_ob->get_state) {
         t_llll *arguments = llllobj_parse_llll((t_object *) x, LLLL_OBJ_VANILLA, NULL, argc, argv, LLLL_PARSE_CLONE);
         t_llll *state_ll = r_ob->get_state(r_ob->orig_obj);
-        llll_writetxt(r_ob->orig_obj, state_ll, arguments);
+        llll_writetxt(r_ob->orig_obj, state_ll, arguments, BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART);
     } else {
         object_error(r_ob->orig_obj, "Writing methods are not supported.");
     }

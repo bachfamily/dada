@@ -335,12 +335,12 @@ void undo_redo_post_debug_do(t_dadaobj *r_ob, e_dada_undo_redo what)
             t_symbol *label = dadaitem_class_get_label(&r_ob->m_classes, tick->dadaitem_type);
             post("    %s(%s, %s%ld)", tick->op_type == DADA_UNDO_OP_CREATION ? "↑" : (tick->op_type == DADA_UNDO_OP_DELETION ? "↓" : "~"), label->s_name, tick->dadaitem_ID > 0 ? "ID=" : "all elements-ID=", tick->dadaitem_ID);
             if (tick->u_get_args) {
-                llll_to_text_buf(tick->u_get_args, &bufget);
+                llll_to_text_buf(tick->u_get_args, &bufget, 0, BACH_DEFAULT_MAXDECIMALS, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART, NULL);
                 post("       get args: %s", bufget);
                 bach_freeptr(bufget);
             }
             if (tick->u_set_args) {
-                llll_to_text_buf(tick->u_set_args, &bufset);
+                llll_to_text_buf(tick->u_set_args, &bufset, 0, BACH_DEFAULT_MAXDECIMALS, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART, NULL);
                 post("       set args: %s", bufset);
                 bach_freeptr(bufset);
             }

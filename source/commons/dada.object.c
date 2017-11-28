@@ -23,6 +23,55 @@ void dada_error_bachcheck()
     }
 }
 
+long parse_version_string(char *str, long *major, long *minor, long *revision, long *maintenance)
+{
+    long maj = 0, min = 0, rev = 0, maint = 0;
+    long count = 0;
+    char temp_str[128];
+    snprintf_zero(temp_str, 128, "%s", str);
+    
+    char *pch = strtok(temp_str, ".");
+    while (pch != NULL)
+    {
+        switch (count) {
+            case 0: maj = atoi(pch); break;
+            case 1: min = atoi(pch); break;
+            case 2: rev = atoi(pch); break;
+            case 3: maint = atoi(pch); break;
+            default: break;
+        }
+        pch = strtok (NULL, ".");
+        count++;
+    }
+    
+    if (major) *major = maj;
+    if (minor) *minor = min;
+    if (revision) *revision = rev;
+    if (maintenance) *maintenance = maint;
+    
+    return maint + rev * 100 + min * 10000 + maj * 1000000;
+}
+
+
+long dada_get_current_version_number()
+{
+    char temp[1024];
+    snprintf_zero(temp, 1024, "%s", DADA_VERSION);
+    return parse_version_string(temp, NULL, NULL, NULL, NULL);
+}
+
+void dadaobj_set_version_number(t_dadaobj *d_ob, long version_number)
+{
+    d_ob->m_version_number = version_number;
+}
+
+
+void dadaobj_set_current_version_number(t_dadaobj *d_ob)
+{
+    dadaobj_set_version_number(d_ob, dada_get_current_version_number());
+}
+
+
 void dada_atomic_lock(t_dadaobj *r_ob)
 {
 	t_dada_atomic_lock *lock = &r_ob->l_lock;
@@ -689,15 +738,19 @@ t_max_err dadaobj_pxjbox_setattr_vzoom(t_dadaobj_pxjbox *b_ob, t_object *attr, l
 {
     return dadaobj_setattr_vzoom(&b_ob->d_ob, attr, ac, av);
 }
+
 t_max_err dadaobj_pxjbox_setattr_maxundosteps(t_dadaobj_pxjbox *b_ob, t_object *attr, long ac, t_atom *av)
 {
 	return dadaobj_setattr_maxundosteps(&b_ob->d_ob, attr, ac, av);
 }
 
-
 void dadaobj_class_init(t_class *c, e_llllobj_obj_types type, long flags)
 {
-
+    DADAOBJ_CLASS_ATTR_LONG(c, type, "versionnumber", 0, t_dadaobj, m_version_number);
+    CLASS_ATTR_DEFAULT_SAVE(c,"versionnumber", 0, "0");
+    CLASS_ATTR_INVISIBLE(c, "versionnumber", ATTR_GET_OPAQUE | ATTR_SET_OPAQUE); // invisible attribute
+    // @exclude all
+    
     if (flags & DADAOBJ_BORDER) {
         DADAOBJ_CLASS_ATTR_CHAR_SUBSTRUCTURE(c,type, "showborder", 0, t_dadaobj, m_bg, t_bg_manager, show_border);
         CLASS_ATTR_STYLE_LABEL(c, "showborder", 0, "onoff", "Show Border");

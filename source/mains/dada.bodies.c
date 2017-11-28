@@ -1503,6 +1503,8 @@ t_bodies* bodies_new(t_symbol *s, long argc, t_atom *argv)
 
 		bodies_initialize_popup_menus(x);
 		
+        dadaobj_set_current_version_number(dadaobj_cast(x));
+        
 		return x;
 	}
 

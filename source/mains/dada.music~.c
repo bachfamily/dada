@@ -559,6 +559,9 @@ void *music_new(t_symbol *s, long argc, t_atom *argv)
         attr_dictionary_process(x,d);
         
         jbox_ready((t_jbox *)x);
+        
+        dadaobj_set_current_version_number(dadaobj_cast(x));
+
         return x;
     }
     

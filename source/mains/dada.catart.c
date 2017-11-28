@@ -1034,6 +1034,8 @@ void *catart_new(t_symbol *s, long argc, t_atom *argv)
 		x->b_ob.d_ob.m_zoom.min_zoom_perc = build_pt(0.01, 0.01);
 		
 		jbox_ready((t_jbox *)x);
+        
+        dadaobj_set_current_version_number(dadaobj_cast(x));
 	}
 	return x;
 }

@@ -1171,7 +1171,10 @@ void *distances_new(t_symbol *s, long argc, t_atom *argv)
         x->need_rebuild_grains = true;
         
 		jbox_ready((t_jbox *)x);
-	}
+
+        dadaobj_set_current_version_number(dadaobj_cast(x));
+    
+    }
 	return x;
 }
 

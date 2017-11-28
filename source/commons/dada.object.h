@@ -44,6 +44,9 @@ class_addattr((c),attr_offset_new(attrname,USESYM(float64),(flags),(method)0L,(m
 #define DADAOBJ_CLASS_ATTR_CHAR(c,type,attrname,flags,structname,structmember) \
 class_addattr((c),attr_offset_new(attrname,USESYM(char),(flags),(method)0L,(method)0L,calcoffset(structname,structmember)+headersize(type)))
 
+#define DADAOBJ_CLASS_ATTR_LONG(c,type,attrname,flags,structname,structmember) \
+class_addattr((c),attr_offset_new(attrname,USESYM(long),(flags),(method)0L,(method)0L,calcoffset(structname,structmember)+headersize(type)))
+
 #define DADAOBJ_CLASS_ATTR_DOUBLE_ARRAY(c,type,attrname,flags,structname,structmember,size) \
 class_addattr((c),attr_offset_array_new(attrname,USESYM(float64),(size),(flags),(method)0L,(method)0L,0/*fix*/,calcoffset(structname,structmember)+headersize(type)))
 
@@ -554,6 +557,8 @@ typedef struct dadaobj
 	t_object				*orig_obj;		///< Pointer to the original object
 	
 	long					flags;			///< A combination of the #e_dadaobj_flags
+    
+    t_atom_long                 m_version_number;
 	
 	t_item_class_manager		m_classes;	
 	t_bach_inspector_manager	m_inspector;
@@ -608,11 +613,15 @@ typedef struct dadaobj_pxjbox
 
 
 
+long dada_get_current_version_number();
 
 
 void dada_error_bachcheck();
 void dada_atomic_lock(t_dadaobj *r_ob);
 void dada_atomic_unlock(t_dadaobj *r_ob);
+
+void dadaobj_set_version_number(t_dadaobj *d_ob, long version_number);
+void dadaobj_set_current_version_number(t_dadaobj *d_ob);
 
 void dadaobj_setup(t_object *ob, t_dadaobj *r_ob, long flags, t_pt zoom_static_additional,
 				   long playout_outlet, long changebang_outlet, long notification_outlet, invalidate_and_redraw_fn invalidate_and_redraw,

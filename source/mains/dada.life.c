@@ -1878,6 +1878,8 @@ void *life_new(t_symbol *s, long argc, t_atom *argv)
 		}
 		
 		jbox_ready((t_jbox *)x);
+        
+        dadaobj_set_current_version_number(dadaobj_cast(x));
 		
 		x->creating_new_obj = false;
 	}

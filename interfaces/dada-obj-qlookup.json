@@ -133,6 +133,25 @@
       "dada.catart"
     ]
   },
+  "dada.graph": {
+    "digest": "Graph network",
+    "module": "dada",
+    "category": [
+      "dada",
+      "dada interfaces",
+      "dada rule-based systems"
+    ],
+    "keywords": [
+      "graph",
+      "network",
+      "process"
+    ],
+    "seealso": [
+      "dada.machines",
+      "dada.nodes",
+      "bach.poset"
+    ]
+  },
   "dada.kaleido": {
     "digest": "Kaleidoscope interface",
     "module": "dada",

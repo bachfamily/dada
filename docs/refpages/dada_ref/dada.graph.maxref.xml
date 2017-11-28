@@ -6,11 +6,11 @@
 <c74object name="dada.graph" module="dada">
 
 	<digest>
-		Elementary graph network
+		Graph network
 	</digest>
 
 	<description>
-		Process a <o>bach.roll</o> via a network of elementary graph
+		Provides an interface for graphs, including autopositioning of nodes
 	</description>
 
 	<!--METADATA-->
@@ -18,13 +18,14 @@
 		<metadata name="author">Daniele Ghisi</metadata>
 		<metadata name="tag">dada</metadata>
 		<metadata name="tag">dada interfaces</metadata>
+		<metadata name="tag">dada rule-based systems</metadata>
 	</metadatalist>
 
 	<!--INLETS-->
 	<inletlist>
 		<inlet id="0" type="INLET_TYPE">
 			<digest>
-				Network uigraph
+				Network graph, or messages
 			</digest>
 			<description>
 			</description>
@@ -36,6 +37,27 @@
 		<outlet id="0" type="INLET_TYPE">
 			<digest>
 				Dump outlet
+			</digest>
+			<description>
+			</description>
+		</outlet>
+		<outlet id="1" type="INLET_TYPE">
+			<digest>
+				Node value on mouse hover or click
+			</digest>
+			<description>
+			</description>
+		</outlet>
+		<outlet id="2" type="INLET_TYPE">
+			<digest>
+				Queries and notifications
+			</digest>
+			<description>
+			</description>
+		</outlet>
+		<outlet id="3" type="INLET_TYPE">
+			<digest>
+				bang when object is changed via the interface
 			</digest>
 			<description>
 			</description>
@@ -58,6 +80,121 @@
 				If the file is an image, it will be loaded as object background (whenever meaningful)
 			</description>
 		</method>
+		<method name="(keyboard)">
+			<arglist />
+			<digest>
+				Edit content
+			</digest>
+			<description>
+				• <m>Esc</m>: reset center to (0, 0) and zoom to 100%<br />
+				• <m>Tab</m>: autozoom<br />
+				• <m>Return</m>: place vertices automatically<br />
+				• <m>Cmd+Z</m> (mac) or <m>Ctrl+Z</m> (win): perform undo step<br />
+				• <m>Cmd+Shift+Z</m> (mac) or <m>Ctrl+Y</m> (win): perform redo step<br />
+				Tools are combination of a specific key pressed and some mouse action. Whenever you press the key, if the tool is available,
+				the mouse cursor will switch to the tool specific one. <br />
+				Available tools are: <br />
+				• Keep the <m>Z</m> key pressed, then click and drag on the canvas to change the zoom <br />
+				• Keep the <m>X</m> key pressed, then click and drag on the canvas to move the displayed center <br />
+				• Keep the <m>L</m> key pressed, click on an element, keep the mouse down and release the mouse on another element to connect the two elements. <br />
+			</description>
+		</method>
+		<method name="(mouse)">
+			<arglist />
+			<digest>
+				Edit content
+			</digest>
+			<description>
+				• <m>mousewheel scroll</m>: move the visible region <br />
+				• <m>Cmd+mousewheel scroll</m> (mac) or <m>Ctrl+mousewheel scroll</m> (win): change zoom <br />
+				• <m>right-click</m> or <m>two-fingers tap</m>: open contextual menu for basic operations<br />
+				• <m>click+drag</m> on an element ot move it<br />
+				   ↪ Add the <m>Alt</m> key to duplicate it<br />
+				• <m>Cmd+click</m> (mac) or <m>Ctrl+click</m> (win) on to delete it<br />
+				• <m>right click</m> or <m>two fingers tap</m>: open contextual menu<br />
+			</description>
+		</method>
+		<method name="autocoord">
+			<arglist />
+			<digest>
+				Assign node coordinates automatically
+			</digest>
+			<description>
+				Assigns the node coordinates automatically, according to the current <m>autocoordalgo</m>.
+			</description>
+		</method>
+		<method name="autozoom">
+			<arglist />
+			<digest>
+				Set domain and range automatically
+			</digest>
+			<description>
+				Adapts view and zoom automatically according to the current stars' and planets' positions.
+			</description>
+		</method>
+		<method name="clear">
+			<arglist />
+			<digest>
+				Clear graph
+			</digest>
+			<description>
+				Deletes all nodes and vertices.
+			</description>
+		</method>
+		<method name="domain">
+			<arg name="arguments" optional="0" type="list" />
+			<digest>
+				Set the X domain
+			</digest>
+			<description>
+				The <m>domain</m> message, followed by two numbers, sets minimum and maximum coordinates
+				to be displayed on the X axis.
+				The <m>domain</m> message,  followed by the "start" or "end" symbol and a number, sets the coordinate
+				to be displayed respectively at the left boundary or at the right boundary of the object box.
+			</description>
+		</method>
+		<method name="dump">
+			<arglist />
+			<digest>
+				Output state
+			</digest>
+			<description>
+				Outputs the current state of the graph, in the syntax.
+				<b>graph (<m>VERTEX1</m> <m>VERTEX2</m>...) (<m>EDGE1</m> <m>EDGE2</m>...)</b>.
+				Each vertex is an llll shaped as <b>((coord <m>x</m> <m>y</m>) (label <m>label</m>) (bgcolor <m>r</m> <m>g</m> <m>b</m> <m>a</m>)
+				(bordercolor <m>r</m> <m>g</m> <m>b</m> <m>a</m>) (textcolor <m>r</m> <m>g</m> <m>b</m> <m>a</m>))</b>.
+				Each edge is an llll shaped as <b>(<m>edge_start_vertex_index</m> <m>edge_end_vertex_index</m> (weight <m>edgeweight</m>))</b>.
+			</description>
+		</method>
+		<method name="getdomain">
+			<arglist />
+			<digest>
+				Retrieve current X domain
+			</digest>
+			<description>
+				The <m>getdomain</m> message outputs from the third outlet the minimum and maximum
+				coordinates displayed on the X axis, preceded by a <m>domain</m> symbol.
+			</description>
+		</method>
+		<method name="getrange">
+			<arglist />
+			<digest>
+				Retrieve current Y range
+			</digest>
+			<description>
+				The <m>getrange</m> message outputs from the third outlet the minimum and maximum
+				coordinates displayed on the Y axis, preceded by a <m>range</m> symbol.
+			</description>
+		</method>
+		<method name="getturtle">
+			<arglist />
+			<digest>
+				Output turtle vertex data
+			</digest>
+			<description>
+				The <m>getturtle</m> message outputs the vertex data for the vertex where the turtle is currently located, if any.
+			</description>
+		</method>
 		<method name="llll">
 			<arglist />
 			<digest>
@@ -68,6 +205,28 @@
 				result is output through the outlet(s).
 			</description>
 		</method>
+		<method name="llll">
+			<arglist />
+			<digest>
+				Set state
+			</digest>
+			<description>
+				Sets the current state of the object. The syntax must follow the one described in the
+				<m>dump</m> message documentation.
+			</description>
+		</method>
+		<method name="range">
+			<arg name="arguments" optional="0" type="list" />
+			<digest>
+				Set the Y range
+			</digest>
+			<description>
+				The <m>range</m> message, followed by two numbers, sets minimum and maximum coordinates
+				to be displayed on the Y axis
+				The <m>range</m> message,  followed by the "start" or "end" symbol and a number, sets the coordinate
+				to be displayed respectively at the bottom boundary or at top right boundary of the object box.
+			</description>
+		</method>
 		<method name="read">
 			<arg name="file_name" optional="1" type="symbol" />
 			<digest>
@@ -76,6 +235,74 @@
 			<description>
 				The specified file is read from disk and the llll it contains loaded as current state.
 				Syntax is expected to be in the format explained in the <m>dump</m> message documentation.
+			</description>
+		</method>
+		<method name="setturtle">
+			<arg name="label_or_coord" optional="1" type="sym" />
+			<arg name="index_or_coord_or_label" optional="0" type="llll/sym" />
+			<digest>
+				Set the turtle
+			</digest>
+			<description>
+				Examples:<br />
+				• <b>setturtle 3</b>   <i>→ Set the turtle on the 3rd vertex</i><br />
+				• <b>setturtle coord (0 10)</b>   <i>→ Set the turtle on the nearest vertex to x=0, y=10</i><br />
+				• <b>setturtle label Warsaw</b>   <i>→ Set the turtle on the vertex having "Warsaw" as label</i><br />
+				<br />
+				The <m>setturtle</m> message, followed by an integer <m>N</m> sets the turtle on the <m>N</m>-th vertex, without causing any output.
+				If followed by the "coord" symbol and an <m>llll</m> of the kind <b>(<m>x</m>, <m>y</m>)</b>
+				it sets the turtle on the nearest vertex to the given (<m>x</m>, <m>y</m>) location, always without causing any output. <br />
+				If <m>relativeturtle</m> is on, the coordinates are expected to be between 0 and 1, relative to the current domain and range
+				(caveat: more precisely, to the domain and range of the latest painted view of the object). <br />
+				If the <m>setturtle</m> message is followed by the "label" symbol, i.e. <b>setturtle label <m>vertexlabel</m></b>,
+				the turtle is positioned on the grain (if any) having <m>vertexlabel</m> as label.
+			</description>
+		</method>
+		<method name="turtle">
+			<arg name="label_or_coord" optional="1" type="sym" />
+			<arg name="index_or_coord_or_label" optional="0" type="llll/sym" />
+			<digest>
+				Set the turtle and output vertex data
+			</digest>
+			<description>
+				Examples:<br />
+				• <b>turtle 3</b>   <i>→ Set the turtle on the 3rd vertex, and output vertex data</i><br />
+				• <b>turtle coord (0 10)</b>   <i>→ Set the turtle on the nearest vertex to x=0, y=10, and output vertex data</i><br />
+				• <b>turtle label Warsaw</b>   <i>→ Set the turtle on the vertex having "Warsaw" as label, and output vertex data</i><br />
+				<br />
+				The <m>setturtle</m> message, followed by an integer <m>N</m> sets the turtle on the <m>N</m>-th vertex,
+				outputting the corresponding vertex data, prepended by the "turtle" symbol and the vertex number.
+				If followed by the "coord" symbol and an <m>llll</m> of the kind <b>(<m>x</m>, <m>y</m>)</b>
+				it sets the turtle on the nearest vertex to the given (<m>x</m>, <m>y</m>) location. <br />
+				If <m>relativeturtle</m> is on, the coordinates are expected to be between 0 and 1, relative to the current domain and range
+				(caveat: more precisely, to the domain and range of the latest painted view of the object). <br />
+				If the <m>setturtle</m> message is followed by the "label" symbol, i.e. <b>setturtle label <m>vertexlabel</m></b>,
+				the turtle is positioned on the grain (if any) having <m>vertexlabel</m> as label.
+			</description>
+		</method>
+		<method name="turtleclear">
+			<arglist />
+			<digest>
+				Clear history of turtled vertices
+			</digest>
+			<description>
+				The <m>turtleclear</m> message will clear the history of turtled vertices (useful in combination with <m>turtlemarkov</m>,
+				to reset the repetition avoidance mechanism).
+				<br />				See also:<m>turtlemarkov</m><br />
+			</description>
+		</method>
+		<method name="turtlemarkov">
+			<arglist />
+			<digest>
+				Move the turtle on the probability graph
+			</digest>
+			<description>
+				The <m>turtlemarkov</m> message will move the turtle on a vertex which is connected to the current vertex,
+				in a probabilistic fashion (i.e.: the more distant vertices are,
+				the less likely it is for the turtle to end up on them).
+				If <m>memory</m> is greater than 1, then repetition with previous states will be avoided, according to such attribute.
+				If there's no connected grain to the current turtled vertex, or if no new vertex could be reached, and "end" notification is sent.
+				<br />				See also:<m>turtleclear</m><br />
 			</description>
 		</method>
 		<method name="write">
@@ -112,7 +339,7 @@
 				Default Arc Color
 			</digest>
 			<description>
-				Color of the arcs
+				Sets the color of the arcs.
 			</description>
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Color" />
@@ -121,6 +348,71 @@
 				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="rgba" />
+			</attributelist>
+		</attribute>
+		<attribute name="autocoordalgo" get="1" set="1" type="int" size="1">
+			<digest>
+				Autoplacement Algorithm
+			</digest>
+			<description>
+				Sets the node placement algorithm for automatical node coordinates assignment.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Settings" />
+				<attribute name="default" get="1" set="1" type="int" size="1" value="2" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Autoplacement Algorithm" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="enumindex" />
+			</attributelist>
+		</attribute>
+		<attribute name="autocoordsize" get="1" set="1" type="float" size="1">
+			<digest>
+				Autoplacement Start Canvas Size
+			</digest>
+			<description>
+				Size of the starting canvas for the autoplacement algorithm.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Settings" />
+				<attribute name="default" get="1" set="1" type="float" size="1" value="100" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Autoplacement Start Canvas Size" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
+			</attributelist>
+		</attribute>
+		<attribute name="autocoordwhenupdated" get="1" set="1" type="int" size="1">
+			<digest>
+				Automatically Assign Node Coordinates When Updated
+			</digest>
+			<description>
+				Toggles the ability to assign node coordinates automatically, via the node placement
+				algorithm set by the attribute <m>autocoordalgo</m>.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Settings" />
+				<attribute name="default" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Automatically Assign Node Coordinates When Updated" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="enumindex" />
+			</attributelist>
+		</attribute>
+		<attribute name="autozoomwhenupdated" get="1" set="1" type="int" size="1">
+			<digest>
+				Auto Zoom When Updated
+			</digest>
+			<description>
+				Toggles the ability to adjust the zoom automatically when the graph is changed.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Settings" />
+				<attribute name="default" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Auto Zoom When Updated" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
 		</attribute>
 		<attribute name="axescolor" get="1" set="1" type="" size="1">
@@ -139,6 +431,22 @@
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="rgba" />
 			</attributelist>
 		</attribute>
+		<attribute name="axeslabelscolor" get="1" set="1" type="" size="1">
+			<digest>
+				Axes Labels Color
+			</digest>
+			<description>
+				Sets the color of the x and y axes labels.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Color" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="0.4 0.4 0.4 1." />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Axes Labels Color" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="rgba" />
+			</attributelist>
+		</attribute>
 		<attribute name="continuousbang" get="1" set="1" type="" size="1">
 			<digest>
 				Continuously Output bang if Changed 
@@ -150,25 +458,24 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Continuously Output bang if Changed " />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
 		</attribute>
-		<attribute name="cursorcolor" get="1" set="1" type="rgba" size="1">
+		<attribute name="edgeretouch" get="1" set="1" type="int" size="1">
 			<digest>
-				Cursor Color
+				Edge Retouch
 			</digest>
 			<description>
-				Color of the
+				Sets the edge retouch mode.
 			</description>
 			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Color" />
-				<attribute name="default" get="1" set="1" type="rgba" size="1" value="0.34 0.87 0.20 1." />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Cursor Color" />
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Appearance" />
+				<attribute name="default" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Edge Retouch" />
 				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="style" get="1" set="1" type="symbol" size="1" value="rgba" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="enumindex" />
 			</attributelist>
 		</attribute>
 		<attribute name="edgewidth" get="1" set="1" type="float" size="1">
@@ -176,6 +483,7 @@
 				Network Edge Line Width
 			</digest>
 			<description>
+				Sets the line with for the edge lines.
 			</description>
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Appearance" />
@@ -191,14 +499,34 @@
 				Line Style
 			</digest>
 			<description>
+				Sets the line style for the edges.
 			</description>
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Appearance" />
-				<attribute name="default" get="1" set="1" type="int" size="1" value="2" />
+				<attribute name="default" get="1" set="1" type="int" size="1" value="0" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Line Style" />
 				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="enumindex" />
+			</attributelist>
+		</attribute>
+		<attribute name="memory" get="1" set="1" type="atom" size="1">
+			<digest>
+				Markov Turtling Avoid Repetitions Memory
+			</digest>
+			<description>
+				Sets a number <m>N</m> so that repetitions of the same grain will be avoided before <m>N</m> steps have passed.
+				Set this value to "inf" to always avoid repetitions. Default is 1: repetition is only avoided with the current step (i.e.
+				the new step will be different from the current one.
+				A <m>turtleclear</m> message will reset the memory.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Settings" />
+				<attribute name="default" get="1" set="1" type="atom" size="1" value="1" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Markov Turtling Avoid Repetitions Memory" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
 			</attributelist>
 		</attribute>
 		<attribute name="messagebang" get="1" set="1" type="" size="1">
@@ -212,7 +540,6 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Send bang Upon Messages" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
@@ -222,7 +549,7 @@
 				Default Node Background Color
 			</digest>
 			<description>
-				Color of the node background
+				Sets the default color of the node background.
 			</description>
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Color" />
@@ -235,23 +562,55 @@
 		</attribute>
 		<attribute name="nodebordercolor" get="1" set="1" type="rgba" size="1">
 			<digest>
-				Node Border Color
+				Default Node Border Color
 			</digest>
 			<description>
-				Color of the border of nodes
+				Sets the default color of the border of nodes.
 			</description>
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Color" />
 				<attribute name="default" get="1" set="1" type="rgba" size="1" value="0.1 0.1 0.1 1." />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Node Border Color" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Default Node Border Color" />
 				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="rgba" />
 			</attributelist>
 		</attribute>
+		<attribute name="nodeformat" get="1" set="1" type="int" size="1">
+			<digest>
+				Node Format
+			</digest>
+			<description>
+				Sets the format for the node display.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Appearance" />
+				<attribute name="default" get="1" set="1" type="int" size="1" value="0" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Node Format" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="enumindex" />
+			</attributelist>
+		</attribute>
+		<attribute name="nodeshape" get="1" set="1" type="int" size="1">
+			<digest>
+				Node Shape
+			</digest>
+			<description>
+				Sets the line style for the edges.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Appearance" />
+				<attribute name="default" get="1" set="1" type="int" size="1" value="0" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Node Shape" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="enumindex" />
+			</attributelist>
+		</attribute>
 		<attribute name="nodesize" get="1" set="1" type="float" size="1">
 			<digest>
-				Node size
+				Node Size
 			</digest>
 			<description>
 				Size of the node (0. meaning auto).
@@ -259,7 +618,7 @@
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Appearance" />
 				<attribute name="default" get="1" set="1" type="float" size="1" value="0." />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Node size" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Node Size" />
 				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
@@ -267,18 +626,36 @@
 		</attribute>
 		<attribute name="nodetextcolor" get="1" set="1" type="rgba" size="1">
 			<digest>
-				Node Text Color
+				Default Node Text Color
 			</digest>
 			<description>
-				Color of the text in the nodes
+				Sets the default color of the text in the nodes.
 			</description>
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Color" />
 				<attribute name="default" get="1" set="1" type="rgba" size="1" value="0.1 0.1 0.1 1." />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Node Text Color" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Default Node Text Color" />
 				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="rgba" />
+			</attributelist>
+		</attribute>
+		<attribute name="notify" get="1" set="1" type="" size="1">
+			<digest>
+				Send Notifications
+			</digest>
+			<description>
+				Toggles the ability to send notifications for interface activities (such as clicks, mousehovers, etc.).
+				Notifications are sent through the dedicated outlet. If the "Verbose" mode is set, whenever meaningful, the state
+				of the notified element will be also output.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Send Notifications" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="enumindex" />
 			</attributelist>
 		</attribute>
 		<attribute name="out" get="1" set="1" type="symbol" size="1">
@@ -286,18 +663,27 @@
 				Outlet Types
 			</digest>
 			<description>
-				The <m>out</m> attribute is a sequence of characters identifying the outlet types (one character for each llll outlet). Characters can be one of the followings: <br />
+				The <m>out</m> attribute is a sequence of characters identifying the outlet types (one character for each llll outlet). Characters can be one of the following: <br />
 				<m>n</m> (default): 'native' output: faster and more precise between bach objects, but unreadable by standard Max objects (an "bach.llll" message appears instead). <br />
-				<m>t</m>: 'text' output: slower and limited in size, but readable by standard Max objects. A plain llll in text format is a generic Max message. <br />
+				<m>t</m>: 'text' output: slower and limited in size, but readable by standard Max objects. A plain llll in text format is a generic Max message.
+				To keep the representation invertible (i.e., to allow a bach object receiving a text-format llll to interpret it exactly as if it was native format,
+				except for the size limitation), some specific kinds of symbols are preceded by a backtick: namely, symbols containing parens, or containing textual
+				representations of numbers or pitches, or beginning with a backtick, plus the symbols "null" and "nil" (distinct from the reserved words
+				"null" and "nil" representing the empty list and the empty sublist) are preceded by a backtick. Moreover, the symbols "int", "float" or "list"
+				are preceded by a backtick only if they are the first element of an llll, to distinguish them from the corresponding reserved messages of Max. <br />
+				<m>m</m>: 'max' output: mostly equivalent to the "t" specifier, but no symbol is backticket except "int", "float" and "list" at the beginning of an llll.
+				It is important to notice that, differently from text-format lllls proper, Max-format lllls might not be invertible even if they do not reach the size
+				limit for Max message. This means that a bach object receiving a Max-format llll output from another bach object might interpret it differently
+				from the original, or in some cases might even reject it. <br />
 				<m>x</m>: disabled output (nothing is output) <br />
 				<m>p</m>: 'portal' output: only used by bach.portal to intercept the @out attribute specified while creating the abstraction (see bach.portal). <br />
-				The native output is recommended, unless communication with standard Max messages is needed. Disabling unused outputs can be useful if extreme optimization of the patch is needed.
+				The native output is recommended, unless communication with standard Max messages is needed.
+				Disabling unused outputs can be useful if extreme optimization of the patch is needed.
 				<br /> <br />
 			</description>
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Outlet Types" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
 			</attributelist>
 		</attribute>
@@ -309,7 +695,6 @@
 			</description>
 			<attributelist>
 				<attribute name="default" get="1" set="1" type="" size="1" value="0 0 300 300" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
 			</attributelist>
 		</attribute>
@@ -318,7 +703,7 @@
 				Play Color
 			</digest>
 			<description>
-				Sets the color playing color.
+				Sets the playing color.
 			</description>
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Color" />
@@ -357,41 +742,12 @@
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
 			</attributelist>
 		</attribute>
-		<attribute name="shape" get="1" set="1" type="int" size="1">
-			<digest>
-				Node Shape
-			</digest>
-			<description>
-			</description>
-			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Appearance" />
-				<attribute name="default" get="1" set="1" type="int" size="1" value="0" />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Node Shape" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="style" get="1" set="1" type="symbol" size="1" value="enumindex" />
-			</attributelist>
-		</attribute>
-		<attribute name="showarcs" get="1" set="1" type="int" size="1">
-			<digest>
-				Show Arcs
-			</digest>
-			<description>
-			</description>
-			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Appearance" />
-				<attribute name="default" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Show Arcs" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
-			</attributelist>
-		</attribute>
 		<attribute name="showarrows" get="1" set="1" type="int" size="1">
 			<digest>
 				Show Arrows
 			</digest>
 			<description>
+				Toggles the ability to show the edge arrows.
 			</description>
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Appearance" />
@@ -410,9 +766,39 @@
 				Toggles the display of the x and y axes.
 			</description>
 			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Grid" />
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Axes And Grid" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="1" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Show Axes" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
+			</attributelist>
+		</attribute>
+		<attribute name="showaxeslabels" get="1" set="1" type="" size="1">
+			<digest>
+				Show Axes Labels
+			</digest>
+			<description>
+				Toggles the display of the x and y axes labels.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Axes And Grid" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Show Axes Labels" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
+			</attributelist>
+		</attribute>
+		<attribute name="showedges" get="1" set="1" type="int" size="1">
+			<digest>
+				Show Edges
+			</digest>
+			<description>
+				Toggles the ability to show the edges.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Appearance" />
+				<attribute name="default" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Show Edges" />
 				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
@@ -423,6 +809,7 @@
 				Show Nodes
 			</digest>
 			<description>
+				Toggles the ability to show the nodes.
 			</description>
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Appearance" />
@@ -438,6 +825,7 @@
 				Show Arc Weights
 			</digest>
 			<description>
+				Toggles the ability to show the edge weights.
 			</description>
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Appearance" />
@@ -456,12 +844,49 @@
 				Toggles the ability to snap items to the grid.
 			</description>
 			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Grid" />
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Axes And Grid" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Snap To Grid" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
+			</attributelist>
+		</attribute>
+		<attribute name="tonedivision" get="1" set="1" type="int" size="1">
+			<digest>
+				Microtonal Division
+			</digest>
+			<description>
+				In the bach environment, the tone division defines the microtonal accuracy of the symbolic representation,
+				by representing the number of steps in which each tone is divided.
+				For the standard semitonal representation (where just sharps and flats suffice), one can stick with
+				<m>tonedivision</m> being 2, meaning: the tone is divided into two semitones.
+				By increasing this value, the microtonal grid gets more dense: for instance, 4 is the quartertonal grid
+				(where each tone is divided in 4 quartertones); 8 is the eight-tonal grid, and so on.
+				<br /> <br />
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Settings" />
+				<attribute name="default" get="1" set="1" type="int" size="1" value="2" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Microtonal Division" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
+			</attributelist>
+		</attribute>
+		<attribute name="turtlecolor" get="1" set="1" type="rgba" size="1">
+			<digest>
+				Turtle Color
+			</digest>
+			<description>
+				Sets the color of the turtle.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Color" />
+				<attribute name="default" get="1" set="1" type="rgba" size="1" value="0.34 0.87 0.20 1." />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Turtle Color" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="rgba" />
 			</attributelist>
 		</attribute>
 		<attribute name="undobang" get="1" set="1" type="" size="1">
@@ -475,7 +900,6 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="1" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Send bang Upon Undo" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
@@ -491,7 +915,6 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="1" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Save State For Undo Before Playing" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
@@ -507,6 +930,36 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Appearance" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="100" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Vertical Zoom %" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
+			</attributelist>
+		</attribute>
+		<attribute name="xlabel" get="1" set="1" type="" size="1">
+			<digest>
+				X Axis Label
+			</digest>
+			<description>
+				Sets the label for the x axis.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Axes And Grid" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="X Axis Label" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
+			</attributelist>
+		</attribute>
+		<attribute name="ylabel" get="1" set="1" type="" size="1">
+			<digest>
+				Y Axis Label
+			</digest>
+			<description>
+				Sets the label for the y axis.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Axes And Grid" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Y Axis Label" />
 				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
@@ -530,15 +983,22 @@
 		</attribute>
 	</attributelist>
 
+	<!--DISCUSSION-->
+	<discussion>
+		The module relies on the Boost library in order to provide node autopositioning.
+	</discussion>
+
 	<!--SEEALSO-->
 	<seealsolist>
-		<seealso name="bach.nodes" />
+		<seealso name="dada.machines" />
+		<seealso name="dada.nodes" />
+		<seealso name="bach.poset" />
 	</seealsolist>
 
 	<misc name = "Input">
 		<entry name ="Inlet 1 (llll)">
 			<description>
-				Network uigraph.
+				Network graph, or messages.
 			</description>
 		</entry>
 	</misc>
@@ -547,6 +1007,34 @@
 		<entry name ="Outlet 1 (llll)">
 			<description>
 				Dump outlet.
+			</description>
+		</entry>
+		<entry name ="Outlet 2 (llll)">
+			<description>
+				Node value on mouse hover or click.
+			</description>
+		</entry>
+		<entry name ="Outlet 3 (llll)">
+			<description>
+				Queries and notifications.
+			</description>
+		</entry>
+		<entry name ="Outlet 4 (bang)">
+			<description>
+				bang when object is changed via the interface.
+			</description>
+		</entry>
+	</misc>
+
+	<misc name = "Discussion">
+		<entry name ="More details">
+			<description>
+		The module relies on the Boost library in order to provide node autopositioning.
+			</description>
+		</entry>
+		<entry name ="Keywords">
+			<description>
+graph, network, process.
 			</description>
 		</entry>
 	</misc>

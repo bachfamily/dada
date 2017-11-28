@@ -32,4 +32,4 @@ dada math
 dada.help
 /Users/danieleghisi/Documents/Max 7/Packages/dada/help/dada.help.json
 dada.help.home.maxpat, dada.help.search.maxpat, dada.help.searchtag.maxpat
-/Users/danieleghisi/Documents/Max 7/Packages/bach/source/commons/dada_doc_commons.h
+/Users/danieleghisi/Documents/Max 7/Packages/dada/source/commons/dada_doc_commons.h

@@ -605,7 +605,7 @@ void ext_main(void *moduleRef)
 	srand(time(NULL));
 
 	if (llllobj_check_version(bach_get_current_llll_version()) || llllobj_test()) {
-		dada_error_bachcheck;
+		dada_error_bachcheck();
 		return;
 	}
 
@@ -1785,12 +1785,18 @@ void platform_set_state(t_platform *x, t_llll *state)
         x->global_time = 0;
 
     if (x->hero && hero_as_llll) {
-        const long NUM_ROUTERS_TO_REMOVE = 4;
-        t_symbol *ROUTERS_TO_REMOVE[4];
+        const long NUM_ROUTERS_TO_REMOVE = 10;
+        t_symbol *ROUTERS_TO_REMOVE[10];
         ROUTERS_TO_REMOVE[0] = gensym("coord");
         ROUTERS_TO_REMOVE[1] = gensym("speed");
         ROUTERS_TO_REMOVE[2] = gensym("direction");
         ROUTERS_TO_REMOVE[3] = gensym("state");
+        ROUTERS_TO_REMOVE[4] = gensym("idlesprite");
+        ROUTERS_TO_REMOVE[5] = gensym("walksprite");
+        ROUTERS_TO_REMOVE[6] = gensym("jumpsprite");
+        ROUTERS_TO_REMOVE[7] = gensym("glidesprite");
+        ROUTERS_TO_REMOVE[8] = gensym("flysprite");
+        ROUTERS_TO_REMOVE[9] = gensym("deadsprite");
         remove_subllll_with_routers(hero_as_llll, NUM_ROUTERS_TO_REMOVE, ROUTERS_TO_REMOVE);
         dadaitem_set_from_llll(dadaobj_cast(x), (t_dadaitem *)x->hero, hero_as_llll, 0);
         
@@ -2180,7 +2186,6 @@ void *platform_new(t_symbol *s, long argc, t_atom *argv)
 {
 	t_platform *x = NULL;
 	t_dictionary *d = NULL;
-	long i;
 	long boxflags;
 	t_llll *llll_for_rebuild = NULL;
 	
@@ -4259,19 +4264,19 @@ t_symbol *direction_to_sym(long direction)
 {
     switch (direction) {
         case DADA_GAMECHAR_VIA_SIDE_BOTTOM:
-            gensym("down");
+            return gensym("down");
             break;
 
         case DADA_GAMECHAR_VIA_SIDE_TOP:
-            gensym("up");
+            return gensym("up");
             break;
         
         case DADA_GAMECHAR_VIA_SIDE_LEFT:
-            gensym("left");
+            return gensym("left");
             break;
         
         case DADA_GAMECHAR_VIA_SIDE_RIGHT:
-            gensym("right");
+            return gensym("right");
             break;
             
         default:

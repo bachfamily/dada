@@ -157,6 +157,38 @@
 
 	<!--ATTRIBUTES-->
 	<attributelist>
+		<attribute name="allowcentershift" get="1" set="1" type="" size="1">
+			<digest>
+				Allow Center Shifting
+			</digest>
+			<description>
+				Toggles the ability to allow the center to shift.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="1" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Allow Center Shifting" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
+			</attributelist>
+		</attribute>
+		<attribute name="bgimage" get="1" set="1" type="" size="1">
+			<digest>
+				Background Image
+			</digest>
+			<description>
+				Sets a background image texture, tiling the plane. Use "" or "none" to remove the image.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Appearance" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="none" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Background Image" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
+			</attributelist>
+		</attribute>
 		<attribute name="bitdepth" get="1" set="1" type="int" size="1">
 			<digest>
 				Bit Depth
@@ -173,6 +205,53 @@
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
 			</attributelist>
 		</attribute>
+		<attribute name="center" get="1" set="1" type="" size="1">
+			<digest>
+				Center Coordinates
+			</digest>
+			<description>
+				Sets the coordinate of the center
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Appearance" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="0 0" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Center Coordinates" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
+			</attributelist>
+		</attribute>
+		<attribute name="continuousbang" get="1" set="1" type="" size="1">
+			<digest>
+				Continuously Output bang if Changed 
+			</digest>
+			<description>
+				Toggles the ability to send the changed bang continuously during mousedrag actions.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Continuously Output bang if Changed " />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
+			</attributelist>
+		</attribute>
+		<attribute name="embed" get="1" set="1" type="" size="1">
+			<digest>
+				Save Data With Patcher
+			</digest>
+			<description>
+				Toggles the ability to embed the state of the object within the patcher.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="1" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Save Data With Patcher" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
+			</attributelist>
+		</attribute>
 		<attribute name="hiprec" get="1" set="1" type="int" size="1">
 			<digest>
 				High Precision Display
@@ -184,6 +263,37 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Appearance" />
 				<attribute name="default" get="1" set="1" type="int" size="1" value="0" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="High Precision Display" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
+			</attributelist>
+		</attribute>
+		<attribute name="maxundosteps" get="1" set="1" type="" size="1">
+			<digest>
+				Maximum Number Of Undo Steps
+			</digest>
+			<description>
+				Sets the maximum number of undo steps (0 being: no undo).
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="50" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Maximum Number Of Undo Steps" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
+			</attributelist>
+		</attribute>
+		<attribute name="messagebang" get="1" set="1" type="" size="1">
+			<digest>
+				Send bang Upon Messages
+			</digest>
+			<description>
+				Toggles the ability to send the changed bang also when changes happen via messages.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Send bang Upon Messages" />
 				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
@@ -233,13 +343,96 @@
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
 			</attributelist>
 		</attribute>
-		<attribute name="playstep" get="1" set="1" type="" size="1">
+		<attribute name="snaptogrid" get="1" set="1" type="" size="1">
 			<digest>
-				
+				Snap To Grid
 			</digest>
 			<description>
+				Toggles the ability to snap items to the grid.
 			</description>
 			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Axes And Grid" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Snap To Grid" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
+			</attributelist>
+		</attribute>
+		<attribute name="undobang" get="1" set="1" type="" size="1">
+			<digest>
+				Send bang Upon Undo
+			</digest>
+			<description>
+				Toggles the ability to send the changed bang also when changes happen via messages.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="1" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Send bang Upon Undo" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
+			</attributelist>
+		</attribute>
+		<attribute name="undobeforeplay" get="1" set="1" type="" size="1">
+			<digest>
+				Save State For Undo Before Playing
+			</digest>
+			<description>
+				Toggles the ability to save the state for an undo step before playing
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="1" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Save State For Undo Before Playing" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
+			</attributelist>
+		</attribute>
+		<attribute name="verboseundo" get="1" set="1" type="" size="1">
+			<digest>
+				Post Undo/Redo Steps
+			</digest>
+			<description>
+				Toggles the ability to post undo/redo steps in the Max window.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Post Undo/Redo Steps" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
+			</attributelist>
+		</attribute>
+		<attribute name="vzoom" get="1" set="1" type="" size="1">
+			<digest>
+				Vertical Zoom %
+			</digest>
+			<description>
+				Sets the object vertical zoom percentage
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Appearance" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="100" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Vertical Zoom %" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
+			</attributelist>
+		</attribute>
+		<attribute name="zoom" get="1" set="1" type="" size="1">
+			<digest>
+				Zoom %
+			</digest>
+			<description>
+				Sets the object zoom percentage (or horizontal zoom, if the object is separately zoommable on horizontal and on vertical axis).
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Appearance" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="100" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Zoom %" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
 			</attributelist>
 		</attribute>

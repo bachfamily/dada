@@ -94,7 +94,9 @@
 				Edit content or play
 			</digest>
 			<description>
-				// • <m>Cmd+Z</m> (mac) or <m>Ctrl+Z</m> (win): perform undo step<br />
+				• <m>Esc</m>: reset center to (0, 0) and zoom to 100%<br />
+				• <m>Tab</m>: autozoom<br />
+				• <m>Cmd+Z</m> (mac) or <m>Ctrl+Z</m> (win): perform undo step<br />
 				• <m>Cmd+Shift+Z</m> (mac) or <m>Ctrl+Y</m> (win): perform redo step<br />
 				• <m>Spacebar</m>: toggle play<br />
 			</description>
@@ -105,7 +107,10 @@
 				Edit content
 			</digest>
 			<description>
-				// • <m>click+drag</m> on an element ot move it<br />
+				• <m>mousewheel scroll</m>: move the visible region <br />
+				• <m>Cmd+mousewheel scroll</m> (mac) or <m>Ctrl+mousewheel scroll</m> (win): change zoom <br />
+				• <m>right-click</m> or <m>two-fingers tap</m>: open contextual menu for basic operations<br />
+				• <m>click+drag</m> on an element ot move it<br />
 				   ↪ Add the <m>Alt</m> key to duplicate it<br />
 				• <m>Cmd+click</m> (mac) or <m>Ctrl+click</m> (win) on to delete it<br />
 				• <m>right click</m> or <m>two fingers tap</m>: open contextual menu<br />
@@ -117,7 +122,17 @@
 				Navigate or edit content
 			</digest>
 			<description>
-				// @copy DADA_DOC_TOOLS_ZX
+				Tools are combination of a specific key pressed and some mouse action. Whenever you press the key, if the tool is available,
+				the mouse cursor will switch to the tool specific one. <br />
+				Available tools are: <br />
+				• Keep the <m>Z</m> key pressed, then click and drag on the canvas to change the zoom <br />
+				• Keep the <m>X</m> key pressed, then click and drag on the canvas to move the displayed center <br />
+				• Keep the <m>N</m> key pressed, click on the desired element and drag up or down in order to modify its pitch. <br />
+				• Keep the <m>V</m> key pressed, click on the desired element and drag up or down in order to modify its velocity. <br />
+				• Keep the <m>S</m> key pressed, click on the desired element and drag up or down in order to scale its magnitude or value. <br />
+				• Keep the <m>R</m> key pressed, click on the desired element and drag up or down in order to rotate it. <br />
+				• Keep the <m>Q</m> key pressed, click on an element, drag up or down to modify the color hue or saturation. <br />
+				• Keep the <m>L</m> key pressed, click on an element, keep the mouse down and release the mouse on another element to connect the two elements. <br />
 			</description>
 		</method>
 		<method name="addball">
@@ -199,6 +214,16 @@
 				(channel <m>MIDIchannel</m>) (flags <m>flags</m>)</b>. <br />
 				A first argument limits the elements to be dumped.
 				The <m>dump room</m> message only dumps the room state; the <m>dump balls</m> message only dumps the balls state. <br />
+				Graph syntax in dada is the following one <b>(<m>VERTEX1</m> <m>VERTEX2</m>...) (<m>EDGE1</m> <m>EDGE2</m>...)</b>.
+				Each vertex is an llll shaped as <b>((coord <m>x</m> <m>y</m>) <m>METADATA1</m> <m>METADATA2</m>...)</b>.
+				Each edge is an llll shaped as <b>(<m>edge_start_vertex_index</m> <m>edge_end_vertex_index</m> <m>METADATA1</m> <m>METADATA2</m>...)</b>,
+				where the indices of the vertices are 1-based, and correspond to the position on the vertices in the corresponding vertices llll.
+				The <m>METADATA</m> llll may depend on the graph metadata type. For instance, if the edges or vertices contain information about pitch
+				and velocity, they might be something like <b>(pitch <m>midicents_value</m>)</b> and/or <b>(velocity <m>velocity_value</m>)</b>.
+				<br /> <br />
+				Item flags syntax in dada is the following one <b>(flags <m>flag1</m> <m>flag2</m>...)</b>, where each flag is one of the following symbols:
+				<b>lock</b>, <b>mute</b>, <b>solo</b>, <b>inactive</b>.
+				<br /> <br />
 			</description>
 		</method>
 		<method name="flush">
@@ -502,6 +527,21 @@
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
 		</attribute>
+		<attribute name="continuousbang" get="1" set="1" type="" size="1">
+			<digest>
+				Continuously Output bang if Changed 
+			</digest>
+			<description>
+				Toggles the ability to send the changed bang continuously during mousedrag actions.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Continuously Output bang if Changed " />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
+			</attributelist>
+		</attribute>
 		<attribute name="edgewidth" get="1" set="1" type="float" size="1">
 			<digest>
 				Room Edge Line Width
@@ -534,21 +574,19 @@
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
 		</attribute>
-		<attribute name="middlecoctave" get="1" set="1" type="int" size="1">
+		<attribute name="messagebang" get="1" set="1" type="" size="1">
 			<digest>
-				Middle C Octave
+				Send bang Upon Messages
 			</digest>
 			<description>
-				Sets the octave number of the middle C. By default this is 4 (meaning that C4 = Do4 is the middle C);
-				values of 3 and 5 are also encountered. This value is used if <m>showbounce</m> is set to "Note Name".
+				Toggles the ability to send the changed bang also when changes happen via messages.
 			</description>
 			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Settings" />
-				<attribute name="default" get="1" set="1" type="int" size="1" value="4" />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Middle C Octave" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Send bang Upon Messages" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
 		</attribute>
 		<attribute name="mode" get="1" set="1" type="int" size="1">
@@ -564,24 +602,6 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Settings" />
 				<attribute name="default" get="1" set="1" type="int" size="1" value="0" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Metadata Mode" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="style" get="1" set="1" type="symbol" size="1" value="enumindex" />
-			</attributelist>
-		</attribute>
-		<attribute name="notenamesstyle" get="1" set="1" type="int" size="1">
-			<digest>
-				Note Names Style
-			</digest>
-			<description>
-				In the bach environment you can choose to represent note names in two different ways: either with the latin
-				symbols (Do, Re, Mi, Fa, Sol, La, Si) or with the anglo-saxon letters (C, D, E, F, G, A, B).
-				<br /> <br />
-			</description>
-			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Settings" />
-				<attribute name="default" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Note Names Style" />
 				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="enumindex" />
@@ -603,6 +623,24 @@
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
 		</attribute>
+		<attribute name="notify" get="1" set="1" type="" size="1">
+			<digest>
+				Send Notifications
+			</digest>
+			<description>
+				Toggles the ability to send notifications for interface activities (such as clicks, mousehovers, etc.).
+				Notifications are sent through the dedicated outlet. If the "Verbose" mode is set, whenever meaningful, the state
+				of the notified element will be also output.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Send Notifications" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="enumindex" />
+			</attributelist>
+		</attribute>
 		<attribute name="out" get="1" set="1" type="symbol" size="1">
 			<digest>
 				Outlet Types
@@ -610,7 +648,21 @@
 			<description>
 				The <m>out</m> attribute is a sequence of characters identifying the outlet types (one character for each llll outlet). Characters can be one of the following: <br />
 				<m>n</m> (default): 'native' output: faster and more precise between bach objects, but unreadable by standard Max objects (an "bach.llll" message appears instead). <br />
-				<m>t</m>: 'text' output: slower and limited in size, but readable by standard Max objects. A plain llll in text format is a generic Max message. To keep the representation invertible (i.e., to allow a bach object receiving a text-format llll to interpret it exactly as if it was native format, e
+				<m>t</m>: 'text' output: slower and limited in size, but readable by standard Max objects. A plain llll in text format is a generic Max message.
+				To keep the representation invertible (i.e., to allow a bach object receiving a text-format llll to interpret it exactly as if it was native format,
+				except for the size limitation), some specific kinds of symbols are preceded by a backtick: namely, symbols containing parens, or containing textual
+				representations of numbers or pitches, or beginning with a backtick, plus the symbols "null" and "nil" (distinct from the reserved words
+				"null" and "nil" representing the empty list and the empty sublist) are preceded by a backtick. Moreover, the symbols "int", "float" or "list"
+				are preceded by a backtick only if they are the first element of an llll, to distinguish them from the corresponding reserved messages of Max. <br />
+				<m>m</m>: 'max' output: mostly equivalent to the "t" specifier, but no symbol is backticket except "int", "float" and "list" at the beginning of an llll.
+				It is important to notice that, differently from text-format lllls proper, Max-format lllls might not be invertible even if they do not reach the size
+				limit for Max message. This means that a bach object receiving a Max-format llll output from another bach object might interpret it differently
+				from the original, or in some cases might even reject it. <br />
+				<m>x</m>: disabled output (nothing is output) <br />
+				<m>p</m>: 'portal' output: only used by bach.portal to intercept the @out attribute specified while creating the abstraction (see bach.portal). <br />
+				The native output is recommended, unless communication with standard Max messages is needed.
+				Disabling unused outputs can be useful if extreme optimization of the patch is needed.
+				<br /> <br />
 			</description>
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
@@ -754,6 +806,21 @@
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="enumindex" />
 			</attributelist>
 		</attribute>
+		<attribute name="undobang" get="1" set="1" type="" size="1">
+			<digest>
+				Send bang Upon Undo
+			</digest>
+			<description>
+				Toggles the ability to send the changed bang also when changes happen via messages.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="1" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Send bang Upon Undo" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
+			</attributelist>
+		</attribute>
 		<attribute name="vertexsize" get="1" set="1" type="float" size="1">
 			<digest>
 				Room Vertex Size
@@ -765,6 +832,38 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Appearance" />
 				<attribute name="default" get="1" set="1" type="float" size="1" value="4." />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Room Vertex Size" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
+			</attributelist>
+		</attribute>
+		<attribute name="vzoom" get="1" set="1" type="" size="1">
+			<digest>
+				Vertical Zoom %
+			</digest>
+			<description>
+				Sets the object vertical zoom percentage
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Appearance" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="100" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Vertical Zoom %" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
+			</attributelist>
+		</attribute>
+		<attribute name="zoom" get="1" set="1" type="" size="1">
+			<digest>
+				Zoom %
+			</digest>
+			<description>
+				Sets the object zoom percentage (or horizontal zoom, if the object is separately zoommable on horizontal and on vertical axis).
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Appearance" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="100" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Zoom %" />
 				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />

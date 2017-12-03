@@ -9,7 +9,7 @@
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 539.0, 113.0, 831.0, 633.0 ],
+		"rect" : [ 100.0, 100.0, 831.0, 633.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -270,7 +270,9 @@
 									"numpoints" : 40,
 									"outlettype" : [ "signal" ],
 									"patching_rect" : [ 23.0, 311.847839, 248.0, 232.152161 ],
-									"wheelfunction" : "none",
+									"staticfunction" : "",
+									"versionnumber" : 10000,
+									"wheelfunction" : "",
 									"zoom" : 1.373225
 								}
 
@@ -388,7 +390,6 @@
 					}
 ,
 					"patching_rect" : [ 39.0, 154.0, 66.0, 22.0 ],
-					"presentation_rect" : [ 39.0, 154.0, 0.0, 0.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -422,7 +423,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 539.0, 139.0, 831.0, 607.0 ],
+						"rect" : [ 0.0, 26.0, 831.0, 607.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -458,7 +459,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 477.0, 280.847839, 174.0, 25.0 ],
-									"presentation_rect" : [ 477.0, 286.847839, 0.0, 0.0 ],
 									"style" : "",
 									"text" : "Modulation amount"
 								}
@@ -472,7 +472,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 477.0, 255.847839, 174.0, 25.0 ],
-									"presentation_rect" : [ 488.0, 257.0, 0.0, 0.0 ],
 									"style" : "",
 									"text" : "Equal power interpolation"
 								}
@@ -733,7 +732,9 @@
 									"numpoints" : 40,
 									"outlettype" : [ "signal" ],
 									"patching_rect" : [ 23.0, 280.847839, 248.0, 232.152161 ],
-									"wheelfunction" : "none",
+									"staticfunction" : "",
+									"versionnumber" : 10000,
+									"wheelfunction" : "",
 									"zoom" : 1.674
 								}
 
@@ -931,7 +932,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 0.0, 26.0, 831.0, 607.0 ],
+						"rect" : [ 100.0, 126.0, 831.0, 607.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -1369,9 +1370,10 @@
 									"patching_rect" : [ 23.0, 280.847839, 247.0, 252.369568 ],
 									"pathcolor" : [ 0.007977, 1.0, 0.0, 1.0 ],
 									"pathmode" : 0,
-									"staticfunction" : "return cos(0.005*x)*cos(0.005*y);",
+									"staticfunction" : "return cos(0.0001*x*y)*cos(0.0001*y*y);",
 									"type" : 0,
-									"wheelfunction" : "return cos(sqrt(3.1416+theta)  * 1000000);",
+									"versionnumber" : 10000,
+									"wheelfunction" : "",
 									"zoom" : 10.0
 								}
 
@@ -1728,8 +1730,8 @@
  ],
 		"lines" : [  ],
 		"parameters" : 		{
-			"obj-2::obj-30" : [ "Gain", "Gain", 0 ],
-			"obj-3::obj-30" : [ "Gain[1]", "Gain", 0 ]
+			"obj-3::obj-30" : [ "Gain[1]", "Gain", 0 ],
+			"obj-2::obj-30" : [ "Gain", "Gain", 0 ]
 		}
 ,
 		"dependency_cache" : [ 			{

@@ -455,9 +455,7 @@ void base_edclose(t_base *x, char **ht, long size)
 {
     // do something with the text
     if (ht) {
-        t_atom av;
-        atom_setobj(&av, *ht);
-        t_llll *ll = llll_parse(1, &av);
+        t_llll *ll = llll_from_text_buf(*ht, size > MAX_SYM_LENGTH);
         if (ll) {
             xbase_destroy_all_tables(x->xbase);
             llll_to_db(x->xbase, ll, x->escape_single_quotes, x->convert_null_to_default);

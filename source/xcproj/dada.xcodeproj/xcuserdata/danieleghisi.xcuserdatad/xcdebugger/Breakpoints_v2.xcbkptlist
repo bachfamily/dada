@@ -730,12 +730,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../mains/dada.base.c"
-            timestampString = "533133046.076873"
+            timestampString = "534427988.436675"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1112"
-            endingLineNumber = "1112"
-            landmarkName = "base_entries_create_from_file()"
+            startingLineNumber = "441"
+            endingLineNumber = "441"
+            landmarkName = "base_dblclick()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -746,28 +746,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../mains/dada.base.c"
-            timestampString = "533133046.076873"
+            timestampString = "534428092.259294"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1390"
-            endingLineNumber = "1390"
-            landmarkName = "llll_to_db()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "../mains/dada.base.c"
-            timestampString = "534010688.39395"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "457"
-            endingLineNumber = "457"
-            landmarkName = "base_edclose()"
+            startingLineNumber = "439"
+            endingLineNumber = "439"
+            landmarkName = "base_dblclick()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

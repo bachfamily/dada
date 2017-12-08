@@ -688,6 +688,14 @@ void escape_single_quotes_do(char *buf, long size)
 }
 
 
+long llll_obj_to_sym_fn(void *data, t_hatom *a, const t_llll *address)
+{
+    if (hatom_gettype(a) == H_OBJ)
+        hatom_setsym(a, gensym((char *)hatom_getobj(a)));
+    return 1;
+}
+
+
 
 void xbase_entry_create_do(t_xbase *b, t_symbol *table_name, t_llllelem *specs_head, t_llll *only_these_fields, char escape_single_quotes, char convert_null_to_default)
 {
@@ -796,6 +804,8 @@ void xbase_entry_create_do(t_xbase *b, t_symbol *table_name, t_llllelem *specs_h
                                         t_llll *newll = llll_behead(llll_clone(ll));
                                         if (!newll) newll = llll_get();
                                         
+                                        // must convert H_OBJs element in the llll into symbols
+                                        llll_funall(newll, llll_obj_to_sym_fn, NULL, 1, -1, FUNALL_ONLY_PROCESS_ATOMS);
                                         
                                         if (xbase_store_lllls_with_phonenumbers(b)) {
                                             this_values_size = snprintf_zero(values + values_cur, VALUES_ALLOC - values_size, firstname ? "%d" : ", %d", newll->l_phonenumber);
@@ -1055,6 +1065,8 @@ void base_distanceentry_create(t_base *x, t_symbol *msg, long ac, t_atom *av)
 
 
 
+
+
 long llll_free_with_strings_fn(void *data, t_hatom *a, const t_llll *address)
 {
     if (hatom_gettype(a) == H_OBJ)
@@ -1114,7 +1126,8 @@ void base_entries_create_from_file(t_base *x, t_symbol *msg, long ac, t_atom *av
     t_llll *parsed = llllobj_parse_llll((t_object *) x, LLLL_OBJ_VANILLA, NULL, ac, av, LLLL_PARSE_RETAIN);
     t_llll *fields = NULL;
     if (parsed) {
-        llll_parseargs(NULL, parsed, "l", gensym("cols"), &fields);
+        llll_parseargs_and_attrs(NULL, parsed, "l", gensym("cols"), &fields);
+//        llll_parseargs(NULL, parsed, "l", gensym("cols"), &fields);
         if (parsed && parsed->l_head && hatom_gettype(&parsed->l_head->l_hatom) == H_SYM) {
             base_entries_create_from_file_do(x, hatom_getsym(&parsed->l_head->l_hatom), parsed->l_head->l_next && hatom_gettype(&parsed->l_head->l_next->l_hatom) == H_SYM ? hatom_getsym(&parsed->l_head->l_next->l_hatom) : NULL, fields);
         }

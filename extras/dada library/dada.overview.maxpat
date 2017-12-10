@@ -63,7 +63,7 @@
 					"numoutlets" : 0,
 					"patching_rect" : [ 243.0, 11.0, 120.0, 19.0 ],
 					"style" : "",
-					"text" : "v0.1 alpha",
+					"text" : "v0.1.0.1 alpha",
 					"textcolor" : [ 0.109804, 0.109804, 0.109804, 1.0 ],
 					"varname" : "autohelp_top_digest[3]"
 				}
@@ -257,7 +257,7 @@
 					"name" : "cage.overviewswitch.maxpat",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"offset" : [ 0.0, -3272.0 ],
+					"offset" : [ 0.0, -4856.0 ],
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{

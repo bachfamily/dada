@@ -755,5 +755,68 @@
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../commons/dada.interface.c"
+            timestampString = "536866157.59163"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "198"
+            endingLineNumber = "198"
+            landmarkName = "dadaobj_mousewheel()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "dadaobj_mousewheel(dadaobj*, object*, _pt, long, double, double)"
+                  moduleName = "dada.catart"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/danieleghisi/Documents/Max%207/Packages/dada/source/commons/dada.interface.c"
+                  timestampString = "536866157.596691"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "198"
+                  endingLineNumber = "198"
+                  offsetFromSymbolStart = "231">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "dadaobj_mousewheel(dadaobj*, object*, _pt, long, double, double)"
+                  moduleName = "dada.base"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/danieleghisi/Documents/Max%207/Packages/dada/source/commons/dada.interface.c"
+                  timestampString = "536866157.596945"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "198"
+                  endingLineNumber = "198"
+                  offsetFromSymbolStart = "231">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "dadaobj_mousewheel(dadaobj*, object*, _pt, long, double, double)"
+                  moduleName = "dada.segment"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/danieleghisi/Documents/Max%207/Packages/dada/source/commons/dada.interface.c"
+                  timestampString = "536866157.597117"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "198"
+                  endingLineNumber = "198"
+                  offsetFromSymbolStart = "231">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

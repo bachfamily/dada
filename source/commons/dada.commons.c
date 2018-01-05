@@ -265,7 +265,7 @@ t_pt delta_pix_to_delta_coord(t_dadaobj *r_ob, t_pt delta_pixel)
 			return res;
 		}
 		default:
-			return build_pt(delta_pixel.x/r_ob->m_zoom.zoom.x, -delta_pixel.y/r_ob->m_zoom.zoom.x);
+			return build_pt(delta_pixel.x/r_ob->m_zoom.zoom.x, -delta_pixel.y/r_ob->m_zoom.zoom.y);
 	}
 }
 

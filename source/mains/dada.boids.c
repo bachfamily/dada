@@ -620,7 +620,7 @@ boids_rule_fn get_rule_prototype_from_code(t_boids *x, t_symbol *fun_name, t_sym
     string = (t_object *)object_new(CLASS_NOBOX, gensym("string"), buf);
     atom_setobj(&str, string);
     
-    t_symbol *ps_addsymbol = gensym("addsymbol");
+/*    t_symbol *ps_addsymbol = gensym("addsymbol");
     object_method(clang, ps_addsymbol, gensym("acosh"), &acosh);
     object_method(clang, ps_addsymbol, gensym("asinh"), &asinh);
     object_method(clang, ps_addsymbol, gensym("atanh"), &atanh);
@@ -628,6 +628,7 @@ boids_rule_fn get_rule_prototype_from_code(t_boids *x, t_symbol *fun_name, t_sym
     object_method(clang, ps_addsymbol, gensym("hypot"), &hypot);
     object_method(clang, ps_addsymbol, gensym("trunc"), &trunc);
     object_method(clang, ps_addsymbol, gensym("round"), &round);
+    */
     
     // compile the string
     object_method_typed(clang, gensym("compile"), 1, &str, &ret);
@@ -729,7 +730,7 @@ int C74_EXPORT main(void)
 	common_symbols_init();
 	llllobj_common_symbols_init();
 	
-	if (llllobj_check_version(bach_get_current_llll_version()) || llllobj_test()) {
+	if (dada_check_bach_version() || llllobj_test()) {
 		dada_error_bachcheck();
 		return 1;
 	}

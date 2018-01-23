@@ -570,6 +570,7 @@ void life_set_custom_rule(t_life *x, t_symbol *rule)
 	string = (t_object *)object_new(CLASS_NOBOX, gensym("string"), buf);
 	atom_setobj(&str, string);
 	
+    /*
     t_symbol *ps_addsymbol = gensym("addsymbol");
     object_method(x->clang, ps_addsymbol, gensym("acosh"), &acosh);
     object_method(x->clang, ps_addsymbol, gensym("asinh"), &asinh);
@@ -578,6 +579,7 @@ void life_set_custom_rule(t_life *x, t_symbol *rule)
     object_method(x->clang, ps_addsymbol, gensym("hypot"), &hypot);
     object_method(x->clang, ps_addsymbol, gensym("trunc"), &trunc);
     object_method(x->clang, ps_addsymbol, gensym("round"), &round);
+    */
     
 	// compile the string
 	object_method_typed(x->clang, gensym("compile"), 1, &str, &ret);
@@ -620,7 +622,7 @@ int C74_EXPORT main(void)
 	llllobj_common_symbols_init();
 	
 
-	if (llllobj_check_version(bach_get_current_llll_version()) || llllobj_test()) {
+	if (dada_check_bach_version() || llllobj_test()) {
 		dada_error_bachcheck();
 		return 1;
 	}

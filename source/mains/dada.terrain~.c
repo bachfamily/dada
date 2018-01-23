@@ -356,7 +356,7 @@ int C74_EXPORT main(void)
     
     srand(time(NULL));
     
-    if (llllobj_check_version(bach_get_current_llll_version()) || llllobj_test()) {
+    if (dada_check_bach_version() || llllobj_test()) {
         dada_error_bachcheck();
         return 1;
     }
@@ -661,6 +661,7 @@ void terrain_set_custom_wheelfunction(t_terrain *x, t_symbol *code)
     
     object_method(x->clang_wheel, gensym("include_standard_headers"));
 
+    /*
     t_symbol *ps_addsymbol = gensym("addsymbol");
     object_method(x->clang_wheel, ps_addsymbol, gensym("acosh"), &acosh);
     object_method(x->clang_wheel, ps_addsymbol, gensym("asinh"), &asinh);
@@ -669,6 +670,7 @@ void terrain_set_custom_wheelfunction(t_terrain *x, t_symbol *code)
     object_method(x->clang_wheel, ps_addsymbol, gensym("hypot"), &hypot);
     object_method(x->clang_wheel, ps_addsymbol, gensym("trunc"), &trunc);
     object_method(x->clang_wheel, ps_addsymbol, gensym("round"), &round);
+    */
     
     // make a new string object (alternative to symbol that avoids post)
     string = (t_object *)object_new(CLASS_NOBOX, gensym("string"), buf);

@@ -613,15 +613,19 @@ typedef struct dadaobj_pxjbox
 
 
 
-long dada_get_current_version_number();
 
-
+/// handling version numbers
+long dada_check_bach_version();
 void dada_error_bachcheck();
+
+long dada_get_current_version_number();
+void dadaobj_set_version_number(t_dadaobj *d_ob, long version_number);
+void dadaobj_set_current_version_number(t_dadaobj *d_ob);
+
+/// atomic locks
 void dada_atomic_lock(t_dadaobj *r_ob);
 void dada_atomic_unlock(t_dadaobj *r_ob);
 
-void dadaobj_set_version_number(t_dadaobj *d_ob, long version_number);
-void dadaobj_set_current_version_number(t_dadaobj *d_ob);
 
 void dadaobj_setup(t_object *ob, t_dadaobj *r_ob, long flags, t_pt zoom_static_additional,
 				   long playout_outlet, long changebang_outlet, long notification_outlet, invalidate_and_redraw_fn invalidate_and_redraw,

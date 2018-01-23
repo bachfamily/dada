@@ -244,7 +244,7 @@ int C74_EXPORT main(void)
 	common_symbols_init();
 	llllobj_common_symbols_init();
 	
-	if (llllobj_check_version(bach_get_current_llll_version()) || llllobj_test()) {
+	if (dada_check_bach_version() || llllobj_test()) {
 		dada_error_bachcheck();
 		return 1;
 	}

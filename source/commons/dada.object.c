@@ -13,13 +13,32 @@
 #include "dada.popupmenu.h"
 #include "dada.undo.h"
 
+long dada_check_bach_version()
+{
+    long min_required_bach_version = 80000;
+    bach = (t_bach *) gensym("bach")->s_thing;
+    if (!bach) {
+        return 1;
+    } else if (bach->b_version < min_required_bach_version) {
+        return 1;
+    }
+    return 0;
+}
+
 void dada_error_bachcheck()
 {
     if (!gensym("bach")->s_thing) {
         error("error: dada needs bach to be installed in order to work (www.bachproject.net).");
     } else {
-        error("error: your bach version (%s) is not supported by this dada version.", bach_get_current_version_string_verbose());
-        error("   to fix this, please upgrade both bach and dada to their latest version.");
+        char temp[2048];
+        snprintf_zero(temp, 2048, "%s", bach_get_current_version_string_verbose());
+        if (temp[0]) {
+            error("error: dada needs a bach version of at least 0.8.");
+            error("   Your bach version is %s. Please upgrade bach.", temp);
+        } else {
+            error("error: dada needs a bach version of at least 0.8.", temp);
+            error("   You have installed an older version. Please upgrade bach.");
+        }
     }
 }
 

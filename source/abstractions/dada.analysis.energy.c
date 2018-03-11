@@ -1,12 +1,12 @@
 /**
 	@file
-	dada.analysis.loudness.c
+	dada.analysis.energy.c
 	
 	@name 
-	dada.analysis.loudness
+	dada.analysis.energy
 	
 	@realname 
-	dada.analysis.loudness
+	dada.analysis.energy
 
 	@type
 	abstraction
@@ -18,13 +18,13 @@
 	Daniele Ghisi
 	
 	@digest 
-	Symbolic loudness
+	Symbolic energy
 	
 	@description
-	Finds the loudness of a score.
+	Finds the average velocity of a score.
 	
 	@discussion
-	The loudness is computed as the sum of all relative durations in the score
+	The energy is computed as the sum of all relative durations in the score
 	(i.e. duration of notes, divided by the duration of the whole score), weighted
 	by the corresponding velocities.
 
@@ -32,7 +32,7 @@
 	dada, dada abstractions, dada analysis
 
 	@keywords
-	analysis, loudness, velocity, duration, sum
+	analysis, loudness, energy, velocity, duration, sum
 
 	@seealso
 	dada.segment, dada.catart, dada.analysis.centroid, dada.analysis.spread
@@ -78,8 +78,8 @@ llllobj_class_add_out_attr(c, LLLL_OBJ_VANILLA);
 // OUTLETS
 // ---------------
 
-// @out 0 @type llll @digest Score loudness
-// @description Outputs the loudness of the score, intended as the sum of all 
+// @out 0 @type llll @digest Score energy
+// @description Outputs the energy of the score, intended as the sum of all 
 // relative durations in the score (i.e. duration of notes, divided by the duration 
 // of the whole score), weighted by the corresponding velocities. 
 

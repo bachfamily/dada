@@ -1369,16 +1369,18 @@ void convexcomb_to_xy(double *val, long num_vals, double *xv, double *yv, double
 }
 
 
-void build_grains(t_catart *x)
+long build_grains(t_catart *x)
 {
+    long num_output_grains = 0;
+    
     if (!x->d_database || strlen(x->d_database->s_name) <= 0 || !x->tablename || strlen(x->tablename->s_name) <= 0) {
         object_error((t_object *)x, "Define a valid database and table name.");
-        return; // nothing to build
+        return 0; // nothing to build
     }
 
     if (!x->field_x || strlen(x->field_x->s_name) <= 0 || !x->field_y || strlen(x->field_y->s_name) <= 0) {
         object_error((t_object *)x, "Define valid 'xfield' and 'yfield' attributes.");
-        return;
+        return 0;
     }
 	
 	
@@ -1629,6 +1631,7 @@ void build_grains(t_catart *x)
 	numrecords = db_result_numrecords(result);
 	numfields = db_result_numfields_local(result);
 	
+    num_output_grains = 0;
 	if (numfields >= 8) {
         i = 0;
         for (char **record = db_result_firstrecord(result); i < numrecords; record = db_result_nextrecord(result), i++) {
@@ -1637,7 +1640,8 @@ void build_grains(t_catart *x)
             
 			// add grain
 			t_catart_grain *gr = (t_catart_grain *)bach_newptr(sizeof(t_catart_grain));
-			double val_x, val_y, val_col, val_size, val_shape; 
+			double val_x, val_y, val_col, val_size, val_shape;
+            num_output_grains++;
 			
             if (x->mode == DADA_CATART_MODE_CARTESIAN) {
                 if (x->field_x_is_string) {
@@ -1719,6 +1723,8 @@ void build_grains(t_catart *x)
 		bach_freeptr(field_size_unique_sym);
 	if (field_shape_unique_sym)
 		bach_freeptr(field_shape_unique_sym);
+
+    return num_output_grains;
 }
 
 
@@ -1727,8 +1733,10 @@ void rebuild_grains(t_catart *x, char preserve_turtle)
     dadaobj_mutex_lock(dadaobj_cast(x));
     // preserve turtle?
     long db_ID = x->turtled_grain ? x->turtled_grain->db_id : -1;
+    long num_grains = 0;
+    
     clear_grains(x);
-    build_grains(x);
+    num_grains = build_grains(x);
     x->turtled_grain = NULL;
     if (preserve_turtle && db_ID >= 0) {
         t_llllelem *elem;
@@ -1745,6 +1753,11 @@ void rebuild_grains(t_catart *x, char preserve_turtle)
         dadaobj_cast(x)->m_zoom.must_autozoom = true;
     dadaobj_mutex_unlock(dadaobj_cast(x));
     llllobj_outlet_symbol_as_llll((t_object *)x, LLLL_OBJ_UI, 2, _sym_done);
+    
+    t_llll *numgrains_ll = llll_get();
+    llll_appendsym(numgrains_ll, gensym("numgrains"));
+    llll_appendlong(numgrains_ll, num_grains);
+    llllobj_outlet_llll((t_object *)x, LLLL_OBJ_UI, 2, numgrains_ll);
 }
 
 

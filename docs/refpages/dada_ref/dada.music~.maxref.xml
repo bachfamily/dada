@@ -268,6 +268,20 @@
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
 		</attribute>
+		<attribute name="jitmatrix" get="1" set="1" type="" size="1">
+			<digest>
+				
+			</digest>
+			<description>
+				Sets the name of a jitter matrix to which the output should be mirrored.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
+			</attributelist>
+		</attribute>
 		<attribute name="maxundosteps" get="1" set="1" type="" size="1">
 			<digest>
 				Maximum Number Of Undo Steps
@@ -299,6 +313,22 @@
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
 		</attribute>
+		<attribute name="notifypaint" get="1" set="1" type="" size="1">
+			<digest>
+				Notify Display Refresh
+			</digest>
+			<description>
+				Toggles the ability to notify every new redraw of the box via a "painted" symbol.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Notify Display Refresh" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
+			</attributelist>
+		</attribute>
 		<attribute name="outputbuffer" get="1" set="1" type="int" size="1">
 			<digest>
 				Output Buffer
@@ -323,7 +353,6 @@
 			</description>
 			<attributelist>
 				<attribute name="default" get="1" set="1" type="" size="1" value="0. 0. 700. 200." />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
 			</attributelist>
 		</attribute>

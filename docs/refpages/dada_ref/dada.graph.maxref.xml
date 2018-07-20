@@ -166,6 +166,25 @@
 				Each edge is an llll shaped as <b>(<m>edge_start_vertex_index</m> <m>edge_end_vertex_index</m> (weight <m>edgeweight</m>))</b>.
 			</description>
 		</method>
+		<method name="exportimage">
+			<arg name="filename" optional="1" type="symbol" />
+			<digest>
+				Save as PNG image
+			</digest>
+			<description>
+				Message attributes:<br />
+				<m>@filename</m> (symbol, default: none): filename<br />
+				<m>@dpi</m> (int, default: 72): Dots Per Inch<br />
+				<m>@width</m> (double, default: none): Width In Coordinates<br />
+				<m>@height</m> (double, default: none): Height In Coordinates<br />
+				<m>@pixelwidth</m> (double, default: none): Width In Pixels<br />
+				<m>@pixelheight</m> (double, default: none): Height In Pixels<br />
+				<m>@center</m> (llll, default: none): Center Coordinates<br />
+				<m>@zoom</m> (llll, default: none): Zoom Percentage<br />
+				<br />
+				Saves the object as a PNG image. Optional argument provides the filename (otherwise a dialog box will pop up).
+			</description>
+		</method>
 		<method name="getdomain">
 			<arglist />
 			<digest>
@@ -494,6 +513,19 @@
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
 			</attributelist>
 		</attribute>
+		<attribute name="jitmatrix" get="1" set="1" type="" size="1">
+			<digest>
+				
+			</digest>
+			<description>
+				Sets the name of a jitter matrix to which the output should be mirrored.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
+			</attributelist>
+		</attribute>
 		<attribute name="linestyle" get="1" set="1" type="int" size="1">
 			<digest>
 				Line Style
@@ -656,6 +688,22 @@
 				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="enumindex" />
+			</attributelist>
+		</attribute>
+		<attribute name="notifypaint" get="1" set="1" type="" size="1">
+			<digest>
+				Notify Display Refresh
+			</digest>
+			<description>
+				Toggles the ability to notify every new redraw of the box via a "painted" symbol.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Notify Display Refresh" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
 		</attribute>
 		<attribute name="out" get="1" set="1" type="symbol" size="1">

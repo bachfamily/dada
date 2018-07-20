@@ -20,6 +20,7 @@ FRAMEWORK_SEARCH_PATHS = "$(C74SUPPORT)/max-includes" "$(C74SUPPORT)/msp-include
 DSTROOT = $(SRCROOT)/../lib ///Developer/SDKs/MaxSDK-6.1.4/dada/lib
 // (This next path is relative to DSTROOT)
 INSTALL_PATH = /
+BACH_LIBRARY_SEARCH_PATH = $(SRCROOT)/../../../bach/source/lib/
 
 // Special Files
 GCC_PREFIX_HEADER = $(C74SUPPORT)/max-includes/macho-prefix.pch

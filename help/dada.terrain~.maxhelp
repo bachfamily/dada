@@ -9,7 +9,7 @@
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 100.0, 100.0, 831.0, 633.0 ],
+		"rect" : [ 198.0, 99.0, 831.0, 633.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -39,6 +39,91 @@
 		"showrootpatcherontab" : 0,
 		"showontab" : 0,
 		"boxes" : [ 			{
+				"box" : 				{
+					"fontname" : "Arial",
+					"fontsize" : 12.0,
+					"id" : "obj-15",
+					"maxclass" : "newobj",
+					"numinlets" : 0,
+					"numoutlets" : 0,
+					"patcher" : 					{
+						"fileversion" : 1,
+						"appversion" : 						{
+							"major" : 7,
+							"minor" : 3,
+							"revision" : 4,
+							"architecture" : "x64",
+							"modernui" : 1
+						}
+,
+						"rect" : [ 0.0, 26.0, 831.0, 607.0 ],
+						"bglocked" : 0,
+						"openinpresentation" : 0,
+						"default_fontsize" : 13.0,
+						"default_fontface" : 0,
+						"default_fontname" : "Arial",
+						"gridonopen" : 1,
+						"gridsize" : [ 5.0, 5.0 ],
+						"gridsnaponopen" : 1,
+						"objectsnaponopen" : 1,
+						"statusbarvisible" : 2,
+						"toolbarvisible" : 1,
+						"lefttoolbarpinned" : 0,
+						"toptoolbarpinned" : 0,
+						"righttoolbarpinned" : 0,
+						"bottomtoolbarpinned" : 0,
+						"toolbars_unpinned_last_save" : 0,
+						"tallnewobj" : 0,
+						"boxanimatetime" : 200,
+						"enablehscroll" : 1,
+						"enablevscroll" : 1,
+						"devicewidth" : 0.0,
+						"description" : "",
+						"digest" : "",
+						"tags" : "",
+						"style" : "",
+						"subpatcher_template" : "",
+						"showontab" : 1,
+						"boxes" : [ 							{
+								"box" : 								{
+									"bgmode" : 0,
+									"border" : 0,
+									"clickthrough" : 0,
+									"enablehscroll" : 0,
+									"enablevscroll" : 0,
+									"id" : "obj-7",
+									"lockeddragscroll" : 0,
+									"maxclass" : "bpatcher",
+									"name" : "dada.commons.maxpat",
+									"numinlets" : 0,
+									"numoutlets" : 0,
+									"offset" : [ 0.0, 0.0 ],
+									"patching_rect" : [ 2.0, 4.0, 673.0, 516.0 ],
+									"viewvisibility" : 1
+								}
+
+							}
+ ],
+						"lines" : [  ]
+					}
+,
+					"patching_rect" : [ 55.0, 193.0, 73.0, 22.0 ],
+					"saved_object_attributes" : 					{
+						"description" : "",
+						"digest" : "",
+						"fontsize" : 13.0,
+						"globalpatchername" : "",
+						"style" : "",
+						"tags" : ""
+					}
+,
+					"style" : "",
+					"text" : "p commons",
+					"varname" : "basic_tab[8]"
+				}
+
+			}
+, 			{
 				"box" : 				{
 					"fontname" : "Arial",
 					"fontsize" : 12.0,
@@ -272,7 +357,6 @@
 									"patching_rect" : [ 23.0, 311.847839, 248.0, 232.152161 ],
 									"staticfunction" : "",
 									"versionnumber" : 10000,
-									"wheelfunction" : "",
 									"zoom" : 1.373225
 								}
 
@@ -734,7 +818,6 @@
 									"patching_rect" : [ 23.0, 280.847839, 248.0, 232.152161 ],
 									"staticfunction" : "",
 									"versionnumber" : 10000,
-									"wheelfunction" : "",
 									"zoom" : 1.674
 								}
 
@@ -932,7 +1015,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 100.0, 126.0, 831.0, 607.0 ],
+						"rect" : [ 198.0, 125.0, 831.0, 607.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -1373,7 +1456,6 @@
 									"staticfunction" : "return cos(0.0001*x*y)*cos(0.0001*y*y);",
 									"type" : 0,
 									"versionnumber" : 10000,
-									"wheelfunction" : "",
 									"zoom" : 10.0
 								}
 
@@ -1730,8 +1812,8 @@
  ],
 		"lines" : [  ],
 		"parameters" : 		{
-			"obj-3::obj-30" : [ "Gain[1]", "Gain", 0 ],
-			"obj-2::obj-30" : [ "Gain", "Gain", 0 ]
+			"obj-2::obj-30" : [ "Gain", "Gain", 0 ],
+			"obj-3::obj-30" : [ "Gain[1]", "Gain", 0 ]
 		}
 ,
 		"dependency_cache" : [ 			{
@@ -1767,11 +1849,53 @@
 				"implicit" : 1
 			}
 , 			{
+				"name" : "dada.commons.maxpat",
+				"bootpath" : "~/Documents/Max 7/Packages/dada/help",
+				"patcherrelativepath" : ".",
+				"type" : "JSON",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "mydadastuff.png",
+				"bootpath" : "/private/tmp",
+				"patcherrelativepath" : "../../../../../../../private/tmp",
+				"type" : "PNG ",
+				"implicit" : 1
+			}
+, 			{
 				"name" : "dada.terrain~.mxo",
 				"type" : "iLaX"
 			}
 , 			{
 				"name" : "bach.args.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "dada.bodies.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "dada.bounce.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.print.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "dada.catart.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "dada.base.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.keys.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "mira.multitouch.mxo",
 				"type" : "iLaX"
 			}
  ],

@@ -210,6 +210,7 @@ void catart_free(t_catart *x);
 void catart_assist(t_catart *x, void *b, long m, long a, char *s);
 
 void catart_paint(t_catart *x, t_object *view);
+void catart_paint_ext(t_catart *x, t_object *view, t_dada_force_graphics *force_graphics);
 
 void catart_int(t_catart *x, t_atom_long num);
 void catart_float(t_catart *x, double num);
@@ -489,10 +490,11 @@ int C74_EXPORT main(void)
 
     
     
-    
+    DADAOBJ_JBOX_DECLARE_IMAGE_METHODS(c);
+
 	llllobj_class_add_out_attr(c, LLLL_OBJ_UI);
 	
-	dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_SPLITXYZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_GRID | DADAOBJ_AXES | DADAOBJ_LABELS | DADAOBJ_MOUSEHOVER | DADAOBJ_AXES_SHOWDEFAULT | DADAOBJ_GRID_SHOWDEFAULT | DADAOBJ_LABELS_SHOWDEFAULT);
+	dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_SPLITXYZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_GRID | DADAOBJ_AXES | DADAOBJ_LABELS | DADAOBJ_MOUSEHOVER | DADAOBJ_AXES_SHOWDEFAULT | DADAOBJ_GRID_SHOWDEFAULT | DADAOBJ_LABELS_SHOWDEFAULT | DADAOBJ_EXPORTTOJITTER);
 	CLASS_ATTR_FILTER_CLIP(c, "zoom", 0.0001, 10000);
 
 	
@@ -1016,7 +1018,7 @@ void *catart_new(t_symbol *s, long argc, t_atom *argv)
 		x->b_ob.r_ob.l_box.b_firstin = (t_object *)x;
 //		object_obex_store((void *)x, _sym_dumpout, (t_object*)outlet_new(x, NULL));
 
-		dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_SPLITXYZOOM | DADAOBJ_CENTEROFFSET, build_pt(5, 5), 3, 4, 2, (invalidate_and_redraw_fn)catart_iar, "vn", 2, "b444");
+		dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_SPLITXYZOOM | DADAOBJ_CENTEROFFSET, build_pt(5, 5), 3, 4, 2, (dada_paint_ext_fn)catart_paint_ext, (invalidate_and_redraw_fn)catart_iar, "vn", 2, "b444");
 		dadaobj_addfunctions(dadaobj_cast(x), (dada_mousemove_fn)catart_mousemove, (method)catart_task, NULL, NULL, NULL, NULL, NULL, NULL);
 
 		x->d_columns = hashtab_new(13);
@@ -1764,13 +1766,14 @@ void rebuild_grains(t_catart *x, char preserve_turtle)
 
 
 //// GRAPHIC DRAWING
-void catart_paint_grains(t_catart *x, t_jgraphics *g, t_object *view, t_rect rect, t_pt center){
+void catart_paint_grains(t_catart *x, t_jgraphics *g, t_object *view, t_rect rect, t_pt center, t_dada_force_graphics *force_graphics)
+{
 	
 	char use_layers = false;
 
 	if (!g) {
  		use_layers = true;
-		g = jbox_start_layer((t_object *)x, view, gensym("grains"), rect.width, rect.height);
+        g = view ? jbox_start_layer((t_object *)x, view, gensym("grains"), rect.width, rect.height) : force_graphics->graphic_context;
 	}
 	
 	if (g){
@@ -1792,11 +1795,11 @@ void catart_paint_grains(t_catart *x, t_jgraphics *g, t_object *view, t_rect rec
 			
 		}
 		
-		if (use_layers)
+		if (use_layers && view)
 			jbox_end_layer((t_object *)x, view, gensym("grains"));
 	}
 	
-	if (use_layers)
+	if (use_layers && view)
 		jbox_paint_layer((t_object *)x, view, gensym("grains"), 0., 0.);	// position of the layer
 }
 
@@ -1824,38 +1827,34 @@ char *catart_atom_to_string(t_atom *a, long max_decimals)
 	}
 }
 
-void catart_paint(t_catart *x, t_object *view)
+void catart_paint_ext(t_catart *x, t_object *view, t_dada_force_graphics *force_graphics)
 {
 	
-	t_jgraphics *g;
-	t_rect rect;
-	t_pt center;
+    t_jgraphics *g = force_graphics->graphic_context;
+	t_rect rect = force_graphics->rect;
+	t_pt center = force_graphics->center_pix;
 	t_jfont *jf = jfont_create_debug("Arial", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL, x->legend_text_size);
 
     if (x->need_rebuild_grains) {
         rebuild_grains(x, true);
     }
-    if (dadaobj_cast(x)->m_zoom.must_autozoom) {
+    if (view && dadaobj_cast(x)->m_zoom.must_autozoom) {
         catart_autozoom_do(x, view);
         dadaobj_cast(x)->m_zoom.must_autozoom = false;
     }
 
     // getting rectangle dimensions
-	g = (t_jgraphics*) patcherview_get_jgraphics(view); 
-	jbox_get_rect_for_view((t_object *)x, view, &rect);
-	center = get_center_pix(dadaobj_cast(x), view, &rect);
-    
-    dadaobj_getdomain(dadaobj_cast(x), view, &x->domain_min, &x->domain_max);
-    dadaobj_getrange(dadaobj_cast(x), view, &x->range_min, &x->range_max);
+    dadaobj_getdomain(dadaobj_cast(x), view, &x->domain_min, &x->domain_max, force_graphics);
+    dadaobj_getrange(dadaobj_cast(x), view, &x->range_min, &x->range_max, force_graphics);
 
     dadaobj_paint_background(dadaobj_cast(x), g, &rect);
 
     dadaobj_mutex_lock(dadaobj_cast(x));
 
-    dadaobj_paint_grid(dadaobj_cast(x), view, rect, center); // axis are inside here
+    dadaobj_paint_grid(dadaobj_cast(x), view, force_graphics); // axis are inside here
 
 	// grains
-	catart_paint_grains(x, NULL, view, rect, center);
+	catart_paint_grains(x, NULL, view, rect, center, force_graphics);
 	
     // painting turtle, if any
     if (x->show_turtle && x->turtled_grain) {
@@ -1931,6 +1930,11 @@ void catart_paint(t_catart *x, t_object *view)
 	jfont_destroy(jf);
 }
 
+
+void catart_paint(t_catart *x, t_object *view)
+{
+    dadaobj_paint(dadaobj_cast(x), view);
+}
 
 
 void catart_autozoom_do(t_catart *x, t_object *view)

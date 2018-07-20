@@ -682,13 +682,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../mains/dada.bounce.c"
-            timestampString = "538408262.129734"
+            timestampString = "553802417.631801"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1956"
-            endingLineNumber = "1956"
-            landmarkName = "show_vertex_popup_menu()"
-            landmarkType = "7">
+            startingLineNumber = "1965"
+            endingLineNumber = "1965"
+            landmarkName = "show_vertex_popup_menu"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -698,13 +698,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../mains/dada.music~.c"
-            timestampString = "538408262.129796"
+            timestampString = "553802417.631883"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1832"
             endingLineNumber = "1832"
-            landmarkName = "music_buffer_to_numsamples_and_bufferidx()"
-            landmarkType = "7">
+            landmarkName = "music_buffer_to_numsamples_and_bufferidx"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -714,13 +714,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../mains/dada.music~.c"
-            timestampString = "538408262.129837"
+            timestampString = "553802417.6319391"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2066"
             endingLineNumber = "2066"
-            landmarkName = "music_mousedown()"
-            landmarkType = "7">
+            landmarkName = "music_mousedown"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -730,7 +730,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../mains/dada.base.c"
-            timestampString = "538408262.129879"
+            timestampString = "553800840.070397"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "441"
@@ -746,13 +746,381 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../mains/dada.base.c"
-            timestampString = "538408262.1299191"
+            timestampString = "553800840.070436"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "439"
             endingLineNumber = "439"
             landmarkName = "base_dblclick"
             landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../mains/dada.platform.c"
+            timestampString = "553802417.632036"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "3627"
+            endingLineNumber = "3627"
+            landmarkName = "platform_key"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../mains/dada.bounce.c"
+            timestampString = "553802417.632519"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2549"
+            endingLineNumber = "2549"
+            landmarkName = "bounce_key"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../commons/dada.object.c"
+            timestampString = "553802417.63257"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1761"
+            endingLineNumber = "1761"
+            landmarkName = "dadaobj_paint"
+            landmarkType = "9">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "dadaobj_paint(dadaobj*, object*)"
+                  moduleName = "dada.multibrot"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/danieleghisi/Documents/Max%207/Packages/dada/source/commons/dada.object.c"
+                  timestampString = "553802442.570155"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1761"
+                  endingLineNumber = "1761"
+                  offsetFromSymbolStart = "194">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "dadaobj_paint(dadaobj*, object*)"
+                  moduleName = "dada.bounce"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/danieleghisi/Documents/Max%207/Packages/dada/source/commons/dada.object.c"
+                  timestampString = "553802442.6227731"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1761"
+                  endingLineNumber = "1761"
+                  offsetFromSymbolStart = "194">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "dadaobj_paint(dadaobj*, object*)"
+                  moduleName = "dada.kaleido"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/danieleghisi/Documents/Max%207/Packages/dada/source/commons/dada.object.c"
+                  timestampString = "553802442.674832"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1761"
+                  endingLineNumber = "1761"
+                  offsetFromSymbolStart = "194">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "dadaobj_paint(dadaobj*, object*)"
+                  moduleName = "dada.life"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/danieleghisi/Documents/Max%207/Packages/dada/source/commons/dada.object.c"
+                  timestampString = "553802442.885336"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1761"
+                  endingLineNumber = "1761"
+                  offsetFromSymbolStart = "194">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "dadaobj_paint(dadaobj*, object*)"
+                  moduleName = "dada.boids"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/danieleghisi/Documents/Max%207/Packages/dada/source/commons/dada.object.c"
+                  timestampString = "553802442.893034"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1761"
+                  endingLineNumber = "1761"
+                  offsetFromSymbolStart = "194">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "dadaobj_paint(dadaobj*, object*)"
+                  moduleName = "dada.nodes"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/danieleghisi/Documents/Max%207/Packages/dada/source/commons/dada.object.c"
+                  timestampString = "553802442.943202"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1761"
+                  endingLineNumber = "1761"
+                  offsetFromSymbolStart = "194">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "dadaobj_paint(dadaobj*, object*)"
+                  moduleName = "dada.platform"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/danieleghisi/Documents/Max%207/Packages/dada/source/commons/dada.object.c"
+                  timestampString = "553802443.157029"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1761"
+                  endingLineNumber = "1761"
+                  offsetFromSymbolStart = "194">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "dadaobj_paint(dadaobj*, object*)"
+                  moduleName = "dada.catart"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/danieleghisi/Documents/Max%207/Packages/dada/source/commons/dada.object.c"
+                  timestampString = "553802443.510327"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1761"
+                  endingLineNumber = "1761"
+                  offsetFromSymbolStart = "194">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "dadaobj_paint(dadaobj*, object*)"
+                  moduleName = "dada.bodies"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/danieleghisi/Documents/Max%207/Packages/dada/source/commons/dada.object.c"
+                  timestampString = "553802443.517475"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1761"
+                  endingLineNumber = "1761"
+                  offsetFromSymbolStart = "194">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "dadaobj_paint(dadaobj*, object*)"
+                  moduleName = "dada.base"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/danieleghisi/Documents/Max%207/Packages/dada/source/commons/dada.object.c"
+                  timestampString = "553802443.530526"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1761"
+                  endingLineNumber = "1761"
+                  offsetFromSymbolStart = "194">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../commons/dada.object.c"
+            timestampString = "553802417.632901"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1811"
+            endingLineNumber = "1811"
+            landmarkName = "dadaobj_jbox_exportimage_do"
+            landmarkType = "9">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "dadaobj_jbox_exportimage_do(dadaobj_jbox*, symbol*, long, atom*)"
+                  moduleName = "dada.multibrot"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/danieleghisi/Documents/Max%207/Packages/dada/source/commons/dada.object.c"
+                  timestampString = "553802442.57292"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1811"
+                  endingLineNumber = "1811"
+                  offsetFromSymbolStart = "1272">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "dadaobj_jbox_exportimage_do(dadaobj_jbox*, symbol*, long, atom*)"
+                  moduleName = "dada.bounce"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/danieleghisi/Documents/Max%207/Packages/dada/source/commons/dada.object.c"
+                  timestampString = "553802442.625754"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1811"
+                  endingLineNumber = "1811"
+                  offsetFromSymbolStart = "1272">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "dadaobj_jbox_exportimage_do(dadaobj_jbox*, symbol*, long, atom*)"
+                  moduleName = "dada.kaleido"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/danieleghisi/Documents/Max%207/Packages/dada/source/commons/dada.object.c"
+                  timestampString = "553802442.678128"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1811"
+                  endingLineNumber = "1811"
+                  offsetFromSymbolStart = "1272">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "dadaobj_jbox_exportimage_do(dadaobj_jbox*, symbol*, long, atom*)"
+                  moduleName = "dada.life"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/danieleghisi/Documents/Max%207/Packages/dada/source/commons/dada.object.c"
+                  timestampString = "553802442.887527"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1811"
+                  endingLineNumber = "1811"
+                  offsetFromSymbolStart = "1272">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "dadaobj_jbox_exportimage_do(dadaobj_jbox*, symbol*, long, atom*)"
+                  moduleName = "dada.boids"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/danieleghisi/Documents/Max%207/Packages/dada/source/commons/dada.object.c"
+                  timestampString = "553802442.8957469"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1811"
+                  endingLineNumber = "1811"
+                  offsetFromSymbolStart = "1272">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "dadaobj_jbox_exportimage_do(dadaobj_jbox*, symbol*, long, atom*)"
+                  moduleName = "dada.nodes"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/danieleghisi/Documents/Max%207/Packages/dada/source/commons/dada.object.c"
+                  timestampString = "553802442.946452"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1811"
+                  endingLineNumber = "1811"
+                  offsetFromSymbolStart = "1272">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "dadaobj_jbox_exportimage_do(dadaobj_jbox*, symbol*, long, atom*)"
+                  moduleName = "dada.platform"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/danieleghisi/Documents/Max%207/Packages/dada/source/commons/dada.object.c"
+                  timestampString = "553802443.15976"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1811"
+                  endingLineNumber = "1811"
+                  offsetFromSymbolStart = "1272">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "dadaobj_jbox_exportimage_do(dadaobj_jbox*, symbol*, long, atom*)"
+                  moduleName = "dada.catart"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/danieleghisi/Documents/Max%207/Packages/dada/source/commons/dada.object.c"
+                  timestampString = "553802443.512761"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1811"
+                  endingLineNumber = "1811"
+                  offsetFromSymbolStart = "1272">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "dadaobj_jbox_exportimage_do(dadaobj_jbox*, symbol*, long, atom*)"
+                  moduleName = "dada.bodies"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/danieleghisi/Documents/Max%207/Packages/dada/source/commons/dada.object.c"
+                  timestampString = "553802443.520144"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1811"
+                  endingLineNumber = "1811"
+                  offsetFromSymbolStart = "1272">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "dadaobj_jbox_exportimage_do(dadaobj_jbox*, symbol*, long, atom*)"
+                  moduleName = "dada.base"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/danieleghisi/Documents/Max%207/Packages/dada/source/commons/dada.object.c"
+                  timestampString = "553802443.533038"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1811"
+                  endingLineNumber = "1811"
+                  offsetFromSymbolStart = "1272">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

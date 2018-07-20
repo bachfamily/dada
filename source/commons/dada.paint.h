@@ -45,7 +45,7 @@ typedef struct _dada_sprite
 
 #define DADA_DEFAULT_RECT_ROUNDNESS	8
 
-void ezpaint_note_with_staff(t_object *x, t_jgraphics *g, t_object *view, double midicents, e_accidentals_preferences accpref, long tonedivision,
+void ezpaint_note_with_staff(t_object *x, t_jgraphics *g, double midicents, e_accidentals_preferences accpref, long tonedivision,
 							 t_pt staff_topleft, double staff_width, double fontsize, double note_x_pos, char shift_note_for_accidentals,
 							 t_jrgba *staffcolor, t_jrgba *clefcolor, t_jrgba *notecolor);
 

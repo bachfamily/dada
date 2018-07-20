@@ -101,6 +101,7 @@ void multibrot_free(t_multibrot *x);
 void multibrot_assist(t_multibrot *x, void *b, long m, long a, char *s);
 
 void multibrot_paint(t_multibrot *x, t_object *view);
+void multibrot_paint_ext(t_multibrot *x, t_object *view, t_dada_force_graphics *force_graphics);
 void multibrot_exportpng(t_multibrot *x, t_symbol *file, long dpi, double width, double height, t_pt exportcenteroffset);
 
 
@@ -286,8 +287,10 @@ int C74_EXPORT main(void)
     // @marg 1 @name params @optional 1 @type llll
     class_addmethod(c, (method)multibrot_anything,		"exportpng",	A_GIMME,	0);
     
+    DADAOBJ_JBOX_DECLARE_IMAGE_METHODS(c);
+
 	llllobj_class_add_out_attr(c, LLLL_OBJ_UI);
-	dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BORDER | DADAOBJ_BORDER_SHOWDEFAULT | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_AXES | DADAOBJ_GRID | DADAOBJ_LABELS);
+	dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BORDER | DADAOBJ_BORDER_SHOWDEFAULT | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_AXES | DADAOBJ_GRID | DADAOBJ_LABELS | DADAOBJ_EXPORTTOJITTER);
     CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"grid",0,"0.2 0.2");
 
     CLASS_ATTR_FILTER_CLIP(c, "zoom", 10, ATOM_LONG_MAX); // default clipping for zoom
@@ -590,7 +593,7 @@ void *multibrot_new(t_symbol *s, long argc, t_atom *argv)
 		x->b_ob.r_ob.l_box.b_firstin = (t_object *)x;
 		x->n_proxy1 = proxy_new((t_object *) x, 1, &x->n_in);
 
-		dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BORDER | DADAOBJ_BORDER_SHOWDEFAULT | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET, build_pt(100., 100.), 2, 3, 2, (invalidate_and_redraw_fn)multibrot_iar, "vn", 2, "b4444");
+		dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BORDER | DADAOBJ_BORDER_SHOWDEFAULT | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET, build_pt(100., 100.), 2, 3, 2, (dada_paint_ext_fn)multibrot_paint_ext, (invalidate_and_redraw_fn)multibrot_iar, "vn", 2, "b4444");
 		dadaobj_addfunctions(dadaobj_cast(x), (dada_mousemove_fn)multibrot_mousemove, NULL, (method)multibrot_undo_postprocess, (get_state_fn)multibrot_get_state, (set_state_fn)multibrot_set_state, NULL, NULL, NULL);
         x->b_ob.d_ob.m_zoom.max_zoom_perc = build_pt(1000000000, 1000000000);
 
@@ -790,12 +793,13 @@ t_jrgba get_color_at_coord(t_multibrot *x, t_pt coord, double *pitch_at_coord, d
 }
 
 
-void multibrot_paint_surface(t_multibrot *x, t_object *view, t_jgraphics *g, t_rect rect, t_pt center, double zoom){
+void multibrot_paint_surface(t_multibrot *x, t_object *view, t_jgraphics *g, t_rect rect, t_pt center, t_dada_force_graphics *force_graphics)
+{
 	
     char to_layer = 0;
     if (!g) {
         to_layer = 1;
-        g = jbox_start_layer((t_object *)x, view, gensym("surface"), rect.width, rect.height);
+        g = view ? jbox_start_layer((t_object *)x, view, gensym("surface"), rect.width, rect.height) : force_graphics->graphic_context;
     }
 	
 	if (g){
@@ -815,16 +819,16 @@ void multibrot_paint_surface(t_multibrot *x, t_object *view, t_jgraphics *g, t_r
 		t_rect rect_ok = build_rect(0, 0, rect.width, rect.height);
 		jgraphics_image_surface_draw(g, surf, rect_ok, rect_ok);
 		
-        if (to_layer)
+        if (to_layer && view)
             jbox_end_layer((t_object *)x, view, gensym("surface"));
 	}
 	
-    if (to_layer)
+    if (to_layer && view)
         jbox_paint_layer((t_object *)x, view, gensym("surface"), 0., 0.);	// position of the layer
 }
 
 
-void paint_main_tester(t_multibrot *x, t_jgraphics *g, t_object *view, t_rect rect, t_pt center)
+void paint_main_tester(t_multibrot *x, t_jgraphics *g, t_pt center)
 {
     double size = x->tester_size;
     t_pt pix = coord_to_pix(dadaobj_cast(x), center, x->tester_coord);
@@ -834,23 +838,28 @@ void paint_main_tester(t_multibrot *x, t_jgraphics *g, t_object *view, t_rect re
     paint_line(g, x->j_testercolor, pix.x, pix.y - 1.5, pix.x, pix.y - size - 1.5, 1);
 }
 
-void multibrot_paint(t_multibrot *x, t_object *view)
+void multibrot_paint_ext(t_multibrot *x, t_object *view, t_dada_force_graphics *force_graphics)
 {
-	t_rect rect;
-	t_pt center = get_center_pix(dadaobj_cast(x), view, &rect);
-	double zoom = x->b_ob.d_ob.m_zoom.zoom.x;
-	t_jgraphics *g = (t_jgraphics*) patcherview_get_jgraphics(view); 
+	t_rect rect = force_graphics->rect;
+	t_pt center = force_graphics->center_pix;
+	double zoom = force_graphics->zoom.x;
+	t_jgraphics *g = force_graphics->graphic_context;
 
 	jgraphics_set_source_rgba(g, 0, 0, 0, 1); // alpha = 1;
 	
-	multibrot_paint_surface(x, view, NULL, rect, center, zoom); // g = NULL, since we wanna paint it on a layer
+	multibrot_paint_surface(x, view, NULL, rect, center, force_graphics); // g = NULL, since we wanna paint it on a layer
 
-    dadaobj_paint_grid(dadaobj_cast(x), view, rect, center);
+    dadaobj_paint_grid(dadaobj_cast(x), view, force_graphics);
 
     if (x->b_ob.d_ob.m_interface.mouse_is_down)
-        paint_main_tester(x, g, view, rect, center);
+        paint_main_tester(x, g, center);
     
     dadaobj_paint_border(dadaobj_cast(x), g, &rect);
+}
+
+void multibrot_paint(t_multibrot *x, t_object *view)
+{
+    dadaobj_paint(dadaobj_cast(x), view);
 }
 
 
@@ -875,7 +884,15 @@ void multibrot_exportpng(t_multibrot *x, t_symbol *file, long dpi, double width,
         t_jsurface *s_studio = jgraphics_image_surface_create(JGRAPHICS_FORMAT_ARGB32, exportrect.width, exportrect.height);
         t_jgraphics *g_studio = jgraphics_create(s_studio);
         jgraphics_set_source_rgba(g_studio, 0, 0, 0, 1.);
-        multibrot_paint_surface(x, NULL, g_studio, exportrect, exportcenter, x->b_ob.d_ob.m_zoom.zoom.x);
+        
+        t_dada_force_graphics force_graphics;
+        force_graphics.graphic_context = g_studio;
+        force_graphics.rect = exportrect;
+        force_graphics.center_pix = exportcenter;
+        force_graphics.zoom = dadaobj_cast(x)->m_zoom.zoom;
+        
+        
+        multibrot_paint_surface(x, NULL, g_studio, exportrect, exportcenter, &force_graphics);
         jgraphics_image_surface_writepng(s_studio, filename, path, dpi);
         jgraphics_destroy(g_studio);
         jgraphics_surface_destroy(s_studio);

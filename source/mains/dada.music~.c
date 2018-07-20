@@ -516,7 +516,7 @@ void *music_new(t_symbol *s, long argc, t_atom *argv)
         x->b_ob.r_ob.l_ob.z_box.b_firstin = (t_object *)x;
         dsp_setupjbox((t_pxjbox *)x, 2);
         
-        dadaobj_pxjbox_setup((t_dadaobj_pxjbox *)x, DADAOBJ_ZOOM | DADAOBJ_AXES | DADAOBJ_GRID | DADAOBJ_BORDER | DADAOBJ_BORDER_SHOWDEFAULT |  DADAOBJ_BG | DADAOBJ_MOUSEHOVER | DADAOBJ_NOTIFICATIONS | DADAOBJ_PLAY, build_pt(1., 1.), -1, -1, 2, (invalidate_and_redraw_fn)music_iar, "", 0, "44s");
+        dadaobj_pxjbox_setup((t_dadaobj_pxjbox *)x, DADAOBJ_ZOOM | DADAOBJ_AXES | DADAOBJ_GRID | DADAOBJ_BORDER | DADAOBJ_BORDER_SHOWDEFAULT |  DADAOBJ_BG | DADAOBJ_MOUSEHOVER | DADAOBJ_NOTIFICATIONS | DADAOBJ_PLAY, build_pt(1., 1.), -1, -1, 2, NULL, (invalidate_and_redraw_fn)music_iar, "", 0, "44s");
         x->b_ob.d_ob.m_zoom.max_zoom_perc = build_pt(100000, 100000);
         //    dadaobj_addfunctions(dadaobj_cast(x), (dada_mousemove_fn)music_mousemove, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
         
@@ -1850,7 +1850,7 @@ void music_send_next_notification(t_music *x)
     switch (dadaobj_cast(x)->m_interface.send_notifications) {
         case DADAOBJ_NOTIFY_BASIC:
         case DADAOBJ_NOTIFY_VERBOSE:
-            dadaobj_send_notification_sym(dadaobj_cast(x), gensym("next"), LLLL_OBJ_UIMSP);
+            dadaobj_send_notification_sym(dadaobj_cast(x), gensym("next"));
             break;
             
         default:
@@ -1985,7 +1985,7 @@ void music_send_mousedown_notification(t_music *x, t_symbol *sym, char forceverb
         n = DADAOBJ_NOTIFY_VERBOSE;
     switch (n) {
         case DADAOBJ_NOTIFY_BASIC:
-            dadaobj_send_notification_sym(dadaobj_cast(x), sym, LLLL_OBJ_UIMSP);
+            dadaobj_send_notification_sym(dadaobj_cast(x), sym);
             break;
             
         case DADAOBJ_NOTIFY_VERBOSE:
@@ -1997,7 +1997,7 @@ void music_send_mousedown_notification(t_music *x, t_symbol *sym, char forceverb
             llll_appendlong(sub_ll, x->mousedownnumsamps);
             llll_appenddouble(sub_ll, mpfr_get_d(x->mousedownphase_hp, DADA_MUSIC_MPFR_RND));
             llll_appendllll(ll, sub_ll);
-            dadaobj_send_notification_llll(dadaobj_cast(x), ll, LLLL_OBJ_UIMSP);
+            dadaobj_send_notification_llll(dadaobj_cast(x), ll);
         }
             break;
         

@@ -163,8 +163,8 @@ long get_mousedown_ptr_index(void *rob)
     return r_ob->m_interface.mousedown_item ? dadaitem_get_index(r_ob, r_ob->m_interface.mousedown_item) : 0;
 }
 
-void dadaobj_setup(t_object *ob, t_dadaobj *r_ob, long flags, t_pt zoom_static_additional,
-				   long playout_outlet, long changebang_outlet, long notification_outlet, invalidate_and_redraw_fn invalidate_and_redraw,
+void dadaobj_setup(t_object *ob, t_dadaobj *r_ob, e_llllobj_obj_types llllobj_type, long flags, t_pt zoom_static_additional,
+				   long playout_outlet, long changebang_outlet, long notification_outlet, dada_paint_ext_fn paint_ext, invalidate_and_redraw_fn invalidate_and_redraw,
 				   const char *tools, 
 				   long stores, const char *outlets, ...)
 {
@@ -172,7 +172,9 @@ void dadaobj_setup(t_object *ob, t_dadaobj *r_ob, long flags, t_pt zoom_static_a
     va_start(args, outlets);
 	
 	r_ob->orig_obj = ob;
-    r_ob->invalidate_and_redraw = invalidate_and_redraw;
+    r_ob->llllobj_type = llllobj_type;
+    r_ob->m_paint.paint_ext = paint_ext;
+    r_ob->m_paint.invalidate_and_redraw = invalidate_and_redraw;
 	
 	systhread_mutex_new_debug(&r_ob->l_mutex, 0);
 	
@@ -232,25 +234,25 @@ void dadaobj_setup(t_object *ob, t_dadaobj *r_ob, long flags, t_pt zoom_static_a
 }
 
 void dadaobj_jbox_setup(t_dadaobj_jbox *b_ob, long flags, t_pt zoom_static_additional,
-						long playout_outlet, long changebang_outlet, long notification_outlet, invalidate_and_redraw_fn invalidate_and_redraw,
+						long playout_outlet, long changebang_outlet, long notification_outlet, dada_paint_ext_fn paint_ext, invalidate_and_redraw_fn invalidate_and_redraw,
 						const char *tools, long stores, const char *outlets, ...)
 {
 	va_list args;
     va_start(args, outlets);
 
 	llllobj_jbox_setup((t_llllobj_jbox *)b_ob, stores, outlets, args);
-	dadaobj_setup((t_object *)b_ob, &b_ob->d_ob, flags, zoom_static_additional, playout_outlet, changebang_outlet, notification_outlet, invalidate_and_redraw, tools, stores, outlets, args);
+	dadaobj_setup((t_object *)b_ob, &b_ob->d_ob, LLLL_OBJ_UI, flags, zoom_static_additional, playout_outlet, changebang_outlet, notification_outlet, paint_ext, invalidate_and_redraw, tools, stores, outlets, args);
 }
 
 void dadaobj_pxjbox_setup(t_dadaobj_pxjbox *b_ob, long flags, t_pt zoom_static_additional,
-						long playout_outlet, long changebang_outlet, long notification_outlet, invalidate_and_redraw_fn invalidate_and_redraw,
+						long playout_outlet, long changebang_outlet, long notification_outlet, dada_paint_ext_fn paint_ext, invalidate_and_redraw_fn invalidate_and_redraw,
 						const char *tools, long stores, const char *outlets, ...)
 {
 	va_list args;
     va_start(args, outlets);
 	
 	llllobj_pxjbox_setup((t_llllobj_pxjbox *)b_ob, stores, outlets, args);
-	dadaobj_setup((t_object *)b_ob, &b_ob->d_ob, flags, zoom_static_additional, playout_outlet, changebang_outlet, notification_outlet, invalidate_and_redraw, tools, stores, outlets, args);
+	dadaobj_setup((t_object *)b_ob, &b_ob->d_ob, LLLL_OBJ_UIMSP, flags, zoom_static_additional, playout_outlet, changebang_outlet, notification_outlet, paint_ext, invalidate_and_redraw, tools, stores, outlets, args);
 }
 
 void dadaobj_addfunctions(t_dadaobj *d_ob, dada_mousemove_fn mousemove_fn, method clock_task, method undo_postprocess, 
@@ -326,27 +328,35 @@ void dadaobj_pxjbox_free(t_dadaobj_pxjbox *b_ob)
 	jbox_free((t_jbox *)b_ob);
 }
 
-void dadaobj_send_changedbang(t_dadaobj *r_ob, e_llllobj_obj_types type)
+void dadaobj_send_changedbang(t_dadaobj *r_ob)
 {
 	if (r_ob->flags & DADAOBJ_CHANGEDBANG && (!r_ob->curr_change_is_from_message || r_ob->m_interface.send_bang_from_messages))
-		llllobj_outlet_bang(r_ob->orig_obj, type, r_ob->m_interface.changebang_out_num);
+		llllobj_outlet_bang(r_ob->orig_obj, r_ob->llllobj_type, r_ob->m_interface.changebang_out_num);
 }
 
-void dadaobj_send_notification_sym(t_dadaobj *r_ob, t_symbol *sym, e_llllobj_obj_types type)
+void dadaobj_send_painted_notification(t_dadaobj *r_ob)
+{
+    t_llll *temp = llll_get();
+    llll_appendsym(temp, _llllobj_sym_painted);
+    llllobj_outlet_llll(r_ob->orig_obj, r_ob->llllobj_type, r_ob->m_interface.notifications_out_num, temp);
+    llll_free(temp);
+}
+
+void dadaobj_send_notification_sym(t_dadaobj *r_ob, t_symbol *sym)
 {
     if (r_ob->flags & DADAOBJ_NOTIFICATIONS && r_ob->m_interface.send_notifications) {
         t_llll *temp = llll_get();
         llll_appendsym(temp, sym);
-        llllobj_outlet_llll(r_ob->orig_obj, type, r_ob->m_interface.notifications_out_num, temp);
+        llllobj_outlet_llll(r_ob->orig_obj, r_ob->llllobj_type, r_ob->m_interface.notifications_out_num, temp);
         llll_free(temp);
     }
 }
 
 // will also free the ll, destructive.
-void dadaobj_send_notification_llll(t_dadaobj *r_ob, t_llll *ll, e_llllobj_obj_types type)
+void dadaobj_send_notification_llll(t_dadaobj *r_ob, t_llll *ll)
 {
     if (r_ob->flags & DADAOBJ_NOTIFICATIONS && r_ob->m_interface.send_notifications) {
-        llllobj_outlet_llll(r_ob->orig_obj, type, r_ob->m_interface.notifications_out_num, ll);
+        llllobj_outlet_llll(r_ob->orig_obj, r_ob->llllobj_type, r_ob->m_interface.notifications_out_num, ll);
         llll_free(ll);
     }
 }
@@ -360,9 +370,9 @@ void dadaobj_jbox_send_changebang(t_dadaobj *r_ob)
 
 void dadaobj_invalidate_and_redraw(t_dadaobj *d_ob)
 {
-    if (!d_ob->dont_repaint) {
-        if (d_ob->invalidate_and_redraw)
-            d_ob->invalidate_and_redraw(d_ob->orig_obj);
+    if (!d_ob->m_paint.dont_repaint) {
+        if (d_ob->m_paint.invalidate_and_redraw)
+            d_ob->m_paint.invalidate_and_redraw(d_ob->orig_obj);
         else
             jbox_redraw((t_jbox *)d_ob->orig_obj);
     }
@@ -769,7 +779,15 @@ void dadaobj_class_init(t_class *c, e_llllobj_obj_types type, long flags)
     CLASS_ATTR_DEFAULT_SAVE(c,"versionnumber", 0, "0");
     CLASS_ATTR_INVISIBLE(c, "versionnumber", ATTR_GET_OPAQUE | ATTR_SET_OPAQUE); // invisible attribute
     // @exclude all
-    
+
+    if (type == LLLL_OBJ_UI || type == LLLL_OBJ_UIMSP) {
+        DADAOBJ_CLASS_ATTR_CHAR_SUBSTRUCTURE(c,type, "notifypaint", 0, t_dadaobj, m_paint, t_paint_manager, notify_when_painted);
+        CLASS_ATTR_STYLE_LABEL(c, "notifypaint", 0, "onoff", "Notify Display Refresh");
+        CLASS_ATTR_DEFAULT_SAVE_PAINT(c, "notifypaint", 0, "0");
+        CLASS_ATTR_CATEGORY(c, "notifypaint", 0, "Behavior");
+        // @description Toggles the ability to notify every new redraw of the box via a "painted" symbol.
+    }
+       
     if (flags & DADAOBJ_BORDER) {
         DADAOBJ_CLASS_ATTR_CHAR_SUBSTRUCTURE(c,type, "showborder", 0, t_dadaobj, m_bg, t_bg_manager, show_border);
         CLASS_ATTR_STYLE_LABEL(c, "showborder", 0, "onoff", "Show Border");
@@ -1089,7 +1107,18 @@ void dadaobj_class_init(t_class *c, e_llllobj_obj_types type, long flags)
             // @description Sets the playing color.
             // @includeifflagged DADAOBJ_PLAY+DADAOBJ_BORDER
         }
-	}  
+	}
+    
+    if (flags & DADAOBJ_EXPORTTOJITTER) {
+        DADAOBJ_CLASS_ATTR_SYM_SUBSTRUCTURE(c,type,"jitmatrix",0, t_dadaobj, m_paint, t_paint_manager, jit_destination_matrix);
+        CLASS_ATTR_STYLE_LABEL(c,"jitmatrix",0,"text","");
+        CLASS_ATTR_DEFAULT_SAVE(c,"jitmatrix",0,"");
+        CLASS_ATTR_CATEGORY(c, "jitmatrix", 0, "Behavior");
+        // @description Sets the name of a jitter matrix to which the output should be mirrored.
+        // @includeifflagged DADAOBJ_EXPORTTOJITTER
+    }
+        
+
 }
 
 void dadaobj_mutex_lock(t_dadaobj *r_ob)
@@ -1127,10 +1156,11 @@ long dadaobj_anything_handle_domain_or_range(t_dadaobj *r_ob, t_symbol *router, 
     
     if (router == gensym("getdomain")) {
         // set the displayed domain (only works for first view)
-        t_object *view = jpatcher_get_firstview((t_object *)gensym("#P")->s_thing);
+//        t_object *view = jpatcher_get_firstview((t_object *)gensym("#P")->s_thing);
+        t_object *view = jpatcher_get_firstview(r_ob->orig_obj);
         double min, max;
         t_llll *res = llll_get();
-        dadaobj_getdomain(r_ob, view, &min, &max);
+        dadaobj_getdomain(r_ob, view, &min, &max, NULL);
         
         llll_appendsym(res, _llllobj_sym_domain);
         llll_appenddouble(res, min);
@@ -1141,10 +1171,11 @@ long dadaobj_anything_handle_domain_or_range(t_dadaobj *r_ob, t_symbol *router, 
         
     } else if (router == gensym("getrange")) {
         // set the displayed domain (only works for first view)
-        t_object *view = jpatcher_get_firstview((t_object *)gensym("#P")->s_thing);
+//        t_object *view = jpatcher_get_firstview((t_object *)gensym("#P")->s_thing);
+        t_object *view = jpatcher_get_firstview(r_ob->orig_obj);
         double min, max;
         t_llll *res = llll_get();
-        dadaobj_getrange(r_ob, view, &min, &max);
+        dadaobj_getrange(r_ob, view, &min, &max, NULL);
         
         llll_appendsym(res, _llllobj_sym_range);
         llll_appenddouble(res, min);
@@ -1169,13 +1200,13 @@ long dadaobj_anything_handle_domain_or_range(t_dadaobj *r_ob, t_symbol *router, 
         
         if (hatom_getsym(&args->l_head->l_hatom) == _llllobj_sym_start) {
             FOR_ALL_VIEWS(r_ob) {
-                dadaobj_getdomain(r_ob, view, &min, &max);
+                dadaobj_getdomain(r_ob, view, &min, &max, NULL);
                 dadaobj_setdomain(r_ob, view, new_val, new_val + (max - min));
             }
             return 1;
         } else if (hatom_getsym(&args->l_head->l_hatom) == _llllobj_sym_end) {
             FOR_ALL_VIEWS(r_ob) {
-                dadaobj_getdomain(r_ob, view, &min, &max);
+                dadaobj_getdomain(r_ob, view, &min, &max, NULL);
                 dadaobj_setdomain(r_ob, view, new_val - (max - min), new_val);
             }
             return 1;
@@ -1196,13 +1227,13 @@ long dadaobj_anything_handle_domain_or_range(t_dadaobj *r_ob, t_symbol *router, 
         
         if (hatom_getsym(&args->l_head->l_hatom) == _llllobj_sym_start) {
             FOR_ALL_VIEWS(r_ob) {
-                dadaobj_getrange(r_ob, view, &min, &max);
+                dadaobj_getrange(r_ob, view, &min, &max, NULL);
                 dadaobj_setrange(r_ob, view, new_val, new_val + (max - min));
             }
             return 1;
         } else if (hatom_getsym(&args->l_head->l_hatom) == _llllobj_sym_end) {
             FOR_ALL_VIEWS(r_ob) {
-                dadaobj_getrange(r_ob, view, &min, &max);
+                dadaobj_getrange(r_ob, view, &min, &max, NULL);
                 dadaobj_setrange(r_ob, view, new_val - (max - min), new_val);
             }
             return 1;
@@ -1224,10 +1255,12 @@ long dadaobj_parse_export_png_syntax(t_dadaobj *r_ob, t_object *view, t_llll *ll
     *filename = NULL;
     
     double domain_min = 0, domain_max = 100, range_min = 0, range_max = 100;
-    if (!view)
-        view = jpatcher_get_firstview((t_object *)gensym("#P")->s_thing);
-    dadaobj_getdomain(r_ob, view, &domain_min, &domain_max);
-    dadaobj_getrange(r_ob, view, &range_min, &range_max);
+    if (!view) {
+//        view = jpatcher_get_firstview((t_object *)gensym("#P")->s_thing);
+        view = jpatcher_get_firstview(r_ob->orig_obj);
+    }
+    dadaobj_getdomain(r_ob, view, &domain_min, &domain_max, NULL);
+    dadaobj_getrange(r_ob, view, &range_min, &range_max, NULL);
     t_pt w = delta_coord_to_delta_pix(r_ob, build_pt(domain_max - domain_min, range_max - range_min));
     
     *width = w.x;
@@ -1324,12 +1357,14 @@ void dadaobj_double_to_string(double val, char *buf, int max_decimals, char also
 
 
 
-void dadaobj_paint_grid(t_dadaobj *r_ob, t_object *view, t_rect rect, t_pt center)
+void dadaobj_paint_grid(t_dadaobj *r_ob, t_object *view, t_dada_force_graphics *force_graphics)
 {
     if (!r_ob->m_grid.show_grid && !r_ob->m_grid.show_axes && !r_ob->m_grid.show_labels)
         return;
-        
-    t_jgraphics *g = jbox_start_layer(r_ob->orig_obj, view, gensym("grid"), rect.width, rect.height);
+    
+    t_rect rect = force_graphics->rect;
+    t_pt center = force_graphics->center_pix;
+    t_jgraphics *g = view ? jbox_start_layer(r_ob->orig_obj, view, gensym("grid"), rect.width, rect.height) : force_graphics->graphic_context;
     
     if (g) {
         if (r_ob->m_grid.show_grid) {
@@ -1358,7 +1393,7 @@ void dadaobj_paint_grid(t_dadaobj *r_ob, t_object *view, t_rect rect, t_pt cente
         }
         
         if (r_ob->m_grid.show_axes) {
-            t_pt origin = get_center_pix(r_ob, view, NULL);
+            t_pt origin = view ? get_center_pix(r_ob, view, NULL) : force_graphics->center_pix;
             const double PAD = 10, PAD_2 = 3;
             
             if (origin.x > -PAD && origin.x < rect.width + PAD)
@@ -1369,7 +1404,7 @@ void dadaobj_paint_grid(t_dadaobj *r_ob, t_object *view, t_rect rect, t_pt cente
         }
         
         if (r_ob->m_grid.show_labels || (r_ob->m_grid.show_axes && r_ob->m_grid.show_axes_labels)) {
-            t_pt origin = get_center_pix(r_ob, view, NULL);
+            t_pt origin = view ? get_center_pix(r_ob, view, NULL) : force_graphics->center_pix;
             t_pt coord = build_pt(0, 0);
             t_pt pix_step = build_pt(r_ob->m_grid.grid_size.x * r_ob->m_zoom.zoom.x, r_ob->m_grid.grid_size.y * r_ob->m_zoom.zoom.y);
             t_jfont *jf_labels = jfont_create_debug("Arial", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL, r_ob->m_grid.labelsfontsize);
@@ -1442,9 +1477,12 @@ void dadaobj_paint_grid(t_dadaobj *r_ob, t_object *view, t_rect rect, t_pt cente
         }
         
         
-        jbox_end_layer(r_ob->orig_obj, view, gensym("grid"));
+        if (view)
+            jbox_end_layer(r_ob->orig_obj, view, gensym("grid"));
     }
-    jbox_paint_layer(r_ob->orig_obj, view, gensym("grid"), 0., 0.);	// position of the layer
+    
+    if (view)
+        jbox_paint_layer(r_ob->orig_obj, view, gensym("grid"), 0., 0.);	// position of the layer
 }
 
 void dadaobj_jbox_set_state_and_free_llll(t_object *x, t_llll *ll)
@@ -1545,3 +1583,398 @@ long dadaitem_identifier_eq(t_dadaitem_identifier id1, t_dadaitem_identifier id2
     return 1;
 }
 
+
+
+t_dada_force_graphics dadaobj_get_forced_graphics_from_view(t_dadaobj *r_ob, t_object *view)
+{
+    t_rect rect;
+    t_jgraphics *g = (t_jgraphics*) patcherview_get_jgraphics(view);
+    jbox_get_rect_for_view(r_ob->orig_obj, view, &rect);
+    
+    t_dada_force_graphics out;
+    out.graphic_context = g;
+    out.rect = rect;
+    out.zoom = r_ob->m_zoom.zoom;
+    out.center_offset = r_ob->m_zoom.center_offset;
+    out.center_pix = get_center_pix(r_ob, view, &rect);
+    
+    return out;
+}
+
+
+
+void dadaobj_paint_to_jitter_matrix(t_dadaobj *r_ob, t_symbol *matrix_name, long width, long height)
+{
+    t_object *x = r_ob->orig_obj;
+    long w = width, h = height;
+    t_rect draw_rect = build_rect(0, 0, w, h);
+    t_jsurface *draw_surface = jgraphics_image_surface_create(JGRAPHICS_FORMAT_ARGB32, w, h);
+    t_jgraphics *draw_g = jgraphics_create(draw_surface);
+    
+    jgraphics_set_source_rgba(draw_g, 0, 0, 0, 1.);
+    //    jgraphics_image_surface_draw(g, bg_slots_surface, rect_oo, rect_oo);
+    
+    t_dada_force_graphics force_graphics;
+    force_graphics.graphic_context = draw_g;
+    force_graphics.rect = draw_rect;
+    force_graphics.center_offset = r_ob->m_zoom.center_offset;
+    force_graphics.zoom = r_ob->m_zoom.zoom;
+    force_graphics.center_pix = coord_to_pix(r_ob, build_pt(draw_rect.width/2., draw_rect.height/2.), r_ob->m_zoom.center_offset);
+    
+    (r_ob->m_paint.paint_ext)(x, NULL, &force_graphics);
+    
+    //find matrix
+    t_jrgba color;
+    void *matrix = jit_object_findregistered(matrix_name);
+    if (matrix && jit_object_method(matrix, _jit_sym_class_jit_matrix)) {
+        long savelock;
+        t_jit_matrix_info minfo;
+        char *bp,*p;
+        
+        savelock = (long) jit_object_method(matrix,_jit_sym_lock,1);
+        jit_object_method(matrix,_jit_sym_getinfo,&minfo);
+        jit_object_method(matrix,_jit_sym_getdata,&bp);
+        
+        if (!bp || minfo.dimcount < 2 || (minfo.planecount != 1 && minfo.planecount != 4)) {
+            object_error((t_object *)x, "Error with jitter matrix");
+            object_error((t_object *)x, "   Please check that it exists, that it has at least 2 dimensions and either 1 or 4 planes.");
+            jit_object_method(matrix,_jit_sym_lock,savelock);
+        } else {
+            
+            if (minfo.dim[0] != w || minfo.dim[1] != h) {
+                minfo.dim[0] = w;
+                minfo.dim[1] = h;
+                if (jit_object_method(matrix, _jit_sym_setinfo, &minfo))
+                    object_warn((t_object *)x, "Cannot resize jitter matrix automatically");
+                jit_object_method(matrix,_jit_sym_getinfo,&minfo);
+                jit_object_method(matrix,_jit_sym_getdata,&bp);
+            }
+            
+            if (!bp || minfo.dimcount < 2 || (minfo.planecount != 1 && minfo.planecount != 4)) {
+                object_error((t_object *)x, "Error with jitter matrix");
+                object_error((t_object *)x, "   Please check that it exists, that it has at least 2 dimensions and either 1 or 4 planes.");
+                jit_object_method(matrix,_jit_sym_lock,savelock);
+            } else {
+                
+                long actual_w = minfo.dim[0], actual_h = minfo.dim[1];
+                
+                if (minfo.type==_jit_sym_char) {
+                    for (long i = 0; i < actual_w; i++) {
+                        for (long j = 0; j < actual_h; j++) {
+                            jgraphics_image_surface_get_pixel(draw_surface, i, j, &color);
+                            p = bp + (j)*minfo.dimstride[1] + (i)*minfo.dimstride[0];
+                            if (minfo.planecount == 1) {
+                                t_jhsla color_hsla = rgba_to_hsla(color);
+                                *((uchar *)p) = round(color_hsla.lightness * color_hsla.alpha * 255);
+                            } else {
+                                *((uchar *)p) = round(color.alpha * 255);
+                                *(((uchar *)p) + 1) = round(color.red * 255);
+                                *(((uchar *)p) + 2) = round(color.green * 255);
+                                *(((uchar *)p) + 3) = round(color.blue * 255);
+                            }
+                        }
+                    }
+                    
+                } else if (minfo.type==_jit_sym_long) {
+                    /*                bp += plane*4;
+                     for (i=0; i<argc; i++,j++) {
+                     p = bp + (j/minfo.dim[0])*minfo.dimstride[1] + (j%minfo.dim[0])*minfo.dimstride[0];
+                     *((t_int32 *)p) = jit_atom_getlong(argv+i);
+                     } */
+                } else if (minfo.type==_jit_sym_float32) {
+                    for (long i = 0; i < actual_w; i++) {
+                        for (long j = 0; j < actual_h; j++) {
+                            jgraphics_image_surface_get_pixel(draw_surface, i, j, &color);
+                            p = bp + (j)*minfo.dimstride[1] + (i)*minfo.dimstride[0];
+                            if (minfo.planecount == 1) {
+                                t_jhsla color_hsla = rgba_to_hsla(color);
+                                *((float *)p) = color_hsla.lightness * color_hsla.alpha;
+                            } else {
+                                *(((float *)p)) = color.alpha;
+                                *(((float *)p) + 1) = color.red;
+                                *(((float *)p) + 2) = color.green;
+                                *(((float *)p) + 3) = color.blue;
+                            }
+                        }
+                    }
+                    
+                    /*                bp += x->plane*4;
+                     for (i=0; i<argc; i++,j++) {
+                     p = bp + (j/minfo.dim[0])*minfo.dimstride[1] + (j%minfo.dim[0])*minfo.dimstride[0];
+                     *((float *)p) = jit_atom_getfloat(argv+i);
+                     } */
+                } else if (minfo.type==_jit_sym_float64) {
+                    
+                    for (long i = 0; i < actual_w; i++) {
+                        for (long j = 0; j < actual_h; j++) {
+                            jgraphics_image_surface_get_pixel(draw_surface, i, j, &color);
+                            p = bp + (j)*minfo.dimstride[1] + (i)*minfo.dimstride[0];
+                            if (minfo.planecount == 1) {
+                                t_jhsla color_hsla = rgba_to_hsla(color);
+                                *((double *)p) = color_hsla.lightness * color_hsla.alpha;
+                            } else {
+                                *((double *)p) = color.alpha;
+                                *(((double *)p) + 1) = color.red;
+                                *(((double *)p) + 2) = color.green;
+                                *(((double *)p) + 3) = color.blue;
+                            }
+                        }
+                    }
+                    
+                    /*                bp += x->plane*8;
+                     for (i=0; i<argc; i++,j++) {
+                     p = bp + (j/minfo.dim[0])*minfo.dimstride[1] + (j%minfo.dim[0])*minfo.dimstride[0];
+                     *((double *)p) = jit_atom_getfloat(argv+i);
+                     } */
+                }
+            }
+            
+            jit_object_method(matrix,_jit_sym_lock,savelock);
+        }
+    } else {
+        object_error((t_object *)x, "Can't find jitter matrix!");
+        //        jit_error_sym(x,_jit_sym_err_calculate);
+    }
+    
+    
+    jgraphics_destroy(draw_g);
+    jgraphics_surface_destroy(draw_surface);
+}
+
+
+
+
+void dadaobj_paint(t_dadaobj *r_ob, t_object *view)
+{
+    t_dada_force_graphics forced_graphics = dadaobj_get_forced_graphics_from_view(r_ob, view);
+    
+    r_ob->m_geometry.last_used_view_width_pix = forced_graphics.rect.width;
+    r_ob->m_geometry.last_used_view_height_pix = forced_graphics.rect.height;
+    
+
+    (r_ob->m_paint.paint_ext)(r_ob->orig_obj, view, &forced_graphics);
+    
+    if (r_ob->m_paint.jit_destination_matrix && strlen(r_ob->m_paint.jit_destination_matrix->s_name) > 0)
+        dadaobj_paint_to_jitter_matrix(r_ob, r_ob->m_paint.jit_destination_matrix, forced_graphics.rect.width, forced_graphics.rect.height);
+    
+    if (r_ob->m_paint.notify_when_painted)
+        dadaobj_send_painted_notification(r_ob);
+}
+
+
+
+
+
+
+
+void get_filename_extension(char *filename, char *ext, char also_truncate_filename)
+{
+    char *dot = strrchr(filename, '.');
+    if (!dot || dot == filename)
+        ext[0] = 0;
+    else {
+        strncpy_zero(ext, dot + 1, MAX_FILENAME_CHARS);
+        if (also_truncate_filename)
+            *dot = 0;
+    }
+}
+
+
+void dadaobj_jbox_exportimage_do(t_dadaobj_jbox *x, t_symbol *s, long ac, t_atom *av)
+{
+    t_llll *arguments = (t_llll *) atom_getobj(av);
+    t_dadaobj *r_ob = &x->d_ob;
+    char ok = true;
+    double height = -1, width = -1; // x->d_ob.m_geometry.last_used_view_height_pix, width = x->d_ob.m_geometry.last_used_view_width_pix;
+    long dpi = 72;
+    t_symbol *filename_sym = NULL, *type_sym = NULL;
+    t_pt center = x->d_ob.m_zoom.center_offset, zoom = x->d_ob.m_zoom.zoom;
+    t_llll *center_ll = NULL, *zoom_ll = NULL;
+    char cooked = 0;
+    t_pt center_prev = center;
+    t_pt zoom_prev = zoom;
+    double width_pix = -1, height_pix = -1;
+
+    llll_parseargs_and_attrs(r_ob->orig_obj, arguments, "ssiddddll",
+                             _sym_filename, &filename_sym,
+                             _sym_type, &type_sym,
+                             gensym("dpi"), &dpi,
+                             gensym("height"), &height,
+                             gensym("width"), &width,
+                             gensym("pixelwidth"), &width_pix,
+                             gensym("pixelheight"), &height_pix,
+                             gensym("center"), &center_ll,
+                             gensym("zoom"), &zoom_ll
+                             );
+    
+    //    dev_llll_print(arguments, NULL, 0, 2, NULL);
+    if (zoom_ll || center_ll)
+        cooked = 1;
+    
+    if (center_ll) {
+        center = llll_to_pt(center_ll);
+        llll_free(center_ll);
+    }
+
+    if (zoom_ll) {
+        // zoom is defined.
+        if (zoom_ll->l_size == 1)
+            zoom.x = zoom.y = hatom_getdouble(&zoom_ll->l_head->l_hatom);
+        else
+            zoom = llll_to_pt(zoom_ll);
+        zoom.x *= 100; zoom.y *= 100; // zoom were given in percentage
+        llll_free(zoom_ll);
+        
+        if (height_pix > 0)
+            height = height_pix/zoom.y;
+        else if (height > 0)
+            height_pix = height * zoom.y;
+        if (width_pix > 0)
+            width = width_pix/zoom.y;
+        else if (width > 0)
+            width_pix = width * zoom.y;
+    } else {
+        if (height > 0 && height_pix > 0) {
+            zoom.y = height_pix/height;
+        } else if (height > 0) {
+            height_pix = height*zoom.y;
+        } else if (height_pix > 0 ) {
+            height = height_pix/zoom.y;
+        }
+        if (width > 0 && width_pix > 0) {
+            zoom.x = width_pix/width;
+        } else if (width > 0) {
+            width_pix = width*zoom.x;
+        } else if (width_pix > 0 ) {
+            width = width_pix/zoom.x;
+        }
+    }
+    
+    if (height_pix < 0)
+        height_pix = x->d_ob.m_geometry.last_used_view_height_pix;
+    if (width_pix < 0)
+        width_pix = x->d_ob.m_geometry.last_used_view_width_pix;
+
+    if (!cooked && (height_pix != x->d_ob.m_geometry.last_used_view_height_pix || width_pix != x->d_ob.m_geometry.last_used_view_width_pix))
+        cooked = 1;
+    
+//    object_post((t_object *)x, "1 %s", filename_sym ? filename_sym->s_name : "<none>" );
+    if (arguments->l_size) {
+        filename_sym = hatom_getsym(&arguments->l_head->l_hatom);
+        if (filename_sym)
+            llll_destroyelem(arguments->l_head);
+    }
+
+//    object_post((t_object *)x, "2 %s", filename_sym ? filename_sym->s_name : "<none>" );
+
+    if (!filename_sym) {
+        t_fourcc filetype = 'PICT', outtype;
+        char filename_temp[MAX_PATH_CHARS];
+        char full_filename_temp[MAX_PATH_CHARS];
+        full_filename_temp[0] = 0;
+        short path = 0;
+        if (saveasdialog_extended(filename_temp, &path, &outtype, &filetype, 1) == 0) {
+            path_topotentialname(path, filename_temp, full_filename_temp, 0);
+            if (full_filename_temp[0])
+                filename_sym = gensym(full_filename_temp);
+        }
+    }
+    
+    if (filename_sym) {
+        char new_temp_filename[MAX_FILENAME_CHARS];
+        char extension[MAX_FILENAME_CHARS];
+        get_filename_extension(filename_sym->s_name, extension, false);
+        if (strcasecmp(extension, "png") != 0) {
+            snprintf_zero(new_temp_filename, MAX_FILENAME_CHARS, "%s.png", filename_sym->s_name);
+            filename_sym = gensym(new_temp_filename);
+        }
+    }
+    
+    if (!type_sym) {
+        if (filename_sym) {
+            char extension[MAX_FILENAME_CHARS];
+            get_filename_extension(filename_sym->s_name, extension, false);
+            if (strcasecmp(extension, "png") == 0)
+                type_sym = gensym("png");
+            else if (strcasecmp(extension, "jpg") == 0 || strcasecmp(extension, "jpeg") == 0)
+                type_sym = gensym("jpeg");
+            else
+                type_sym = gensym("png");
+        }
+    }
+    
+    if (filename_sym) {
+        
+        if (cooked) {
+            // you never know
+            r_ob->m_zoom.zoom = zoom;
+            r_ob->m_zoom.center_offset = center;
+        }
+        
+        // getting output path
+        short path = path_getdefault();
+        char filename[MAX_FILENAME_CHARS];
+        char extension[MAX_FILENAME_CHARS];
+        filename[0] = 0;
+        path_frompotentialpathname(filename_sym->s_name, &path, filename);
+        if (!filename[0])
+            snprintf(filename, MAX_FILENAME_CHARS, "%s", filename_sym->s_name);
+        get_filename_extension(filename, extension, false);
+
+//        double w = delta_coord_to_delta_pix(r_ob, build_pt(width, 0)).x, h = delta_coord_to_delta_pix(r_ob, build_pt(0, height)).y;
+        double w = width_pix, h = height_pix;
+        t_rect shot_rect = build_rect(0, 0, w, h);
+        t_jsurface *shot_surface = jgraphics_image_surface_create(JGRAPHICS_FORMAT_ARGB32, w, h);
+        t_jgraphics *shot_g = jgraphics_create(shot_surface);
+        
+        jgraphics_set_source_rgba(shot_g, 0, 0, 0, 1.);
+        
+        t_dada_force_graphics force_graphics;
+        force_graphics.graphic_context = shot_g;
+        force_graphics.rect = shot_rect;
+        force_graphics.center_offset = center; //x->d_ob.m_zoom.center_offset;
+        force_graphics.center_pix = coord_to_pix(&x->d_ob, build_pt(force_graphics.rect.width/2., force_graphics.rect.height/2.), force_graphics.center_offset);
+        force_graphics.zoom = zoom; //x->d_ob.m_zoom.zoom;
+        
+        (x->d_ob.m_paint.paint_ext)((t_object *)x, NULL, &force_graphics);
+            
+        if (type_sym && strcasecmp(extension, "png") == 0) {
+            if (jgraphics_image_surface_writepng(shot_surface, filename, path, dpi) != MAX_ERR_NONE) {
+                object_error((t_object *)x, "Error while exporting image.");
+            }
+        } else if (type_sym && (strcasecmp(extension, "jpeg") == 0 || strcasecmp(extension, "jpg") == 0)) {
+            if (jgraphics_image_surface_writejpeg(shot_surface, filename, path) != MAX_ERR_NONE) {
+                object_error((t_object *)x, "Error while exporting image.");
+            }
+        }
+        
+        jgraphics_destroy(shot_g);
+        jgraphics_surface_destroy(shot_surface);
+        
+        if (cooked) {
+            // you never know
+            r_ob->m_zoom.zoom = zoom_prev;
+            r_ob->m_zoom.center_offset = center_prev;
+        }
+
+    } else {
+        ok = false;
+    }
+    
+    if (arguments)
+        llll_free(arguments);
+}
+
+void dadaobj_jbox_exportimage(t_dadaobj_jbox *x, t_symbol *s, long argc, t_atom *argv)
+{
+    t_atom av;
+    t_llll *arguments = llllobj_parse_llll((t_object *) x, LLLL_OBJ_UI, NULL, argc, argv, LLLL_PARSE_CLONE);
+    atom_setobj(&av, arguments);
+    defer(x, (method)dadaobj_jbox_exportimage_do, s, 1, &av);
+}
+
+
+void dadaobj_jbox_paintjit(t_dadaobj_jbox *x, t_symbol *matrix_name)
+{
+    dadaobj_paint_to_jitter_matrix(&x->d_ob, matrix_name, x->d_ob.m_geometry.last_used_view_width_pix, x->d_ob.m_geometry.last_used_view_height_pix);
+}

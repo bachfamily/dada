@@ -175,6 +175,7 @@ void uigraph_assist(t_uigraph *x, void *b, long m, long a, char *s);
 void uigraph_iar(t_uigraph *x);
 
 void uigraph_paint(t_uigraph *x, t_object *view);
+void uigraph_paint_ext(t_uigraph *x, t_object *view, t_dada_force_graphics *force_graphics);
 
 
 void uigraph_int(t_uigraph *x, t_atom_long num);
@@ -541,10 +542,11 @@ int C74_EXPORT main(void)
     
     
     DADAOBJ_JBOX_DECLARE_READWRITE_METHODS(c);
+    DADAOBJ_JBOX_DECLARE_IMAGE_METHODS(c);
     DADAOBJ_JBOX_DECLARE_ACCEPTSDRAG_METHODS(c);
 
 	llllobj_class_add_out_attr(c, LLLL_OBJ_UI);
-	dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_EMBED | DADAOBJ_MOUSEHOVER | DADAOBJ_GRID | DADAOBJ_BORDER | DADAOBJ_BORDER_SHOWDEFAULT | DADAOBJ_LABELS | DADAOBJ_UNDO | DADAOBJ_AXES | DADAOBJ_NOTIFICATIONS);
+	dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_EMBED | DADAOBJ_MOUSEHOVER | DADAOBJ_GRID | DADAOBJ_BORDER | DADAOBJ_BORDER_SHOWDEFAULT | DADAOBJ_LABELS | DADAOBJ_UNDO | DADAOBJ_AXES | DADAOBJ_NOTIFICATIONS | DADAOBJ_EXPORTTOJITTER);
 
 	
 	CLASS_ATTR_DEFAULT(c, "patching_rect", 0, "0 0 300 300");
@@ -885,7 +887,7 @@ void *uigraph_new(t_symbol *s, long argc, t_atom *argv)
 		jbox_new((t_jbox *)x, boxflags, argc, argv);
 		x->b_ob.r_ob.l_box.b_firstin = (t_object *)x;
 
-		dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_UNDO | DADAOBJ_CHANGEDBANG | DADAOBJ_NOTIFICATIONS, build_pt(1., 1.), 1, 2, 1, (invalidate_and_redraw_fn)uigraph_iar, "l", 1, "b44");
+		dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_UNDO | DADAOBJ_CHANGEDBANG | DADAOBJ_NOTIFICATIONS, build_pt(1., 1.), 1, 2, 1, (dada_paint_ext_fn)uigraph_paint_ext, (invalidate_and_redraw_fn)uigraph_iar, "l", 1, "b44");
 		dadaobj_addfunctions(dadaobj_cast(x), (dada_mousemove_fn)uigraph_mousemove, NULL, (method)uigraph_postprocess_undo, (get_state_fn)uigraph_get_state, (set_state_fn)uigraph_set_state, NULL, NULL, NULL);
 
         graph_new(&x->network_graph, symmetric ? DADA_GRAPH_FLAG_SYMMETRIC : DADA_GRAPH_FLAG_NONE, DADA_GRAPH_METADATA_LLLLNODE, DADA_GRAPH_METADATA_WEIGHT, DADA_LINE_CURVE);
@@ -1798,7 +1800,7 @@ void uigraph_edge_to_properties(t_dada_graph_edge *e, char *label)
 }
 */
 
-void repaint_hovered_elements(t_uigraph *x, t_jgraphics *g, t_object *view, t_rect rect, t_pt center)
+void repaint_hovered_elements(t_uigraph *x, t_jgraphics *g, t_rect rect, t_pt center)
 {
 	
 	if (x->turtled_vertex >= 0 && x->turtled_vertex < x->network_graph.num_vertices){
@@ -1833,7 +1835,7 @@ void repaint_hovered_elements(t_uigraph *x, t_jgraphics *g, t_object *view, t_re
 				t_pt pt2 = coord_to_pix(dadaobj_cast(x), center, x->network_graph.vertices[x->network_graph.edges[x->b_ob.d_ob.m_interface.mousemove_item_identifier.idx].end].r_it.coord);
 				t_pt avg = pt_number_prod(pt_pt_sum(pt1, pt2), 0.5);
 				
-				graph_paint_edge(dadaobj_cast(x), g, view, rect, center, &x->network_graph, change_alpha(x->j_arccolor, 0.3), x->b_ob.d_ob.m_interface.mousemove_item_identifier.idx, 
+				graph_paint_edge(dadaobj_cast(x), g, rect, center, &x->network_graph, change_alpha(x->j_arccolor, 0.3), x->b_ob.d_ob.m_interface.mousemove_item_identifier.idx,
 								 0, 0, (vertex_to_properties_fn)uigraph_vertex_to_properties, x->graph_arc_linewidth + 2, x->edge_retouch_mode, (edge_to_properties_fn)uigraph_edge_to_properties, false, NULL, false);
 			}
 				break;
@@ -1843,31 +1845,36 @@ void repaint_hovered_elements(t_uigraph *x, t_jgraphics *g, t_object *view, t_re
 }
 
 
-void uigraph_paint_arcs(t_uigraph *x, t_object *view, t_rect rect, t_pt center){
-	t_jgraphics *g = jbox_start_layer((t_object *)x, view, gensym("arcs"), rect.width, rect.height);
+void uigraph_paint_arcs(t_uigraph *x, t_object *view, t_rect rect, t_pt center, t_dada_force_graphics *force_graphics)
+{
+    t_jgraphics *g = view ? jbox_start_layer((t_object *)x, view, gensym("arcs"), rect.width, rect.height) : force_graphics->graphic_context;
+    
 	t_rect rect_00 = build_rect(0, 0, rect.width, rect.height);
     double fontsize = jbox_get_fontsize((t_object *)x);
     t_jfont *jf = x->show_arc_values ? jfont_create_debug("Arial", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_BOLD, fontsize) : NULL;
 	if (g) {
-		graph_paint(dadaobj_cast(x), g, view, rect_00, center, &x->network_graph, x->j_arccolor, false, true, x->node_size, x->node_size,
+		graph_paint(dadaobj_cast(x), g, rect_00, center, &x->network_graph, x->j_arccolor, false, true, x->node_size, x->node_size,
 					(vertex_to_properties_fn)uigraph_vertex_to_properties, x->graph_arc_linewidth, x->edge_retouch_mode, (edge_to_properties_fn)uigraph_edge_to_properties, false, jf, x->show_arrows);
         
-		jbox_end_layer((t_object *)x, view, gensym("arcs"));
+        if (view)
+            jbox_end_layer((t_object *)x, view, gensym("arcs"));
 	}
 
     if (jf)
         jfont_destroy_debug(jf);
 	
-	jbox_paint_layer((t_object *)x, view, gensym("arcs"), 0., 0.);	// position of the layer
+    if (view)
+        jbox_paint_layer((t_object *)x, view, gensym("arcs"), 0., 0.);	// position of the layer
 }
 
 
 
 
-void uigraph_paint_nodes(t_uigraph *x, t_object *view, t_rect rect, t_pt center)
+void uigraph_paint_nodes(t_uigraph *x, t_object *view, t_rect rect, t_pt center, t_dada_force_graphics *force_graphics)
 {
 	
-	t_jgraphics *g = jbox_start_layer((t_object *)x, view, gensym("nodes"), rect.width, rect.height);
+    t_jgraphics *g = view ? jbox_start_layer((t_object *)x, view, gensym("nodes"), rect.width, rect.height) : force_graphics->graphic_context;
+    
 	t_rect rect_00 = build_rect(0, 0, rect.width, rect.height);
 	if (g) {
         double fontsize = jbox_get_fontsize((t_object *)x);
@@ -1930,7 +1937,7 @@ void uigraph_paint_nodes(t_uigraph *x, t_object *view, t_rect rect, t_pt center)
                                     midicents = hatom_getdouble(&ll->l_head->l_hatom);
                             }
                         }
-                        ezpaint_note_with_staff((t_object *)x, g, view, midicents, k_ACC_AUTO,
+                        ezpaint_note_with_staff((t_object *)x, g, midicents, k_ACC_AUTO,
                                                 x->tonedivision, build_pt(upperleft_corner.x, upperleft_corner.y + fontsize * 1.4),
                                                 width, fontsize * 2, upperleft_corner.x + 31 * fontsize/12., false, &text_color, &text_color, &text_color);
                     }
@@ -1969,54 +1976,59 @@ void uigraph_paint_nodes(t_uigraph *x, t_object *view, t_rect rect, t_pt center)
 		}
 		
 		jfont_destroy_debug(jf);
-		jbox_end_layer((t_object *)x, view, gensym("nodes"));
+        if (view)
+            jbox_end_layer((t_object *)x, view, gensym("nodes"));
 	}
 	
-	jbox_paint_layer((t_object *)x, view, gensym("nodes"), 0., 0.);	// position of the layer
+    if (view)
+        jbox_paint_layer((t_object *)x, view, gensym("nodes"), 0., 0.);	// position of the layer
 }
 
 
 
 
 
-void uigraph_paint(t_uigraph *x, t_object *view)
+void uigraph_paint_ext(t_uigraph *x, t_object *view, t_dada_force_graphics *force_graphics)
 {
-	t_rect rect;
-	t_jgraphics *g = (t_jgraphics*) patcherview_get_jgraphics(view);
+    t_rect rect = force_graphics->rect;
+    t_jgraphics *g = force_graphics->graphic_context;
 	
     if (x->need_recompute_nodes_width_height) {
         uigraph_recompute_nodes_width_height(x);
         x->need_recompute_nodes_width_height = false;
     }
     
-    if (dadaobj_cast(x)->m_zoom.must_autozoom) {
+    if (view && dadaobj_cast(x)->m_zoom.must_autozoom) {
         uigraph_autozoom_do(x, view);
         dadaobj_cast(x)->m_zoom.must_autozoom = false;
     }
     
-    t_pt center = get_center_pix(dadaobj_cast(x), view, &rect);
+    t_pt center = force_graphics->center_pix;
 	jgraphics_set_source_rgba(g, 0, 0, 0, 1); // alpha = 1;
 	
     dadaobj_paint_background(dadaobj_cast(x), g, &rect);
 
-    dadaobj_paint_grid(dadaobj_cast(x), view, rect, center);
+    dadaobj_paint_grid(dadaobj_cast(x), view, force_graphics);
 	
 //	if (x->b_ob.d_ob.m_interface.allow_mouse_hover && x->b_ob.d_ob.m_tools.curr_tool != DADA_TOOL_ZOOM && x->b_ob.d_ob.m_tools.curr_tool != DADA_TOOL_MOVE_CENTER)
 //		paint_hovered_elements1(x, g, view, rect, center);
 
 	jgraphics_set_source_rgba(g, 0, 0, 0, 1); // alpha = 1;
 	if (x->show_arcs)
-		uigraph_paint_arcs(x, view, rect, center);
+		uigraph_paint_arcs(x, view, rect, center, force_graphics);
 	if (x->show_nodes)
-		uigraph_paint_nodes(x, view, rect, center);
+		uigraph_paint_nodes(x, view, rect, center, force_graphics);
 
 	if (x->b_ob.d_ob.m_tools.curr_tool != DADA_TOOL_ZOOM && x->b_ob.d_ob.m_tools.curr_tool != DADA_TOOL_MOVE_CENTER)
-		repaint_hovered_elements(x, g, view, rect, center);
+		repaint_hovered_elements(x, g, rect, center);
 
     dadaobj_paint_border(dadaobj_cast(x), g, &rect);
 }
 
-
+void uigraph_paint(t_uigraph *x, t_object *view)
+{
+    dadaobj_paint(dadaobj_cast(x), view);
+}
 
 
 

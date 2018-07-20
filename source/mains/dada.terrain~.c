@@ -165,6 +165,8 @@ void *terrain_new(t_symbol *s, long argc, t_atom *argv);
 void terrain_free(t_terrain *x);
 void terrain_assist(t_terrain *x, void *b, long m, long a, char *s);
 void terrain_paint(t_terrain *x, t_object *patcherview);
+void terrain_paint_ext(t_terrain *x, t_object *view, t_dada_force_graphics *force_graphics);
+
 t_atom_long terrain_acceptsdrag(t_terrain *x, t_object *drag, t_object *view);
 void terrain_perform64(t_terrain *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam);
 void terrain_dsp64(t_terrain *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
@@ -387,7 +389,7 @@ int C74_EXPORT main(void)
     
     
     
-    dadaobj_class_init(c, LLLL_OBJ_UIMSP, DADAOBJ_ZOOM | DADAOBJ_AXES | DADAOBJ_GRID | DADAOBJ_LABELS);
+    dadaobj_class_init(c, LLLL_OBJ_UIMSP, DADAOBJ_ZOOM | DADAOBJ_AXES | DADAOBJ_GRID | DADAOBJ_LABELS | DADAOBJ_EXPORTTOJITTER);
 
     
 	CLASS_ATTR_DEFAULT(c,"patching_rect",0, "0. 0. 128. 128.");
@@ -576,7 +578,7 @@ void *terrain_new(t_symbol *s, long argc, t_atom *argv)
             outlets_buf[i] = 's';
         outlets_buf[i] = 0;
         
-        dadaobj_pxjbox_setup((t_dadaobj_pxjbox *)x, DADAOBJ_ZOOM | DADAOBJ_AXES | DADAOBJ_GRID, build_pt(1., 1.), -1, -1, -1, (invalidate_and_redraw_fn)terrain_iar, "", 0, outlets_buf);
+        dadaobj_pxjbox_setup((t_dadaobj_pxjbox *)x, DADAOBJ_ZOOM | DADAOBJ_AXES | DADAOBJ_GRID, build_pt(1., 1.), -1, -1, -1, (dada_paint_ext_fn)terrain_paint_ext, (invalidate_and_redraw_fn)terrain_iar, "", 0, outlets_buf);
         x->b_ob.d_ob.m_zoom.max_zoom_perc = build_pt(100000, 100000);
         //    dadaobj_addfunctions(dadaobj_cast(x), (dada_mousemove_fn)terrain_mousemove, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
         
@@ -1082,12 +1084,13 @@ t_jrgba terrain_long_to_color(long l)
     }
 }
 
-void terrain_paint_buffers(t_terrain *x, t_object *view, t_rect *rect)
+void terrain_paint_buffers(t_terrain *x, t_object *view, t_rect *rect, t_dada_force_graphics *force_graphics)
 {
     t_dadaobj *r_ob = dadaobj_cast(x);
-    t_pt center = get_center_pix(r_ob, view, rect);
-    double width = rect->width, height = rect->height;
-    t_jgraphics *g = jbox_start_layer((t_object *)x, view, gensym("buffers"), width, height);
+    t_pt center = view ? get_center_pix(r_ob, view, rect) : force_graphics->center_pix;
+    double width = view ? rect->width : force_graphics->rect.width, height = view ? rect->height : force_graphics->rect.height;
+    
+    t_jgraphics *g = view ? jbox_start_layer((t_object *)x, view, gensym("buffers"), width, height) : force_graphics->graphic_context;
     if (g) {
 
         // paint buffer arrows and name
@@ -1130,29 +1133,32 @@ void terrain_paint_buffers(t_terrain *x, t_object *view, t_rect *rect)
             jfont_destroy(jf);
         }
         
-        jbox_end_layer((t_object *)x, view, gensym("buffers"));
+        if (view)
+            jbox_end_layer((t_object *)x, view, gensym("buffers"));
     }
     
     
-    jbox_paint_layer((t_object *)x, view, gensym("buffers"), 0., 0.);	// position of the layer
+    if (view)
+        jbox_paint_layer((t_object *)x, view, gensym("buffers"), 0., 0.);	// position of the layer
 }
 
-void terrain_paint_terrain(t_terrain *x, t_object *view, t_rect *rect)
+void terrain_paint_terrain(t_terrain *x, t_object *view, t_rect *rect, t_dada_force_graphics *force_graphics)
 {
     t_dadaobj *r_ob = dadaobj_cast(x);
-    t_pt center = get_center_pix(r_ob, view, rect);
-    double width = rect->width, height = rect->height;
-    t_jgraphics *g = jbox_start_layer((t_object *)x, view, gensym("terrain"), width, height);
+    t_pt center = view ? get_center_pix(r_ob, view, rect) : force_graphics->center_pix;
+    double width = view ? rect->width : force_graphics->rect.width, height = view ? rect->height : force_graphics->rect.height;
+    
+    t_jgraphics *g = view ? jbox_start_layer((t_object *)x, view, gensym("terrain"), width, height) : force_graphics->graphic_context;
 
     if (g) {
         long i, j;
         t_pt this_coord;
         double this_val, c;
         
-        if (x->must_autozoom && x->terrain_type == DADA_TERRAIN_TYPE_WHEEL) {
-            r_ob->dont_repaint = true;
+        if (view && x->must_autozoom && x->terrain_type == DADA_TERRAIN_TYPE_WHEEL) {
+            r_ob->m_paint.dont_repaint = true;
             terrain_autozoom_do(x, view, false);
-            r_ob->dont_repaint = false;
+            r_ob->m_paint.dont_repaint = false;
             center = get_center_pix(r_ob, view, rect);
             x->must_autozoom = false;
         }
@@ -1175,11 +1181,12 @@ void terrain_paint_terrain(t_terrain *x, t_object *view, t_rect *rect)
             jgraphics_image_surface_draw(g, x->terrain, rect_ok, rect_ok); // draw fast apparently doesn't work on retina display
         }
         
-        jbox_end_layer((t_object *)x, view, gensym("terrain"));
+        if (view)
+            jbox_end_layer((t_object *)x, view, gensym("terrain"));
     }
     
-    
-    jbox_paint_layer((t_object *)x, view, gensym("terrain"), 0., 0.);	// position of the layer
+    if (view)
+        jbox_paint_layer((t_object *)x, view, gensym("terrain"), 0., 0.);	// position of the layer
 }
 
 
@@ -1226,25 +1233,25 @@ void terrain_autozoom(t_terrain *x)
     terrain_autozoom_do(x, jpatcher_get_firstview((t_object *)gensym("#P")->s_thing), true);
 }
 
-void terrain_paint(t_terrain *x, t_object *patcherview)
+void terrain_paint_ext(t_terrain *x, t_object *patcherview, t_dada_force_graphics *force_graphics)
 {
     t_dadaobj *r_ob = dadaobj_cast(x);
     long i;
-	t_rect rect;
-    t_jgraphics *g = (t_jgraphics *) patcherview_get_jgraphics(patcherview); // obtain graphics context
-    t_pt center = get_center_pix(r_ob, patcherview, &rect);
+	t_rect rect = force_graphics->rect;
+    t_jgraphics *g = force_graphics->graphic_context; // obtain graphics context
+    t_pt center = force_graphics->center_pix;
 
     dadaobj_paint_background(r_ob, g, &rect);
     
     dadaobj_mutex_lock(r_ob);
-    terrain_paint_terrain(x, patcherview, &rect);
+    terrain_paint_terrain(x, patcherview, &rect, force_graphics);
     dadaobj_mutex_unlock(r_ob);
     
-    dadaobj_paint_grid(r_ob, patcherview, rect, center);
+    dadaobj_paint_grid(r_ob, patcherview, force_graphics);
     
     dadaobj_mutex_lock(r_ob);
     if (x->terrain_type == DADA_TERRAIN_TYPE_WHEEL)
-        terrain_paint_buffers(x, patcherview, &rect);
+        terrain_paint_buffers(x, patcherview, &rect, force_graphics);
     dadaobj_mutex_unlock(r_ob);
     
     long max_path_pts = x->path_max_points;
@@ -1287,6 +1294,11 @@ void terrain_paint(t_terrain *x, t_object *patcherview)
     }
     
     dadaobj_paint_border(r_ob, g, &rect);
+}
+
+void terrain_paint(t_terrain *x, t_object *patcherview)
+{
+    dadaobj_paint(dadaobj_cast(x), patcherview);
 }
 
 

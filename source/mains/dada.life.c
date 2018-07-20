@@ -206,6 +206,7 @@ void life_free(t_life *x);
 void life_assist(t_life *x, void *b, long m, long a, char *s);
 
 void life_paint(t_life *x, t_object *view);
+void life_paint_ext(t_life *x, t_object *view, t_dada_force_graphics *force_graphics);
 
 
 void life_int(t_life *x, t_atom_long num);
@@ -791,10 +792,11 @@ int C74_EXPORT main(void)
 
     
     DADAOBJ_JBOX_DECLARE_READWRITE_METHODS(c);
+    DADAOBJ_JBOX_DECLARE_IMAGE_METHODS(c);
     DADAOBJ_JBOX_DECLARE_ACCEPTSDRAG_METHODS(c);
 
 	llllobj_class_add_out_attr(c, LLLL_OBJ_UI);
-	dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BBG | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_EMBED | DADAOBJ_MOUSEHOVER | DADAOBJ_NOTIFICATIONS);
+	dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BBG | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_EMBED | DADAOBJ_MOUSEHOVER | DADAOBJ_NOTIFICATIONS | DADAOBJ_EXPORTTOJITTER);
 	CLASS_ATTR_FILTER_CLIP(c, "zoom", 10, 1000);
 
 	
@@ -1844,7 +1846,7 @@ void *life_new(t_symbol *s, long argc, t_atom *argv)
 		x->b_ob.r_ob.l_box.b_firstin = (t_object *)x;
 		x->n_proxy1 = proxy_new((t_object *) x, 1, &x->n_in);
 
-		dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BBG | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_CHANGEDBANG | DADAOBJ_NOTIFICATIONS, build_pt(10., 10.), 2, 3, 2, (invalidate_and_redraw_fn)life_iar, "vn", 2, "b444");
+		dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BBG | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_CHANGEDBANG | DADAOBJ_NOTIFICATIONS, build_pt(10., 10.), 2, 3, 2, (dada_paint_ext_fn)life_paint_ext, (invalidate_and_redraw_fn)life_iar, "vn", 2, "b444");
 		dadaobj_addfunctions(dadaobj_cast(x), (dada_mousemove_fn)life_mousemove, NULL, NULL, (get_state_fn)life_get_state, (set_state_fn)life_set_state, NULL, NULL, NULL);
 
 
@@ -2210,11 +2212,11 @@ void life_paint_notes(t_life *x, t_jgraphics *g, t_object *view, t_rect rect, t_
 			}
 		}
 		
-		if (use_layers)
+		if (use_layers && view)
 			jbox_end_layer((t_object *)x, view, gensym("notes"));
 	}
 
-	if (use_layers)
+	if (use_layers && view)
 		jbox_paint_layer((t_object *)x, view, gensym("notes"), 0., 0.);	// position of the layer
 }
 
@@ -2393,25 +2395,20 @@ void life_paint_world(t_life *x, t_jgraphics *g, t_object *view, t_rect rect, t_
 
 
 
-void life_paint(t_life *x, t_object *view)
+void life_paint_ext(t_life *x, t_object *view, t_dada_force_graphics *force_graphics)
 {
 	
-	t_jgraphics *g;
-	t_rect rect;
-	t_pt center;
-
-	// getting rectangle dimensions
-	g = (t_jgraphics*) patcherview_get_jgraphics(view); 
-	jbox_get_rect_for_view((t_object *)x, view, &rect);
-	center = get_center_pix(dadaobj_cast(x), view, &rect);
+	t_jgraphics *g = force_graphics->graphic_context;
+	t_rect rect = force_graphics->rect;
+	t_pt center = force_graphics->center_pix;
 
     dadaobj_paint_background(dadaobj_cast(x), g, &rect);
     
 	jgraphics_set_source_rgba(g, 0, 0, 0, 0.3);
-	life_paint_notes(x, NULL, view, rect, center, false); // paint notes, but with 0.3 alpha channel
+    life_paint_notes(x, view ? NULL : force_graphics->graphic_context, view, rect, center, false); // paint notes, but with 0.3 alpha channel
 	jgraphics_set_source_rgba(g, 0, 0, 0, 1.);
 	
-	life_paint_world(x, NULL, view, rect, center);
+	life_paint_world(x, view ? NULL : force_graphics->graphic_context, view, rect, center);
 	
 	if (!x->b_ob.d_ob.m_interface.mouse_is_down && x->hovered_idx >= 0) {
 		char buf[100];
@@ -2425,6 +2422,11 @@ void life_paint(t_life *x, t_object *view)
 	}
     
     dadaobj_paint_border(dadaobj_cast(x), g, &rect);
+}
+
+void life_paint(t_life *x, t_object *view)
+{
+    dadaobj_paint(dadaobj_cast(x), view);
 }
 
 void life_exportpng(t_life *x, t_symbol *file, long dpi, double width, double height, t_pt exportcenteroffset)

@@ -148,6 +148,7 @@ void stage_free(t_stage *x);
 void stage_assist(t_stage *x, void *b, long m, long a, char *s);
 
 void stage_paint(t_stage *x, t_object *view);
+void stage_paint_ext(t_stage *x, t_object *view, t_dada_force_graphics *force_graphics);
 
 
 void stage_int(t_stage *x, t_atom_long num);
@@ -375,10 +376,11 @@ int C74_EXPORT main(void)
     class_addmethod(c, (method)stage_anything,		"getrange",		A_GIMME,	0);
     
     DADAOBJ_JBOX_DECLARE_READWRITE_METHODS(c);
+    DADAOBJ_JBOX_DECLARE_IMAGE_METHODS(c);
     DADAOBJ_JBOX_DECLARE_ACCEPTSDRAG_METHODS(c);
 
 	llllobj_class_add_out_attr(c, LLLL_OBJ_UI);
-	dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_UNDO | DADAOBJ_EMBED | DADAOBJ_MOUSEHOVER | DADAOBJ_GRID | DADAOBJ_LABELS | DADAOBJ_AXES | DADAOBJ_NOTIFICATIONS);
+	dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_UNDO | DADAOBJ_EMBED | DADAOBJ_MOUSEHOVER | DADAOBJ_GRID | DADAOBJ_LABELS | DADAOBJ_AXES | DADAOBJ_NOTIFICATIONS | DADAOBJ_EXPORTTOJITTER);
 	
 	CLASS_ATTR_DEFAULT(c, "patching_rect", 0, "0 0 300 300");
 	// @exclude dada.stage
@@ -759,7 +761,7 @@ void *stage_new(t_symbol *s, long argc, t_atom *argv)
 		x->b_ob.r_ob.l_box.b_firstin = (t_object *)x;
 		x->n_proxy1 = proxy_new((t_object *) x, 1, &x->n_in);
 		
-        dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_UNDO | DADAOBJ_CHANGEDBANG | DADAOBJ_NOTIFICATIONS, build_pt(1., 1.), -1, 2, 1, (invalidate_and_redraw_fn)stage_iar, "", 2, "b44");
+        dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_UNDO | DADAOBJ_CHANGEDBANG | DADAOBJ_NOTIFICATIONS, build_pt(1., 1.), -1, 2, 1, (dada_paint_ext_fn)stage_paint_ext, (invalidate_and_redraw_fn)stage_iar, "", 2, "b44");
 		dadaobj_addfunctions(dadaobj_cast(x), (dada_mousemove_fn)stage_mousemove, NULL, (method)stage_postprocess_undo, (get_state_fn)stage_get_state, (set_state_fn)stage_set_state, NULL, NULL, NULL);
 
 		dadaobj_dadaitem_class_alloc(dadaobj_cast(x), DADAITEM_TYPE_CARD, gensym("card"), gensym("Card"), DADA_ITEM_ALLOC_ARRAY, 0, false, sizeof(t_dada_card), calcoffset(t_stage, cards), DADA_STAGE_MAX_CARDS, NULL, DADA_FUNC_v_oX, (method)stage_set_cards, NULL, DADA_FUNC_X_o, (method)stage_get_cards, NULL, (method)postprocess_cards, NULL, (method)card_free, false, false);
@@ -919,12 +921,12 @@ t_dadaitem_identifier pixel_to_element(t_stage *x, t_pt pt, t_object *view, t_pt
 
 
 
-void stage_paint(t_stage *x, t_object *view)
+void stage_paint_ext(t_stage *x, t_object *view, t_dada_force_graphics *force_graphics)
 {
-	t_rect rect;
-	t_pt center = get_center_pix(dadaobj_cast(x), view, &rect);
-	long i;
-	t_jgraphics *g = (t_jgraphics*) patcherview_get_jgraphics(view); 
+    long i;
+	t_rect rect = force_graphics->rect;
+	t_pt center = force_graphics->center_pix;
+	t_jgraphics *g = force_graphics->graphic_context;
 	jgraphics_set_source_rgba(g, 0, 0, 0, 1); // alpha = 1;
 	
 	t_jfont *jf = jfont_create_debug("Arial", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL, 12 * x->b_ob.d_ob.m_zoom.zoom.x);
@@ -932,7 +934,7 @@ void stage_paint(t_stage *x, t_object *view)
 
     dadaobj_paint_background(dadaobj_cast(x), g, &rect);
 
-    dadaobj_paint_grid(dadaobj_cast(x), view, rect, center);
+    dadaobj_paint_grid(dadaobj_cast(x), view, force_graphics);
 	
 	if (x->show_text || x->show_icons || x->show_faders) {
 		long num_cards = dadaitem_class_get_num_items(&x->b_ob.d_ob.m_classes, DADAITEM_TYPE_CARD);
@@ -1004,7 +1006,10 @@ void stage_paint(t_stage *x, t_object *view)
 }
 
 
-
+void stage_paint(t_stage *x, t_object *view)
+{
+    dadaobj_paint(dadaobj_cast(x), view);
+}
 
 
 

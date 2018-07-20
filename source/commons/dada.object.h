@@ -89,6 +89,11 @@ class_addmethod(c, (method) dadaobj_jbox_readsinglesymbol, "readsinglesymbol", A
 class_addmethod(c, (method) dadaobj_jbox_acceptsdrag,	"acceptsdrag_unlocked", A_CANT, 0); \
 class_addmethod(c, (method) dadaobj_jbox_acceptsdrag,	"acceptsdrag_locked", A_CANT, 0);
 
+#define DADAOBJ_JBOX_DECLARE_IMAGE_METHODS(c) \
+class_addmethod(c, (method) dadaobj_jbox_exportimage, "exportimage", A_GIMME, 0); \
+class_addmethod(c, (method) dadaobj_jbox_paintjit, "paintjit", A_SYM, 0); \
+class_addmethod(c, (method) dadaobj_jbox_mt, "mt", A_GIMME, 0);
+
 
 
 
@@ -133,6 +138,7 @@ typedef enum _dadaobj_flags
     DADAOBJ_LABELS            = 0x200000,	///< Can show labels
     DADAOBJ_LABELS_SHOWDEFAULT= 0x400000,	///< Show labels is the default
     DADAOBJ_BORDER_SHOWDEFAULT= 0x800000,	///< Show border by default
+    DADAOBJ_EXPORTTOJITTER    = 0x1000000,    ///< Supports export to Jitter
 } e_dadaobj_flags;
 
 
@@ -165,6 +171,19 @@ typedef enum _dadaobj_tools
 } e_dadaobj_tools;
 
 
+
+typedef struct dada_force_graphics
+{
+    t_jgraphics             *graphic_context;
+    t_rect                  rect;
+    
+    t_pt                    zoom;
+    t_pt                    center_offset;
+    t_pt                    center_pix;
+} t_dada_force_graphics;
+
+
+
 typedef void (*invalidate_and_redraw_fn)(t_object *r_ob);
 typedef long (*dada_mousemove_fn)(t_object *r_ob, t_object *patcherview, t_pt pt, long modifiers);
 typedef t_llll *(*get_state_fn)(t_object *r_ob);
@@ -172,6 +191,7 @@ typedef void (*set_state_fn)(t_object *r_ob, t_llll *ll);
 typedef void *(*pixel_to_dadaitem_fn)(void *dadaobj, t_pt pt, t_object *view, long modifiers, t_pt *coordinates, double selection_pad, void *dadaitem_identifier);
 typedef void *(*preselect_items_in_rectangle_fn)(void *dadaobj, t_object *view, t_rect coord);
 typedef void (*update_solos_fn)(t_object *r_ob);
+typedef void (*dada_paint_ext_fn)(t_object *x, t_object *view, t_dada_force_graphics *force_graphics);
 
 //// DADA ITEMS
 
@@ -516,6 +536,9 @@ typedef struct _grid_manager
 
 typedef struct _geometry_manager
 {
+    double                  last_used_view_width_pix;
+    double                  last_used_view_height_pix;
+    
 	e_dada_lattice_types	lattice;
 } t_geometry_manager;
 
@@ -551,11 +574,31 @@ typedef struct _bg_manager
 } t_bg_manager;
 
 
+typedef struct _paint_manager
+{
+    invalidate_and_redraw_fn    invalidate_and_redraw;
+    dada_paint_ext_fn           paint_ext;              ///< Actual generalized paint function
+    t_symbol                    *jit_destination_matrix;
+    char                        dont_repaint;            ///< When this flag is 1, the object is not repainted from dada API
+    char                        notify_when_painted;
+} t_paint_manager;
+
+typedef struct _mt_manager
+{
+    // mira/miraweb: stuff designed to work with mira.multitouch
+    char finger_state[10];                   ///< State of each finger
+    t_pt finger_pos[10];                     ///< Positions of each finger (in pixels)
+    char pinching;                           ///< Flag telling whether there's pinching going on
+    t_pt zoom_at_pinch_start;                ///< Zoom at the moment the pinch started (X and Y)
+} t_mt_manager;
+
+
 /** The structure for a generic UI object in the dada library */
 typedef struct dadaobj
 {
 	t_object				*orig_obj;		///< Pointer to the original object
-	
+    e_llllobj_obj_types     llllobj_type;  ///< Type of llll object
+    
 	long					flags;			///< A combination of the #e_dadaobj_flags
     
     t_atom_long                 m_version_number;
@@ -572,14 +615,11 @@ typedef struct dadaobj
 	t_geometry_manager			m_geometry;
 	t_zoom_manager				m_zoom;
     t_bg_manager                m_bg;
-	
+    t_paint_manager             m_paint;
+    t_mt_manager                m_mt;
 	
 	// Behavior
 	char			save_data_with_patcher;
-
-    invalidate_and_redraw_fn	invalidate_and_redraw;
-    char                        dont_repaint;            ///< When this flag is 1, the object is not repainted from dada API
-    
     update_solos_fn             update_solos;
 
 	// Preset fields 
@@ -596,7 +636,7 @@ typedef struct dadaobj
 	t_systhread_mutex		l_mutex;		///< Generic mutex for the object
 
 	t_shashtable	*IDtable;				///< A simple hash table containing item hash
-	
+
 } t_dadaobj;
 
 typedef struct dadaobj_jbox
@@ -610,6 +650,10 @@ typedef struct dadaobj_pxjbox
 	t_llllobj_pxjbox		r_ob;
 	t_dadaobj				d_ob;
 } t_dadaobj_pxjbox;
+
+
+
+
 
 
 
@@ -628,13 +672,13 @@ void dada_atomic_unlock(t_dadaobj *r_ob);
 
 
 void dadaobj_setup(t_object *ob, t_dadaobj *r_ob, long flags, t_pt zoom_static_additional,
-				   long playout_outlet, long changebang_outlet, long notification_outlet, invalidate_and_redraw_fn invalidate_and_redraw,
+				   long playout_outlet, long changebang_outlet, long notification_outlet, dada_paint_ext_fn paint_ext, invalidate_and_redraw_fn invalidate_and_redraw,
 				   const char *tools, long stores, const char *outlets, ...);
 void dadaobj_pxjbox_setup(t_dadaobj_pxjbox *b_ob, long flags, t_pt zoom_static_additional,
-						  long playout_outlet, long changebang_outlet, long notification_outlet, invalidate_and_redraw_fn invalidate_and_redraw,
+						  long playout_outlet, long changebang_outlet, long notification_outlet, dada_paint_ext_fn paint_ext, invalidate_and_redraw_fn invalidate_and_redraw,
 						  const char *tools, long stores, const char *outlets, ...);
 void dadaobj_jbox_setup(t_dadaobj_jbox *b_ob, long flags, t_pt zoom_static_additional,
-						long playout_outlet, long changed_bang_outlet, long notification_outlet, invalidate_and_redraw_fn invalidate_and_redraw,
+						long playout_outlet, long changed_bang_outlet, long notification_outlet, dada_paint_ext_fn paint_ext, invalidate_and_redraw_fn invalidate_and_redraw,
 						const char *tools, long stores, const char *outlets, ...);
 void dadaobj_addfunctions(t_dadaobj *d_ob, dada_mousemove_fn mousemove_fn, method clock_task, method undo_postprocess, 
 						  get_state_fn get_state, set_state_fn set_state, pixel_to_dadaitem_fn pixel_to_dadaitem, 
@@ -642,9 +686,10 @@ void dadaobj_addfunctions(t_dadaobj *d_ob, dada_mousemove_fn mousemove_fn, metho
 void dadaobj_free(t_dadaobj *r_ob);
 void dadaobj_jbox_free(t_dadaobj_jbox *b_ob);
 void dadaobj_pxjbox_free(t_dadaobj_pxjbox *r_ob);
-void dadaobj_send_changedbang(t_dadaobj *r_ob, e_llllobj_obj_types type = LLLL_OBJ_UI);
-void dadaobj_send_notification_sym(t_dadaobj *r_ob, t_symbol *sym, e_llllobj_obj_types type = LLLL_OBJ_UI);
-void dadaobj_send_notification_llll(t_dadaobj *r_ob, t_llll *ll, e_llllobj_obj_types type = LLLL_OBJ_UI);
+void dadaobj_send_changedbang(t_dadaobj *r_ob);
+void dadaobj_send_notification_sym(t_dadaobj *r_ob, t_symbol *sym);
+void dadaobj_send_notification_llll(t_dadaobj *r_ob, t_llll *ll);
+void dadaobj_send_painted_notification(t_dadaobj *r_ob);
 
 void dadaobj_invalidate_and_redraw(t_dadaobj *d_ob);
 t_max_err dadaobj_setattr_zoom(t_dadaobj *d_ob, t_object *attr, long ac, t_atom *av);
@@ -657,9 +702,12 @@ long dadaitem_identifier_eq(t_dadaitem_identifier id1, t_dadaitem_identifier id2
 
 
 /// PAINT STUFF
+t_dada_force_graphics dadaobj_get_forced_graphics_from_view(t_dadaobj *r_ob, t_object *view);
+void dadaobj_paint(t_dadaobj *r_ob, t_object *view); // High level wrapper for all the _paint_ext( functions
+
 void dadaobj_paint_background(t_dadaobj *r_ob, t_jgraphics *g, t_rect *rect);
 void dadaobj_paint_border(t_dadaobj *r_ob, t_jgraphics *g, t_rect *rect);
-void dadaobj_paint_grid(t_dadaobj *r_ob, t_object *view, t_rect rect, t_pt center);
+void dadaobj_paint_grid(t_dadaobj *r_ob, t_object *view, t_dada_force_graphics *force_graphics);
 
 
 // ATTRIBUTES
@@ -690,6 +738,10 @@ t_atom_long dadaobj_jbox_acceptsdrag(t_dadaobj_jbox *x, t_object *drag, t_object
 // PATCHER STUFF
 t_object *dadaobj_get_patcher(t_dadaobj *r_ob);
 t_object *dadaobj_get_firstview(t_dadaobj *r_ob);
+
+
+void dadaobj_jbox_exportimage(t_dadaobj_jbox *x, t_symbol *s, long argc, t_atom *argv);
+void dadaobj_jbox_paintjit(t_dadaobj_jbox *x, t_symbol *matrix_name);
 
 
 // MUTEXES

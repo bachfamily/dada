@@ -459,22 +459,40 @@ void dadaobj_preset(t_dadaobj *r_ob)
 //// SET DOMAIN or RANGE
 
 
-void dadaobj_getdomain(t_dadaobj *r_ob, t_object *view, double *min, double *max)
+void dadaobj_getdomain(t_dadaobj *r_ob, t_object *view, double *min, double *max, t_dada_force_graphics *force_graphics)
 {
     t_rect rect;
-    jbox_get_rect_for_view(r_ob->orig_obj, view, &rect);
-    double width_coord = rect.width / r_ob->m_zoom.zoom.x;
-    *min = -r_ob->m_zoom.center_offset.x - width_coord/2.;
-    *max = -r_ob->m_zoom.center_offset.x + width_coord/2.;
+    if (view) {
+        jbox_get_rect_for_view(r_ob->orig_obj, view, &rect);
+        double width_coord = rect.width / r_ob->m_zoom.zoom.x;
+        *min = -r_ob->m_zoom.center_offset.x - width_coord/2.;
+        *max = -r_ob->m_zoom.center_offset.x + width_coord/2.;
+    } else if (force_graphics) {
+        rect = force_graphics->rect;
+        double width_coord = rect.width / force_graphics->zoom.x;
+        *min = -force_graphics->center_offset.x - width_coord/2.;
+        *max = -force_graphics->center_offset.x + width_coord/2.;
+    } else {
+        object_error(r_ob->orig_obj, "Can't get domain!");
+    }
 }
 
-void dadaobj_getrange(t_dadaobj *r_ob, t_object *view, double *min, double *max)
+void dadaobj_getrange(t_dadaobj *r_ob, t_object *view, double *min, double *max, t_dada_force_graphics *force_graphics)
 {
     t_rect rect;
-    jbox_get_rect_for_view(r_ob->orig_obj, view, &rect);
-    double heigh_coord = rect.height / r_ob->m_zoom.zoom.y;
-    *min = -r_ob->m_zoom.center_offset.y - heigh_coord/2.;
-    *max = -r_ob->m_zoom.center_offset.y + heigh_coord/2.;
+    if (view) {
+        jbox_get_rect_for_view(r_ob->orig_obj, view, &rect);
+        double heigh_coord = rect.height / r_ob->m_zoom.zoom.y;
+        *min = -r_ob->m_zoom.center_offset.y - heigh_coord/2.;
+        *max = -r_ob->m_zoom.center_offset.y + heigh_coord/2.;
+    } else if (force_graphics) {
+        rect = force_graphics->rect;
+        double heigh_coord = rect.height / force_graphics->zoom.y;
+        *min = -force_graphics->center_offset.y - heigh_coord/2.;
+        *max = -force_graphics->center_offset.y + heigh_coord/2.;
+    } else {
+        object_error(r_ob->orig_obj, "Can't get range!");
+    }
 }
 
 
@@ -508,7 +526,7 @@ void dadaobj_setdomain(t_dadaobj *r_ob, t_object *view, double min, double max)
 void dadaobj_setdomain_start(t_dadaobj *r_ob, t_object *view, double start)
 {
     double min, max;
-    dadaobj_getdomain(r_ob, view, &min, &max);
+    dadaobj_getdomain(r_ob, view, &min, &max, NULL);
     dadaobj_setdomain(r_ob, view, start, max-min);
 }
 
@@ -544,7 +562,7 @@ void dadaobj_setrange(t_dadaobj *r_ob, t_object *view, double min, double max)
 void dadaobj_setrange_start(t_dadaobj *r_ob, t_object *view, double start)
 {
     double min, max;
-    dadaobj_getrange(r_ob, view, &min, &max);
+    dadaobj_getrange(r_ob, view, &min, &max, NULL);
     dadaobj_setrange(r_ob, view, start, max-min);
 }
 
@@ -554,7 +572,7 @@ void dadaobj_setcenteroffset(t_dadaobj *r_ob, t_pt new_center_offset)
     vals[0] = new_center_offset.x;
     vals[1] = new_center_offset.y;
     
-    if (!r_ob->dont_repaint)
+    if (!r_ob->m_paint.dont_repaint)
         object_attr_setdouble_array(r_ob->orig_obj, gensym("center"), 2, vals);
     else
         r_ob->m_zoom.center_offset = build_pt(vals[0], vals[1]);
@@ -563,7 +581,7 @@ void dadaobj_setcenteroffset(t_dadaobj *r_ob, t_pt new_center_offset)
 
 void dadaobj_sethzoom(t_dadaobj *r_ob, double zoom)
 {
-    if (!r_ob->dont_repaint)
+    if (!r_ob->m_paint.dont_repaint)
         object_attr_setfloat(r_ob->orig_obj, gensym("zoom"), zoom);
     else {
         t_atom av;
@@ -574,7 +592,7 @@ void dadaobj_sethzoom(t_dadaobj *r_ob, double zoom)
 
 void dadaobj_setvzoom(t_dadaobj *r_ob, double zoom)
 {
-    if (!r_ob->dont_repaint)
+    if (!r_ob->m_paint.dont_repaint)
         object_attr_setfloat(r_ob->orig_obj, gensym("vzoom"), zoom);
     else {
         t_atom av;
@@ -595,8 +613,8 @@ void dadaobj_setzoom(t_dadaobj *r_ob, t_pt new_zoom)
 t_pt dadaobj_coord_to_01_coord(t_dadaobj *r_ob, t_object *view, t_pt coord)
 {
     double dom_min, dom_max, range_min, range_max;
-    dadaobj_getdomain(r_ob, view, &dom_min, &dom_max);
-    dadaobj_getrange(r_ob, view, &range_min, &range_max);
+    dadaobj_getdomain(r_ob, view, &dom_min, &dom_max, NULL);
+    dadaobj_getrange(r_ob, view, &range_min, &range_max, NULL);
     t_pt res;
     res.x = (coord.x - dom_min)/(dom_max - dom_min);
     res.y = (coord.y - range_min)/(range_max - range_min);
@@ -667,4 +685,110 @@ void snap_coord_to_grid(t_dadaobj *r_ob, t_pt *coord)
 	t_pt grid_size = r_ob->m_grid.grid_size;
 	coord->x = round(coord->x / grid_size.x) * grid_size.x;
 	coord->y = round(coord->y / grid_size.y) * grid_size.y;
+}
+
+
+
+
+/////// MIRA / MIRAWEB INTERACTION
+
+
+long dadaobj_mt_get_num_fingers_down(t_dadaobj *r_ob)
+{
+    long res = 0;
+    for (long i = 0; i < 10; i++)
+        res += (r_ob->m_mt.finger_state[i] > 0);
+    return res;
+}
+
+void dadaobj_jbox_mt(t_dadaobj_jbox *x, t_symbol *s, long argc, t_atom *argv)
+{
+    t_dadaobj *r_ob = &x->d_ob;
+    t_object *orig_obj = r_ob->orig_obj;
+    if (argc) {
+        t_object *firstview = jpatcher_get_firstview((t_object *)orig_obj);
+        
+        //        if (atom_gettype(argv) == A_SYM && atom_getsym(argv) == gensym("region") && argc >= 4) { // region <regionID> <finger> <state> <device>
+        //            long finger_id = CLAMP(atom_getlong(argv + 2), 1, 10) - 1;
+        //            long state = CLAMP(atom_getlong(argv + 3), 0, 1);
+        //            finger_state[finger_id] = state;
+        //        } else
+        if (atom_gettype(argv) == A_SYM && atom_getsym(argv) == gensym("touch") && argc >= 5) { // touch <x> <y> <finger> <state> <region> <device>
+            long finger_id = CLAMP(atom_getlong(argv + 3), 1, 10) - 1;
+            long state = CLAMP(atom_getlong(argv + 4), 0, 1);
+            t_pt pos = build_pt(atom_getfloat(argv + 1) * r_ob->m_geometry.last_used_view_width_pix, atom_getfloat(argv + 2) * r_ob->m_geometry.last_used_view_height_pix);
+            
+            //            dev_object_post((t_object *)r_ob, "• Mira finger %ld %s", finger_id + 1, state ? "ON" : "OFF");
+            
+            if (!r_ob->m_mt.pinching) {
+                if (r_ob->m_mt.finger_state[finger_id]) {
+                    if (!state) {
+                        // finger released
+                        method mouseup = object_method_direct_getmethod((t_object *) orig_obj, gensym("mouseup"));
+                        if (mouseup) (mouseup)(orig_obj, firstview, pos, 0);
+                    } else {
+                        // finger dragged
+                        method mousedrag = object_method_direct_getmethod((t_object *) orig_obj, gensym("mousedrag"));
+                        if (mousedrag) (mousedrag)(orig_obj, firstview, pos, 0);
+                    }
+                } else {
+                    if (!state) {
+                        // should not happen, in principle
+                    } else {
+                        // finger pressed
+                        method mousedown = object_method_direct_getmethod((t_object *) orig_obj, gensym("mousedown"));
+                        if (mousedown) (mousedown)(orig_obj, firstview, pos, 0);
+                    }
+                }
+            }
+            
+            r_ob->m_mt.finger_state[finger_id] = state;
+            r_ob->m_mt.finger_pos[finger_id] = pos;
+            
+            if (dadaobj_mt_get_num_fingers_down(r_ob) == 0)
+                r_ob->m_mt.pinching = false;
+            
+            // swipe = scroll
+        } else if (atom_gettype(argv) == A_SYM && atom_getsym(argv) == gensym("swipe") && argc >= 2) { // swipe <direction> <device>
+            if (r_ob->flags & DADAOBJ_CENTEROFFSET) {
+                t_symbol *direction = atom_getsym(argv + 1);
+                method mousewheel = object_method_direct_getmethod((t_object *) orig_obj, gensym("mousewheel"));
+                if (mousewheel) {
+                    if (r_ob->flags & DADAOBJ_CENTEROFFSETX) {
+                        if (direction == gensym("left"))
+                            (mousewheel)(orig_obj, firstview, r_ob->m_mt.finger_pos[0], 0, -r_ob->m_geometry.last_used_view_width_pix / (10 * r_ob->m_zoom.zoom.x), 0.);
+                        else if (direction == gensym("right"))
+                            (mousewheel)(orig_obj, firstview, r_ob->m_mt.finger_pos[0], 0, r_ob->m_geometry.last_used_view_width_pix / (10 * r_ob->m_zoom.zoom.x), 0.);
+                    }
+                    if (r_ob->flags & DADAOBJ_CENTEROFFSETY) {
+                        if (direction == gensym("up"))
+                            (mousewheel)(orig_obj, firstview, r_ob->m_mt.finger_pos[0], 0, 0., -r_ob->m_geometry.last_used_view_height_pix / (10 * r_ob->m_zoom.zoom.x));
+                        else if (direction == gensym("down"))
+                            (mousewheel)(orig_obj, firstview, r_ob->m_mt.finger_pos[0], 0, 0., r_ob->m_geometry.last_used_view_height_pix / (10 * r_ob->m_zoom.zoom.x));
+                    }
+                }
+            }
+            
+            // pinch = change zoom
+        } else if (atom_gettype(argv) == A_SYM && atom_getsym(argv) == gensym("pinch") && argc >= 2) { // pinch <change> <velocity> <state> <device>
+            if (r_ob->flags & DADAOBJ_ZOOM) {
+                double change = atom_getfloat(argv + 1);
+                if (!r_ob->m_mt.pinching) {
+                    // just started pinching!
+                    r_ob->m_mt.zoom_at_pinch_start = r_ob->m_zoom.zoom;
+                    r_ob->m_mt.pinching = true;
+                }
+                object_attr_setfloat((t_object *)orig_obj, gensym("zoom"), r_ob->m_mt.zoom_at_pinch_start.x * change * 100.);
+                if (r_ob->flags & DADAOBJ_SPLITXYZOOM)
+                    object_attr_setfloat((t_object *)orig_obj, gensym("vzoom"), r_ob->m_mt.zoom_at_pinch_start.y * change * 100.);
+                //            method mousewheel = object_method_direct_getmethod((t_object *) r_ob, gensym("mousewheel"));
+                //            (mousewheel)(r_ob, firstview, r_ob->mt_finger_pos[0], eCommandKey, 0., 4 * (r_ob->zoom_x - change * r_ob->zoom_x)/CONST_Y_MOUSEWHEEL_FACTOR);
+            }
+            
+            // tap = play/stop
+        } else if (atom_gettype(argv) == A_SYM && atom_getsym(argv) == gensym("tap")) { //} && argc >= 3) { // tap <x> <y> <region> <device>
+            method key = object_method_direct_getmethod((t_object *) orig_obj, gensym("key"));
+            if (key) (key)(orig_obj, firstview, (long)JKEY_SPACEBAR, 0, 32);
+        }
+    }
 }

@@ -22,6 +22,7 @@
 #include "llllobj.h"
 #include "bach_math_utilities.h"
 #include "llll_commons_ext.h"
+#include "bach_jit.h"
 
 
 // DEBUG FLAGS

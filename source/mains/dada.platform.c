@@ -288,6 +288,7 @@ void platform_assist(t_platform *x, void *b, long m, long a, char *s);
 
 //void platform_getdrawparams(t_platform *x, t_object *patcherview, t_jboxdrawparams *params);
 void platform_paint(t_platform *x, t_object *view);
+void platform_paint_ext(t_platform *x, t_object *view, t_dada_force_graphics *force_graphics);
 
 
 void platform_int(t_platform *x, t_atom_long num);
@@ -904,10 +905,11 @@ void ext_main(void *moduleRef)
     
     
     DADAOBJ_JBOX_DECLARE_READWRITE_METHODS(c);
+    DADAOBJ_JBOX_DECLARE_IMAGE_METHODS(c);
     DADAOBJ_JBOX_DECLARE_ACCEPTSDRAG_METHODS(c);
 
 	llllobj_class_add_out_attr(c, LLLL_OBJ_UI);
-	dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BORDER | DADAOBJ_BORDER_SHOWDEFAULT | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_UNDO | DADAOBJ_EMBED | DADAOBJ_GRID | DADAOBJ_LABELS | DADAOBJ_SNAPTOGRID | DADAOBJ_MOUSEHOVER | DADAOBJ_PLAY | DADAOBJ_NOTIFICATIONS);
+	dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BORDER | DADAOBJ_BORDER_SHOWDEFAULT | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_UNDO | DADAOBJ_EMBED | DADAOBJ_GRID | DADAOBJ_LABELS | DADAOBJ_SNAPTOGRID | DADAOBJ_MOUSEHOVER | DADAOBJ_PLAY | DADAOBJ_NOTIFICATIONS | DADAOBJ_EXPORTTOJITTER);
 
     CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"grid",0,"1 1"); // finer grid by default.
     CLASS_ATTR_DEFAULT_SAVE(c,"snaptogrid",0,"1");  // snapped to grid by default.
@@ -1179,7 +1181,7 @@ t_max_err platform_notify(t_platform *x, t_symbol *s, t_symbol *msg, void *sende
 			x->break_after_notification = 0;
 		} 
 		
-        if (!x->b_ob.d_ob.dont_repaint && !x->itsme)
+        if (!x->b_ob.d_ob.m_paint.dont_repaint && !x->itsme)
             platform_iar(x);
 	}
 	
@@ -2225,7 +2227,7 @@ void *platform_new(t_symbol *s, long argc, t_atom *argv)
 		x->b_ob.r_ob.l_box.b_firstin = (t_object *)x;
 		x->n_proxy1 = proxy_new((t_object *) x, 1, &x->n_in);
 
-		dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BORDER | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSETX | DADAOBJ_UNDO | DADAOBJ_SELECTION | DADAOBJ_CHANGEDBANG | DADAOBJ_INSPECTOR | DADAOBJ_NOTIFICATIONS | DADAOBJ_PLAY, build_pt(16., 16.), 2, 3, 2, (invalidate_and_redraw_fn)platform_iar, "a", 2, "b444");
+		dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BORDER | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSETX | DADAOBJ_UNDO | DADAOBJ_SELECTION | DADAOBJ_CHANGEDBANG | DADAOBJ_INSPECTOR | DADAOBJ_NOTIFICATIONS | DADAOBJ_PLAY, build_pt(16., 16.), 2, 3, DADA_PLATFORM_NOTIFICATION_OUTLET, (dada_paint_ext_fn)platform_paint_ext, (invalidate_and_redraw_fn)platform_iar, "a", 2, "b444");
 		dadaobj_addfunctions(dadaobj_cast(x), (dada_mousemove_fn)platform_mousemove, (method)platform_task, (method)platform_undo_postprocess, (get_state_fn)platform_get_state, (set_state_fn)platform_set_state, (pixel_to_dadaitem_fn)platform_pixel_to_dadaitem, NULL, NULL);
 
 		x->b_ob.d_ob.m_tools.curr_tool = DADA_TOOL_ARROW;
@@ -3064,13 +3066,12 @@ t_pt platform_get_hero_coords(t_platform *x)
 }
 
 
-void platform_paint(t_platform *x, t_object *view)
+void platform_paint_ext(t_platform *x, t_object *view, t_dada_force_graphics *force_graphics)
 {
     t_dadaobj *r_ob = dadaobj_cast(x);
-    t_rect rect;
-	double zoom = x->b_ob.d_ob.m_zoom.zoom.x;
-	t_jgraphics *g = (t_jgraphics*) patcherview_get_jgraphics(view); 
-	jbox_get_rect_for_view((t_object *)x, view, &rect);
+    t_rect rect = force_graphics->rect;
+	double zoom = force_graphics->zoom.x;
+	t_jgraphics *g = force_graphics->graphic_context;
 
     t_dada_gamechar *hero = x->hero;
 	t_jfont *jf_floattext = jfont_create_debug(x->fontname->s_name, JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL, x->floattext_font_size);
@@ -3078,10 +3079,10 @@ void platform_paint(t_platform *x, t_object *view)
 
     dadaobj_mutex_lock(r_ob);
 
-    r_ob->dont_repaint = true;
+    r_ob->m_paint.dont_repaint = true;
 
     // Checking domain!
-	if (x->autoscroll && x->b_ob.d_ob.m_play.is_playing && hero) {
+	if (view && x->autoscroll && x->b_ob.d_ob.m_play.is_playing && hero) {
         t_pt herocoord = hero->r_it.coord;
 		double domain_coord = delta_pix_to_delta_coord(dadaobj_cast(x), build_pt(rect.width, rect.height)).x;
         double new_domain_start = MAX(0, herocoord.x - domain_coord/2.);
@@ -3091,25 +3092,27 @@ void platform_paint(t_platform *x, t_object *view)
     
     double domain_min, domain_max, domain_diff;
     char entered = false;
-    dadaobj_getdomain(r_ob, view, &domain_min, &domain_max);
+    dadaobj_getdomain(r_ob, view, &domain_min, &domain_max, force_graphics);
     domain_diff = domain_max - domain_min;
-    if (domain_min < 0) {
+    if (view && domain_min < 0) {
         dadaobj_setdomain(dadaobj_cast(x), view, 0, domain_diff);
         jbox_invalidate_layer((t_object *)x, NULL, gensym("grid"));
         entered = true;
     }
     
-    if (domain_max > x->m_level.level_width && domain_diff < x->m_level.level_width) {
-        dadaobj_setdomain(dadaobj_cast(x), view, x->m_level.level_width - domain_diff, x->m_level.level_width);
-        jbox_invalidate_layer((t_object *)x, NULL, gensym("grid"));
-    } else if (domain_max <     x->m_level.level_width && domain_diff > x->m_level.level_width && !entered){
-        dadaobj_setdomain(dadaobj_cast(x), view, 0, domain_diff);
-        jbox_invalidate_layer((t_object *)x, NULL, gensym("grid"));
+    if (view) {
+        if (domain_max > x->m_level.level_width && domain_diff < x->m_level.level_width) {
+            dadaobj_setdomain(dadaobj_cast(x), view, x->m_level.level_width - domain_diff, x->m_level.level_width);
+            jbox_invalidate_layer((t_object *)x, NULL, gensym("grid"));
+        } else if (domain_max < x->m_level.level_width && domain_diff > x->m_level.level_width && !entered){
+            dadaobj_setdomain(dadaobj_cast(x), view, 0, domain_diff);
+            jbox_invalidate_layer((t_object *)x, NULL, gensym("grid"));
+        }
     }
     
-    r_ob->dont_repaint = false;
+    r_ob->m_paint.dont_repaint = false;
 
-	t_pt center = get_center_pix(dadaobj_cast(x), view, &rect);
+	t_pt center = force_graphics->center_pix;
 	x->displayed_coord = get_displayed_coord(x, center, rect);
 	
 	jgraphics_set_source_rgba(g, 0, 0, 0, 1); // alpha = 1;
@@ -3117,13 +3120,13 @@ void platform_paint(t_platform *x, t_object *view)
     dadaobj_paint_background(dadaobj_cast(x), g, &rect);
     
 
-    if (x->firsttime || x->play_state == DADA_PLATFORM_PLAYSTATE_STANDARD || x->play_state == DADA_PLATFORM_PLAYSTATE_DYING) {
+    if (view && x->firsttime || x->play_state == DADA_PLATFORM_PLAYSTATE_STANDARD || x->play_state == DADA_PLATFORM_PLAYSTATE_DYING) {
         jbox_invalidate_layer((t_object *)x, view, gensym("game"));
         x->firsttime = false;
     }
 
 
-    t_jgraphics *g_game = jbox_start_layer(r_ob->orig_obj, view, gensym("game"), rect.width, rect.height);
+    t_jgraphics *g_game = view ? jbox_start_layer(r_ob->orig_obj, view, gensym("game"), rect.width, rect.height) : force_graphics->graphic_context;
     if (g_game) {
         platform_paint_background(x, g_game, rect, center, zoom);
         platform_paint_coins(x, g_game, rect, center, zoom);
@@ -3131,9 +3134,11 @@ void platform_paint(t_platform *x, t_object *view)
         platform_paint_blocks(x, g_game, rect, center, zoom);
         platform_paint_portals(x, g_game, rect, center, zoom);
         platform_paint_floattext(x, g_game, jf_floattext, x->m_level.j_textcolor, rect, center, zoom);
-        jbox_end_layer((t_object *)x, view, gensym("game"));
+        if (view)
+            jbox_end_layer((t_object *)x, view, gensym("game"));
     }
-    jbox_paint_layer((t_object *)x, view, gensym("game"), 0., 0.);	// position of the layer
+    if (view)
+        jbox_paint_layer((t_object *)x, view, gensym("game"), 0., 0.);	// position of the layer
 
     platform_paint_curtain(x, g, jf_legend, rect, center, zoom);
     
@@ -3169,7 +3174,7 @@ void platform_paint(t_platform *x, t_object *view)
     }
 		
     // paint grid if any
-    dadaobj_paint_grid(dadaobj_cast(x), view, rect, center);
+    dadaobj_paint_grid(dadaobj_cast(x), view, force_graphics);
     
 	// paint border
     dadaobj_paint_border(dadaobj_cast(x), g, &rect);
@@ -3179,7 +3184,10 @@ void platform_paint(t_platform *x, t_object *view)
     jfont_destroy(jf_legend);
 }
 
-
+void platform_paint(t_platform *x, t_object *view)
+{
+    dadaobj_paint(dadaobj_cast(x), view);
+}
 
 
 ///////// POPUP MENU FUNCTIONS

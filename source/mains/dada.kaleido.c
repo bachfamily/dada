@@ -190,6 +190,7 @@ void kaleido_free(t_kaleido *x);
 void kaleido_assist(t_kaleido *x, void *b, long m, long a, char *s);
 
 void kaleido_paint(t_kaleido *x, t_object *view);
+void kaleido_paint_ext(t_kaleido *x, t_object *view, t_dada_force_graphics *force_graphics);
 
 
 void kaleido_int(t_kaleido *x, t_atom_long num);
@@ -1132,10 +1133,11 @@ int C74_EXPORT main(void)
     
     
     DADAOBJ_JBOX_DECLARE_READWRITE_METHODS(c);
+    DADAOBJ_JBOX_DECLARE_IMAGE_METHODS(c);
     DADAOBJ_JBOX_DECLARE_ACCEPTSDRAG_METHODS(c);
 
 	llllobj_class_add_out_attr(c, LLLL_OBJ_UI);
-	dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_UNDO | DADAOBJ_EMBED | DADAOBJ_MOUSEHOVER | DADAOBJ_CHANGEDBANG | DADAOBJ_NOTIFICATIONS);
+	dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_UNDO | DADAOBJ_EMBED | DADAOBJ_MOUSEHOVER | DADAOBJ_CHANGEDBANG | DADAOBJ_NOTIFICATIONS | DADAOBJ_EXPORTTOJITTER);
 
 	
 	CLASS_ATTR_DEFAULT(c, "patching_rect", 0, "0 0 300 300");
@@ -1810,7 +1812,7 @@ void *kaleido_new(t_symbol *s, long argc, t_atom *argv)
 		x->b_ob.r_ob.l_box.b_firstin = (t_object *)x;
 		x->n_proxy1 = proxy_new((t_object *) x, 1, &x->n_in);
 
-		dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_UNDO | DADAOBJ_CHANGEDBANG | DADAOBJ_NOTIFICATIONS, build_pt(1., 1.), 3, 4, 2, (invalidate_and_redraw_fn)kaleido_iar, "qvnrs", 2, "b4444");
+		dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_UNDO | DADAOBJ_CHANGEDBANG | DADAOBJ_NOTIFICATIONS, build_pt(1., 1.), 3, 4, 2, (dada_paint_ext_fn)kaleido_paint_ext, (invalidate_and_redraw_fn)kaleido_iar, "qvnrs", 2, "b4444");
 		dadaobj_addfunctions(dadaobj_cast(x), (dada_mousemove_fn)kaleido_mousemove, NULL, (method)kaleido_undo_postprocess, (get_state_fn)kaleido_get_state, (set_state_fn)kaleido_set_state, NULL, NULL, NULL);
 
         x->b_ob.d_ob.update_solos = (update_solos_fn)kaleido_update_solos;
@@ -2984,9 +2986,10 @@ char kaleido_shape_should_be_played(t_kaleido *x, t_kaleido_shape *shape)
     return ((!(item->flags & D_MUTE) && (((item->flags & D_SOLO) > 0) || (!x->has_solo_shapes))) ? true : false);
 }
 
-void kaleido_paint_sampling_points(t_kaleido *x, t_object *view, t_rect rect, t_pt center, double zoom){
+void kaleido_paint_sampling_points(t_kaleido *x, t_object *view, t_rect rect, t_pt center, double zoom, t_dada_force_graphics *force_graphics)
+{
 	
-	t_jgraphics *g = jbox_start_layer((t_object *)x, view, gensym("sampling_points"), rect.width, rect.height);
+    t_jgraphics *g = view ? jbox_start_layer((t_object *)x, view, gensym("sampling_points"), rect.width, rect.height) : force_graphics->graphic_context;
 	
 	if (g){
         
@@ -3030,14 +3033,16 @@ void kaleido_paint_sampling_points(t_kaleido *x, t_object *view, t_rect rect, t_
 				paint_cross(g, &color, p, size * 1.4, 1.);
 		}
  
-		jbox_end_layer((t_object *)x, view, gensym("sampling_points"));
+        if (view)
+            jbox_end_layer((t_object *)x, view, gensym("sampling_points"));
 	}
 	
+    if (view)
 	jbox_paint_layer((t_object *)x, view, gensym("sampling_points"), 0., 0.);	// position of the layer
 }
 
 
-void paint_sampling_point_note(t_kaleido *x, t_jgraphics *g, t_object *view, t_kaleido_sampling_pt *spt, t_rect noterect)
+void paint_sampling_point_note(t_kaleido *x, t_jgraphics *g, t_kaleido_sampling_pt *spt, t_rect noterect)
 {
 	t_jrgba staffcolor = build_jrgba(0.2, 0.2, 0.2, 1);
 	t_jrgba bordercolor = build_jrgba(0.2, 0.2, 0.2, 1);
@@ -3045,7 +3050,7 @@ void paint_sampling_point_note(t_kaleido *x, t_jgraphics *g, t_object *view, t_k
 	
 	paint_rectangle_rounded(g, bordercolor, bgcolor, noterect.x, noterect.y, noterect.width, noterect.height, 1, DADA_DEFAULT_RECT_ROUNDNESS, DADA_DEFAULT_RECT_ROUNDNESS);
 	
-	ezpaint_note_with_staff((t_object *)x, g, view, spt->pitch_mc, k_ACC_AUTO, x->tonedivision, build_pt(noterect.x + 3, noterect.y + 25), 
+	ezpaint_note_with_staff((t_object *)x, g, spt->pitch_mc, k_ACC_AUTO, x->tonedivision, build_pt(noterect.x + 3, noterect.y + 25), 
 							noterect.width - 6, 24, noterect.x + 31, false, &staffcolor, &staffcolor, &staffcolor);
 
 	jgraphics_set_source_rgba(g, 0, 0, 0, 1);
@@ -3060,7 +3065,7 @@ void paint_score_label(t_kaleido *x, t_jgraphics *g, t_pt pt, t_symbol *symbol)
     jfont_destroy(jf);
 }
 
-void repaint_hovered_and_selected_items(t_kaleido *x, t_jgraphics *g, t_object *view, t_rect rect, t_pt center)
+void repaint_hovered_and_selected_items(t_kaleido *x, t_jgraphics *g, t_rect rect, t_pt center)
 {
 	// re-paint selected and hovered elements
 	switch (x->b_ob.d_ob.m_interface.mousemove_item_identifier.type) {
@@ -3084,7 +3089,7 @@ void repaint_hovered_and_selected_items(t_kaleido *x, t_jgraphics *g, t_object *
                 paint_dashed_line(g, bordercolor, spt_pixel.x, spt_pixel.y, pos.x > spt_pixel.x ? pos.x : pos.x + pos.width,
                                   pos.y < spt_pixel.y ? pos.y + pos.height : pos.y, 3, 3);
                 
-                paint_sampling_point_note(x, g, view, spt, pos);
+                paint_sampling_point_note(x, g, spt, pos);
             } else {
                 paint_score_label(x, g, build_pt(spt_pixel.x + 1, spt_pixel.y + 1), spt->label);
             }
@@ -3104,19 +3109,13 @@ void repaint_hovered_and_selected_items(t_kaleido *x, t_jgraphics *g, t_object *
 }
 
 
-void kaleido_paint(t_kaleido *x, t_object *view)
+void kaleido_paint_ext(t_kaleido *x, t_object *view, t_dada_force_graphics *force_graphics)
 {
-    t_jgraphics *g;
-	t_rect rect;
-	t_pt center;
-	double zoom = x->b_ob.d_ob.m_zoom.zoom.x;
+    t_jgraphics *g = force_graphics->graphic_context;
+    t_rect rect = force_graphics->rect;
+    t_pt center = force_graphics->center_pix;
+	double zoom = force_graphics->zoom.x;
 
-	// getting rectangle dimensions
-	g = (t_jgraphics*) patcherview_get_jgraphics(view); 
-	jbox_get_rect_for_view((t_object *)x, view, &rect);
-	center.x = rect.width/2.; 
-	center.y = rect.height/2.;
-	
 	jgraphics_set_source_rgba(g, 0, 0, 0, 1); // alpha = 1;
 	
     dadaobj_paint_background(dadaobj_cast(x), g, &rect);
@@ -3132,7 +3131,6 @@ void kaleido_paint(t_kaleido *x, t_object *view)
 		build_tile(x, rect, center);
 		x->need_build_tile = false;
 	}
- 
     
     
 /*	{
@@ -3154,7 +3152,7 @@ void kaleido_paint(t_kaleido *x, t_object *view)
 		// draw background
 		jgraphics_image_surface_draw_fast(g, x->s_studio);
 		
-		repaint_hovered_and_selected_items(x, g, view, rect, center);
+		repaint_hovered_and_selected_items(x, g, rect, center);
 		
 		// turn light off
 		t_jrgba black = build_jrgba(0, 0, 0, 0.3);
@@ -3232,9 +3230,9 @@ void kaleido_paint(t_kaleido *x, t_object *view)
 		}
 		
 		if (x->show_sampling_points)
-			kaleido_paint_sampling_points(x, view, rect, center, zoom);
+			kaleido_paint_sampling_points(x, view, rect, center, zoom, force_graphics);
 
-		repaint_hovered_and_selected_items(x, g, view, rect, center);
+		repaint_hovered_and_selected_items(x, g, rect, center);
 	}
 
 
@@ -3242,7 +3240,10 @@ void kaleido_paint(t_kaleido *x, t_object *view)
 }
 
 
-
+void kaleido_paint(t_kaleido *x, t_object *view)
+{
+    dadaobj_paint(dadaobj_cast(x), view);
+}
 
 ///////// POPUP MENU FUNCTIONS
 

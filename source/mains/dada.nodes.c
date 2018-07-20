@@ -165,6 +165,7 @@ void nodes_free(t_nodes *x);
 void nodes_assist(t_nodes *x, void *b, long m, long a, char *s);
 
 void nodes_paint(t_nodes *x, t_object *view);
+void nodes_paint_ext(t_nodes *x, t_object *view, t_dada_force_graphics *force_graphics);
 
 
 void nodes_int(t_nodes *x, t_atom_long num);
@@ -632,10 +633,11 @@ int C74_EXPORT main(void)
     
 
     DADAOBJ_JBOX_DECLARE_READWRITE_METHODS(c);
+    DADAOBJ_JBOX_DECLARE_IMAGE_METHODS(c);
     DADAOBJ_JBOX_DECLARE_ACCEPTSDRAG_METHODS(c);
 
 	llllobj_class_add_out_attr(c, LLLL_OBJ_UI);
-	dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BORDER | DADAOBJ_BORDER_SHOWDEFAULT | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_UNDO | DADAOBJ_EMBED | DADAOBJ_MOUSEHOVER | DADAOBJ_NOTIFICATIONS);
+	dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BORDER | DADAOBJ_BORDER_SHOWDEFAULT | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_UNDO | DADAOBJ_EMBED | DADAOBJ_MOUSEHOVER | DADAOBJ_NOTIFICATIONS | DADAOBJ_EXPORTTOJITTER);
 
 	CLASS_ATTR_DEFAULT(c, "patching_rect", 0, "0 0 300 300");
 	// @exclude dada.nodes
@@ -1064,7 +1066,7 @@ void *nodes_new(t_symbol *s, long argc, t_atom *argv)
 		x->b_ob.r_ob.l_box.b_firstin = (t_object *)x;
 		x->n_proxy1 = proxy_new((t_object *) x, 1, &x->n_in);
 
-		dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BORDER | DADAOBJ_BORDER_SHOWDEFAULT | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_UNDO | DADAOBJ_CHANGEDBANG | DADAOBJ_NOTIFICATIONS, build_pt(1., 1.), 2, 3, 2, (invalidate_and_redraw_fn)nodes_iar, "vn", 2, "b444");
+		dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BORDER | DADAOBJ_BORDER_SHOWDEFAULT | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_UNDO | DADAOBJ_CHANGEDBANG | DADAOBJ_NOTIFICATIONS, build_pt(1., 1.), 2, 3, 2, (dada_paint_ext_fn)nodes_paint_ext, (invalidate_and_redraw_fn)nodes_iar, "vn", 2, "b444");
 		dadaobj_addfunctions(dadaobj_cast(x), (dada_mousemove_fn)nodes_mousemove, NULL, (method)nodes_undo_postprocess, (get_state_fn)nodes_get_state, (set_state_fn)nodes_set_state, NULL, NULL, NULL);
 
 		x->b_ob.d_ob.m_tools.curr_tool = DADA_TOOL_ARROW;
@@ -1387,9 +1389,10 @@ t_jrgba get_color_at_coord(t_nodes *x, t_pt coord, double *pitch_at_coord, doubl
 }
 
 
-void nodes_paint_surface(t_nodes *x, t_object *view, t_rect rect, t_pt center, double zoom){
+void nodes_paint_surface(t_nodes *x, t_object *view, t_rect rect, t_pt center, double zoom, t_dada_force_graphics *force_graphics)
+{
 	
-	t_jgraphics *g = jbox_start_layer((t_object *)x, view, gensym("surface"), rect.width, rect.height);
+    t_jgraphics *g = view ? jbox_start_layer((t_object *)x, view, gensym("surface"), rect.width, rect.height) : force_graphics->graphic_context;
 	
 	if (g){
 		long i, j;
@@ -1408,10 +1411,12 @@ void nodes_paint_surface(t_nodes *x, t_object *view, t_rect rect, t_pt center, d
 		t_rect rect_ok = build_rect(0, 0, rect.width, rect.height);
 		jgraphics_image_surface_draw(g, surf, rect_ok, rect_ok);
 		
-		jbox_end_layer((t_object *)x, view, gensym("surface"));
+        if (view)
+            jbox_end_layer((t_object *)x, view, gensym("surface"));
 	}
 	
-	jbox_paint_layer((t_object *)x, view, gensym("surface"), 0., 0.);	// position of the layer
+    if (view)
+        jbox_paint_layer((t_object *)x, view, gensym("surface"), 0., 0.);	// position of the layer
 }
 
 
@@ -1422,7 +1427,7 @@ void paint_node_note(t_nodes *x, t_jgraphics *g, t_object *view, t_nodes_node *n
 	
 	paint_rectangle_rounded(g, bordercolor, bgcolor, noterect.x, noterect.y, noterect.width, noterect.height, 1, DADA_DEFAULT_RECT_ROUNDNESS, DADA_DEFAULT_RECT_ROUNDNESS);
 	
-	ezpaint_note_with_staff((t_object *)x, g, view, node->pitch_mc, k_ACC_AUTO, x->tonedivision, build_pt(noterect.x + 3 * zoom, noterect.y + 25 * zoom), noterect.width - 6 * zoom, 24 * zoom, noterect.x + 31 * zoom, false, &staffcolor, &staffcolor, &staffcolor);
+	ezpaint_note_with_staff((t_object *)x, g, node->pitch_mc, k_ACC_AUTO, x->tonedivision, build_pt(noterect.x + 3 * zoom, noterect.y + 25 * zoom), noterect.width - 6 * zoom, 24 * zoom, noterect.x + 31 * zoom, false, &staffcolor, &staffcolor, &staffcolor);
 
 	jgraphics_set_source_rgba(g, 0, 0, 0, 1);
 }
@@ -1455,7 +1460,7 @@ void repaint_hovered_note(t_nodes *x, t_jgraphics *g, t_object *view, t_rect rec
 				t_jrgba white = change_alpha(get_grey_to_write_over_color(color, 0.2), x->b_ob.d_ob.m_interface.mouse_is_down ? 0.9 : 0.6);
 				t_rect pos = x->b_ob.d_ob.m_interface.mouse_is_down ? get_rect_near_pt_inside_rect(build_pt(pt.x, pt.y), 40, 20, build_rect(0, 0, rect.width, rect.height), build_pt(10, 10), build_pt(10, 10), NULL) :
 												build_rect(pt.x - 20, pt.y - 10, 40, 20);
-				ezpaint_note_with_staff((t_object *)x, g, view, pitch_mc, k_ACC_AUTO, x->tonedivision, 
+				ezpaint_note_with_staff((t_object *)x, g, pitch_mc, k_ACC_AUTO, x->tonedivision, 
 										build_pt(pos.x, round_to_semiinteger(pos.y)), 
 										pos.width, 16, pos.x + 25, false, &white, &white, &white);
 			}
@@ -1474,18 +1479,17 @@ void paint_main_tester(t_nodes *x, t_jgraphics *g, t_object *view, t_rect rect, 
 	paint_line(g, x->j_testercolor, pix.x, pix.y - 1.5, pix.x, pix.y - size - 1.5, 1);
 }
 
-void nodes_paint(t_nodes *x, t_object *view){
-	
-
-	t_rect rect;
-	t_pt center = get_center_pix(dadaobj_cast(x), view, &rect);
-	long i;
-	double zoom = x->b_ob.d_ob.m_zoom.zoom.x;
-	t_jgraphics *g = (t_jgraphics*) patcherview_get_jgraphics(view); 
+void nodes_paint_ext(t_nodes *x, t_object *view, t_dada_force_graphics *force_graphics)
+{
+    long i;
+	t_rect rect = force_graphics->rect;
+	t_pt center = force_graphics->center_pix;
+	double zoom = force_graphics->zoom.x;
+    t_jgraphics *g = force_graphics->graphic_context;
 	
 	jgraphics_set_source_rgba(g, 0, 0, 0, 1); // alpha = 1;
 	
-	nodes_paint_surface(x, view, rect, center, zoom);
+	nodes_paint_surface(x, view, rect, center, zoom, force_graphics);
 	
 	for (i = 0; i < x->num_nodes; i++) {
 		t_jrgba color = get_grey(0.2);
@@ -1540,6 +1544,10 @@ void nodes_paint(t_nodes *x, t_object *view){
     dadaobj_paint_border(dadaobj_cast(x), g, &rect);
 }
 
+void nodes_paint(t_nodes *x, t_object *view)
+{
+    dadaobj_paint(dadaobj_cast(x), view);
+}
 
 
 

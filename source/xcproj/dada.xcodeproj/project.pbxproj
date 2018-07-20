@@ -439,7 +439,7 @@
 		1E045A411AEE91F600A1F2B9 /* dada.base.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.base.c; path = ../mains/dada.base.c; sourceTree = SOURCE_ROOT; };
 		1E0E018D1B13671800F88916 /* dada.notation_spectral.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.notation_spectral.c; path = ../commons/dada.notation_spectral.c; sourceTree = SOURCE_ROOT; };
 		1E0E018E1B13671800F88916 /* dada.notation_spectral.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dada.notation_spectral.h; path = ../commons/dada.notation_spectral.h; sourceTree = SOURCE_ROOT; };
-		1E0E019F1B136A1E00F88916 /* spectral.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = spectral.h; path = "../../../../Users/danieleghisi/Documents/Max 7/Packages/bach/source/commons/dg/spectral.h"; sourceTree = DEVELOPER_DIR; };
+		1E0E019F1B136A1E00F88916 /* spectral.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = spectral.h; path = ../../../bach/source/commons/dg/spectral.h; sourceTree = SOURCE_ROOT; };
 		1E0E01A41B136A3900F88916 /* _kiss_fft_guts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _kiss_fft_guts.h; path = ../../../bach/source/commons/kiss_fft/_kiss_fft_guts.h; sourceTree = SOURCE_ROOT; };
 		1E0E01A51B136A3900F88916 /* kiss_fft.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = kiss_fft.c; path = ../../../bach/source/commons/kiss_fft/kiss_fft.c; sourceTree = SOURCE_ROOT; };
 		1E0E01A61B136A3900F88916 /* kiss_fft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = kiss_fft.h; path = ../../../bach/source/commons/kiss_fft/kiss_fft.h; sourceTree = SOURCE_ROOT; };
@@ -474,6 +474,7 @@
 		1E53FCF1198FAE02006333EA /* dada.machines.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dada.machines.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E53FCF8198FAE2A006333EA /* dada.machines.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; name = dada.machines.c; path = ../mains/dada.machines.c; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.c; };
 		1E5AF16E1997DA4D00CE6392 /* dada.kaleido.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dada.kaleido.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
+		1E6664FA210201B7000CFEEB /* bach_jit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = bach_jit.h; path = ../../../bach/source/commons/dg/bach_jit.h; sourceTree = SOURCE_ROOT; };
 		1E6E12511AF3B7B000E91285 /* dada.db.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.db.c; path = ../commons/dada.db.c; sourceTree = SOURCE_ROOT; };
 		1E6E12521AF3B7B000E91285 /* dada.db.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dada.db.h; path = ../commons/dada.db.h; sourceTree = SOURCE_ROOT; };
 		1E73405D1AF3A06800B9F6CF /* dada.catart.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dada.catart.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -536,7 +537,7 @@
 		1ED646E61DAD4011003CA9B1 /* icon_level.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_level.png; path = ../resources/icons/icon_level.png; sourceTree = "<group>"; };
 		1ED646E71DAD4011003CA9B1 /* icon_portal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_portal.png; path = ../resources/icons/icon_portal.png; sourceTree = "<group>"; };
 		1ED9C9B1190D1224001973B8 /* lib_dada.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = lib_dada.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		1EDCC426196AE6F900638665 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = "../../../../Users/danieleghisi/Documents/Max 7/Packages/dada/source/xcproj/Info.plist"; sourceTree = DEVELOPER_DIR; };
+		1EDCC426196AE6F900638665 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 		1EDCC427196AE75A00638665 /* dada.kaleido.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.kaleido.c; path = ../mains/dada.kaleido.c; sourceTree = SOURCE_ROOT; };
 		1EDCC52D196AEC8B00638665 /* commonsyms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = commonsyms.c; path = "../../../max-sdk-7.3.3/source/c74support/max-includes/common/commonsyms.c"; sourceTree = SOURCE_ROOT; };
 		1EE2A7631982FDEE00B335ED /* dada.life.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dada.life.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -945,6 +946,7 @@
 		1EFC4463196AEF65000BDFBF /* dg */ = {
 			isa = PBXGroup;
 			children = (
+				1E6664FA210201B7000CFEEB /* bach_jit.h */,
 				1E0E019F1B136A1E00F88916 /* spectral.h */,
 				1EFC44E1196AEFC3000BDFBF /* bach_doc_commons_dg.h */,
 				1EFC44E2196AEFC3000BDFBF /* bach_math_utilities.h */,
@@ -2190,12 +2192,15 @@
 			buildSettings = {
 				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = (
 					"-DU_HAVE_GCC_ATOMICS=0",
 					"-fvisibility=hidden",
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 			};
@@ -2206,12 +2211,15 @@
 			baseConfigurationReference = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */;
 			buildSettings = {
 				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = (
 					"-DU_HAVE_GCC_ATOMICS=0",
 					"-fvisibility=hidden",
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 			};
@@ -2223,15 +2231,16 @@
 			buildSettings = {
 				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_DIR)/SDKs/MaxSDK-6.1.3/bach/lib",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = (
 					"-DU_HAVE_GCC_ATOMICS=0",
 					"-fvisibility=hidden",
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 			};
@@ -2242,15 +2251,16 @@
 			baseConfigurationReference = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */;
 			buildSettings = {
 				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_DIR)/SDKs/MaxSDK-6.1.3/bach/lib",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = (
 					"-DU_HAVE_GCC_ATOMICS=0",
 					"-fvisibility=hidden",
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 			};
@@ -2270,7 +2280,11 @@
 					"-DU_HAVE_GCC_ATOMICS=0",
 					"-fvisibility=hidden",
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 			};
@@ -2289,7 +2303,11 @@
 					"-DU_HAVE_GCC_ATOMICS=0",
 					"-fvisibility=hidden",
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 			};
@@ -2301,15 +2319,15 @@
 			buildSettings = {
 				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_DIR)/SDKs/MaxSDK-6.1.3/bach/lib",
-				);
 				OTHER_CFLAGS = (
 					"-DU_HAVE_GCC_ATOMICS=0",
 					"-fvisibility=hidden",
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 			};
@@ -2320,15 +2338,15 @@
 			baseConfigurationReference = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */;
 			buildSettings = {
 				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_DIR)/SDKs/MaxSDK-6.1.3/bach/lib",
-				);
 				OTHER_CFLAGS = (
 					"-DU_HAVE_GCC_ATOMICS=0",
 					"-fvisibility=hidden",
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 			};
@@ -2348,7 +2366,11 @@
 					"-DU_HAVE_GCC_ATOMICS=0",
 					"-fvisibility=hidden",
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REZ_SEARCH_PATHS = "\"/Users/danieleghisi/max-sdk-7.0.3/source/dada/commons\"";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
@@ -2368,7 +2390,11 @@
 					"-DU_HAVE_GCC_ATOMICS=0",
 					"-fvisibility=hidden",
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REZ_SEARCH_PATHS = "\"/Users/danieleghisi/max-sdk-7.0.3/source/dada/commons\"";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
@@ -2387,7 +2413,11 @@
 					"-DU_HAVE_GCC_ATOMICS=0",
 					"-fvisibility=hidden",
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bachproject.dada.terrain;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REZ_SEARCH_PATHS = "";
@@ -2408,7 +2438,11 @@
 					"-DU_HAVE_GCC_ATOMICS=0",
 					"-fvisibility=hidden",
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bachproject.dada.terrain;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REZ_SEARCH_PATHS = "";
@@ -2424,15 +2458,15 @@
 			buildSettings = {
 				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_DIR)/SDKs/MaxSDK-6.1.3/bach/lib",
-				);
 				OTHER_CFLAGS = (
 					"-DU_HAVE_GCC_ATOMICS=0",
 					"-fvisibility=hidden",
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 			};
@@ -2443,15 +2477,15 @@
 			baseConfigurationReference = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */;
 			buildSettings = {
 				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_DIR)/SDKs/MaxSDK-6.1.3/bach/lib",
-				);
 				OTHER_CFLAGS = (
 					"-DU_HAVE_GCC_ATOMICS=0",
 					"-fvisibility=hidden",
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 			};
@@ -2463,15 +2497,15 @@
 			buildSettings = {
 				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_DIR)/SDKs/MaxSDK-6.1.3/bach/lib",
-				);
 				OTHER_CFLAGS = (
 					"-DU_HAVE_GCC_ATOMICS=0",
 					"-fvisibility=hidden",
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 			};
@@ -2482,15 +2516,15 @@
 			baseConfigurationReference = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */;
 			buildSettings = {
 				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_DIR)/SDKs/MaxSDK-6.1.3/bach/lib",
-				);
 				OTHER_CFLAGS = (
 					"-DU_HAVE_GCC_ATOMICS=0",
 					"-fvisibility=hidden",
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 			};
@@ -2502,15 +2536,16 @@
 			buildSettings = {
 				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_DIR)/SDKs/MaxSDK-6.1.3/bach/lib",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = (
 					"-DU_HAVE_GCC_ATOMICS=0",
 					"-fvisibility=hidden",
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 			};
@@ -2521,15 +2556,16 @@
 			baseConfigurationReference = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */;
 			buildSettings = {
 				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_DIR)/SDKs/MaxSDK-6.1.3/bach/lib",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = (
 					"-DU_HAVE_GCC_ATOMICS=0",
 					"-fvisibility=hidden",
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 			};
@@ -2541,15 +2577,16 @@
 			buildSettings = {
 				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_DIR)/SDKs/MaxSDK-6.1.3/bach/lib",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = (
 					"-DU_HAVE_GCC_ATOMICS=0",
 					"-fvisibility=hidden",
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 			};
@@ -2560,15 +2597,16 @@
 			baseConfigurationReference = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */;
 			buildSettings = {
 				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_DIR)/SDKs/MaxSDK-6.1.3/bach/lib",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = (
 					"-DU_HAVE_GCC_ATOMICS=0",
 					"-fvisibility=hidden",
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 			};
@@ -2580,15 +2618,15 @@
 			buildSettings = {
 				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_DIR)/SDKs/MaxSDK-6.1.3/bach/lib",
-				);
 				OTHER_CFLAGS = (
 					"-DU_HAVE_GCC_ATOMICS=0",
 					"-fvisibility=hidden",
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 			};
@@ -2599,15 +2637,15 @@
 			baseConfigurationReference = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */;
 			buildSettings = {
 				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_DIR)/SDKs/MaxSDK-6.1.3/bach/lib",
-				);
 				OTHER_CFLAGS = (
 					"-DU_HAVE_GCC_ATOMICS=0",
 					"-fvisibility=hidden",
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 			};
@@ -2624,7 +2662,11 @@
 					"-DU_HAVE_GCC_ATOMICS=0",
 					"-fvisibility=hidden",
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REZ_SEARCH_PATHS = "\"$(DEVELOPER_DIR)/SDKs/MaxSDK-6.1.4/dada/commons\"";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
@@ -2641,7 +2683,11 @@
 					"-DU_HAVE_GCC_ATOMICS=0",
 					"-fvisibility=hidden",
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REZ_SEARCH_PATHS = "\"$(DEVELOPER_DIR)/SDKs/MaxSDK-6.1.4/dada/commons\"";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
@@ -2672,6 +2718,8 @@
 					"-fvisibility=hidden",
 				);
 				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
 					/usr/local/lib/libgmp.a,
 					/usr/local/lib/libmpfr.a,
 					"$(C74_SYM_LINKER_FLAGS)",
@@ -2708,6 +2756,8 @@
 					"-fvisibility=hidden",
 				);
 				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
 					/usr/local/lib/libgmp.a,
 					/usr/local/lib/libmpfr.a,
 					"$(C74_SYM_LINKER_FLAGS)",
@@ -2735,7 +2785,11 @@
 					"-DU_HAVE_GCC_ATOMICS=0",
 					"-fvisibility=hidden",
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 			};
@@ -2754,7 +2808,11 @@
 					"-DU_HAVE_GCC_ATOMICS=0",
 					"-fvisibility=hidden",
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 			};
@@ -2780,7 +2838,11 @@
 					"-fvisibility=hidden",
 					"-DU_HAVE_GCC_ATOMICS=0",
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 			};
@@ -2805,7 +2867,11 @@
 					"-fvisibility=hidden",
 					"-DU_HAVE_GCC_ATOMICS=0",
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 			};
@@ -2825,7 +2891,11 @@
 					"-DU_HAVE_GCC_ATOMICS=0",
 					"-fvisibility=hidden",
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REZ_SEARCH_PATHS = "\"/Users/danieleghisi/max-sdk-7.0.3/source/dada/commons\"";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
@@ -2845,7 +2915,11 @@
 					"-DU_HAVE_GCC_ATOMICS=0",
 					"-fvisibility=hidden",
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REZ_SEARCH_PATHS = "\"/Users/danieleghisi/max-sdk-7.0.3/source/dada/commons\"";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
@@ -2894,9 +2968,13 @@
 				GENERATE_PKGINFO_FILE = YES;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"/Users/danieleghisi/Documents/Max 7/Packages/bach/source/lib\"",
+					$BACH_LIBRARY_SEARCH_PATH,
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PREBINDING = YES;
 				PRODUCT_NAME = _dada;
 				SEPARATE_STRIP = NO;
@@ -2924,9 +3002,13 @@
 				GENERATE_PKGINFO_FILE = YES;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"/Users/danieleghisi/Documents/Max 7/Packages/bach/source/lib\"",
+					$BACH_LIBRARY_SEARCH_PATH,
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PREBINDING = YES;
 				PRODUCT_NAME = _dada;
 				SEPARATE_STRIP = NO;
@@ -2942,15 +3024,16 @@
 			buildSettings = {
 				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_DIR)/SDKs/MaxSDK-6.1.3/bach/lib",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = (
 					"-DU_HAVE_GCC_ATOMICS=0",
 					"-fvisibility=hidden",
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 			};
@@ -2961,15 +3044,16 @@
 			baseConfigurationReference = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */;
 			buildSettings = {
 				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_DIR)/SDKs/MaxSDK-6.1.3/bach/lib",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = (
 					"-DU_HAVE_GCC_ATOMICS=0",
 					"-fvisibility=hidden",
 				);
-				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 			};

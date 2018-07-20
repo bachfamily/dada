@@ -208,7 +208,7 @@ void boids_free(t_boids *x);
 void boids_assist(t_boids *x, void *b, long m, long a, char *s);
 
 void boids_paint(t_boids *x, t_object *view);
-
+void boids_paint_ext(t_boids *x, t_object *view, t_dada_force_graphics *forced_graphics);
 
 void boids_int(t_boids *x, t_atom_long num);
 void boids_float(t_boids *x, double num);
@@ -929,6 +929,7 @@ int C74_EXPORT main(void)
 
 
     DADAOBJ_JBOX_DECLARE_READWRITE_METHODS(c);
+    DADAOBJ_JBOX_DECLARE_IMAGE_METHODS(c);
     DADAOBJ_JBOX_DECLARE_ACCEPTSDRAG_METHODS(c);
 
     llllobj_class_add_out_attr(c, LLLL_OBJ_UI);
@@ -1742,7 +1743,7 @@ void *boids_new(t_symbol *s, long argc, t_atom *argv)
         
         x->clang_ll = llll_get();
 		
-        dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_UNDO | DADAOBJ_CHANGEDBANG | DADAOBJ_NOTIFICATIONS, build_pt(1., 1.), -1, 3, 1, (invalidate_and_redraw_fn)boids_iar, "qsr", 2, "bl44");
+        dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_UNDO | DADAOBJ_CHANGEDBANG | DADAOBJ_NOTIFICATIONS, build_pt(1., 1.), -1, 3, 1, (dada_paint_ext_fn)boids_paint_ext, (invalidate_and_redraw_fn)boids_iar, "qsr", 2, "bl44");
 		dadaobj_addfunctions(dadaobj_cast(x), (dada_mousemove_fn)boids_mousemove, (method)boids_task, (method)boids_postprocess_undo, (get_state_fn)boids_get_state, (set_state_fn)boids_set_state, NULL, NULL, NULL);
 
 		dadaobj_dadaitem_class_alloc(dadaobj_cast(x), DADAITEM_TYPE_SWARM, gensym("swarm"), gensym("Swarm"), DADA_ITEM_ALLOC_ARRAY, 0, false, sizeof(t_boids_swarm), calcoffset(t_boids, swarm), DADA_BOIDS_MAX_SWARMS, NULL, DADA_FUNC_v_oX, (method)boids_set_swarms, NULL, DADA_FUNC_X_o, (method)boids_get_swarms, NULL, (method)postprocess_boids, NULL, (method)swarm_free, false, false);
@@ -2108,22 +2109,20 @@ void get_ruleparam_text(t_boids *x, t_boids_swarm *sw, long i, long j, long k, c
     }
 }
 
-void boids_paint(t_boids *x, t_object *view)
+void boids_paint_ext(t_boids *x, t_object *view, t_dada_force_graphics *forced_graphics)
 {
-	t_rect rect;
     t_dadaobj *r_ob = dadaobj_cast(x);
-	t_pt center = get_center_pix(r_ob, view, &rect);
+    t_rect rect = forced_graphics->rect;
+    t_pt center = forced_graphics->center_pix;
+    t_jgraphics *g = forced_graphics->graphic_context;
+    double zoom = forced_graphics->zoom.x;
 	long i, j;
     
     
-    if (dadaobj_cast(x)->m_zoom.must_autozoom) {
+    if (view && dadaobj_cast(x)->m_zoom.must_autozoom) {
         boids_autozoom(x, view, &rect);
         dadaobj_cast(x)->m_zoom.must_autozoom = false;
     }
-    
-	t_jgraphics *g = (t_jgraphics*) patcherview_get_jgraphics(view);
-    double zoom = r_ob->m_zoom.zoom.x;
-	
     
 	t_jfont *jf = jfont_create_debug(jbox_get_fontname((t_object *)x)->s_name, (t_jgraphics_font_slant)jbox_get_font_slant((t_object *)x), (t_jgraphics_font_weight)jbox_get_font_weight((t_object *)x), jbox_get_fontsize((t_object *)x));
 
@@ -2133,7 +2132,7 @@ void boids_paint(t_boids *x, t_object *view)
     
     dadaobj_mutex_lock(dadaobj_cast(x));
 
-    dadaobj_paint_grid(dadaobj_cast(x), view, rect, center);
+    dadaobj_paint_grid(dadaobj_cast(x), view, forced_graphics);
 
     // paint swarms
     const double PAD = 20;
@@ -2324,7 +2323,10 @@ void boids_paint(t_boids *x, t_object *view)
 }
 
 
-
+void boids_paint(t_boids *x, t_object *view)
+{
+    dadaobj_paint(dadaobj_cast(x), view);
+}
 
 
 
@@ -3160,8 +3162,8 @@ void boids_follow(t_boids *x)
         
         if (count > 1) {
             t_pt screen_min, screen_max;
-            dadaobj_getdomain(dadaobj_cast(x), view, &screen_min.x, &screen_max.x);
-            dadaobj_getrange(dadaobj_cast(x), view, &screen_min.x, &screen_max.x);
+            dadaobj_getdomain(dadaobj_cast(x), view, &screen_min.x, &screen_max.x, NULL);
+            dadaobj_getrange(dadaobj_cast(x), view, &screen_min.x, &screen_max.x, NULL);
             
             
             if (max.x == min.x) {

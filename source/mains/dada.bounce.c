@@ -159,6 +159,7 @@ void bounce_free(t_bounce *x);
 void bounce_assist(t_bounce *x, void *b, long m, long a, char *s);
 
 void bounce_paint(t_bounce *x, t_object *view);
+void bounce_paint_ext(t_bounce *x, t_object *view, t_dada_force_graphics *force_graphics);
 
 
 void bounce_int(t_bounce *x, t_atom_long num);
@@ -862,10 +863,11 @@ int C74_EXPORT main(void)
   
 
     DADAOBJ_JBOX_DECLARE_READWRITE_METHODS(c);
+    DADAOBJ_JBOX_DECLARE_IMAGE_METHODS(c);
     DADAOBJ_JBOX_DECLARE_ACCEPTSDRAG_METHODS(c);
 
 	llllobj_class_add_out_attr(c, LLLL_OBJ_UI);
-	dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_EMBED | DADAOBJ_MOUSEHOVER | DADAOBJ_GRID | DADAOBJ_LABELS | DADAOBJ_SNAPTOGRID | DADAOBJ_AXES | DADAOBJ_UNDO | DADAOBJ_PLAY | DADAOBJ_NOTIFICATIONS | DADAOBJ_BORDER | DADAOBJ_BORDER_SHOWDEFAULT);
+	dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_EMBED | DADAOBJ_MOUSEHOVER | DADAOBJ_GRID | DADAOBJ_LABELS | DADAOBJ_SNAPTOGRID | DADAOBJ_AXES | DADAOBJ_UNDO | DADAOBJ_PLAY | DADAOBJ_NOTIFICATIONS | DADAOBJ_BORDER | DADAOBJ_BORDER_SHOWDEFAULT | DADAOBJ_EXPORTTOJITTER);
 
 	
 	CLASS_ATTR_DEFAULT(c, "patching_rect", 0, "0 0 300 300");
@@ -1338,7 +1340,7 @@ void *bounce_new(t_symbol *s, long argc, t_atom *argv)
 		x->b_ob.r_ob.l_box.b_firstin = (t_object *)x;
 		x->n_proxy1 = proxy_new((t_object *) x, 1, &x->n_in);
 
-		dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_UNDO | DADAOBJ_CHANGEDBANG | DADAOBJ_NOTIFICATIONS, build_pt(1., 1.), 2, 4, 1, (invalidate_and_redraw_fn)bounce_iar, "qnvsrl", 2, "b4444");
+		dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_UNDO | DADAOBJ_CHANGEDBANG | DADAOBJ_NOTIFICATIONS, build_pt(1., 1.), 2, 4, 1, (dada_paint_ext_fn)bounce_paint_ext, (invalidate_and_redraw_fn)bounce_iar, "qnvsrl", 2, "b4444");
 
         dadaobj_addfunctions(dadaobj_cast(x), (dada_mousemove_fn)bounce_mousemove, (method)bounce_task, (method)bounce_postprocess_undo, (get_state_fn)bounce_get_state, (set_state_fn)bounce_set_state, NULL, NULL, NULL);
 
@@ -1653,13 +1655,13 @@ void paint_edge_note(t_bounce *x, t_jgraphics *g, t_object *view, long edge_idx,
 	t_jrgba bordercolor = build_jrgba(0.2, 0.2, 0.2, 1);
 	
 	
-	ezpaint_note_with_staff((t_object *)x, g, view, node->pitch_mc, k_ACC_AUTO, x->tonedivision, build_pt(noterect.x + 3 * zoom, noterect.y + 25 * zoom), 
+	ezpaint_note_with_staff((t_object *)x, g, node->pitch_mc, k_ACC_AUTO, x->tonedivision, build_pt(noterect.x + 3 * zoom, noterect.y + 25 * zoom),
 							noterect.width - 6 * zoom, 24 * zoom, noterect.x + 31 * zoom, false, &staffcolor, &staffcolor, &staffcolor);
 
 	jgraphics_set_source_rgba(g, 0, 0, 0, 1);*/
 }
 
-void paint_connected_component(t_bounce *x, t_jgraphics *g, t_object *view, t_rect rect, t_pt center, long idx, t_jrgba *color)
+void paint_connected_component(t_bounce *x, t_jgraphics *g, t_rect rect, t_pt center, long idx, t_jrgba *color)
 {
 	if (idx >= 0 && idx < x->room_graph.num_connected_components) {
 		t_dadapolygon *poly = &x->room_graph.connected_components[idx].poly;
@@ -1683,10 +1685,10 @@ void paint_connected_component(t_bounce *x, t_jgraphics *g, t_object *view, t_re
 	}
 }
 
-void repaint_played_elements(t_bounce *x, t_jgraphics *g, t_object *view, t_rect rect, t_pt center)
+void repaint_played_elements(t_bounce *x, t_jgraphics *g, t_rect rect, t_pt center)
 {
     if (x->hit_edge >= 0) {
-        graph_paint_edge(dadaobj_cast(x), g, view, rect, center, &x->room_graph, change_alpha(x->b_ob.d_ob.m_play.play_color, x->b_ob.d_ob.m_play.play_color.alpha * 0.9), x->hit_edge, 0, 0, NULL, 4, false, NULL, false, NULL, false);
+        graph_paint_edge(dadaobj_cast(x), g, rect, center, &x->room_graph, change_alpha(x->b_ob.d_ob.m_play.play_color, x->b_ob.d_ob.m_play.play_color.alpha * 0.9), x->hit_edge, 0, 0, NULL, 4, false, NULL, false, NULL, false);
     }
 }
 
@@ -1700,7 +1702,7 @@ void paint_score_label(t_bounce *x, t_jgraphics *g, t_pt pt, t_symbol *symbol)
     jfont_destroy(jf);
 }
 
-void repaint_hovered_elements(t_bounce *x, t_jgraphics *g, t_object *view, t_rect rect, t_pt center)
+void repaint_hovered_elements(t_bounce *x, t_jgraphics *g, t_rect rect, t_pt center)
 {
 	// re-paint selected and hovered elements
 	t_jrgba staffcolor = build_jrgba(0.2, 0.2, 0.2, 1);
@@ -1727,7 +1729,7 @@ void repaint_hovered_elements(t_bounce *x, t_jgraphics *g, t_object *view, t_rec
                 if (x->metadata_type == DADA_BOUNCE_METADATA_PITCHNVEL) {
                     t_rect noterect = build_rect(pt.x - 25, pt.y - 35, 50, 70);
                     paint_rectangle_rounded(g, bordercolor, bgcolor, noterect.x, noterect.y, noterect.width, noterect.height, 1, DADA_DEFAULT_RECT_ROUNDNESS, DADA_DEFAULT_RECT_ROUNDNESS);
-                    ezpaint_note_with_staff((t_object *)x, g, view, x->room_graph.vertices[x->b_ob.d_ob.m_interface.mousemove_item_identifier.idx].data.m_pitchnvel.pitch_mc, k_ACC_AUTO,
+                    ezpaint_note_with_staff((t_object *)x, g, x->room_graph.vertices[x->b_ob.d_ob.m_interface.mousemove_item_identifier.idx].data.m_pitchnvel.pitch_mc, k_ACC_AUTO,
                                             x->tonedivision, build_pt(noterect.x + 3, noterect.y + 25),
                                             noterect.width - 6, 24, noterect.x + 31, false, &staffcolor, &staffcolor, &staffcolor);
                 } else {
@@ -1754,7 +1756,7 @@ void repaint_hovered_elements(t_bounce *x, t_jgraphics *g, t_object *view, t_rec
                     paint_dashed_line(g, x->j_roomcolor, avg.x, avg.y, corner.x, corner.y, 3, 3);
                     
                     paint_rectangle_rounded(g, bordercolor, bgcolor, noterect.x, noterect.y, noterect.width, noterect.height, 1, DADA_DEFAULT_RECT_ROUNDNESS, DADA_DEFAULT_RECT_ROUNDNESS);
-                    ezpaint_note_with_staff((t_object *)x, g, view, x->room_graph.edges[x->b_ob.d_ob.m_interface.mousemove_item_identifier.idx].data.m_pitchnvel.pitch_mc, k_ACC_AUTO,
+                    ezpaint_note_with_staff((t_object *)x, g, x->room_graph.edges[x->b_ob.d_ob.m_interface.mousemove_item_identifier.idx].data.m_pitchnvel.pitch_mc, k_ACC_AUTO,
                                             x->tonedivision, build_pt(noterect.x + 3, noterect.y + 25),
                                             noterect.width - 6, 24, noterect.x + 31, false, &staffcolor, &staffcolor, &staffcolor);
                 } else {
@@ -1766,7 +1768,7 @@ void repaint_hovered_elements(t_bounce *x, t_jgraphics *g, t_object *view, t_rec
 		case DADAITEM_TYPE_CONNECTED_COMPONENT:
 		{
 			t_jrgba color = change_alpha(x->j_roomcolor, 0.3);
-			paint_connected_component(x, g, view, rect, center, x->b_ob.d_ob.m_interface.mousemove_item_identifier.idx, &color);
+			paint_connected_component(x, g, rect, center, x->b_ob.d_ob.m_interface.mousemove_item_identifier.idx, &color);
 			
             if (x->metadata_type == DADA_BOUNCE_METADATA_PITCHNVEL) {
                 if (x->b_ob.d_ob.m_tools.curr_tool == DADA_TOOL_CHANGE_PITCH || x->b_ob.d_ob.m_tools.curr_tool == DADA_TOOL_CHANGE_VELOCITY) {
@@ -1780,7 +1782,7 @@ void repaint_hovered_elements(t_bounce *x, t_jgraphics *g, t_object *view, t_rec
                                     t_pt avg = pt_number_prod(pt_pt_sum(pt1, pt2), 0.5);
                                     t_rect noterect = build_rect(avg.x - 25, avg.y - 35, 50, 70);
                                     paint_rectangle_rounded(g, bordercolor, bgcolor, noterect.x, noterect.y, noterect.width, noterect.height, 1, DADA_DEFAULT_RECT_ROUNDNESS, DADA_DEFAULT_RECT_ROUNDNESS);
-                                    ezpaint_note_with_staff((t_object *)x, g, view, x->room_graph.edges[i].data.m_pitchnvel.pitch_mc, k_ACC_AUTO,
+                                    ezpaint_note_with_staff((t_object *)x, g, x->room_graph.edges[i].data.m_pitchnvel.pitch_mc, k_ACC_AUTO,
                                                             x->tonedivision, build_pt(noterect.x + 3, noterect.y + 25),
                                                             noterect.width - 6, 24, noterect.x + 31, false, &staffcolor, &staffcolor, &staffcolor);
                                 }
@@ -1791,7 +1793,7 @@ void repaint_hovered_elements(t_bounce *x, t_jgraphics *g, t_object *view, t_rec
                                     t_pt pt = coord_to_pix(dadaobj_cast(x), center, x->room_graph.vertices[i].r_it.coord);
                                     t_rect noterect = build_rect(pt.x - 25, pt.y - 35, 50, 70);
                                     paint_rectangle_rounded(g, bordercolor, bgcolor, noterect.x, noterect.y, noterect.width, noterect.height, 1, DADA_DEFAULT_RECT_ROUNDNESS, DADA_DEFAULT_RECT_ROUNDNESS);
-                                    ezpaint_note_with_staff((t_object *)x, g, view, x->room_graph.vertices[i].data.m_pitchnvel.pitch_mc, k_ACC_AUTO, 
+                                    ezpaint_note_with_staff((t_object *)x, g, x->room_graph.vertices[i].data.m_pitchnvel.pitch_mc, k_ACC_AUTO, 
                                                             x->tonedivision, build_pt(noterect.x + 3, noterect.y + 25), 
                                                             noterect.width - 6, 24, noterect.x + 31, false, &staffcolor, &staffcolor, &staffcolor);
                                 }
@@ -1808,37 +1810,41 @@ void repaint_hovered_elements(t_bounce *x, t_jgraphics *g, t_object *view, t_rec
 	}
 }
 
-void bounce_paint_graph(t_bounce *x, t_object *view, t_rect rect, t_pt center){
+void bounce_paint_graph(t_bounce *x, t_object *view, t_rect rect, t_pt center, t_dada_force_graphics *forced_graphics)
+{
 	
-	t_jgraphics *g = jbox_start_layer((t_object *)x, view, gensym("room"), rect.width, rect.height);
+    t_jgraphics *g = view ? jbox_start_layer((t_object *)x, view, gensym("room"), rect.width, rect.height) : forced_graphics->graphic_context;
 	
 	if (g) {
 //        t_jfont *jf_label = jfont_create("Arial", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL, 11);
-		graph_paint(dadaobj_cast(x), g, view, rect, center, &x->room_graph, x->j_roomcolor, true, true,
+		graph_paint(dadaobj_cast(x), g, rect, center, &x->room_graph, x->j_roomcolor, true, true,
 					x->room_vertex_size, x->room_vertex_size, NULL, x->room_edge_linewidth, 0, NULL, false, NULL, false);
-		jbox_end_layer((t_object *)x, view, gensym("room"));
+        
+        if (view)
+            jbox_end_layer((t_object *)x, view, gensym("room"));
 //        jfont_destroy(jf_label);
 	}
 	
-	jbox_paint_layer((t_object *)x, view, gensym("room"), 0., 0.);	// position of the layer
+    if (view)
+        jbox_paint_layer((t_object *)x, view, gensym("room"), 0., 0.);	// position of the layer
 }
 
 
-void bounce_paint(t_bounce *x, t_object *view)
+void bounce_paint_ext(t_bounce *x, t_object *view, t_dada_force_graphics *force_graphics)
 {
-	t_rect rect;
-	t_pt center = get_center_pix(dadaobj_cast(x), view, &rect);
-	long i;
-	t_jgraphics *g = (t_jgraphics*) patcherview_get_jgraphics(view); 
+    long i;
+	t_rect rect = force_graphics->rect;
+    t_pt center = force_graphics->center_pix;;
+    t_jgraphics *g = force_graphics->graphic_context;
 	
 	jgraphics_set_source_rgba(g, 0, 0, 0, 1); // alpha = 1;
 	
     dadaobj_paint_background(dadaobj_cast(x), g, &rect);
 
-    dadaobj_paint_grid(dadaobj_cast(x), view, rect, center);
+    dadaobj_paint_grid(dadaobj_cast(x), view, force_graphics);
 		
 	if (x->show_room)
-		bounce_paint_graph(x, view, rect, center);
+		bounce_paint_graph(x, view, rect, center, force_graphics);
 	
 	if (x->show_balls || x->show_speed) {
 		long num_balls = dadaitem_class_get_num_items(&x->b_ob.d_ob.m_classes, DADAITEM_TYPE_BALL);
@@ -1873,15 +1879,18 @@ void bounce_paint(t_bounce *x, t_object *view)
 	}
 	
 	if (x->b_ob.d_ob.m_tools.curr_tool != DADA_TOOL_ZOOM && x->b_ob.d_ob.m_tools.curr_tool != DADA_TOOL_MOVE_CENTER)
-		repaint_hovered_elements(x, g, view, rect, center);
+		repaint_hovered_elements(x, g, rect, center);
 
-    repaint_played_elements(x, g, view, rect, center);
+    repaint_played_elements(x, g, rect, center);
     
     dadaobj_paint_border(dadaobj_cast(x), g, &rect);
 }
 
 
-
+void bounce_paint(t_bounce *x, t_object *view)
+{
+    dadaobj_paint(dadaobj_cast(x), view);
+}
 
 
 

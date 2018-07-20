@@ -64,8 +64,8 @@ void dadaobj_end_preset(t_dadaobj *r_ob);
 void dadaobj_preset(t_dadaobj *r_ob);
 
 // DOMAIN AND RANGE, center offset
-void dadaobj_getrange(t_dadaobj *r_ob, t_object *view, double *min, double *max);
-void dadaobj_getdomain(t_dadaobj *r_ob, t_object *view, double *min, double *max);
+void dadaobj_getrange(t_dadaobj *r_ob, t_object *view, double *min, double *max, t_dada_force_graphics *force_graphics);
+void dadaobj_getdomain(t_dadaobj *r_ob, t_object *view, double *min, double *max, t_dada_force_graphics *force_graphics);
 void dadaobj_setrange(t_dadaobj *r_ob, t_object *view, double min, double max);
 void dadaobj_setdomain_start(t_dadaobj *r_ob, t_object *view, double start);
 void dadaobj_setrange_start(t_dadaobj *r_ob, t_object *view, double start);
@@ -76,6 +76,8 @@ void dadaobj_setvzoom(t_dadaobj *r_ob, double zoom);
 void dadaobj_sethzoom(t_dadaobj *r_ob, double zoom);
 t_pt dadaobj_coord_to_01_coord(t_dadaobj *r_ob, t_object *view, t_pt coord);
 
+// MULTITOUCH AND MIRA
+void dadaobj_jbox_mt(t_dadaobj_jbox *x, t_symbol *s, long argc, t_atom *argv);
 
 
 ////////// GRID FUNCTIONS

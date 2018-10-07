@@ -236,7 +236,7 @@ int C74_EXPORT main(void)
     // @method getinfo @digest Output information
     // @description A <m>getinfo</m> symbol, followed by two numbers <m>x</m> and <m>y</m>,
     // outputs the information for the point (<m>x</m>, <m>y</m>), in the form:
-    // <b>(coord <m>x</m> <m>y</m>) (belong <m>B</m>) (numiter <m>N</m>)</b>, where <m>B</m> is 1 if the iterated system
+    // <b>[coord <m>x</m> <m>y</m>] [belong <m>B</m>] [numiter <m>N</m>]</b>, where <m>B</m> is 1 if the iterated system
     // multibrots for the introduced point, or 0 otherwise, and <m>N</m> is the number of iterations
     // that it took to verify the divergence (if any, otherwise <m>N</m> will be equal to <m>maxiter</m>).
     // @marg 0 @name x @optional 0 @type number
@@ -277,7 +277,7 @@ int C74_EXPORT main(void)
     // @method exportpng @digest Export PNG image
     // @description The word <m>exportpng</m>, followed by an file path, exports the current canvas as a PNG image.
     // This can be further followed by a list formatted as:
-    // <b>(<m>specification</m> <m>value</m>) (<m>specification</m> <m>value</m>)...</b>. <br />
+    // <b>[<m>specification</m> <m>value</m>] [<m>specification</m> <m>value</m>]...</b>. <br />
     // Each specification can be one of the followings: <br />
     // • "dpi": the value is expected to be the dpi resolution of the exported image; <br />
     // • "width": the value is expected to be the width of the exported image in pixels; <br />

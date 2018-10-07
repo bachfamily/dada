@@ -337,7 +337,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 301.0, 118.0, 247.0, 23.0 ],
 									"style" : "",
-									"text" : "addnode (coord 0 0) (pitch 6200) (vel 49)"
+									"text" : "addnode [coord 0 0] [pitch 6200] [vel 49]"
 								}
 
 							}

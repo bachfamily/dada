@@ -137,10 +137,10 @@
 			</digest>
 			<description>
 				Sets the buffer names and the buffer angles (for buffer wheel <m>type</m> only).
-				Syntax is expected to be: <b>(<m>name1</m> <m>angle1</m>) (<m>name2</m> <m>angle2</m>)...</b>,
+				Syntax is expected to be: <b>[<m>name1</m> <m>angle1</m>] [<m>name2</m> <m>angle2</m>]...</b>,
 				where <m>name</m> is a symbol identifying the buffer names, and <m>angle</m> is its angle in the buffer wheel,
 				in radians. You can append the degrees ° symbol after the number (without any spaces) or substitute the angle with
-				<b>(<m>angleindeg</m> deg)</b> if you want to define an angle in degrees.
+				<b>[<m>angleindeg</m> deg]</b> if you want to define an angle in degrees.
 			</description>
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Settings" />
@@ -177,6 +177,7 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Continuously Output bang if Changed " />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
@@ -605,6 +606,7 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="1" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Save State For Undo Before Playing" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
@@ -620,6 +622,7 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Post Undo/Redo Steps" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>

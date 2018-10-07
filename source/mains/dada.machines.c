@@ -958,13 +958,13 @@ int C74_EXPORT main(void)
     
     // @method dump @digest Output state
     // @description Outputs the current state of the object. The syntax is
-    // <b>machines (prototypes <m>PROTOTYPE1</m> <m>PROTOTYPE2</m>...) (network (vertices <m>VERTEX1</m> <m>VERTEX2</m>...) (edges <m>EDGE1</m> <m>EDGE2</m>...))</b>.
+    // <b>machines [prototypes <m>PROTOTYPE1</m> <m>PROTOTYPE2</m>...] [network [vertices <m>VERTEX1</m> <m>VERTEX2</m>...] [edges <m>EDGE1</m> <m>EDGE2</m>...]]</b>.
     // Each prototype is in the syntax
-    // <b>((name <m>name</m>) (fullname <m>fullname</m>) (char <m>displaychars</m>) (numins <m>ins</m>) (numouts <m>outs</m>))</b>.
+    // <b>[[name <m>name</m>] [fullname <m>fullname</m>] [char <m>displaychars</m>] [numins <m>ins</m>] [numouts <m>outs</m>]]</b>.
     // Each vertex is in the syntax
-    // <b>((coord <m>x</m> <m>y</m>) (type <m>machinetype</m>) (numins <m>ins</m>) (numouts <m>outs</m>)</b>.
+    // <b>[[coord <m>x</m> <m>y</m>] [type <m>machinetype</m>] [numins <m>ins</m>] [numouts <m>outs</m>]</b>.
     // Each connection is in the syntax
-    // <b>(<m>vertex1</m> <m>vertex2</m> (numin <m>in</m>) (numout <m>out</m>))</b>,
+    // <b>[<m>vertex1</m> <m>vertex2</m> [numin <m>in</m>] [numout <m>out</m>]]</b>,
     // representing a connection from the outlet <m>out</m> of vertex of index <m>vertex1</m> (in the vertex list), to the inlet
     // <m>in</m> of the vertex of index <m>vertex2</m>. <br />
     // The <m>dump prototypes</m> message only dumps the prototypes; the <m>dump network</m> message only dumps the network. <br />

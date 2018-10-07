@@ -795,23 +795,23 @@ int C74_EXPORT main(void)
 
     // @method dump @digest Output state
     // @description Outputs the current state of the object. The syntax is
-    // <b>boids (rules <m>CUSTOMRULE1</m> <m>CUSTOMRULE2</m>...) (swarms <m>SWARM1</m> <m>2</m>...) </b>.
+    // <b>boids [rules <m>CUSTOMRULE1</m> <m>CUSTOMRULE2</m>...] [swarms <m>SWARM1</m> <m>2</m>...] </b>.
     // Each <m>CUSTOMRULE</m> element represents a custom rule and is in the form
-    // <b>((name <m>rule_name</m>) (code <m>function_code</m>) (defaultgain <m>gain</m>) (abscoord <m>ac</m>) (absintensity <m>ai</m>) (params <m>PARAM1</m> <m>PARAM2</m> <m>PARAM3</m>...)</b>,
+    // <b>[[name <m>rule_name</m>] [code <m>function_code</m>] [defaultgain <m>gain</m>] [abscoord <m>ac</m>] [absintensity <m>ai</m>] [params <m>PARAM1</m> <m>PARAM2</m> <m>PARAM3</m>...]</b>,
     // where the <m>function_code</m> must be a single symbol, and <m>ai</m> and <m>ac</m> are 1/0 values telling respectively if the function will return absolute
     // coordinates or absolute intensity instead of a coordinate difference, and intensity difference (speed). These two last values both default to 0:
     // functions return by default a vector which will be added to the current speed to modify it. <br />
     // Each parameter is in the form
-    // <b>(<m>name</m> <m>type</m> <m>value</m>)</b>, where <m>type</m> is a symbol among: "int", "float", "pt", and value is the corresponding value (or couple of
+    // <b>[<m>name</m> <m>type</m> <m>value</m>]</b>, where <m>type</m> is a symbol among: "int", "float", "pt", and value is the corresponding value (or couple of
     // x and y values, without parentheses, in the case of "pt" type). <br />
     // Each <m>SWARM</m> element represents a swarm is in the form
     // <b>((name <m>name</m>) (size <m>num_boids</m>) (coord <m>COORD_BOID1</m> <m>COORD_BOID2</m>...) (speed <m>SPEED_BOID1</m> <m>SPEED_BOID2</m>...)
     // (intensity <m>intensity_boid1</m> <m>intensity_boid2</m>...) (intensityspeed <m>intensityspeed_boid1</m> <m>intensityspeed_boid2</m>...)
     // (maxspeed <m>maximum_swarm_speed</m>) (maxintensity <m>maximum_swarm_intensity</m>) (color <m>red</m> <m>green</m> <m>blue</m> <m>alpha</m>)
     // (applyrule <m>RULE1</m> <m>RULE2</m> <m>RULE3</m>...))</b>,
-    // where each <m>COORD_BOID</m> and <m>SPEED_BOID</m> is in the form <b>(<m>x</m> <m>y</m>)</b>, where each <m>intensityspeed_boid</m> is
+    // where each <m>COORD_BOID</m> and <m>SPEED_BOID</m> is in the form <b>[<m>x</m> <m>y</m>]</b>, where each <m>intensityspeed_boid</m> is
     // the difference between successive intensities (derivative), and where each <m>RULE</m> represents a rule to be applied to the swarm, and is in the form
-    // <b>(<m>rule_name</m> (gain <m>gain_value</m>) (<m>param_name</m> <m>param_value</m>) (<m>param_name</m> <m>param_value</m>) ...)</b>, <br />
+    // <b>[<m>rule_name</m> [gain <m>gain_value</m>] [<m>param_name</m> <m>param_value</m>] [<m>param_name</m> <m>param_value</m>] ...]</b>, <br />
     // where, in turn, each <m>param_name</m> is one of the parameters defined for the given rule "int", "float" or "pt", i.e. float couple (see the "rules" llll, above).
     // <br />
     // A first argument limits the elements to be dumped: the <m>dump rules</m> message only dumps the rules; the <m>dump swarms</m> message only dumps the swarms. <br />
@@ -828,11 +828,11 @@ int C74_EXPORT main(void)
     // @method rotate @digest Rotate swarms
     // @description The word <m>rotate</m> followed the index of a swarm, and an angle (in radians), rotates
     // the swarm. The angle can be set in degrees by appending the degrees ° symbol after the number (without any spaces) or by
-    // replacing the number with an llll in the form <b>(<m>amount_in_degrees</m> deg)</b>.
+    // replacing the number with an llll in the form <b>[<m>amount_in_degrees</m> deg]</b>.
     // If the index of the shape is <m>0</m> or the <m>all</m> symbol, all shapes will be rotated.
-    // If a third argument is added, in the form <b>(<m>x</m> <m>y</m>)</b>, it sets the coordinates of the origin for the rotation.
+    // If a third argument is added, in the form <b>[<m>x</m> <m>y</m>]</b>, it sets the coordinates of the origin for the rotation.
     // If no third argument is added, the default center of rotation is the shape barycenter (if a single swarm is being rotated)
-    // or the origin <b>(0 0)</b> if all swarms are being rotated.
+    // or the origin <b>[0 0]</b> if all swarms are being rotated.
     // The center of rotation llll can be replaced by the <m>barycenter</m> symbol, to specify that rotation must happen around individuals barycenters.
     // Alternatively you can add the "barycenter" symbol as third element in order to specify that coordinates are barycentric coordinates.
     // @marg 0 @name swarm_index @optional 0 @type int/all
@@ -841,7 +841,7 @@ int C74_EXPORT main(void)
     class_addmethod(c, (method)boids_anything,	"rotate",		A_GIMME,	0);
     
     // @method move @digest Translate swarms
-    // @description The word <m>move</m> followed the index of a swarm and a vector in wrapped <b>(<m>x</m> <m>y</m>)</b> syntax,
+    // @description The word <m>move</m> followed the index of a swarm and a vector in wrapped <b>[<m>x</m> <m>y</m>]</b> syntax,
     // translates the swarm by the given vector. If the index of the swarm is <m>0</m> or the <m>all</m> symbol, all swarms will be translated.
     // @marg 0 @name swarm_index @optional 0 @type int/all
     // @marg 1 @name amount @optional 0 @type llll
@@ -851,10 +851,10 @@ int C74_EXPORT main(void)
     // @description The word <m>scale</m> followed the index of a swarm and a number, scales the given swarm of the factor
     // specified by the number.
     // If the index of the swarm is <m>0</m> or the <m>all</m> symbol, all swarms will be scaled.
-    // If, instead of a single factor, a list in the form <b>(<m>x_scale</m> <m>y_scale</m>)</b> is given,
+    // If, instead of a single factor, a list in the form <b>[<m>x_scale</m> <m>y_scale</m>]</b> is given,
     // two different scale factors are applied for the X and Y axis.
-    // You can provide as third argument the scaling center, in <b>(<m>x</m> <m>y</m>)</b> form. If no center is provided,
-    // by default the barycenter is used for single swarms scaling, while the origin <b>(0, 0)</b> is used when all swarms are to be scaled
+    // You can provide as third argument the scaling center, in <b>[<m>x</m> <m>y</m>]</b> form. If no center is provided,
+    // by default the barycenter is used for single swarms scaling, while the origin <b>[0, 0]</b> is used when all swarms are to be scaled
     // The scaling center llll can be replaced by the <m>barycenter</m> symbol, to specify that scaling must happen with respect to individuals baricenters.
     // Alternatively you can add the "barycenter" symbol as third element in order to specify that coordinates are barycentric coordinates.
     // @marg 0 @name swarm_index @optional 0 @type int/all

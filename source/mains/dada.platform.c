@@ -696,9 +696,9 @@ void ext_main(void *moduleRef)
     // <b>(title <m>title</m>) (hero <m>hero_name</m>) (bgsprite <m>background_sprite_name</m>) (gravity <m>gravity_coefficient</m>) (maxtime <m>maximum_time_ms_or_none</m>)
     // (height <m>level_height</m>) (width <m>total_level_width</m>) (groundfriction <m>ground_friction_coefficient</m>) (airfriction <m>air_friction_coefficient</m>) (textcolor <m>r</m> <m>g</m> <m>b</m> <m>a</m>) (intro <m>0/1:has_intro_screen?</m>)</b>. <br />
     // Each <m>SPRITE</m> has the syntax:
-    // <b>((name <m>name</m>) (pics <m>pic1_filename</m> <m>pic2_filename</m>...) (rect <m>x</m> <m>y</m> <m>width</m> <m>height</m>) (stretch <m>0/1:can_stretch?</m>) (slidetime <m>slide_time_in_ms</m>))</b><br />
+    // <b>[[name <m>name</m>] [pics <m>pic1_filename</m> <m>pic2_filename</m>...] [rect <m>x</m> <m>y</m> <m>width</m> <m>height</m>] [stretch <m>0/1:can_stretch?</m>] [slidetime <m>slide_time_in_ms</m>]]</b><br />
     // Each <m>PROTOTYPE</m> has the syntax:
-    // <b>(<m>prototype_name</m> <m>prototype_type</m> (<m>spec1</m> <m>spec1_value</m>) (<m>spec2</m> <m>spec2_value</m>)...)</b><br />
+    // <b>[<m>prototype_name</m> <m>prototype_type</m> [<m>spec1</m> <m>spec1_value</m>] [<m>spec2</m> <m>spec2_value</m>]...]</b><br />
     // where <m>prototype_type</m> is one of the following symbols: "block", "coin", "gamechar", "portal" and each <m>spec</m> is a specification belonging
     // to the corresponding category (see below). <br />
     // Each <m>GAMECHAR</m> has the syntax:
@@ -820,7 +820,7 @@ void ext_main(void *moduleRef)
     // @method script @digest Execute script
     // @description The <m>script</m> message will execute a sequence of actions,
     // contained in the argument llll. Scripts can be also set inside some specification fields (e.g. "dieseq") and automatically triggered
-    // during playtime. Scripts must be a sequence of actions in the form <b>(<m>ACTION1</m>) (<m>ACTION2</m>)...</b>.
+    // during playtime. Scripts must be a sequence of actions in the form <b>[<m>ACTION1</m>] [<m>ACTION2</m>]...</b>.
     // In all actions two keywords can be used: "me", referring to the subject of the action (if automatically triggered at playtime by
     // fields such as "breakseq" or "dieseq"), and "hero", referring to the current gamechar hero.
     // Actions can be the ones below (curly brackets refer to variables, while square brackets mean that the arguments are optional). <br />
@@ -863,9 +863,9 @@ void ext_main(void *moduleRef)
     // @marg 0 @name what @optional 0 @type symbol
     // @marg 1 @name where_clause @optional 1 @type llll
     // @example count coins @caption count all coins
-    // @example count coins where (pointsgiven 10) @caption only count coins giving 10 points
-    // @example count items where (name Juan) @caption count all items named "Juan"
-    // @example count gamechars where (vp 1) @caption count all gamechars with 1 VP
+    // @example count coins where [pointsgiven 10] @caption only count coins giving 10 points
+    // @example count items where [name Juan] @caption count all items named "Juan"
+    // @example count gamechars where [vp 1] @caption count all gamechars with 1 VP
     class_addmethod(c, (method)platform_anything,		"count",		A_GIMME,	0);
 
     

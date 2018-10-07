@@ -1023,7 +1023,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 336.0, 122.317253, 284.0, 97.0 ],
 									"style" : "",
-									"text" : "graph ( vertices ( ( coord -17.757448 1.331836 ) ( label 6000 ) ) ( ( coord 4.575425 14.483416 ) ( label 6200 ) ) ( ( coord 13.508574 -8.593886 ) ( label 6500 ) ) ( ( coord -11.802015 27.88314 ) ( label 6700 ) ) ( ( coord 21.697294 21.183278 ) ( label 12 ) ) ( ( coord 35.336214 -7.046707 ) ( label 7200) ) ) ( edges ( 1 2 ( weight 0.1 ) ) ( 1 4 ( weight 0.1 ) ) ( 2 3 ( weight 0.2 ) ) ( 3 5 ( weight 0.4 ) ) ( 3 6 ( weight 0.7 ) ) ( 4 2 ( weight 0.1 ) ) )"
+									"text" : "graph [ vertices [ [ coord -17.757448 1.331836 ] [ label 6000 ] ] [ [ coord 4.575425 14.483416 ] [ label 6200 ] ] [ [ coord 13.508574 -8.593886 ] [ label 6500 ] ] [ [ coord -11.802015 27.88314 ] [ label 6700 ] ] [ [ coord 21.697294 21.183278 ] [ label 12 ] ] [ [ coord 35.336214 -7.046707 ] [ label 7200] ] ] [ edges [ 1 2 [ weight 0.1 ] ] [ 1 4 [ weight 0.1 ] ] [ 2 3 [ weight 0.2 ] ] [ 3 5 [ weight 0.4 ] ] [ 3 6 [ weight 0.7 ] ] [ 4 2 [ weight 0.1 ] ] ]"
 								}
 
 							}

@@ -1053,7 +1053,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 535.5, 467.0, 268.0, 38.0 ],
 									"style" : "",
-									"text" : "staticfunction \"return exp(fmod(0.05*(x-4000)*0.05*(y+4000), 1.));\""
+									"text" : "staticfunction \"return exp[fmod[0.05*[x-4000]*0.05*[y+4000], 1.]];\""
 								}
 
 							}
@@ -1120,7 +1120,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 510.5, 439.0, 268.0, 23.0 ],
 									"style" : "",
-									"text" : "staticfunction \"return tanh(0.005*x*0.005*y);\""
+									"text" : "staticfunction \"return tanh[0.005*x*0.005*y];\""
 								}
 
 							}
@@ -1148,7 +1148,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 499.0, 407.5, 291.0, 23.0 ],
 									"style" : "",
-									"text" : "staticfunction \"return cos(0.005*x)*cos(0.005*y);\""
+									"text" : "staticfunction \"return cos[0.005*x]*cos[0.005*y];\""
 								}
 
 							}
@@ -1161,7 +1161,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 483.5, 375.0, 329.0, 23.0 ],
 									"style" : "",
-									"text" : "staticfunction \"return cos(0.0001*x*y)*cos(0.0001*y*y);\""
+									"text" : "staticfunction \"return cos[0.0001*x*y]*cos[0.0001*y*y];\""
 								}
 
 							}

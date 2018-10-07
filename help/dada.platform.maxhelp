@@ -779,7 +779,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 357.0, 190.0, 197.0, 23.0 ],
 									"style" : "",
-									"text" : "count items where (name Juan)"
+									"text" : "count items where [name Juan]"
 								}
 
 							}
@@ -792,7 +792,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 357.0, 139.0, 287.0, 23.0 ],
 									"style" : "",
-									"text" : "count coins where (pointsgiven 10) (name Coin)"
+									"text" : "count coins where [pointsgiven 10] [name Coin]"
 								}
 
 							}
@@ -805,7 +805,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 159.0, 139.0, 186.0, 23.0 ],
 									"style" : "",
-									"text" : "count gamechars where (vp 1)"
+									"text" : "count gamechars where [vp 1]"
 								}
 
 							}
@@ -818,7 +818,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 131.0, 106.0, 280.0, 23.0 ],
 									"style" : "",
-									"text" : "count gamechars where (name EvilMushroom)"
+									"text" : "count gamechars where [name EvilMushroom]"
 								}
 
 							}
@@ -1112,7 +1112,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 565.0, 545.0, 142.0, 23.0 ],
 									"style" : "",
-									"text" : "script (wait 1000) (win)"
+									"text" : "script [wait 1000] [win]"
 								}
 
 							}
@@ -1199,7 +1199,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 370.0, 147.35556, 317.0, 23.0 ],
 									"style" : "",
-									"text" : "count gamechars where (name EvilMushroom) (vp 1)"
+									"text" : "count gamechars where [name EvilMushroom] [vp 1]"
 								}
 
 							}
@@ -1233,7 +1233,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 64.0, 539.0, 281.0, 23.0 ],
 									"style" : "",
-									"text" : "script generate evilmushroom with (coord $1 8)"
+									"text" : "script generate evilmushroom with [coord $1 8]"
 								}
 
 							}

@@ -201,11 +201,11 @@ int C74_EXPORT main(void)
     // @method dump @digest Output entire database as llll
     // @description Outputs the entire database in llll form (also outputs the column names depending on the
     // <m>outputcolnames</m> attribute).
-    // Syntax is: <b><m>TABLE1</m> <m>TABLE2</m>...</b>, where each table is <b>(<m>TABLE_HEADER</m> <m>TABLE_CONTENT</m>)</b>,
+    // Syntax is: <b><m>TABLE1</m> <m>TABLE2</m>...</b>, where each table is <b>[<m>TABLE_HEADER</m> <m>TABLE_CONTENT</m>]</b>,
     // where <m>TABLE_HEADER</m> is
-    // <b>(<m>table_name</m> (<m>column_name1</m> <m>column_type1</m>) (<m>column_name2</m> <m>column_type2</m>)...)</b>
+    // <b>[<m>table_name</m> [<m>column_name1</m> <m>column_type1</m>] [<m>column_name2</m> <m>column_type2</m>]...]</b>
     // and <m>TABLE_CONTENT</m> is
-    // <b>((<m>table_id_name</m> <m>id</m>) (<m>field1_name</m> <m>content1</m>) (<m>field2_name</m> <m>content2</m>)...)</b>
+    // <b>[[<m>table_id_name</m> <m>id</m>] [<m>field1_name</m> <m>content1</m>] [<m>field2_name</m> <m>content2</m>]...]</b>
     // and the <m>table_id_name</m> name is the singularized version of the table name, with the "_id" suffix (e.g.
     // for a table named "waves" this will be "wave_id").
     class_addmethod(c, (method)base_dump,			"dump", 0);
@@ -213,7 +213,7 @@ int C74_EXPORT main(void)
     // @method getcols @digest Output column names and types as llll
     // @description Outputs the table header for each table in the database, i.e. the column names and types.
     // Syntax is: <b><m>TABLE1</m> <m>TABLE2</m>...</b>, where each table is
-    // <b>(<m>table_name</m> (<m>column_name1</m> <m>column_type1</m>) (<m>column_name2</m> <m>column_type2</m>)...)</b>
+    // <b>[<m>table_name</m> [<m>column_name1</m> <m>column_type1</m>] [<m>column_name2</m> <m>column_type2</m>]...]</b>
     class_addmethod(c, (method)base_getcols,			"getcols", 0);
 
     
@@ -239,10 +239,10 @@ int C74_EXPORT main(void)
 	
 	// @method addentry @digest Add an entry to a table
 	// @description An <m>addentry</m> message followed by a table name and some entry specification 
-	// will add an entry to the table (if existing). Entry specification be in the form <b>(<m>columnname1</m> <m>content1</m>) (<m>columnname2</m> <m>content2</m>)... </b>.
+	// will add an entry to the table (if existing). Entry specification be in the form <b>[<m>columnname1</m> <m>content1</m>] [<m>columnname2</m> <m>content2</m>]... </b>.
 	// @marg 0 @name table_name @optional 0 @type symbol	
 	// @marg 1 @name specs @optional 0 @type llll
-    // @example addentry towns (name NewYork) (population 8406000) @caption add an entry in the table "towns".
+    // @example addentry towns [name NewYork] [population 8406000] @caption add an entry in the table "towns".
 	class_addmethod(c, (method)base_entry_create,		"addentry",		A_GIMME, 0);
 	class_addmethod(c, (method)base_entry_destroy,		"deleteentry",		A_SYM, A_LONG, 0); // ????? Are we sure???
     
@@ -281,8 +281,8 @@ int C74_EXPORT main(void)
     // @description Appends the content of a given text file (second argument) to a table (first argument).
     // The file should contain a properly formatted <m>llll</m> in the form
     // <b><m>ENTRY1</m> <m>ENTRY2</m>...</b>, where each <b><m>ENTRY</m></b> is in the form
-    // <b>((<m>column_name</m> <m>value(s)</m>) (<m>column_name</m> <m>value(s)</m>)...)</b>. <br />
-    // If a third specification of the kind <b>(cols <m>colname1</m> <m>colname2</m>...)</b> is set,
+    // <b>[[<m>column_name</m> <m>value[s]</m>] [<m>column_name</m> <m>value[s]</m>]...]</b>. <br />
+    // If a third specification of the kind <b>[cols <m>colname1</m> <m>colname2</m>...]</b> is set,
     // only the specified columns will be imported into the database. <br />
     // If you have a massive amount of symbol entries in your table, this should be the preferred method of loading
     // them into a <o>dada.base</o> object, since it bypasses the Max symbol table, inserting strings directly into the SQLite database.
@@ -295,11 +295,11 @@ int C74_EXPORT main(void)
 	// @method addtable @digest Add a table to the database
 	// @description An <m>addtable</m> message followed by a table name and some columns specifications 
 	// will add a table to the database having the given number and types of columns. 
-	// Column specification must be in the form <b>(<m>name1</m> <m>type1</m>) (<m>name2</m> <m>type2</m>)... </b>
+	// Column specification must be in the form <b>[<m>name1</m> <m>type1</m>] [<m>name2</m> <m>type2</m>]... </b>
 	// where each <m>name</m> is a symbol and each type is one of the symbols: "f" (float), "i" (integer), "s" (symbol), "r" (rational), "l" (llll).
 	// @marg 0 @name table_name @optional 0 @type symbol	
 	// @marg 1 @name columns @optional 0 @type llll
-    // @example addtable towns (name s) (population i) @caption add a table named "towns" with two columns: name (symbol) and popuplation (integer)
+    // @example addtable towns [name s] [population i] @caption add a table named "towns" with two columns: name (symbol) and popuplation (integer)
 	class_addmethod(c, (method)base_table_create,		"addtable",		A_GIMME, 0);
 
     

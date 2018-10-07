@@ -485,10 +485,10 @@ int C74_EXPORT main(void)
     CLASS_ATTR_BASIC(c, "buffers", 0);
     CLASS_ATTR_SAVE(c, "buffers", 0);
     // @description Sets the buffer names and the buffer angles (for buffer wheel <m>type</m> only).
-    // Syntax is expected to be: <b>(<m>name1</m> <m>angle1</m>) (<m>name2</m> <m>angle2</m>)...</b>,
+    // Syntax is expected to be: <b>[<m>name1</m> <m>angle1</m>] [<m>name2</m> <m>angle2</m>]...</b>,
     // where <m>name</m> is a symbol identifying the buffer names, and <m>angle</m> is its angle in the buffer wheel,
     // in radians. You can append the degrees ° symbol after the number (without any spaces) or substitute the angle with
-    // <b>(<m>angleindeg</m> deg)</b> if you want to define an angle in degrees.
+    // <b>[<m>angleindeg</m> deg]</b> if you want to define an angle in degrees.
 
     CLASS_ATTR_SYM(c, "wheelfunction", 0, t_terrain, terrain_wheel_code);
     CLASS_ATTR_STYLE_LABEL(c, "wheelfunction", 0, "text_large", "Wheel Function Code");

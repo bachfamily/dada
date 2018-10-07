@@ -556,12 +556,12 @@ int C74_EXPORT main(void)
 
     // @method dump @digest Output state
     // @description Outputs the current state of the object. The syntax is
-    // <b>nodes (nodes <m>NODE1</m> <m>NODE2</m>...) (testers <m>TESTER1</m> <m>TESTER2</m>...)</b>.
+    // <b>nodes [nodes <m>NODE1</m> <m>NODE2</m>...] [testers <m>TESTER1</m> <m>TESTER2</m>...]</b>.
     // Currently a single tester is supported. <br />
     // Each node is in the syntax
-    // <b>(coord <m>x</m> <m>y</m>) (pitch <m>pitch_cents</m>) (velocity <m>vel</m>)</b>.<br />
+    // <b>[coord <m>x</m> <m>y</m>] [pitch <m>pitch_cents</m>] [velocity <m>vel</m>]</b>.<br />
     // Each tester is in the syntax
-    // <b>(coord <m>x</m> <m>y</m>) (channel <m>MIDIchannel</m></b>.
+    // <b>[coord <m>x</m> <m>y</m>] [channel <m>MIDIchannel</m></b>.
     class_addmethod(c, (method)nodes_anything,	"dump",			A_GIMME,	0);
 
     // @method clear @digest Clear all nodes
@@ -582,7 +582,7 @@ int C74_EXPORT main(void)
     // @description Adds a new node. The correct syntax is:
     // <b>addnode <m>NODE_SYNTAX</m></b>, where the node syntax is the one
     // documented in the <m>dump</m> message. The node syntax should NOT be wrapped in parenthesis.
-    // For instance, a valid message is: <b>addnode (coord -90. 20.) (pitch 6000) (vel 127)</b>
+    // For instance, a valid message is: <b>addnode [coord -90. 20.] [pitch 6000] [vel 127]</b>
     // After the node has been added, a notification is sent through the third outlet in the form
     // <b>addnode <m>node_index</m></b>.
     // @marg 0 @name node_syntax @optional 0 @type llll

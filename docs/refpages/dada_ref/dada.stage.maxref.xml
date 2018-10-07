@@ -160,20 +160,20 @@
 			</digest>
 			<description>
 				Outputs the current state of the object. The syntax is
-				<b>stage (cards <m>CARD1</m> <m>CARD2</m>...)</b>,
+				<b>stage [cards <m>CARD1</m> <m>CARD2</m>...]</b>,
 				each card being
 				<b>(coord <m>x</m> <m>y</m>) (speed <m>x</m> <m>y</m>) (color <m>r</m> <m>g</m> <m>b</m> <m>a</m>)
 				(channel <m>MIDIchannel</m>) (flags <m>flags</m>)</b>. <br />
 				A first argument limits the elements to be dumped.
 				The <m>dump room</m> message only dumps the room state; the <m>dump balls</m> message only dumps the balls state. <br />
-				Graph syntax in dada is the following one <b>(<m>VERTEX1</m> <m>VERTEX2</m>...) (<m>EDGE1</m> <m>EDGE2</m>...)</b>.
-				Each vertex is an llll shaped as <b>((coord <m>x</m> <m>y</m>) <m>METADATA1</m> <m>METADATA2</m>...)</b>.
-				Each edge is an llll shaped as <b>(<m>edge_start_vertex_index</m> <m>edge_end_vertex_index</m> <m>METADATA1</m> <m>METADATA2</m>...)</b>,
+				Graph syntax in dada is the following one <b>[<m>VERTEX1</m> <m>VERTEX2</m>...] [<m>EDGE1</m> <m>EDGE2</m>...]</b>.
+				Each vertex is an llll shaped as <b>[[coord <m>x</m> <m>y</m>] <m>METADATA1</m> <m>METADATA2</m>...]</b>.
+				Each edge is an llll shaped as <b>[<m>edge_start_vertex_index</m> <m>edge_end_vertex_index</m> <m>METADATA1</m> <m>METADATA2</m>...]</b>,
 				where the indices of the vertices are 1-based, and correspond to the position on the vertices in the corresponding vertices llll.
 				The <m>METADATA</m> llll may depend on the graph metadata type. For instance, if the edges or vertices contain information about pitch
-				and velocity, they might be something like <b>(pitch <m>midicents_value</m>)</b> and/or <b>(velocity <m>velocity_value</m>)</b>.
+				and velocity, they might be something like <b>[pitch <m>midicents_value</m>]</b> and/or <b>[velocity <m>velocity_value</m>]</b>.
 				<br /> <br />
-				Item flags syntax in dada is the following one <b>(flags <m>flag1</m> <m>flag2</m>...)</b>, where each flag is one of the following symbols:
+				Item flags syntax in dada is the following one <b>[flags <m>flag1</m> <m>flag2</m>...]</b>, where each flag is one of the following symbols:
 				<b>lock</b>, <b>mute</b>, <b>solo</b>, <b>inactive</b>.
 				<br /> <br />
 			</description>
@@ -403,6 +403,7 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Send bang Upon Messages" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
@@ -479,6 +480,7 @@
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Outlet Types" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
 			</attributelist>
 		</attribute>
@@ -509,6 +511,7 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="50" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Play Step (ms)" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
 			</attributelist>
@@ -691,6 +694,7 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="1" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Save State For Undo Before Playing" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>

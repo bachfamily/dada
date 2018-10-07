@@ -719,7 +719,7 @@ int C74_EXPORT main(void)
     
     // @method dump @digest Dump current state
     // @description The word <m>dump</m> dumps the state of all the cells in the form
-    // <b>life (world <m>CELLS</m>)</b>, where <m>CELLS</m> is an llll containing <m>N</m> sub-lllls, each containing <m>N</m> integers
+    // <b>life [world <m>CELLS</m>]</b>, where <m>CELLS</m> is an llll containing <m>N</m> sub-lllls, each containing <m>N</m> integers
     // (i.e. it is a <m>N</m>-by-<m>N</m> matrix). Each integer represents the state of a cell, and <m>N</m> equals exactly the world <m>size</m>
     // (see <m>size</m> attribute). The state of the cell must be an integer from 0 to 255.
 	class_addmethod(c, (method)life_anything,		"dump",		A_GIMME,	0);
@@ -739,7 +739,7 @@ int C74_EXPORT main(void)
     // @method random @digest Create random active cells
     // @description The word <m>random</m> sets the state of some random cells to 1, by default setting all other cells to 0.
     // The word can be further followed by a list formatted as:
-    // <b>(<m>specification</m> <m>value</m>) (<m>specification</m> <m>value</m>)...</b>. <br />
+    // <b>[<m>specification</m> <m>value</m>] [<m>specification</m> <m>value</m>]...</b>. <br />
     // Each specification can be one of the followings: <br />
     // • "distribution": the value is expected to be either "gaussian" or "uniform"; <br />
     // • "density": the floating point density of cells for the distribution; <br />
@@ -758,7 +758,7 @@ int C74_EXPORT main(void)
     // @method exportpng @digest Export PNG image
     // @description The word <m>exportpng</m>, followed by an file path, exports the current canvas as a PNG image.
     // This can be further followed by a list formatted as:
-    // <b>(<m>specification</m> <m>value</m>) (<m>specification</m> <m>value</m>)...</b>. <br />
+    // <b>[<m>specification</m> <m>value</m>] [<m>specification</m> <m>value</m>]...</b>. <br />
     // Each specification can be one of the followings: <br />
     // • "dpi": the value is expected to be the dpi resolution of the exported image; <br />
     // • "width": the value is expected to be the width of the exported image in pixels; <br />

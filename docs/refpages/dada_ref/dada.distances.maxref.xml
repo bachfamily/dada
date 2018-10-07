@@ -245,7 +245,7 @@
 				Find nearest neighbors
 			</digest>
 			<description>
-				The <m>knn</m> message, followed by an integer <m>K</m> and an <m>llll</m> of the kind <b>(<m>x</m>, <m>y</m>)</b>,
+				The <m>knn</m> message, followed by an integer <m>K</m> and an <m>llll</m> of the kind <b>[<m>x</m>, <m>y</m>]</b>,
 				finds the <m>K</m> points which are nearest to the location (<m>x</m>, <m>y</m>), and outputs their content field(s) from the third outlet. <br />
 				If <m>relativeknn</m> is on, the coordinates are expected to be between 0 and 1, relative to the current domain and range
 				(caveat: more precisely, to the domain and range of the latest painted view of the object).
@@ -271,10 +271,10 @@
 			</digest>
 			<description>
 				Examples:<br />
-				• <b>setturtle (0 10)</b>   <i>→ Set the turtle on the nearest grain to x=0, y=10</i><br />
+				• <b>setturtle [0 10]</b>   <i>→ Set the turtle on the nearest grain to x=0, y=10</i><br />
 				• <b>setturtle name Warsaw</b>   <i>→ Set the turtle on the grain having "Warsaw" as content for the column "name"</i><br />
 				<br />
-				The <m>setturtle</m> message, followed by a <m>llll</m> of the kind <b>(<m>x</m>, <m>y</m>)</b>
+				The <m>setturtle</m> message, followed by a <m>llll</m> of the kind <b>[<m>x</m>, <m>y</m>]</b>
 				sets the turtle on the nearest grain to the given (<m>x</m>, <m>y</m>) location, without causing any output. <br />
 				If <m>relativeturtle</m> is on, the coordinates are expected to be between 0 and 1, relative to the current domain and range
 				(caveat: more precisely, to the domain and range of the latest painted view of the object). <br />
@@ -291,10 +291,10 @@
 			</digest>
 			<description>
 				Examples:<br />
-				• <b>turtle (0 10)</b>   <i>→ Set the turtle on the nearest grain to x=0, y=10, and output content</i><br />
+				• <b>turtle [0 10]</b>   <i>→ Set the turtle on the nearest grain to x=0, y=10, and output content</i><br />
 				• <b>turtle name Warsaw</b>   <i>→ Set the turtle on the grain having "Warsaw" as content for the column "name", and output content</i><br />
 				<br />
-				The <m>turtle</m> message, followed by a <m>llll</m> of the kind <b>(<m>x</m>, <m>y</m>)</b>
+				The <m>turtle</m> message, followed by a <m>llll</m> of the kind <b>[<m>x</m>, <m>y</m>]</b>
 				sets the turtle on the nearest grain to the given (<m>x</m>, <m>y</m>) location, and outputs the grain content field(s)
 				from the second outlet, preceded by the "turtle" symbol. <br />
 				If <m>relativeturtle</m> is on, the coordinates are expected to be between 0 and 1, relative to the current domain and range
@@ -321,7 +321,7 @@
 				Move the turtle and output grain content
 			</digest>
 			<description>
-				The <m>turtledelta</m> message, followed by a <m>llll</m> of the kind <b>(<m>delta_x</m>, <m>delta_y</m>)</b>
+				The <m>turtledelta</m> message, followed by a <m>llll</m> of the kind <b>[<m>delta_x</m>, <m>delta_y</m>]</b>
 				moves the turtle of a (<m>delta_x</m>, <m>delta_y</m>) vector and sets it to the nearest grain to the new position (ignoring
 				the grain which previously had the turtle). The content field(s) of such grain are then output from the second outlet preceded by the
 				"turtle" symbol. <br />
@@ -690,6 +690,7 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="50" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Maximum Number Of Undo Steps" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
 			</attributelist>
@@ -724,6 +725,7 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Send bang Upon Messages" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
@@ -838,6 +840,7 @@
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Outlet Types" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
 			</attributelist>
 		</attribute>
@@ -1243,6 +1246,7 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Post Undo/Redo Steps" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>

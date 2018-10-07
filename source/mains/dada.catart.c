@@ -421,7 +421,7 @@ int C74_EXPORT main(void)
     
     
     // @method setturtle @digest Set the turtle
-    // @description The <m>setturtle</m> message, followed by a <m>llll</m> of the kind <b>(<m>x</m>, <m>y</m>)</b>
+    // @description The <m>setturtle</m> message, followed by a <m>llll</m> of the kind <b>[<m>x</m>, <m>y</m>]</b>
     // sets the turtle on the nearest grain to the given (<m>x</m>, <m>y</m>) location, without causing any output. <br />
     // If <m>relativeturtle</m> is on, the coordinates are expected to be between 0 and 1, relative to the current domain and range
     // (caveat: more precisely, to the domain and range of the latest painted view of the object). <br />
@@ -430,13 +430,13 @@ int C74_EXPORT main(void)
     // In this case, the turtle is positioned on the (first found) grain (if any) having <m>value</m> as value for the field <m>colname</m>.
     // @marg 0 @name position_or_columnname @optional 0 @type llll/sym
     // @marg 1 @name column_value @optional 1 @type anything
-    // @example setturtle (0 10) @caption Set the turtle on the nearest grain to x=0, y=10
+    // @example setturtle [0 10] @caption Set the turtle on the nearest grain to x=0, y=10
     // @example setturtle name Warsaw @caption Set the turtle on the grain having "Warsaw" as content for the column "name"
     class_addmethod(c, (method)catart_anything,		"setturtle",		A_GIMME,	0);
 	
     
 	// @method turtle @digest Set the turtle and output grain content
-	// @description The <m>turtle</m> message, followed by a <m>llll</m> of the kind <b>(<m>x</m>, <m>y</m>)</b>
+	// @description The <m>turtle</m> message, followed by a <m>llll</m> of the kind <b>[<m>x</m>, <m>y</m>]</b>
 	// sets the turtle on the nearest grain to the given (<m>x</m>, <m>y</m>) location, and outputs the grain content field(s)
 	// from the second outlet, preceded by the "turtle" symbol. <br />
     // If <m>relativeturtle</m> is on, the coordinates are expected to be between 0 and 1, relative to the current domain and range
@@ -446,13 +446,13 @@ int C74_EXPORT main(void)
     // In this case, the turtle is positioned on the (first found) grain (if any) having <m>value</m> as value for the field <m>colname</m>.
     // @marg 0 @name position_or_columnname @optional 0 @type llll/sym
     // @marg 1 @name column_value @optional 1 @type anything
-    // @example turtle (0 10) @caption Set the turtle on the nearest grain to x=0, y=10, and output content
+    // @example turtle [0 10] @caption Set the turtle on the nearest grain to x=0, y=10, and output content
     // @example turtle name Warsaw @caption Set the turtle on the grain having "Warsaw" as content for the column "name", and output content
 	class_addmethod(c, (method)catart_anything,		"turtle",		A_GIMME,	0);
 
 	
 	// @method turtledelta @digest Move the turtle and output grain content
-	// @description The <m>turtledelta</m> message, followed by a <m>llll</m> of the kind <b>(<m>delta_x</m>, <m>delta_y</m>)</b>
+	// @description The <m>turtledelta</m> message, followed by a <m>llll</m> of the kind <b>[<m>delta_x</m>, <m>delta_y</m>]</b>
 	// moves the turtle of a (<m>delta_x</m>, <m>delta_y</m>) vector and sets it to the nearest grain to the new position (ignoring
 	// the grain which previously had the turtle). The content field(s) of such grain are then output from the second outlet preceded by the
 	// "turtle" symbol. <br />
@@ -468,7 +468,7 @@ int C74_EXPORT main(void)
 
     
 	// @method knn @digest Find nearest neighbors
-	// @description The <m>knn</m> message, followed by an integer <m>K</m> and an <m>llll</m> of the kind <b>(<m>x</m>, <m>y</m>)</b>,
+	// @description The <m>knn</m> message, followed by an integer <m>K</m> and an <m>llll</m> of the kind <b>[<m>x</m>, <m>y</m>]</b>,
 	// finds the <m>K</m> points which are nearest to the location (<m>x</m>, <m>y</m>), and outputs their content field(s) from the third outlet. <br />
     // If <m>relativeknn</m> is on, the coordinates are expected to be between 0 and 1, relative to the current domain and range
     // (caveat: more precisely, to the domain and range of the latest painted view of the object).

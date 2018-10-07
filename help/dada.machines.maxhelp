@@ -542,7 +542,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 39.0, 194.0, 229.0, 23.0 ],
 									"style" : "",
-									"text" : "random 20 (fa fe fi fo fu sylrev concat)"
+									"text" : "random 20 [fa fe fi fo fu sylrev concat]"
 								}
 
 							}
@@ -584,7 +584,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 14.0, 101.0, 713.0, 81.0 ],
 									"style" : "",
-									"text" : "(prototypes ((name fa) (fullname \"Append Fa\" ) (char a) (numins 1) (numouts 1)) ((name fi) (fullname \"Append Fi\" ) (char i) (numins 1) (numouts 1)) ((name fo) (fullname \"Append Fo\" ) (char o) (numins 1) (numouts 1)) ((name fu) (fullname \"Append Fu\" ) (char u) (numins 1) (numouts 1)) ((name fe) (fullname \"Generate Fe\" ) (char e! ) (numins 0) (numouts 1)) ((name concat) (fullname \"Concatenate Words\" ) (char + ) (numins 2) (numouts 1)) ((name sylrev) (fullname \"Reverse Syllables\" ) (char < ) (numins 1) (numouts 1)))"
+									"text" : "[prototypes [[name fa] [fullname \"Append Fa\" ] [char a] [numins 1] [numouts 1]] [[name fi] [fullname \"Append Fi\" ] [char i] [numins 1] [numouts 1]] [[name fo] [fullname \"Append Fo\" ] [char o] [numins 1] [numouts 1]] [[name fu] [fullname \"Append Fu\" ] [char u] [numins 1] [numouts 1]] [[name fe] [fullname \"Generate Fe\" ] [char e! ] [numins 0] [numouts 1]] [[name concat] [fullname \"Concatenate Words\" ] [char + ] [numins 2] [numouts 1]] [[name sylrev] [fullname \"Reverse Syllables\" ] [char < ] [numins 1] [numouts 1]]]"
 								}
 
 							}
@@ -1257,7 +1257,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 370.114441, 384.0, 290.0, 23.0 ],
 									"style" : "",
-									"text" : "sel all, onset = \"random(0, 2000)\", clearselection"
+									"text" : "sel all, onset = \"random[0, 2000]\", clearselection"
 								}
 
 							}
@@ -1342,7 +1342,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 34.0, 162.567627, 442.0, 23.0 ],
 									"style" : "",
-									"text" : "random 20 (transposeup transposedown circularshiftleft split join scramble)"
+									"text" : "random 20 [transposeup transposedown circularshiftleft split join scramble]"
 								}
 
 							}
@@ -1421,7 +1421,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 14.0, 104.0, 500.0, 23.0 ],
 									"style" : "",
-									"text" : "(prototypes ((name scramble) (fullname Scramble) (char §) (numins 1) (numouts 1)) )"
+									"text" : "[prototypes [[name scramble] [fullname Scramble] [char §] [numins 1] [numouts 1]] ]"
 								}
 
 							}
@@ -2396,7 +2396,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 379.0, 362.567627, 186.0, 81.0 ],
 									"style" : "",
-									"text" : "random 20 ((transposeup 50) (transposedown 10) (circularshiftleft 10) (circularshiftright 20) (split 20) (join 20))"
+									"text" : "random 20 [[transposeup 50] [transposedown 10] [circularshiftleft 10] [circularshiftright 20] [split 20] [join 20]]"
 								}
 
 							}
@@ -2424,7 +2424,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 379.0, 262.567627, 156.0, 67.0 ],
 									"style" : "",
-									"text" : "random 20 (transposeup transposedown circularshiftleft circularshiftright)"
+									"text" : "random 20 [transposeup transposedown circularshiftleft circularshiftright]"
 								}
 
 							}

@@ -1000,7 +1000,7 @@ int C74_EXPORT main(void)
 	
 	// @method sample @digest Set sampling points and output sampling information
 	// @description The symbol <m>sample</m> followed by a list in the form
-	// <b>(<m>x1</m> <m>y1</m>) (<m>x2</m> <m>y2</m>) ...</b> sets the coordinates of points on the
+	// <b>[<m>x1</m> <m>y1</m>] [<m>x2</m> <m>y2</m>] ...</b> sets the coordinates of points on the
 	// canvas to be sampled, and then outputs the sampled information (see <m>bang</m>). This is equivalent
 	// as using the <m>setsample</m> message followed by a <m>bang</m>.
     // @marg 0 @name coordinates @optional 0 @type llll
@@ -1008,12 +1008,12 @@ int C74_EXPORT main(void)
 
 	// @method setsample @digest Set sampling points
 	// @description The symbol <m>sample</m> followed by a list in the form
-	// <b>((<m>x1</m> <m>y1</m>) <m>pitch_mc1</m> <m>velocity1</m>) ((<m>x2</m> <m>y2</m>) <m>pitch_mc2</m> <m>velocity2</m>) ...</b>
+	// <b>[[<m>x1</m> <m>y1</m>] <m>pitch_mc1</m> <m>velocity1</m>] [[<m>x2</m> <m>y2</m>] <m>pitch_mc2</m> <m>velocity2</m>] ...</b>
 	// sets the coordinates of points on the canvas to be sampled, as well as their associated pitches (in midicents) and
 	// velocities (1 to 127), which will be used at playtime. Pitches and velocities are optional, and can be dropped (in which 
 	// case a default pitch of 6000 and a default velocity of 100 will be used).
     // If the <m>type</m> attribute is set to "Scores", then the syntax
-    // <b>((<m>x1</m> <m>y1</m>) <m>label1</m> <m>score1</m>)) ((<m>x2</m> <m>y2</m>) <m>label2</m> <m>score2</m>) ...</b>
+    // <b>[[<m>x1</m> <m>y1</m>] <m>label1</m> <m>score1</m>]] [[<m>x2</m> <m>y2</m>] <m>label2</m> <m>score2</m>] ...</b>
     // is expected
     // @marg 0 @name sampling_points @optional 0 @type llll
 	class_addmethod(c, (method)kaleido_anything,	"setsample",		A_GIMME,	0);
@@ -1038,11 +1038,11 @@ int C74_EXPORT main(void)
 	// @method rotate @digest Rotate elements
 	// @description The word <m>rotate</m> followed the index of a shape, and an angle (in radians), rotates
 	// the shape. The angle can be set in degrees by appending the degrees ° symbol after the number (without any spaces) or
-    // by replacing the number with an llll in the form <b>(<m>amount_in_degrees</m> deg)</b>.
+    // by replacing the number with an llll in the form <b>[<m>amount_in_degrees</m> deg]</b>.
     // If the index of the shape is <m>0</m> or the <m>all</m> symbol, all shapes will be rotated.
-	// If a third argument is added, in the form <b>(<m>x</m> <m>y</m>)</b>, it sets the coordinates of the origin for the rotation.
+	// If a third argument is added, in the form <b>[<m>x</m> <m>y</m>]</b>, it sets the coordinates of the origin for the rotation.
 	// If no third argument is added, the default center of rotation is the shape barycenter (if a single shape is being rotated)
-	// or the origin <b>(0 0)</b> if all shapes are being rotated.
+	// or the origin <b>[0 0]</b> if all shapes are being rotated.
 	// The center of rotation llll can be replaced by the <m>barycenter</m> symbol, to specify that rotation must happen around individuals barycenters. 
 	// Alternatively you can add the "barycenter" symbol as third element in order to specify that coordinates are barycentric coordinates. 
     // @marg 0 @name shape_index @optional 0 @type int/all
@@ -1051,7 +1051,7 @@ int C74_EXPORT main(void)
 	class_addmethod(c, (method)kaleido_anything,	"rotate",		A_GIMME,	0);
 
 	// @method move @digest Translate elements
-	// @description The word <m>move</m> followed the index of a shape and a vector in wrapped <b>(<m>x</m> <m>y</m>)</b> syntax,
+	// @description The word <m>move</m> followed the index of a shape and a vector in wrapped <b>[<m>x</m> <m>y</m>]</b> syntax,
 	// translates the shape of the given vector. If the index of the shape is <m>0</m> or the <m>all</m> symbol, all shapes will be translated.
     // @marg 0 @name shape_index @optional 0 @type int/all
     // @marg 1 @name amount @optional 0 @type llll
@@ -1061,10 +1061,10 @@ int C74_EXPORT main(void)
 	// @description The word <m>scale</m> followed the index of a shape and a number, scales the given shape of the factor
 	// specified by the number.
 	// If the index of the shape is <m>0</m> or the <m>all</m> symbol, all shapes will be scaled.
-	// If, instead of a single factor, a list in the form <b>(<m>x_scale</m> <m>y_scale</m>)</b> is given,
+	// If, instead of a single factor, a list in the form <b>[<m>x_scale</m> <m>y_scale</m>]</b> is given,
 	// two different scale factors are applied for the X and Y axis.
-	// You can provide as third argument the scaling center, in <b>(<m>x</m> <m>y</m>)</b> form. If no center is provided, 
-	// by default the barycenter is used for single shape scaling, while the origin <b>(0, 0)</b> is used when all shapes are to be scaled
+	// You can provide as third argument the scaling center, in <b>[<m>x</m> <m>y</m>]</b> form. If no center is provided, 
+	// by default the barycenter is used for single shape scaling, while the origin <b>[0, 0]</b> is used when all shapes are to be scaled
 	// The scaling center llll can be replaced by the <m>barycenter</m> symbol, to specify that scaling must happen with respect to individuals baricenters.
 	// Alternatively you can add the "barycenter" symbol as third element in order to specify that coordinates are barycentric coordinates. 
     // @marg 0 @name shape_index @optional 0 @type int/all
@@ -1077,13 +1077,13 @@ int C74_EXPORT main(void)
 	// orientation. 
 	// If the index of the shape is <m>0</m> or the <m>all</m> symbol, all shapes will be shaken.
 	// You can specify via two optional elements the intensity of such shaking, in the form 
-	// <b>(<m>min_shift</m> <m>max_shift</m>) (<m>min_rotation</m> <m>max_rotation</m>)</b>.
+	// <b>[<m>min_shift</m> <m>max_shift</m>] [<m>min_rotation</m> <m>max_rotation</m>]</b>.
 	// Where the each value is intended as absolute value (of the shift or of the rotation). The direction of the shift and the rotation
 	// are chosen randomly. The rotation always happens around the shape's barycenter.
 	// The default minimum shift and minimum rotation is 0; the default maximum shift is one fifth of the mirror size; 
 	// the default maximum rotation is 10 degrees.
 	// A third optional element sets the shaking region, as a circle where each shape barycenter should fall, in the form
-	// <b>((<m>center_x</m> <m>center_y</m>) <m>radius</m>)</b>. By default the center is the barycenter of the main chamber, i.e.
+	// <b>[[<m>center_x</m> <m>center_y</m>] <m>radius</m>]</b>. By default the center is the barycenter of the main chamber, i.e.
 	// of the triangle formed by the three mirrors; the radius is by default the <m>mirrorsize</m>.
     // @marg 0 @name shape_index @optional 0 @type int/all
     // @marg 1 @name shift @optional 1 @type number/llll

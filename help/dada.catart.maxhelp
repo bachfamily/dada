@@ -405,7 +405,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 88.5, 344.0, 211.5, 52.0 ],
 									"style" : "",
-									"text" : "addentry similarities ( A $1 ) ( B $2 ) ( C $3 ) ( D $4 ) ( E $5 ) ( F $6 ) ( G $7 ) ( H $8 ) ( I $9 )"
+									"text" : "addentry similarities [ A $1 ] [ B $2 ] [ C $3 ] [ D $4 ] [ E $5 ] [ F $6 ] [ G $7 ] [ H $8 ] [ I $9 ]"
 								}
 
 							}
@@ -420,7 +420,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 10.0, 147.5, 375.0, 23.0 ],
 									"style" : "",
-									"text" : "addtable similarities (A f) (B f) (C f) (D f) (E f) (F f) (G f) (H f) (I f)"
+									"text" : "addtable similarities [A f] [B f] [C f] [D f] [E f] [F f] [G f] [H f] [I f]"
 								}
 
 							}
@@ -2155,7 +2155,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 375.0, 201.0, 109.0, 23.0 ],
 									"style" : "",
-									"text" : "knn 4 (400 6000)"
+									"text" : "knn 4 [400 6000]"
 								}
 
 							}
@@ -2800,7 +2800,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 104.028915, 479.0, 256.5, 62.0 ],
 									"style" : "",
-									"text" : "addtable scores (content l) (title s) (duration f) (onset f) (centroid f) (loudness f) (spread f) (type s) (pim f) (phase f) (measure i) (label s) (tempo l) (bpm f)"
+									"text" : "addtable scores [content l] [title s] [duration f] [onset f] [centroid f] [loudness f] [spread f] [type s] [pim f] [phase f] [measure i] [label s] [tempo l] [bpm f]"
 								}
 
 							}
@@ -3854,7 +3854,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 36.0, 152.5, 93.0, 23.0 ],
 									"style" : "",
-									"text" : "setturtle (11 3)"
+									"text" : "setturtle [11 3]"
 								}
 
 							}
@@ -3894,7 +3894,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 323.875, 291.0, 109.0, 23.0 ],
 									"style" : "",
-									"text" : "turtledelta (0.8 0)"
+									"text" : "turtledelta [0.8 0]"
 								}
 
 							}
@@ -3907,7 +3907,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 323.875, 263.0, 109.0, 23.0 ],
 									"style" : "",
-									"text" : "turtledelta (2 0.7)"
+									"text" : "turtledelta [2 0.7]"
 								}
 
 							}
@@ -3934,7 +3934,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 323.875, 238.0, 107.0, 23.0 ],
 									"style" : "",
-									"text" : "turtledelta (-1 -1)"
+									"text" : "turtledelta [-1 -1]"
 								}
 
 							}
@@ -4058,7 +4058,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 10.0, 114.5, 77.0, 23.0 ],
 									"style" : "",
-									"text" : "turtle (12 4)"
+									"text" : "turtle [12 4]"
 								}
 
 							}

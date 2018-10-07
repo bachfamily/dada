@@ -224,7 +224,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 253.5, 299.0, 390.0, 38.0 ],
 									"style" : "",
-									"text" : "meta edge 1 (label lowscore) ( score score (((( 4 4 ) (( 1/4 120 ))) ( 1 ( 4700. 100 0 )))))"
+									"text" : "meta edge 1 [label lowscore] [ score score [[[[ 4 4 ] [[ 1/4 120 ]]] [ 1 [ 4700. 100 0 ]]]]]"
 								}
 
 							}
@@ -883,7 +883,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 16.647934, 443.0, 145.0, 23.0 ],
 									"style" : "",
-									"text" : "move edge $1 ( $2 $3 )"
+									"text" : "move edge $1 [ $2 $3 ]"
 								}
 
 							}
@@ -1475,7 +1475,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 399.0, 122.0, 155.0, 52.0 ],
 									"style" : "",
-									"text" : "addball (coord 100 100) (speed -200 -200) (color 0.5 0.5 0 1)"
+									"text" : "addball [coord 100 100] [speed -200 -200] [color 0.5 0.5 0 1]"
 								}
 
 							}
@@ -2574,7 +2574,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 311.0, 294.0, 208.0, 23.0 ],
 									"style" : "",
-									"text" : "meta vertex 4 (pitch 6200) (vel 80)"
+									"text" : "meta vertex 4 [pitch 6200] [vel 80]"
 								}
 
 							}
@@ -2601,7 +2601,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 311.0, 229.0, 202.0, 23.0 ],
 									"style" : "",
-									"text" : "meta edge 5 (pitch 6300) (vel 80)"
+									"text" : "meta edge 5 [pitch 6300] [vel 80]"
 								}
 
 							}
@@ -2653,7 +2653,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 183.0, 163.0, 119.0, 23.0 ],
 									"style" : "",
-									"text" : "split edge 3 (-40 0)"
+									"text" : "split edge 3 [-40 0]"
 								}
 
 							}
@@ -2679,7 +2679,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 68.0, 128.0, 123.0, 23.0 ],
 									"style" : "",
-									"text" : "move edge 3 (0 10)"
+									"text" : "move edge 3 [0 10]"
 								}
 
 							}
@@ -2721,7 +2721,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 48.0, 101.0, 127.0, 23.0 ],
 									"style" : "",
-									"text" : "move vertex 5 (-4 0)"
+									"text" : "move vertex 5 [-4 0]"
 								}
 
 							}
@@ -2747,7 +2747,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 15.0, 76.0, 166.0, 23.0 ],
 									"style" : "",
-									"text" : "move component 1 (10 10)"
+									"text" : "move component 1 [10 10]"
 								}
 
 							}

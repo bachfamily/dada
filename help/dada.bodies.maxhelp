@@ -179,7 +179,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 605.0, 370.0, 145.0, 23.0 ],
 									"style" : "",
-									"text" : "planet 2 (speed 40 -20)"
+									"text" : "planet 2 [speed 40 -20]"
 								}
 
 							}
@@ -208,7 +208,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 494.0, 370.0, 109.0, 23.0 ],
 									"style" : "",
-									"text" : "star 1 (radius 40)"
+									"text" : "star 1 [radius 40]"
 								}
 
 							}
@@ -551,7 +551,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 45.5, 165.0, 407.0, 52.0 ],
 									"style" : "",
-									"text" : "addplanets ( ( coord 0. 0. ) ( speed 0 -200 ) ( acc 0. 0. ) ( color 0.2 0.1 0.09 1. ) ( channel 2 ) ( flags mute ) ) ( ( coord 100. -50. ) ( speed -30 -30 ) ( acc -4. 0. ) ( color 0.3 0.3 0.3 1. ) ( channel 4 ) )"
+									"text" : "addplanets [ [ coord 0. 0. ] [ speed 0 -200 ] [ acc 0. 0. ] [ color 0.2 0.1 0.09 1. ] [ channel 2 ] [ flags mute ] ] [ [ coord 100. -50. ] [ speed -30 -30 ] [ acc -4. 0. ] [ color 0.3 0.3 0.3 1. ] [ channel 4 ] ]"
 								}
 
 							}
@@ -581,7 +581,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 10.0, 75.0, 429.0, 67.0 ],
 									"style" : "",
-									"text" : "addstars ( ( coord 80. -80. ) ( density 0.01 ) ( radius 15.8 ) ( notes ( 1. 8728. ) ( 3. 9028. ) ( 5. 8728. ) ) ( color 0.3 0.3 0. 1. ) ( channel 1 ) ) ( ( coord 80. 40. ) ( density 0.04 ) ( radius 6 ) ( notes ( 0. 6000. ) ( 0.2 6200. ) ( 1.14 6700. ) ) ( color 0. 0. 1. 1. ) ( channel 2 ) )"
+									"text" : "addstars [ [ coord 80. -80. ] [ density 0.01 ] [ radius 15.8 ] [ notes [ 1. 8728. ] [ 3. 9028. ] [ 5. 8728. ] ] [ color 0.3 0.3 0. 1. ] [ channel 1 ] ] [ [ coord 80. 40. ] [ density 0.04 ] [ radius 6 ] [ notes [ 0. 6000. ] [ 0.2 6200. ] [ 1.14 6700. ] ] [ color 0. 0. 1. 1. ] [ channel 2 ] ]"
 								}
 
 							}
@@ -1257,7 +1257,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 488.0, 380.0, 357.0, 52.0 ],
 									"style" : "",
-									"text" : "addstars ( ( coord 80. -80. ) ( density 0.01 ) ( radius 18 ) ( notes ( 1. 8728. ) ( 3. 9028. ) ( 5. 8728. ) ) ( color 1. 0. 0. 1. ) ( channel 1 ) ( flags ) )"
+									"text" : "addstars [ [ coord 80. -80. ] [ density 0.01 ] [ radius 18 ] [ notes [ 1. 8728. ] [ 3. 9028. ] [ 5. 8728. ] ] [ color 1. 0. 0. 1. ] [ channel 1 ] [ flags ] ]"
 								}
 
 							}
@@ -2678,7 +2678,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 544.0, 145.067627, 152.0, 23.0 ],
 									"style" : "",
-									"text" : "law (d >= r)*(-G*m/(d*d))"
+									"text" : "law [d >= r]*[-G*m/[d*d]]"
 								}
 
 							}
@@ -2824,7 +2824,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 110.0, 316.0, 138.0, 23.0 ],
 									"style" : "",
-									"text" : "law -G*m*(d-r)/(d*d*d)"
+									"text" : "law -G*m*[d-r]/[d*d*d]"
 								}
 
 							}
@@ -2838,7 +2838,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 466.5, 231.0, 96.0, 23.0 ],
 									"style" : "",
-									"text" : "law -G*m/(d*d)"
+									"text" : "law -G*m/[d*d]"
 								}
 
 							}

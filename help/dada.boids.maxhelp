@@ -302,7 +302,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 33.0, 171.0, 375.0, 38.0 ],
 									"style" : "",
-									"text" : "addswarms ((size 30) (coord uniform 400 0 100 100) (speed 0 0) (color 0 0 0.3 1) (name steadyswarm))"
+									"text" : "addswarms [[size 30] [coord uniform 400 0 100 100] [speed 0 0] [color 0 0 0.3 1] [name steadyswarm]]"
 								}
 
 							}
@@ -316,7 +316,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 10.0, 80.0, 738.0, 81.0 ],
 									"style" : "",
-									"text" : "addswarms ((size 200) (coord uniform 0 0 300 300) (speed uniform 0 0 10 10) (color 0.7 0 0 1) (name swarm1) (maxspeed 200) (applyrule center avoid align (wind (gain 0.5) (speed -20 -20)) (leftbarrier (position 0) (repulsion 20)) (rightbarrier (position 3000) (repulsion 20)) (topbarrier (position 1760) (repulsion 20)) (bottombarrier (position 0) (repulsion 1000)))) ((size 100) (coord uniform -180 -60 100 400) (speed uniform 0 0 20 0) (color 0. 0.3 0 1) (name swarm2) (maxspeed 200) (applyrule center avoid align (rightbarrier (position 180) (repulsion 30))))"
+									"text" : "addswarms [[size 200] [coord uniform 0 0 300 300] [speed uniform 0 0 10 10] [color 0.7 0 0 1] [name swarm1] [maxspeed 200] [applyrule center avoid align [wind [gain 0.5] [speed -20 -20]] [leftbarrier [position 0] [repulsion 20]] [rightbarrier [position 3000] [repulsion 20]] [topbarrier [position 1760] [repulsion 20]] [bottombarrier [position 0] [repulsion 1000]]]] [[size 100] [coord uniform -180 -60 100 400] [speed uniform 0 0 20 0] [color 0. 0.3 0 1] [name swarm2] [maxspeed 200] [applyrule center avoid align [rightbarrier [position 180] [repulsion 30]]]]"
 								}
 
 							}
@@ -569,7 +569,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 559.0, 397.5, 297.0, 67.0 ],
 									"style" : "",
-									"text" : "changeruleparams 1 leftbarrier (repulsion $1 ), changeruleparams 1 rightbarrier (repulsion $1 ), changeruleparams 1 topbarrier (repulsion $1 ), changeruleparams 1 bottombarrier (repulsion $1 )"
+									"text" : "changeruleparams 1 leftbarrier [repulsion $1 ], changeruleparams 1 rightbarrier [repulsion $1 ], changeruleparams 1 topbarrier [repulsion $1 ], changeruleparams 1 bottombarrier [repulsion $1 ]"
 								}
 
 							}
@@ -596,7 +596,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 559.0, 504.5, 157.0, 23.0 ],
 									"style" : "",
-									"text" : "swarm 1 ( maxspeed $1 )"
+									"text" : "swarm 1 [ maxspeed $1 ]"
 								}
 
 							}
@@ -623,7 +623,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 735.0, 347.0, 136.0, 38.0 ],
 									"style" : "",
-									"text" : "changeruleparams 1 align (gain $1 )"
+									"text" : "changeruleparams 1 align [gain $1 ]"
 								}
 
 							}
@@ -945,7 +945,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 559.0, 308.5, 165.0, 38.0 ],
 									"style" : "",
-									"text" : "changeruleparams 1 avoid (thresh $1 ) (gain 1.)"
+									"text" : "changeruleparams 1 avoid [thresh $1 ] [gain 1.]"
 								}
 
 							}
@@ -1211,7 +1211,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ -900.0, 346.0, 713.0, 67.0 ],
 									"style" : "",
-									"text" : "clear, addswarms ((size 100) (coord uniform 200 100 300 300) (speed uniform 0 0 10 10) (color 0.7 0 0 1) (name myflock) (maxspeed 200) (applyrule center avoid align (wind (gain 0.01) (speed 100 100)) (leftbarrier (position 0) (repulsion 20)) (rightbarrier (position 1600) (repulsion 20)) (topbarrier (position 1460) (repulsion 20)) (bottombarrier (position 0) (repulsion 1000))))"
+									"text" : "clear, addswarms [[size 100] [coord uniform 200 100 300 300] [speed uniform 0 0 10 10] [color 0.7 0 0 1] [name myflock] [maxspeed 200] [applyrule center avoid align [wind [gain 0.01] [speed 100 100]] [leftbarrier [position 0] [repulsion 20]] [rightbarrier [position 1600] [repulsion 20]] [topbarrier [position 1460] [repulsion 20]] [bottombarrier [position 0] [repulsion 1000]]]]"
 								}
 
 							}
@@ -2101,7 +2101,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 33.0, 171.0, 375.0, 38.0 ],
 									"style" : "",
-									"text" : "addswarms ((size 30) (coord uniform 400 0 100 100) (speed 0 0) (color 0 0 0.3 1) (name steadyswarm))"
+									"text" : "addswarms [[size 30] [coord uniform 400 0 100 100] [speed 0 0] [color 0 0 0.3 1] [name steadyswarm]]"
 								}
 
 							}
@@ -2115,7 +2115,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 10.0, 80.0, 738.0, 81.0 ],
 									"style" : "",
-									"text" : "addswarms ((size 200) (coord uniform 0 0 300 300) (speed uniform 0 0 10 10) (color 0.7 0 0 1) (name swarm1) (maxspeed 200) (applyrule center avoid align (wind (gain 0.5) (speed -20 -20)) (leftbarrier (position 0) (repulsion 20)) (rightbarrier (position 3000) (repulsion 20)) (topbarrier (position 1760) (repulsion 20)) (bottombarrier (position 0) (repulsion 1000)))) ((size 100) (coord uniform -180 -60 100 400) (speed uniform 0 0 20 0) (color 0. 0.3 0 1) (name swarm2) (maxspeed 200) (applyrule center avoid align (rightbarrier (position 180) (repulsion 30))))"
+									"text" : "addswarms [[size 200] [coord uniform 0 0 300 300] [speed uniform 0 0 10 10] [color 0.7 0 0 1] [name swarm1] [maxspeed 200] [applyrule center avoid align [wind [gain 0.5] [speed -20 -20]] [leftbarrier [position 0] [repulsion 20]] [rightbarrier [position 3000] [repulsion 20]] [topbarrier [position 1760] [repulsion 20]] [bottombarrier [position 0] [repulsion 1000]]]] [[size 100] [coord uniform -180 -60 100 400] [speed uniform 0 0 20 0] [color 0. 0.3 0 1] [name swarm2] [maxspeed 200] [applyrule center avoid align [rightbarrier [position 180] [repulsion 30]]]]"
 								}
 
 							}
@@ -2329,7 +2329,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 525.0, 301.5, 167.0, 38.0 ],
 									"style" : "",
-									"text" : "swarm 1 ( color 0. 0. 0. 1. ) (name foo)"
+									"text" : "swarm 1 [ color 0. 0. 0. 1. ] [name foo]"
 								}
 
 							}
@@ -2342,7 +2342,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 525.0, 387.0, 120.0, 23.0 ],
 									"style" : "",
-									"text" : "swarm 1 ( size $1 )"
+									"text" : "swarm 1 [ size $1 ]"
 								}
 
 							}
@@ -2372,7 +2372,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 541.5, 178.482819, 118.0, 23.0 ],
 									"style" : "",
-									"text" : "scale 2 0.8 (10 20)"
+									"text" : "scale 2 0.8 [10 20]"
 								}
 
 							}
@@ -2491,7 +2491,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 541.5, 240.675568, 107.0, 23.0 ],
 									"style" : "",
-									"text" : "move 2 (-20 -10)"
+									"text" : "move 2 [-20 -10]"
 								}
 
 							}
@@ -2520,7 +2520,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 541.5, 215.473297, 104.0, 23.0 ],
 									"style" : "",
-									"text" : "move all (20 30)"
+									"text" : "move all [20 30]"
 								}
 
 							}
@@ -2550,7 +2550,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 109.5, 237.347397, 185.0, 23.0 ],
 									"style" : "",
-									"text" : "rotate all ( 30 deg ) barycenter"
+									"text" : "rotate all [ 30 deg ] barycenter"
 								}
 
 							}
@@ -2580,7 +2580,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 97.5, 200.710922, 157.0, 23.0 ],
 									"style" : "",
-									"text" : "rotate all ( 30 deg ) (0 20)"
+									"text" : "rotate all [ 30 deg ] [0 20]"
 								}
 
 							}
@@ -2609,7 +2609,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 77.0, 127.138954, 120.0, 23.0 ],
 									"style" : "",
-									"text" : "rotate all ( 30 deg )"
+									"text" : "rotate all [ 30 deg ]"
 								}
 
 							}
@@ -2639,7 +2639,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 88.0, 155.508682, 151.0, 23.0 ],
 									"style" : "",
-									"text" : "rotate 3 ( 5 deg ) (50 60)"
+									"text" : "rotate 3 [ 5 deg ] [50 60]"
 								}
 
 							}
@@ -2668,7 +2668,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 33.0, 98.769234, 114.0, 23.0 ],
 									"style" : "",
-									"text" : "rotate 3 ( 30 deg )"
+									"text" : "rotate 3 [ 30 deg ]"
 								}
 
 							}
@@ -3500,7 +3500,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ -900.0, 397.0, 745.0, 52.0 ],
 									"style" : "",
-									"text" : "clear, addswarms ((size 100) (coord uniform 200 100 300 300) (speed uniform 0 0 10 10) (color 0.7 0 0 1) (name swarm1) (maxspeed 200) (applyrule center avoid align (wind (gain 0.01) (speed 100 100)) (leftbarrier (position 0) (repulsion 20)) (rightbarrier (position 600) (repulsion 20)) (topbarrier (position 460) (repulsion 20)) (bottombarrier (position 0) (repulsion 1000))))"
+									"text" : "clear, addswarms [[size 100] [coord uniform 200 100 300 300] [speed uniform 0 0 10 10] [color 0.7 0 0 1] [name swarm1] [maxspeed 200] [applyrule center avoid align [wind [gain 0.01] [speed 100 100]] [leftbarrier [position 0] [repulsion 20]] [rightbarrier [position 600] [repulsion 20]] [topbarrier [position 460] [repulsion 20]] [bottombarrier [position 0] [repulsion 1000]]]]"
 								}
 
 							}

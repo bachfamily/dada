@@ -144,13 +144,13 @@
 			</digest>
 			<description>
 				Outputs the current state of the object. The syntax is
-				<b>machines (prototypes <m>PROTOTYPE1</m> <m>PROTOTYPE2</m>...) (network (vertices <m>VERTEX1</m> <m>VERTEX2</m>...) (edges <m>EDGE1</m> <m>EDGE2</m>...))</b>.
+				<b>machines [prototypes <m>PROTOTYPE1</m> <m>PROTOTYPE2</m>...] [network [vertices <m>VERTEX1</m> <m>VERTEX2</m>...] [edges <m>EDGE1</m> <m>EDGE2</m>...]]</b>.
 				Each prototype is in the syntax
-				<b>((name <m>name</m>) (fullname <m>fullname</m>) (char <m>displaychars</m>) (numins <m>ins</m>) (numouts <m>outs</m>))</b>.
+				<b>[[name <m>name</m>] [fullname <m>fullname</m>] [char <m>displaychars</m>] [numins <m>ins</m>] [numouts <m>outs</m>]]</b>.
 				Each vertex is in the syntax
-				<b>((coord <m>x</m> <m>y</m>) (type <m>machinetype</m>) (numins <m>ins</m>) (numouts <m>outs</m>)</b>.
+				<b>[[coord <m>x</m> <m>y</m>] [type <m>machinetype</m>] [numins <m>ins</m>] [numouts <m>outs</m>]</b>.
 				Each connection is in the syntax
-				<b>(<m>vertex1</m> <m>vertex2</m> (numin <m>in</m>) (numout <m>out</m>))</b>,
+				<b>[<m>vertex1</m> <m>vertex2</m> [numin <m>in</m>] [numout <m>out</m>]]</b>,
 				representing a connection from the outlet <m>out</m> of vertex of index <m>vertex1</m> (in the vertex list), to the inlet
 				<m>in</m> of the vertex of index <m>vertex2</m>. <br />
 				The <m>dump prototypes</m> message only dumps the prototypes; the <m>dump network</m> message only dumps the network. <br />
@@ -380,6 +380,7 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Send bang Upon Messages" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
@@ -460,6 +461,7 @@
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Outlet Types" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
 			</attributelist>
 		</attribute>

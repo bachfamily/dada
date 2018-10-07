@@ -537,10 +537,10 @@ int C74_EXPORT main(void)
 
     // @method dump @digest Output state
     // @description Outputs the current state of the object. The syntax is
-    // <b>bodies (stars <m>STAR1</m> <m>STAR2</m>...) (planets <m>PLANET1</m> <m>PLANET2</m>...)</b>.
+    // <b>bodies [stars <m>STAR1</m> <m>STAR2</m>...] [planets <m>PLANET1</m> <m>PLANET2</m>...]</b>.
     // Each star is in the syntax
     // <b>(coord <m>x</m> <m>y</m>) (density <m>d</m>) (radius <m>r</m>) (notes <m>NOTE1</m> <m>NOTE2</m>...) (color <m>r</m> <m>g</m> <m>b</m> <m>a</m>)
-    // (channel <m>MIDIchannel</m>) (flags <m>flags</m>)</b>, where each <m>NOTE</m> is in the syntax <b>(<m>angle</m> <m>MIDIcents</m>)</b>.<br />
+    // (channel <m>MIDIchannel</m>) (flags <m>flags</m>)</b>, where each <m>NOTE</m> is in the syntax <b>[<m>angle</m> <m>MIDIcents</m>]</b>.<br />
     // Each particle is in the syntax
     // <b>(coord <m>x</m> <m>y</m>) (speed <m>x</m> <m>y</m>) (acc <m>x</m> <m>y</m>) (color <m>r</m> <m>g</m> <m>b</m> <m>a</m>)
     // (channel <m>MIDIchannel</m>) (flags <m>flags</m>)</b>. <br /> <br />

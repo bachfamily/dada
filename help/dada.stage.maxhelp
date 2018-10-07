@@ -724,7 +724,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 36.0, 108.0, 550.0, 38.0 ],
 									"style" : "",
-									"text" : "addcards ((coord -100 40) (name Bar) (icon hexacube.png) (value 0.1) (height 60) (width -1)) ((coord 100 -40) (name Foobar) (icon hexacube.png) (value 0.9) (height 60) (width -1))"
+									"text" : "addcards [[coord -100 40] [name Bar] [icon hexacube.png] [value 0.1] [height 60] [width -1]] [[coord 100 -40] [name Foobar] [icon hexacube.png] [value 0.9] [height 60] [width -1]]"
 								}
 
 							}
@@ -765,7 +765,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 14.0, 75.0, 492.0, 23.0 ],
 									"style" : "",
-									"text" : "addcards ((coord 0 0) (name Foo) (icon cube.png) (value 0.5) (height 60) (width -1))"
+									"text" : "addcards [[coord 0 0] [name Foo] [icon cube.png] [value 0.5] [height 60] [width -1]]"
 								}
 
 							}

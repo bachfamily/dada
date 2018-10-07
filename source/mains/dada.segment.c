@@ -226,7 +226,7 @@ int C74_EXPORT main(void)
     // @descriptions Toggles the ability to prepend the feature name in the grain llll output from the lambda outlet, so that each feature can be handled
     // by a separate module. An answer (without any router) is expected in the lambda inlet features by routers in the lambda loop.
     // This attribute on by default. If it is turned off, then the grain llll is only output through the right outlet preceded by a generic "features"
-    // symbol, and a single llll of the kind <b>(<m>featurename</m> <m>featurevalue</m>) (<m>featurename</m> <m>featurevalue</m>)...</b> is expected
+    // symbol, and a single llll of the kind <b>[<m>featurename</m> <m>featurevalue</m>] [<m>featurename</m> <m>featurevalue</m>]...</b> is expected
     // in return. This is very convenient for optimization purposes.
     
     

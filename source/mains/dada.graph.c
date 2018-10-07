@@ -444,10 +444,10 @@ int C74_EXPORT main(void)
     
     // @method dump @digest Output state
     // @description Outputs the current state of the graph, in the syntax.
-    //	<b>graph (<m>VERTEX1</m> <m>VERTEX2</m>...) (<m>EDGE1</m> <m>EDGE2</m>...)</b>.
+    //	<b>graph [<m>VERTEX1</m> <m>VERTEX2</m>...] [<m>EDGE1</m> <m>EDGE2</m>...]</b>.
     //  Each vertex is an llll shaped as <b>((coord <m>x</m> <m>y</m>) (label <m>label</m>) (bgcolor <m>r</m> <m>g</m> <m>b</m> <m>a</m>)
     // (bordercolor <m>r</m> <m>g</m> <m>b</m> <m>a</m>) (textcolor <m>r</m> <m>g</m> <m>b</m> <m>a</m>))</b>.
-    //  Each edge is an llll shaped as <b>(<m>edge_start_vertex_index</m> <m>edge_end_vertex_index</m> (weight <m>edgeweight</m>))</b>.
+    //  Each edge is an llll shaped as <b>[<m>edge_start_vertex_index</m> <m>edge_end_vertex_index</m> [weight <m>edgeweight</m>]]</b>.
     class_addmethod(c, (method) uigraph_anything, "dump", A_GIMME, 0);
 
     
@@ -488,7 +488,7 @@ int C74_EXPORT main(void)
     
     // @method setturtle @digest Set the turtle
     // @description The <m>setturtle</m> message, followed by an integer <m>N</m> sets the turtle on the <m>N</m>-th vertex, without causing any output.
-    // If followed by the "coord" symbol and an <m>llll</m> of the kind <b>(<m>x</m>, <m>y</m>)</b>
+    // If followed by the "coord" symbol and an <m>llll</m> of the kind <b>[<m>x</m>, <m>y</m>]</b>
     // it sets the turtle on the nearest vertex to the given (<m>x</m>, <m>y</m>) location, always without causing any output. <br />
     // If <m>relativeturtle</m> is on, the coordinates are expected to be between 0 and 1, relative to the current domain and range
     // (caveat: more precisely, to the domain and range of the latest painted view of the object). <br />
@@ -497,7 +497,7 @@ int C74_EXPORT main(void)
     // @marg 0 @name label_or_coord @optional 1 @type sym
     // @marg 1 @name index_or_coord_or_label @optional 0 @type llll/sym
     // @example setturtle 3 @caption Set the turtle on the 3rd vertex
-    // @example setturtle coord (0 10) @caption Set the turtle on the nearest vertex to x=0, y=10
+    // @example setturtle coord [0 10] @caption Set the turtle on the nearest vertex to x=0, y=10
     // @example setturtle label Warsaw @caption Set the turtle on the vertex having "Warsaw" as label
     class_addmethod(c, (method)uigraph_anything,		"setturtle",		A_GIMME,	0);
     
@@ -505,7 +505,7 @@ int C74_EXPORT main(void)
     // @method turtle @digest Set the turtle and output vertex data
     // @description The <m>setturtle</m> message, followed by an integer <m>N</m> sets the turtle on the <m>N</m>-th vertex,
     // outputting the corresponding vertex data, prepended by the "turtle" symbol and the vertex number.
-    // If followed by the "coord" symbol and an <m>llll</m> of the kind <b>(<m>x</m>, <m>y</m>)</b>
+    // If followed by the "coord" symbol and an <m>llll</m> of the kind <b>[<m>x</m>, <m>y</m>]</b>
     // it sets the turtle on the nearest vertex to the given (<m>x</m>, <m>y</m>) location. <br />
     // If <m>relativeturtle</m> is on, the coordinates are expected to be between 0 and 1, relative to the current domain and range
     // (caveat: more precisely, to the domain and range of the latest painted view of the object). <br />
@@ -514,7 +514,7 @@ int C74_EXPORT main(void)
     // @marg 0 @name label_or_coord @optional 1 @type sym
     // @marg 1 @name index_or_coord_or_label @optional 0 @type llll/sym
     // @example turtle 3 @caption Set the turtle on the 3rd vertex, and output vertex data
-    // @example turtle coord (0 10) @caption Set the turtle on the nearest vertex to x=0, y=10, and output vertex data
+    // @example turtle coord [0 10] @caption Set the turtle on the nearest vertex to x=0, y=10, and output vertex data
     // @example turtle label Warsaw @caption Set the turtle on the vertex having "Warsaw" as label, and output vertex data
     class_addmethod(c, (method)uigraph_anything,		"turtle",		A_GIMME,	0);
     

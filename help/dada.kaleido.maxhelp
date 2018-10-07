@@ -873,7 +873,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 106.0, 238.0, 216.0, 23.0 ],
 									"style" : "",
-									"text" : "shake all (3 5) (0.1 0.2) ((10 20) 50)"
+									"text" : "shake all [3 5] [0.1 0.2] [[10 20] 50]"
 								}
 
 							}
@@ -902,7 +902,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 70.0, 158.0, 144.0, 23.0 ],
 									"style" : "",
-									"text" : "shake all (3 5) (0.1 0.2)"
+									"text" : "shake all [3 5] [0.1 0.2]"
 								}
 
 							}
@@ -1114,7 +1114,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 116.0, 106.0, 114.0, 23.0 ],
 									"style" : "",
-									"text" : "rotate 3 ( 30 deg )"
+									"text" : "rotate 3 [ 30 deg ]"
 								}
 
 							}
@@ -1143,7 +1143,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 319.0, 404.5, 118.0, 23.0 ],
 									"style" : "",
-									"text" : "scale 2 0.8 (10 20)"
+									"text" : "scale 2 0.8 [10 20]"
 								}
 
 							}
@@ -1258,7 +1258,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 319.0, 520.0, 107.0, 23.0 ],
 									"style" : "",
-									"text" : "move 2 (-20 -10)"
+									"text" : "move 2 [-20 -10]"
 								}
 
 							}
@@ -1286,7 +1286,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 319.0, 489.0, 104.0, 23.0 ],
 									"style" : "",
-									"text" : "move all (20 30)"
+									"text" : "move all [20 30]"
 								}
 
 							}
@@ -1343,7 +1343,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 97.5, 213.0, 121.0, 23.0 ],
 									"style" : "",
-									"text" : "rotate all 30° (0 20)"
+									"text" : "rotate all 30° [0 20]"
 								}
 
 							}
@@ -1399,7 +1399,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 88.0, 180.0, 115.0, 23.0 ],
 									"style" : "",
-									"text" : "rotate 3 5° (50 60)"
+									"text" : "rotate 3 5° [50 60]"
 								}
 
 							}
@@ -1726,7 +1726,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 335.0, 200.5, 105.0, 23.0 ],
 									"style" : "",
-									"text" : "rotate all (2 deg)"
+									"text" : "rotate all [2 deg]"
 								}
 
 							}

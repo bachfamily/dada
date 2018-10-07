@@ -665,28 +665,28 @@ int C74_EXPORT main(void)
 	// @method move @digest Translate elements
 	// @description The word <m>move</m> followed by an element type (either <m>vertex</m> or
     // <m>edge</m> or <m>component</m> or <m>ball</m>), followed by the index of a shape or ball and a
-    // vector in wrapped <b>(<m>x</m> <m>y</m>)</b> syntax,
+    // vector in wrapped <b>[<m>x</m> <m>y</m>]</b> syntax,
 	// translates the element by the given vector.
     // @marg 0 @name element_type @optional 0 @type symbol
     // @marg 1 @name element_index @optional 0 @type long
     // @marg 2 @name delta_coord @optional 0 @type llll
-    // @example move component 1 (10 10) @caption Move the 1st connected component by (10, 10)
-    // @example move vertex 5 (-4 0) @caption Move the 5th vertex by (-4, 0)
-    // @example move edge 3 (0 10) @caption Shift 2nd edge up by 10
-    // @example move ball 1 (0 10) @caption Shift 1st ball up by 10
+    // @example move component 1 [10 10] @caption Move the 1st connected component by (10, 10)
+    // @example move vertex 5 [-4 0] @caption Move the 5th vertex by (-4, 0)
+    // @example move edge 3 [0 10] @caption Shift 2nd edge up by 10
+    // @example move ball 1 [0 10] @caption Shift 1st ball up by 10
     class_addmethod(c, (method)bounce_anything,	"move",		A_GIMME,	0);
 
     // @method rotate @digest Rotate elements
     // @description The word <m>rotate</m> followed by an element type (either <m>component</m> or <m>ball</m>),
     // followed by the index of a shape and an angle in radians
     // rotates the element by the given angle. If the angle is terminates with the degrees ° symbol after the number (without any spaces)
-    // or if it is given as an llll of the form <b>(<m>angle</m> deg)</b>,
+    // or if it is given as an llll of the form <b>[<m>angle</m> deg]</b>,
     // then the angle is assumed to be in degrees.
     // @marg 0 @name element_type @optional 0 @type symbol
     // @marg 1 @name element_index @optional 0 @type long
     // @marg 2 @name angle @optional 0 @type number/llll
     // @example rotate component 1 2 @caption Rotate the 1st connected component by 2 radians
-    // @example rotate ball 1 (30 deg) @caption Rotate the 1st ball by 30 degrees
+    // @example rotate ball 1 [30 deg] @caption Rotate the 1st ball by 30 degrees
     class_addmethod(c, (method)bounce_anything,	"rotate",		A_GIMME,	0);
     
     // @method scale @digest Scale elements
@@ -705,7 +705,7 @@ int C74_EXPORT main(void)
     // @description Adds a new ball in the room. The correct syntax is:
     // <b>addball <m>BALL_SYNTAX</m></b>, where the ball syntax is the one
     // documented in the <m>dump</m> message. The ball syntax should NOT be wrapped in parenthesis.
-    // For instance, a valid message is: <b>addball (coord -90. 20.) (speed 100. 30.) (color 0.4 0. 0. 1.)</b>
+    // For instance, a valid message is: <b>addball [coord -90. 20.] [speed 100. 30.] [color 0.4 0. 0. 1.]</b>
     // After the ball has been added, a notification is sent through the second outlet in the form
     // <b>addball <m>ball_index</m></b>.
     // @marg 0 @name ball_syntax @optional 0 @type llll
@@ -721,13 +721,13 @@ int C74_EXPORT main(void)
     // @method split @digest Split edges
     // @description The word <m>split</m> followed by the <m>edge</m> symbol,
     // by the index of the edge to be split, and by the wrapped llll with the
-    // splitting <b>(<m>x</m> <m>y</m>)</b> coordinates, splits the given edge
+    // splitting <b>[<m>x</m> <m>y</m>]</b> coordinates, splits the given edge
     // at the specified point, and outputs a notification through the second outlet
     // containing the <m>edge split</m> symbols, plus the sequence of newly created edges.
     // @marg 0 @name edge @optional 0 @type symbol
     // @marg 1 @name edge_index @optional 0 @type long
     // @marg 2 @name split_point @optional 0 @type llll
-    // @example split edge 3 (-40 0) @caption Split 3rd edge by adding a point at (-40, 0)
+    // @example split edge 3 [-40 0] @caption Split 3rd edge by adding a point at (-40, 0)
     class_addmethod(c, (method)bounce_anything,	"split",		A_GIMME,	0);
 
     
@@ -736,16 +736,16 @@ int C74_EXPORT main(void)
     // and the edge or vertex index, assigns metadata to a vertex or an edge.
     // The metadata should be contained in the llll specified as
     // further argument.
-    // If the metadata <m>type</m> is set to "Pitch and velocity", such llll should contain a specification such as <b>(pitch <m>mc</m>)</b> and/or
-    // <b>(velocity <m>vel</m>)</b>.
+    // If the metadata <m>type</m> is set to "Pitch and velocity", such llll should contain a specification such as <b>[pitch <m>mc</m>]</b> and/or
+    // <b>[velocity <m>vel</m>]</b>.
     // If the metadata <m>type</m> is set to "Scores", such llll should be the score itself.
     // @marg 0 @name element_type @optional 0 @type symbol
     // @marg 1 @name element_index @optional 0 @type long
     // @marg 2 @name metadata @optional 0 @type llll
-    // @example meta edge 5 (pitch 6300) (vel 80) @caption Assign a pitch of 6300 cents and a velocity of 80 as metadata for 5th edge
-    // @example meta vertex 4 (pitch 6300) (vel 80) @caption The same, for 4th vertex
-    // @example meta edge 1 (score roll ((200 (7200. 405. 100)) (700 (6300. 405. 100)))) @caption Assign a bach.roll syntax as score metadata for edge 1
-    // @example meta edge 1 (score score (((( 4 4 ) (( 1/4 120 ))) ( 1 ( 4700. 100 0 ))))) @caption Assign a bach.score syntax as score metadata for edge 1
+    // @example meta edge 5 [pitch 6300] [vel 80] @caption Assign a pitch of 6300 cents and a velocity of 80 as metadata for 5th edge
+    // @example meta vertex 4 [pitch 6300] [vel 80] @caption The same, for 4th vertex
+    // @example meta edge 1 [score roll [[200 [7200. 405. 100]] [700 [6300. 405. 100]]]] @caption Assign a bach.roll syntax as score metadata for edge 1
+    // @example meta edge 1 [score score [[[[ 4 4 ] [[ 1/4 120 ]]] [ 1 [ 4700. 100 0 ]]]]] @caption Assign a bach.score syntax as score metadata for edge 1
     class_addmethod(c, (method)bounce_anything,	"meta",		A_GIMME,	0);
     
     
@@ -777,7 +777,7 @@ int C74_EXPORT main(void)
 
     // @method dump @digest Output state
     // @description Outputs the current state of the object. The syntax is
-    // <b>bounce (room <m>GRAPH</m>) (balls <m>BALL1</m> <m>BALL2</m>...)</b>.
+    // <b>bounce [room <m>GRAPH</m>] [balls <m>BALL1</m> <m>BALL2</m>...]</b>.
     // each ball is in the syntax
     // <b>(coord <m>x</m> <m>y</m>) (speed <m>x</m> <m>y</m>) (color <m>r</m> <m>g</m> <m>b</m> <m>a</m>)
     // (channel <m>MIDIchannel</m>) (flags <m>flags</m>)</b>. <br />
@@ -797,14 +797,14 @@ int C74_EXPORT main(void)
 
     // @method notes @digest Assign pitches and velocities
     // @description When <m>type</m> is set to "Pitch and Velocity", the <m>notes</m> message assigns
-    // a pitch and velocity to each of the edges. An llll of type <b>(<m>pitch</m> <m>vel</m>) (<m>pitch</m> <m>vel</m>)...</b>
+    // a pitch and velocity to each of the edges. An llll of type <b>[<m>pitch</m> <m>vel</m>] [<m>pitch</m> <m>vel</m>]...</b>
     // is expected as argument.
     // @marg 0 @name pitch_and_vels @optional 0 @type llll
     class_addmethod(c, (method)bounce_anything,	"notes",			A_GIMME,	0);
 
     // @method scores @digest Assign scores
     // @description When <m>type</m> is set to "Scores", the <m>scores</m> message assigns
-    // a score to each of the edges. An llll of type <b>(<m>SCORE1</m>) (<m>SCORE2</m>)...</b>
+    // a score to each of the edges. An llll of type <b>[<m>SCORE1</m>] [<m>SCORE2</m>]...</b>
     // is expected as argument, where each <m>SCORE</m> is usually a <o>bach.roll</o> or <o>bach.score</o> gathered syntax,
     // but can also be any other llll.
     // @marg 0 @name scores @optional 0 @type llll

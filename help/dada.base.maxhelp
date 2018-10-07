@@ -298,7 +298,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 89.5, 245.0, 157.0, 23.0 ],
 									"style" : "",
-									"text" : "addentry objs ( name $1 )"
+									"text" : "addentry objs [ name $1 ]"
 								}
 
 							}
@@ -328,7 +328,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 10.0, 104.0, 143.0, 23.0 ],
 									"style" : "",
-									"text" : "addtable objs (name s)"
+									"text" : "addtable objs [name s]"
 								}
 
 							}
@@ -357,7 +357,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 209.0, 360.5, 353.0, 38.0 ],
 									"style" : "",
-									"text" : "( 0 39 22 59 54 33 ) ( 39 0 20 20 81 8 ) ( 22 20 0 39 74 18 ) ( 59 20 39 0 93 27 ) ( 54 81 74 93 0 73 ) ( 33 8 18 27 73 0 )"
+									"text" : "[ 0 39 22 59 54 33 ] [ 39 0 20 20 81 8 ] [ 22 20 0 39 74 18 ] [ 59 20 39 0 93 27 ] [ 54 81 74 93 0 73 ] [ 33 8 18 27 73 0 ]"
 								}
 
 							}
@@ -806,7 +806,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 23.0, 271.0, 349.0, 38.0 ],
 									"style" : "",
-									"text" : "addentry myscores (content (roll ( ( 0. ( 7900. 405. 100 0 ) 0 ) 0 ))) (title Sol) (page 5) (bpm 60.5)"
+									"text" : "addentry myscores [content [roll [ [ 0. [ 7900. 405. 100 0 ] 0 ] 0 ]]] [title Sol] [page 5] [bpm 60.5]"
 								}
 
 							}
@@ -822,7 +822,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 55.0, 209.0, 401.0, 52.0 ],
 									"style" : "",
-									"text" : "addentry myscores (content (roll ( ( 0. ( 6000. 405. 100 0 ) 0 ) ( 400. ( 7200. 405. 100 0 ) ( 7600. 405. 100 0 ) 0 ) ( 800. ( 7200. 405. 100 0 ) ( 7600. 405. 100 0 ) 0 ) 0 ) )) (title UmPa) (page 5) (bpm 72.)"
+									"text" : "addentry myscores [content [roll [ [ 0. [ 6000. 405. 100 0 ] 0 ] [ 400. [ 7200. 405. 100 0 ] [ 7600. 405. 100 0 ] 0 ] [ 800. [ 7200. 405. 100 0 ] [ 7600. 405. 100 0 ] 0 ] 0 ] ]] [title UmPa] [page 5] [bpm 72.]"
 								}
 
 							}
@@ -837,7 +837,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 118.0, 182.0, 316.0, 23.0 ],
 									"style" : "",
-									"text" : "addtable myscores (content l) (title s) (page i) (bpm f)"
+									"text" : "addtable myscores [content l] [title s] [page i] [bpm f]"
 								}
 
 							}
@@ -1169,7 +1169,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 142.0, 392.0, 323.0, 23.0 ],
 									"style" : "",
-									"text" : "appendfromfile waves newwaves.txt (cols wavelength)"
+									"text" : "appendfromfile waves newwaves.txt [cols wavelength]"
 								}
 
 							}
@@ -1515,7 +1515,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 81.841339, 198.0, 288.0, 23.0 ],
 									"style" : "",
-									"text" : "query SELECT COUNT(score_id) FROM scores"
+									"text" : "query SELECT COUNT[score_id] FROM scores"
 								}
 
 							}
@@ -1624,7 +1624,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 183.817322, 258.0, 430.0, 38.0 ],
 									"style" : "",
-									"text" : "query \"SELECT * FROM scores WHERE score_id IN (SELECT score_id FROM scores WHERE CENTROID >= 6900)\""
+									"text" : "query \"SELECT * FROM scores WHERE score_id IN [SELECT score_id FROM scores WHERE CENTROID >= 6900]\""
 								}
 
 							}
@@ -1740,7 +1740,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 66.841331, 168.0, 357.0, 23.0 ],
 									"style" : "",
-									"text" : "query SELECT COUNT(DISTINCT(filename)) FROM scores"
+									"text" : "query SELECT COUNT[DISTINCT[filename]] FROM scores"
 								}
 
 							}
@@ -2842,7 +2842,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 101.0, 234.0, 349.0, 38.0 ],
 									"style" : "",
-									"text" : "addentry myscores (content (roll ( ( 0. ( 7900. 405. 100 0 ) 0 ) 0 ))) (title Sol) (page 5) (bpm 60.5)"
+									"text" : "addentry myscores [content [roll [ [ 0. [ 7900. 405. 100 0 ] 0 ] 0 ]]] [title Sol] [page 5] [bpm 60.5]"
 								}
 
 							}
@@ -2858,7 +2858,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 62.0, 177.0, 401.0, 52.0 ],
 									"style" : "",
-									"text" : "addentry myscores (content (roll ( ( 0. ( 6000. 405. 100 0 ) 0 ) ( 400. ( 7200. 405. 100 0 ) ( 7600. 405. 100 0 ) 0 ) ( 800. ( 7200. 405. 100 0 ) ( 7600. 405. 100 0 ) 0 ) 0 ) )) (title UmPa) (page 5) (bpm 72.)"
+									"text" : "addentry myscores [content [roll [ [ 0. [ 6000. 405. 100 0 ] 0 ] [ 400. [ 7200. 405. 100 0 ] [ 7600. 405. 100 0 ] 0 ] [ 800. [ 7200. 405. 100 0 ] [ 7600. 405. 100 0 ] 0 ] 0 ] ]] [title UmPa] [page 5] [bpm 72.]"
 								}
 
 							}
@@ -2905,7 +2905,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 26.0, 130.5, 316.0, 23.0 ],
 									"style" : "",
-									"text" : "addtable myscores (content l) (title s) (page i) (bpm f)"
+									"text" : "addtable myscores [content l] [title s] [page i] [bpm f]"
 								}
 
 							}

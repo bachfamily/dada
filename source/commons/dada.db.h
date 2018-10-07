@@ -13,7 +13,7 @@
 #include "dada.items.h"
 #include "ext_database.h"
 
-#define DADA_XBASE_MAX_TABLES 16
+#define DADA_XBASE_MAX_TABLES 256
 #define DADA_XBASE_MAX_COLUMNS 1024
 #define DADA_XBASE_MAGIC_GOOD 12481632
 #define DADA_XBASE_MAGIC_BAD 666

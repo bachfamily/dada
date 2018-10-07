@@ -9,7 +9,7 @@
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 100.0, 100.0, 703.0, 559.0 ],
+		"rect" : [ 282.0, 102.0, 703.0, 559.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -56,7 +56,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 100.0, 126.0, 703.0, 533.0 ],
+						"rect" : [ 282.0, 128.0, 703.0, 533.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -3470,6 +3470,23 @@
 						"showontab" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
+									"id" : "obj-4",
+									"maxclass" : "newobj",
+									"numinlets" : 2,
+									"numoutlets" : 2,
+									"outlettype" : [ "", "float" ],
+									"patching_rect" : [ 126.0, 451.0, 99.0, 23.0 ],
+									"saved_object_attributes" : 									{
+										"versionnumber" : 80001
+									}
+,
+									"style" : "",
+									"text" : "bach.transcribe"
+								}
+
+							}
+, 							{
+								"box" : 								{
 									"id" : "obj-25",
 									"maxclass" : "preset",
 									"numinlets" : 1,
@@ -3866,6 +3883,11 @@
 			}
  ],
 		"lines" : [  ],
+		"parameters" : 		{
+			"obj-15::obj-7::obj-8::obj-74" : [ "toggle", "toggle", 0 ],
+			"obj-15::obj-7::obj-8::obj-86" : [ "toggle[1]", "toggle[1]", 0 ]
+		}
+,
 		"dependency_cache" : [ 			{
 				"name" : "helpname.js",
 				"bootpath" : "C74:/help/resources",
@@ -4013,6 +4035,10 @@
 				"type" : "iLaX"
 			}
 , 			{
+				"name" : "bach.transcribe.mxo",
+				"type" : "iLaX"
+			}
+, 			{
 				"name" : "bach.post.mxo",
 				"type" : "iLaX"
 			}
@@ -4041,7 +4067,19 @@
 				"type" : "iLaX"
 			}
 , 			{
+				"name" : "dada.multibrot.mxo",
+				"type" : "iLaX"
+			}
+, 			{
 				"name" : "mira.multitouch.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "dada.platform.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.roll.mxo",
 				"type" : "iLaX"
 			}
  ],

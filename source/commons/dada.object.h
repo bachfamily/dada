@@ -51,8 +51,8 @@ class_addattr((c),attr_offset_new(attrname,USESYM(long),(flags),(method)0L,(meth
 class_addattr((c),attr_offset_array_new(attrname,USESYM(float64),(size),(flags),(method)0L,(method)0L,0/*fix*/,calcoffset(structname,structmember)+headersize(type)))
 
 
-#define DADAOBJ_CLASS_ATTR_CHAR_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember) \
-	class_addattr((c),attr_offset_new(attrname,USESYM(char),(flags),(method)0L,(method)0L,calcoffset(structname,structmember)+calcoffset(substructname,substructmember)+headersize(type)))
+    #define DADAOBJ_CLASS_ATTR_CHAR_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember) \
+        class_addattr((c),attr_offset_new(attrname,USESYM(char),(flags),(method)0L,(method)0L,calcoffset(structname,structmember)+calcoffset(substructname,substructmember)+headersize(type)))
 
 #define DADAOBJ_CLASS_ATTR_LONG_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember) \
 	{		\

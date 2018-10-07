@@ -1256,7 +1256,7 @@ t_max_err life_setattr_cellsize(t_life *x, t_object *attr, long ac, t_atom *av)
 		long size;
 		
 		t_llll *parsed = llllobj_parse_llll((t_object *) x, LLLL_OBJ_UI, NULL, ac, av, LLLL_PARSE_CLONE);
-		atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE);
+		atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE | LLLL_D_PARENS);
 		
 		if (text && *text) {
 			// Equation introduced
@@ -1295,7 +1295,7 @@ t_max_err life_setattr_cellalpha(t_life *x, t_object *attr, long ac, t_atom *av)
 		long size;
 		
 		t_llll *parsed = llllobj_parse_llll((t_object *) x, LLLL_OBJ_UI, NULL, ac, av, LLLL_PARSE_CLONE);
-		atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE);
+		atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE | LLLL_D_PARENS);
 		
 		if (text && *text) {
 			// Equation introduced
@@ -1334,7 +1334,7 @@ t_max_err life_setattr_cellred(t_life *x, t_object *attr, long ac, t_atom *av)
 		long size;
 		
 		t_llll *parsed = llllobj_parse_llll((t_object *) x, LLLL_OBJ_UI, NULL, ac, av, LLLL_PARSE_CLONE);
-		atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE);
+		atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE | LLLL_D_PARENS);
 		
 		if (text && *text) {
 			// Equation introduced
@@ -1374,7 +1374,7 @@ t_max_err life_setattr_cellgreen(t_life *x, t_object *attr, long ac, t_atom *av)
 		long size;
 		
 		t_llll *parsed = llllobj_parse_llll((t_object *) x, LLLL_OBJ_UI, NULL, ac, av, LLLL_PARSE_CLONE);
-		atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE);
+		atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE | LLLL_D_PARENS);
 		
 		if (text && *text) {
 			// Equation introduced
@@ -1413,7 +1413,7 @@ t_max_err life_setattr_cellblue(t_life *x, t_object *attr, long ac, t_atom *av)
 		long size;
 		
 		t_llll *parsed = llllobj_parse_llll((t_object *) x, LLLL_OBJ_UI, NULL, ac, av, LLLL_PARSE_CLONE);
-		atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE);
+		atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE | LLLL_D_PARENS);
 		
 		if (text && *text) {
 			// Equation introduced
@@ -1454,7 +1454,7 @@ t_max_err life_setattr_cents(t_life *x, t_object *attr, long ac, t_atom *av)
 		long size;
 		
 		t_llll *parsed = llllobj_parse_llll((t_object *) x, LLLL_OBJ_UI, NULL, ac, av, LLLL_PARSE_CLONE);
-		atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE);
+		atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE | LLLL_D_PARENS);
 
 		if (parsed->l_head && hatom_gettype(&parsed->l_head->l_hatom) == H_SYM && hatom_getsym(&parsed->l_head->l_hatom) == gensym("custom")) {
 			// nothing to do
@@ -1512,7 +1512,7 @@ t_max_err life_setattr_velocity(t_life *x, t_object *attr, long ac, t_atom *av)
 		long size;
 		
 		t_llll *parsed = llllobj_parse_llll((t_object *) x, LLLL_OBJ_UI, NULL, ac, av, LLLL_PARSE_CLONE);
-		atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE);
+		atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE | LLLL_D_PARENS);
 		
 		if (parsed->l_head && hatom_gettype(&parsed->l_head->l_hatom) == H_SYM && hatom_getsym(&parsed->l_head->l_hatom) == gensym("custom")) {
 			// nothing to do

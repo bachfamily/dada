@@ -1854,7 +1854,7 @@ void catart_paint_ext(t_catart *x, t_object *view, t_dada_force_graphics *force_
     dadaobj_paint_grid(dadaobj_cast(x), view, force_graphics); // axis are inside here
 
 	// grains
-	catart_paint_grains(x, NULL, view, rect, center, force_graphics);
+	catart_paint_grains(x, g, view, rect, center, force_graphics);
 	
     // painting turtle, if any
     if (x->show_turtle && x->turtled_grain) {

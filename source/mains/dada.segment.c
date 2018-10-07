@@ -1446,7 +1446,7 @@ t_max_err segment_setattr_segmentsize(t_segment *x, t_object *attr, long ac, t_a
 		long size;
 		
 		t_llll *parsed = llllobj_parse_llll((t_object *) x, LLLL_OBJ_VANILLA, NULL, ac, av, LLLL_PARSE_CLONE);
-		atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE);
+		atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE | LLLL_D_PARENS);
 		
 		x->segmentsize_as_sym = gensym(text);
 		
@@ -1473,7 +1473,7 @@ t_max_err segment_setattr_hopsize(t_segment *x, t_object *attr, long ac, t_atom 
         long size;
         
         t_llll *parsed = llllobj_parse_llll((t_object *) x, LLLL_OBJ_VANILLA, NULL, ac, av, LLLL_PARSE_CLONE);
-        atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE);
+        atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE | LLLL_D_PARENS);
         
         x->hopsize_as_sym = gensym(text);
         

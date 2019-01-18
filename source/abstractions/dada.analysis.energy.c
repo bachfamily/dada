@@ -35,7 +35,7 @@
 	analysis, loudness, energy, velocity, duration, sum
 
 	@seealso
-	dada.segment, dada.catart, dada.analysis.centroid, dada.analysis.spread
+	dada.segment, dada.cartesian, dada.analysis.centroid, dada.analysis.spread
 	
 	@owner
 	Daniele Ghisi

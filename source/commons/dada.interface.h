@@ -81,6 +81,8 @@ void dadaobj_jbox_mt(t_dadaobj_jbox *x, t_symbol *s, long argc, t_atom *argv);
 
 
 ////////// GRID FUNCTIONS
+void dadaobj_update_grid_size(t_dadaobj *r_ob, t_object *view);
+t_pt dadaobj_get_grid_size(t_dadaobj *r_ob);
 void snap_coord_to_grid(t_dadaobj *r_ob, t_pt *coord);
 void paint_grid(t_dadaobj *r_ob, t_jgraphics *g, t_rect rect, t_pt center);
 

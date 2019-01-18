@@ -87,7 +87,7 @@
 		1E6E12541AF3B7B000E91285 /* dada.db.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E6E12521AF3B7B000E91285 /* dada.db.h */; };
 		1E7340541AF3A06800B9F6CF /* dada.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */; };
 		1E7340581AF3A06800B9F6CF /* lib_dada.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED9C9B1190D1224001973B8 /* lib_dada.a */; };
-		1E7340771AF3A0A800B9F6CF /* dada.catart.c in Sources */ = {isa = PBXBuildFile; fileRef = 1E7340761AF3A0A800B9F6CF /* dada.catart.c */; };
+		1E7340771AF3A0A800B9F6CF /* dada.cartesian.c in Sources */ = {isa = PBXBuildFile; fileRef = 1E7340761AF3A0A800B9F6CF /* dada.cartesian.c */; };
 		1E7851041AF294220079E361 /* dada.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */; };
 		1E7851081AF294220079E361 /* lib_dada.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED9C9B1190D1224001973B8 /* lib_dada.a */; };
 		1E7851271AF294C70079E361 /* dada.segment.c in Sources */ = {isa = PBXBuildFile; fileRef = 1E7851261AF294C70079E361 /* dada.segment.c */; };
@@ -477,8 +477,8 @@
 		1E6664FA210201B7000CFEEB /* bach_jit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = bach_jit.h; path = ../../../bach/source/commons/dg/bach_jit.h; sourceTree = SOURCE_ROOT; };
 		1E6E12511AF3B7B000E91285 /* dada.db.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.db.c; path = ../commons/dada.db.c; sourceTree = SOURCE_ROOT; };
 		1E6E12521AF3B7B000E91285 /* dada.db.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dada.db.h; path = ../commons/dada.db.h; sourceTree = SOURCE_ROOT; };
-		1E73405D1AF3A06800B9F6CF /* dada.catart.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dada.catart.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
-		1E7340761AF3A0A800B9F6CF /* dada.catart.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.catart.c; path = ../mains/dada.catart.c; sourceTree = SOURCE_ROOT; };
+		1E73405D1AF3A06800B9F6CF /* dada.cartesian.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dada.cartesian.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
+		1E7340761AF3A0A800B9F6CF /* dada.cartesian.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.cartesian.c; path = ../mains/dada.cartesian.c; sourceTree = SOURCE_ROOT; };
 		1E78510D1AF294220079E361 /* dada.segment.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dada.segment.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E7851261AF294C70079E361 /* dada.segment.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.segment.c; path = ../mains/dada.segment.c; sourceTree = SOURCE_ROOT; };
 		1E8914241EFDB906009EBADE /* dada.music~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "dada.music~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -753,7 +753,7 @@
 				1E36336319D8297700D52726 /* dada.platform.mxo */,
 				1E045A381AEE91D600A1F2B9 /* dada.base.mxo */,
 				1E78510D1AF294220079E361 /* dada.segment.mxo */,
-				1E73405D1AF3A06800B9F6CF /* dada.catart.mxo */,
+				1E73405D1AF3A06800B9F6CF /* dada.cartesian.mxo */,
 				1EA0FE771B36C55700A9AA55 /* dada.graph.mxo */,
 				1E53FB5F1BA0767400FF1F3D /* dada.bodies.mxo */,
 				1E4B99E81C39F2410043EE55 /* dada.multibrot.mxo */,
@@ -803,7 +803,7 @@
 				1E53FB731BA0769700FF1F3D /* dada.bodies.c */,
 				1E5399161D43ED1C00439855 /* dada.boids.c */,
 				1E4345A4197D2C15007DB98F /* dada.bounce.c */,
-				1E7340761AF3A0A800B9F6CF /* dada.catart.c */,
+				1E7340761AF3A0A800B9F6CF /* dada.cartesian.c */,
 				1E2A3AD91DBF55ED0009CF52 /* dada.distances.c */,
 				1EA0FE911B36C57400A9AA55 /* dada.graph.c */,
 				1EDCC427196AE75A00638665 /* dada.kaleido.c */,
@@ -1353,9 +1353,9 @@
 			productReference = 1E5AF16E1997DA4D00CE6392 /* dada.kaleido.mxo */;
 			productType = "com.apple.product-type.bundle";
 		};
-		1E73404F1AF3A06800B9F6CF /* dada.catart */ = {
+		1E73404F1AF3A06800B9F6CF /* dada.cartesian */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1E73405A1AF3A06800B9F6CF /* Build configuration list for PBXNativeTarget "dada.catart" */;
+			buildConfigurationList = 1E73405A1AF3A06800B9F6CF /* Build configuration list for PBXNativeTarget "dada.cartesian" */;
 			buildPhases = (
 				1E7340521AF3A06800B9F6CF /* Headers */,
 				1E7340531AF3A06800B9F6CF /* Resources */,
@@ -1368,9 +1368,9 @@
 			dependencies = (
 				1E7340501AF3A06800B9F6CF /* PBXTargetDependency */,
 			);
-			name = dada.catart;
+			name = dada.cartesian;
 			productName = iterator;
-			productReference = 1E73405D1AF3A06800B9F6CF /* dada.catart.mxo */;
+			productReference = 1E73405D1AF3A06800B9F6CF /* dada.cartesian.mxo */;
 			productType = "com.apple.product-type.bundle";
 		};
 		1E7850FF1AF294220079E361 /* dada.segment */ = {
@@ -1534,7 +1534,7 @@
 				1E53FB511BA0767400FF1F3D /* dada.bodies */,
 				1E5399061D43ECE100439855 /* dada.boids */,
 				1E43458E197D2C04007DB98F /* dada.bounce */,
-				1E73404F1AF3A06800B9F6CF /* dada.catart */,
+				1E73404F1AF3A06800B9F6CF /* dada.cartesian */,
 				1E2A3AC71DBF55D40009CF52 /* dada.distances */,
 				1EA0FE691B36C55700A9AA55 /* dada.graph */,
 				1E5AF1611997DA4D00CE6392 /* dada.kaleido */,
@@ -1920,7 +1920,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1E7340771AF3A0A800B9F6CF /* dada.catart.c in Sources */,
+				1E7340771AF3A0A800B9F6CF /* dada.cartesian.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2120,7 +2120,7 @@
 		};
 		1E6E11EA1AF3AB9300E91285 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 1E73404F1AF3A06800B9F6CF /* dada.catart */;
+			target = 1E73404F1AF3A06800B9F6CF /* dada.cartesian */;
 			targetProxy = 1E6E11E91AF3AB9300E91285 /* PBXContainerItemProxy */;
 		};
 		1E7340501AF3A06800B9F6CF /* PBXTargetDependency */ = {
@@ -3187,7 +3187,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
 		};
-		1E73405A1AF3A06800B9F6CF /* Build configuration list for PBXNativeTarget "dada.catart" */ = {
+		1E73405A1AF3A06800B9F6CF /* Build configuration list for PBXNativeTarget "dada.cartesian" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1E73405B1AF3A06800B9F6CF /* Development */,

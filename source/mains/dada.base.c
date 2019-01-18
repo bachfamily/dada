@@ -32,7 +32,7 @@
 	database, llll, storage 
 	
 	@seealso
-	bach.shelf, dada.segment, dada.catart, dada.distances
+	bach.shelf, dada.segment, dada.cartesian, dada.distances
 	
 	@owner
 	Daniele Ghisi

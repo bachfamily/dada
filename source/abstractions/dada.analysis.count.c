@@ -32,7 +32,7 @@
 	analysis, count, notes, chords, measures, voices, items
 
 	@seealso
-	dada.segment, dada.catart
+	dada.segment, dada.cartesian
 	
 	@owner
 	Daniele Ghisi

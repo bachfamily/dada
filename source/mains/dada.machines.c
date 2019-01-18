@@ -2223,7 +2223,8 @@ void machines_mousedown(t_machines *x, t_object *patcherview, t_pt pt, long modi
 
 char machines_snap_selection_to_grid_fn(t_dadaobj *r_ob, t_dadaitem *item, void *data)
 {
-    dadaitem_move(r_ob, item, build_pt(round(item->coord.x/r_ob->m_grid.grid_size.x) * r_ob->m_grid.grid_size.x, round(item->coord.y/r_ob->m_grid.grid_size.y) * r_ob->m_grid.grid_size.y), DIA_INTERFACE);
+    t_pt grid_size = dadaobj_get_grid_size(r_ob);
+    dadaitem_move(r_ob, item, build_pt(round(item->coord.x/grid_size.x) * grid_size.x, round(item->coord.y/grid_size.y) * grid_size.y), DIA_INTERFACE);
     return 0;
 }
 
@@ -2418,9 +2419,10 @@ long machines_key(t_machines *x, t_object *patcherview, long keycode, long modif
         case JKEY_LEFTARROW:
         case JKEY_RIGHTARROW:
         {
+            t_pt grid_size = dadaobj_get_grid_size(dadaobj_cast(x));
             machines_undo_step_push_network(x, gensym("Move Machines"));
-            double amountx = x->b_ob.d_ob.m_grid.snap_to_grid ? x->b_ob.d_ob.m_grid.grid_size.x : 10;
-            double amounty = x->b_ob.d_ob.m_grid.snap_to_grid ? x->b_ob.d_ob.m_grid.grid_size.y : 10;
+            double amountx = x->b_ob.d_ob.m_grid.snap_to_grid ? grid_size.x : 10;
+            double amounty = x->b_ob.d_ob.m_grid.snap_to_grid ? grid_size.y : 10;
             t_pt delta_coord = (keycode == JKEY_UPARROW ? build_pt(0, amounty) : (keycode == JKEY_DOWNARROW ? build_pt(0, -amounty) : (keycode == JKEY_LEFTARROW ? build_pt(-amountx, 0) : (keycode == JKEY_RIGHTARROW ? build_pt(amountx, 0) : build_pt(0, 0)))));
             if (modifiers & eShiftKey) delta_coord = pt_number_prod(delta_coord, 4);
             dadaobj_selection_iterate(dadaobj_cast(x), (dadaitem_iterfn)machine_move_vertices_delta_fn, &delta_coord);

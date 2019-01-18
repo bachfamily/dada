@@ -32,7 +32,7 @@
 	distances, corpus, database, map, scaling, graph, exploration
 	
 	@seealso
-	dada.base, dada.segment, dada.catart
+	dada.base, dada.segment, dada.cartesian
 	
 	@owner
 	Daniele Ghisi
@@ -265,6 +265,8 @@ void distances_initdataview(t_distances *x);
 t_max_err distances_set_query(t_distances *x, void *attr, long argc, t_atom *argv);
 t_max_err distances_set_database(t_distances *x, void *attr, long argc, t_atom *argv);
 t_max_err distances_set_where(t_distances *x, void *attr, long argc, t_atom *argv);
+t_max_err distances_set_uniform(t_distances *x, void *attr, long argc, t_atom *argv);
+t_max_err distances_set_uniformpar(t_distances *x, void *attr, long argc, t_atom *argv);
 
 t_llll *get_grain_contentfield(t_distances *x, t_distances_grain *gr);
 void output_grain_contentfield(t_distances *x, t_distances_grain *gr, t_symbol *router, char beat_sync);
@@ -550,7 +552,7 @@ int C74_EXPORT main(void)
 	llllobj_class_add_out_attr(c, LLLL_OBJ_UI);
 	
 	dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_GRID | DADAOBJ_AXES | DADAOBJ_LABELS |  DADAOBJ_MOUSEHOVER | DADAOBJ_GRID_SHOWDEFAULT | DADAOBJ_LABELS_SHOWDEFAULT | DADAOBJ_EXPORTTOJITTER);
-	CLASS_ATTR_FILTER_CLIP(c, "zoom", 0.0001, 10000);
+	CLASS_ATTR_FILTER_CLIP(c, "zoom", 0.0001, 100000);
 
 	
 	CLASS_ATTR_DEFAULT(c, "patching_rect", 0, "0 0 300 300");
@@ -816,13 +818,15 @@ int C74_EXPORT main(void)
 
 
     CLASS_ATTR_CHAR(c, "uniform", 0, t_distances, also_compute_uniform_grid);
-    CLASS_ATTR_STYLE_LABEL(c, "uniform", 0, "text", "Also Compute Uniform Grid");
+    CLASS_ATTR_ACCESSORS(c, "uniform", NULL, distances_set_uniform);
+    CLASS_ATTR_STYLE_LABEL(c, "uniform", 0, "onoff", "Also Compute Uniform Grid");
     CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"uniform",0,"0.");
     CLASS_ATTR_FILTER_CLIP(c, "uniform", 0., 1.);
     // @description Toggles the computation of the uniform grid. By default, to avoid wasting useless CPU-time, this is off.
     // You need to turn this on before touching to the other uniform grid attributes <m>uniformpar</m> and <m>uniformsize</m>.
 
     CLASS_ATTR_DOUBLE(c, "uniformpar", 0, t_distances, align_to_uniform_grid);
+    CLASS_ATTR_ACCESSORS(c, "uniformpar", NULL, distances_set_uniformpar);
     CLASS_ATTR_STYLE_LABEL(c, "uniformpar", 0, "text", "Align To Uniform Grid");
     CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"uniformpar",0,"0.");
     CLASS_ATTR_FILTER_CLIP(c, "uniformpar", 0., 1.);
@@ -878,6 +882,26 @@ void view_create_deferred(t_distances *x, t_symbol *msg, long ac, t_atom *av)
 {
     db_view_create(x->d_db, x->d_query->s_name, &x->d_view);
     object_attach_byptr_register(x, x->d_view, _sym_nobox);
+}
+
+t_max_err distances_set_uniform(t_distances *x, void *attr, long argc, t_atom *argv)
+{
+    if (argc && argv) {
+        x->also_compute_uniform_grid = atom_getlong(argv);
+        x->need_rebuild_grains = true;
+        distances_iar(x);
+    }
+    return MAX_ERR_NONE;
+}
+
+t_max_err distances_set_uniformpar(t_distances *x, void *attr, long argc, t_atom *argv)
+{
+    if (argc && argv) {
+        x->align_to_uniform_grid = atom_getfloat(argv);
+        x->need_rebuild_grains = true;
+        distances_iar(x);
+    }
+    return MAX_ERR_NONE;
 }
 
 t_max_err distances_set_query(t_distances *x, void *attr, long argc, t_atom *argv)
@@ -2253,11 +2277,14 @@ char *distances_atom_to_string(t_atom *a, long max_decimals)
         res[len] = 0;
 		return res;
 	} else {        
-		char *res = double_to_string(atom_getfloat(a), max_decimals);
-		if (res[strlen(res)-1] == ' ')
-			res[strlen(res)-1] = 0;
-		if (res[strlen(res)-1] == '.')
-			res[strlen(res)-1] = 0;
+        char *res = double_to_string(atom_getfloat(a), max_decimals);
+        long len = strlen(res);
+        if (len > 0) {
+            if (res[len-1] == ' ')
+                res[len-1] = 0;
+            if (res[len-1] == '.')
+                res[len-1] = 0;
+        }
 		return res;
 	}
 }
@@ -2493,6 +2520,9 @@ t_llll *get_grain_contentfield(t_distances *x, t_distances_grain *gr)
 	char query[256];
     long f;
     t_llll *out = llll_get();
+    
+    if (!gr)
+        return;
     
     for (f = 0; f < x->field_content_size; f++) {
         t_db_result	*result = NULL;

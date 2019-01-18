@@ -35,7 +35,7 @@
 	analysis, chroma, vector, pitch class
 
 	@seealso
-	dada.segment, dada.catart
+	dada.segment, dada.cartesian
 	
 	@owner
 	Daniele Ghisi

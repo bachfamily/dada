@@ -1,12 +1,12 @@
 /**
 	@file
-	dada.catart.c
+	dada.cartesian.c
 	
 	@name 
-	dada.catart
+	dada.cartesian
 	
 	@realname 
-	dada.catart
+	dada.cartesian
 
 	@type
 	object
@@ -18,18 +18,20 @@
 	Daniele Ghisi
 	
 	@digest 
-	Symbolic concatenative synthesis interface 
+	Cartesian display of database
 	
 	@description
 	2D interface for databases
 	
 	@discussion
+    This object has been inspired by the CataRT software
+    (by Diemo Schwarz, IMTR Team, Ircam--Centre Pompidou, and collaborators).
 	
 	@category
 	dada, dada interfaces, dada corpus-based tools, dada geometry
 
 	@keywords
-	catart, corpus, database, concatenative, synthesis, exploration
+	cartesian, corpus, database, concatenative, synthesis, exploration
 	
 	@seealso
 	dada.base, dada.segment, dada.distances
@@ -55,9 +57,9 @@
 #include "dada.db.h"
 #include "dada.notation.h"
 
-#define DADA_CATART_INTERFACE_GRAIN_TOLERANCE 5
-#define DADA_CATART_MAX_CONTENTFIELDS 10
-#define DADA_CATART_MAX_CONVEXCOMB 32
+#define DADA_CARTESIAN_INTERFACE_GRAIN_TOLERANCE 5
+#define DADA_CARTESIAN_MAX_CONTENTFIELDS 10
+#define DADA_CARTESIAN_MAX_CONVEXCOMB 32
 
 ////////////////////////// structures
 
@@ -70,12 +72,12 @@ enum {
 };
 
 enum {
-    DADA_CATART_MODE_CARTESIAN = 0,
-    DADA_CATART_MODE_CONVEXCOMB = 1
+    DADA_CARTESIAN_MODE_CARTESIAN = 0,
+    DADA_CARTESIAN_MODE_CONVEXCOMB = 1
 };
 
 
-typedef struct _catart_grain
+typedef struct _cartesian_grain
 {
 	long		result_idx;
 	long		db_id;
@@ -96,9 +98,9 @@ typedef struct _catart_grain
 	double		bpm;
 	double		phase;
     double      length_ms;
-} t_catart_grain;
+} t_cartesian_grain;
 
-typedef struct _catart 
+typedef struct _cartesian
 {
 	t_dadaobj_jbox	b_ob; // root object
 	
@@ -119,13 +121,13 @@ typedef struct _catart
 	t_symbol	*field_color;
 	t_symbol	*field_shape;
 	
-    t_symbol	*field_content[DADA_CATART_MAX_CONTENTFIELDS];
+    t_symbol	*field_content[DADA_CARTESIAN_MAX_CONTENTFIELDS];
     long        field_content_size;
 
     char        mode;
-    t_symbol    *field_convexcomb[DADA_CATART_MAX_CONVEXCOMB];
-    double      field_convexcomb_min[DADA_CATART_MAX_CONVEXCOMB];
-    double      field_convexcomb_max[DADA_CATART_MAX_CONVEXCOMB];
+    t_symbol    *field_convexcomb[DADA_CARTESIAN_MAX_CONVEXCOMB];
+    double      field_convexcomb_min[DADA_CARTESIAN_MAX_CONVEXCOMB];
+    double      field_convexcomb_max[DADA_CARTESIAN_MAX_CONVEXCOMB];
     long        field_convexcomb_size;
     t_atom      field_convexcomb_norm;
 
@@ -177,16 +179,16 @@ typedef struct _catart
     char            interrupt_looping_on_mouseleave;
     char            interrupt_looping_when_not_hovering;
     char            interrupt_beatsync_on_mouseleave;
-    t_catart_grain  *lastplayed_grain;
+    t_cartesian_grain  *lastplayed_grain;
     t_symbol        *seq_router;
 
     void            *loop_clock;							///< The clock for the looping play (only used for non-beatsynchronous processing)
 
 
 	// interface
-	t_catart_grain	*mousehover_grain;
-	t_catart_grain	*mousedown_grain;
-	t_catart_grain	*turtled_grain;
+	t_cartesian_grain	*mousehover_grain;
+	t_cartesian_grain	*mousedown_grain;
+	t_cartesian_grain	*turtled_grain;
     
 	// points
 	t_llll			*grains;
@@ -200,68 +202,68 @@ typedef struct _catart
     
     char            relative_turtling;
     char            relative_knn;
-} t_catart;
+} t_cartesian;
 
 
 ///////////////////////// function prototypes
 //// standard set
-void *catart_new(t_symbol *s, long argc, t_atom *argv);
-void catart_free(t_catart *x);
-void catart_assist(t_catart *x, void *b, long m, long a, char *s);
+void *cartesian_new(t_symbol *s, long argc, t_atom *argv);
+void cartesian_free(t_cartesian *x);
+void cartesian_assist(t_cartesian *x, void *b, long m, long a, char *s);
 
-void catart_paint(t_catart *x, t_object *view);
-void catart_paint_ext(t_catart *x, t_object *view, t_dada_force_graphics *force_graphics);
+void cartesian_paint(t_cartesian *x, t_object *view);
+void cartesian_paint_ext(t_cartesian *x, t_object *view, t_dada_force_graphics *force_graphics);
 
-void catart_int(t_catart *x, t_atom_long num);
-void catart_float(t_catart *x, double num);
-void catart_anything(t_catart *x, t_symbol *msg, long ac, t_atom *av);
-void catart_bang(t_catart *x);
+void cartesian_int(t_cartesian *x, t_atom_long num);
+void cartesian_float(t_cartesian *x, double num);
+void cartesian_anything(t_cartesian *x, t_symbol *msg, long ac, t_atom *av);
+void cartesian_bang(t_cartesian *x);
 
 // interface
-void catart_focusgained(t_catart *x, t_object *patcherview);
-void catart_focuslost(t_catart *x, t_object *patcherview);
-void catart_mousedown(t_catart *x, t_object *patcherview, t_pt pt, long modifiers);
-void catart_mousemove(t_catart *x, t_object *patcherview, t_pt pt, long modifiers);
-void catart_mouseup(t_catart *x, t_object *patcherview, t_pt pt, long modifiers);
-void catart_mousedrag(t_catart *x, t_object *patcherview, t_pt pt, long modifiers);
-long catart_key(t_catart *x, t_object *patcherview, long keycode, long modifiers, long textcharacter);
-long catart_keyup(t_catart *x, t_object *patcherview, long keycode, long modifiers, long textcharacter);
-void catart_mousewheel(t_catart *x, t_object *view, t_pt pt, long modifiers, double x_inc, double y_inc);	
-void catart_mouseleave(t_catart *x, t_object *patcherview, t_pt pt, long modifiers); 
-void catart_mouseenter(t_catart *x, t_object *patcherview, t_pt pt, long modifiers);
-t_max_err catart_notify(t_catart *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
+void cartesian_focusgained(t_cartesian *x, t_object *patcherview);
+void cartesian_focuslost(t_cartesian *x, t_object *patcherview);
+void cartesian_mousedown(t_cartesian *x, t_object *patcherview, t_pt pt, long modifiers);
+void cartesian_mousemove(t_cartesian *x, t_object *patcherview, t_pt pt, long modifiers);
+void cartesian_mouseup(t_cartesian *x, t_object *patcherview, t_pt pt, long modifiers);
+void cartesian_mousedrag(t_cartesian *x, t_object *patcherview, t_pt pt, long modifiers);
+long cartesian_key(t_cartesian *x, t_object *patcherview, long keycode, long modifiers, long textcharacter);
+long cartesian_keyup(t_cartesian *x, t_object *patcherview, long keycode, long modifiers, long textcharacter);
+void cartesian_mousewheel(t_cartesian *x, t_object *view, t_pt pt, long modifiers, double x_inc, double y_inc);
+void cartesian_mouseleave(t_cartesian *x, t_object *patcherview, t_pt pt, long modifiers);
+void cartesian_mouseenter(t_cartesian *x, t_object *patcherview, t_pt pt, long modifiers);
+t_max_err cartesian_notify(t_cartesian *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
 
-void catart_dump(t_catart *x);
-void catart_clock(t_catart *x, t_symbol *s);
-void catart_autozoom(t_catart *x);
-void catart_autozoom_do(t_catart *x, t_object *view);
-void catart_initdataview(t_catart *x);
+void cartesian_dump(t_cartesian *x);
+void cartesian_clock(t_cartesian *x, t_symbol *s);
+void cartesian_autozoom(t_cartesian *x);
+void cartesian_autozoom_do(t_cartesian *x, t_object *view);
+void cartesian_initdataview(t_cartesian *x);
 
-t_max_err catart_set_query(t_catart *x, void *attr, long argc, t_atom *argv);
-t_max_err catart_set_database(t_catart *x, void *attr, long argc, t_atom *argv);
-t_max_err catart_set_where(t_catart *x, void *attr, long argc, t_atom *argv);
+t_max_err cartesian_set_query(t_cartesian *x, void *attr, long argc, t_atom *argv);
+t_max_err cartesian_set_database(t_cartesian *x, void *attr, long argc, t_atom *argv);
+t_max_err cartesian_set_where(t_cartesian *x, void *attr, long argc, t_atom *argv);
 
-t_llll *get_grain_contentfield(t_catart *x, t_catart_grain *gr);
-void output_grain_contentfield(t_catart *x, t_catart_grain *gr, t_symbol *router, char beat_sync);
-void catart_loop_tick(t_catart *x);
-void catart_schedule_interface_grain_llll(t_catart *x, t_catart_grain *gr, t_llll *ll);
-void do_send_llll(t_catart *x, t_symbol *s, long ac, t_atom *av);
+t_llll *get_grain_contentfield(t_cartesian *x, t_cartesian_grain *gr);
+void output_grain_contentfield(t_cartesian *x, t_cartesian_grain *gr, t_symbol *router, char beat_sync);
+void cartesian_loop_tick(t_cartesian *x);
+void cartesian_schedule_interface_grain_llll(t_cartesian *x, t_cartesian_grain *gr, t_llll *ll);
+void do_send_llll(t_cartesian *x, t_symbol *s, long ac, t_atom *av);
 
 
-/* void catart_jsave(t_catart *x, t_dictionary *d);
-void catart_preset(t_catart *x);
-void catart_begin_preset(t_catart *x, t_symbol *s, long argc, t_atom *argv);
-void catart_restore_preset(t_catart *x, t_symbol *s, long argc, t_atom *argv);
-void catart_end_preset(t_catart *x);
+/* void cartesian_jsave(t_cartesian *x, t_dictionary *d);
+void cartesian_preset(t_cartesian *x);
+void cartesian_begin_preset(t_cartesian *x, t_symbol *s, long argc, t_atom *argv);
+void cartesian_restore_preset(t_cartesian *x, t_symbol *s, long argc, t_atom *argv);
+void cartesian_end_preset(t_cartesian *x);
 
- void catart_clear(t_catart *x, char also_outside_world);
- void catart_undo_postprocess(t_catart *x);
+ void cartesian_clear(t_cartesian *x, char also_outside_world);
+ void cartesian_undo_postprocess(t_cartesian *x);
 */
 
 
 
 //////////////////////// global class pointer variable
-static t_class *catart_class;
+static t_class *cartesian_class;
 static t_symbol	*ps_dbview_update = NULL;
 static t_symbol	*ps_dbview_query_changed = NULL;
 
@@ -272,7 +274,7 @@ static t_symbol	*ps_dbview_query_changed = NULL;
 ///////////////////////// utility functions
 
 
-long catart_colname_to_coltype(t_catart *x, t_symbol *tablename, t_symbol *colname)
+long cartesian_colname_to_coltype(t_cartesian *x, t_symbol *tablename, t_symbol *colname)
 {
     if (colname && colname->s_name) {
         if (colname == table_name_to_idname(tablename))
@@ -288,7 +290,7 @@ long catart_colname_to_coltype(t_catart *x, t_symbol *tablename, t_symbol *colna
 }
 
 
-void catart_iar(t_catart *x)
+void cartesian_iar(t_cartesian *x)
 {
 	jbox_invalidate_layer((t_object *)x, NULL, gensym("grid"));
 	jbox_invalidate_layer((t_object *)x, NULL, gensym("grains"));
@@ -297,7 +299,7 @@ void catart_iar(t_catart *x)
 
 
 // process any change which has happened for the shapes
-void process_change(t_catart *x)
+void process_change(t_cartesian *x)
 {
 	jbox_redraw((t_jbox *)x);
 }
@@ -319,7 +321,7 @@ int C74_EXPORT main(void)
 
 	srand(time(NULL)); // needed for the random function
 
-	CLASS_NEW_CHECK_SIZE(c, "dada.catart", (method)catart_new, (method)catart_free, (long)sizeof(t_catart), 
+	CLASS_NEW_CHECK_SIZE(c, "dada.cartesian", (method)cartesian_new, (method)cartesian_free, (long)sizeof(t_cartesian),
 				  0L /* leave NULL!! */, A_GIMME, 0);
 	
 	c->c_flags |= CLASS_FLAG_NEWDICTIONARY;
@@ -327,19 +329,19 @@ int C74_EXPORT main(void)
 	//	jbox_initclass(c, 0);
 	
 	// paint & utilities
-	class_addmethod(c, (method) catart_paint,			"paint", A_CANT, 0);
-	class_addmethod(c, (method) catart_assist,			"assist",		A_CANT, 0);  
-	class_addmethod(c, (method)	catart_notify,			"bachnotify",		A_CANT,		0);
+	class_addmethod(c, (method) cartesian_paint,			"paint", A_CANT, 0);
+	class_addmethod(c, (method) cartesian_assist,			"assist",		A_CANT, 0);
+	class_addmethod(c, (method)	cartesian_notify,			"bachnotify",		A_CANT,		0);
 
 	// save & preset
-/*    class_addmethod(c, (method) catart_preset, "preset", 0);
-    class_addmethod(c, (method) catart_begin_preset, "begin_preset", A_GIMME, 0);
-    class_addmethod(c, (method) catart_restore_preset, "restore_preset", A_GIMME, 0);
-    class_addmethod(c, (method) catart_end_preset, "end_preset", 0);
+/*    class_addmethod(c, (method) cartesian_preset, "preset", 0);
+    class_addmethod(c, (method) cartesian_begin_preset, "begin_preset", A_GIMME, 0);
+    class_addmethod(c, (method) cartesian_restore_preset, "restore_preset", A_GIMME, 0);
+    class_addmethod(c, (method) cartesian_end_preset, "end_preset", 0);
 	CLASS_METHOD_ATTR_PARSE(c, "begin_preset", "undocumented", gensym("long"), 0L, "1");
 	CLASS_METHOD_ATTR_PARSE(c, "restore_preset", "undocumented", gensym("long"), 0L, "1");
 	CLASS_METHOD_ATTR_PARSE(c, "end_preset", "undocumented", gensym("long"), 0L, "1");
-	class_addmethod(c, (method) catart_jsave, "jsave", A_CANT, 0);
+	class_addmethod(c, (method) cartesian_jsave, "jsave", A_CANT, 0);
 */
 	
 	// @method (mouse) @digest Navigate or output grain content
@@ -349,46 +351,46 @@ int C74_EXPORT main(void)
 	// In any case, grain output could be postponed if beat synchronization is active (see <m>beatsync</m> attribute). <br />
     // Use scroll or two finger swipe to move in the plane. Use <m>Cmd</m>+scroll to change horizontal zoom,
     // add <m>Alt</m> to change vertical zoom.
-	class_addmethod(c, (method) catart_focusgained, "focusgained", A_CANT, 0);
-	class_addmethod(c, (method) catart_focuslost, "focuslost", A_CANT, 0); 	
-	class_addmethod(c, (method) catart_mousedown, "mousedown", A_CANT, 0);
-	class_addmethod(c, (method) catart_mousedrag, "mousedrag", A_CANT, 0);
-	class_addmethod(c, (method) catart_mouseup, "mouseup", A_CANT, 0);
+	class_addmethod(c, (method) cartesian_focusgained, "focusgained", A_CANT, 0);
+	class_addmethod(c, (method) cartesian_focuslost, "focuslost", A_CANT, 0);
+	class_addmethod(c, (method) cartesian_mousedown, "mousedown", A_CANT, 0);
+	class_addmethod(c, (method) cartesian_mousedrag, "mousedrag", A_CANT, 0);
+	class_addmethod(c, (method) cartesian_mouseup, "mouseup", A_CANT, 0);
 
     // @method (keyboard) @digest Autozoom
     // @description Use <m>Tab</m> to set the zoom automatically depending on the displayed points
-    class_addmethod(c, (method) catart_key, "key", A_CANT, 0);
-  	class_addmethod(c, (method) catart_keyup, "keyup", A_CANT, 0);
+    class_addmethod(c, (method) cartesian_key, "key", A_CANT, 0);
+  	class_addmethod(c, (method) cartesian_keyup, "keyup", A_CANT, 0);
     
     // @method (tools) @digest Navigate
     // @description
     // @copy DADA_DOC_TOOLS_INTRO
     // @copy DADA_DOC_TOOLS_ZX
-	class_addmethod(c, (method) catart_mousemove, "mousemove", A_CANT, 0);
-	class_addmethod(c, (method) catart_mousewheel, "mousewheel", A_CANT, 0);
-	class_addmethod(c, (method) catart_mouseenter, "mouseenter", A_CANT, 0);
-	class_addmethod(c, (method) catart_mouseleave, "mouseleave", A_CANT, 0);
+	class_addmethod(c, (method) cartesian_mousemove, "mousemove", A_CANT, 0);
+	class_addmethod(c, (method) cartesian_mousewheel, "mousewheel", A_CANT, 0);
+	class_addmethod(c, (method) cartesian_mouseenter, "mouseenter", A_CANT, 0);
+	class_addmethod(c, (method) cartesian_mouseleave, "mouseleave", A_CANT, 0);
 
     // @method clock @digest Select a clock source
     // @description The word <m>clock</m>, followed by the name of an existing <m>setclock</m> objects, sets the
     // object to be controlled by that <m>setclock</m> object rather than by Max's internal millisecond clock.
     // The word <m>clock</m> by itself sets the object back to using Max's regular millisecond clock.
-    class_addmethod(c, (method)catart_clock,	"clock", A_DEFSYM, 0);
+    class_addmethod(c, (method)cartesian_clock,	"clock", A_DEFSYM, 0);
     
     
 	// @method bang @digest Output sampling information
 	// @description Output the sampling information regarding the sampling points set via the <m>sample</m> message.
-	class_addmethod(c, (method)catart_bang,			"bang",			0);
+	class_addmethod(c, (method)cartesian_bang,			"bang",			0);
 
         
 	// @method dump @digest Output content of all grains
 	// @description Outputs from the first outlet an llll containing the content field of all the grains.
-	class_addmethod(c, (method)catart_dump,		"dump",		A_GIMME,	0);
+	class_addmethod(c, (method)cartesian_dump,		"dump",		A_GIMME,	0);
 
     
     // @method autozoom @digest Set domain and range automatically
     // @description Sets domain and range automatically depending on the displayed grains.
-    class_addmethod(c, (method)catart_autozoom,		"autozoom",	0);
+    class_addmethod(c, (method)cartesian_autozoom,		"autozoom",	0);
 
     // @method domain @digest Set the X domain
     // @description The <m>domain</m> message, followed by two numbers, sets minimum and maximum coordinates
@@ -396,7 +398,7 @@ int C74_EXPORT main(void)
     // The <m>domain</m> message,  followed by the "start" or "end" symbol and a number, sets the coordinate
     // to be displayed respectively at the left boundary or at the right boundary of the object box.
     // @marg 0 @name arguments @optional 0 @type list
-    class_addmethod(c, (method)catart_anything,		"domain",		A_GIMME,	0);
+    class_addmethod(c, (method)cartesian_anything,		"domain",		A_GIMME,	0);
     
     // @method range @digest Set the Y range
     // @description The <m>range</m> message, followed by two numbers, sets minimum and maximum coordinates
@@ -404,19 +406,19 @@ int C74_EXPORT main(void)
     // The <m>range</m> message,  followed by the "start" or "end" symbol and a number, sets the coordinate
     // to be displayed respectively at the bottom boundary or at top right boundary of the object box.
     // @marg 0 @name arguments @optional 0 @type list
-    class_addmethod(c, (method)catart_anything,		"range",		A_GIMME,	0);
+    class_addmethod(c, (method)cartesian_anything,		"range",		A_GIMME,	0);
 
     
     // @method getdomain @digest Retrieve current X domain
     // @description The <m>getdomain</m> message outputs from the third outlet the minimum and maximum
     // coordinates displayed on the X axis, preceded by a <m>domain</m> symbol.
-    class_addmethod(c, (method)catart_anything,		"getdomain",		A_GIMME,	0);
+    class_addmethod(c, (method)cartesian_anything,		"getdomain",		A_GIMME,	0);
 
     
     // @method getrange @digest Retrieve current Y range
     // @description The <m>getrange</m> message outputs from the third outlet the minimum and maximum
     // coordinates displayed on the Y axis, preceded by a <m>range</m> symbol.
-    class_addmethod(c, (method)catart_anything,		"getrange",		A_GIMME,	0);
+    class_addmethod(c, (method)cartesian_anything,		"getrange",		A_GIMME,	0);
 
     
     
@@ -432,11 +434,11 @@ int C74_EXPORT main(void)
     // @marg 1 @name column_value @optional 1 @type anything
     // @example setturtle [0 10] @caption Set the turtle on the nearest grain to x=0, y=10
     // @example setturtle name Warsaw @caption Set the turtle on the grain having "Warsaw" as content for the column "name"
-    class_addmethod(c, (method)catart_anything,		"setturtle",		A_GIMME,	0);
+    class_addmethod(c, (method)cartesian_anything,		"setturtle",		A_GIMME,	0);
 	
     
 	// @method turtle @digest Set the turtle and output grain content
-	// @description The <m>turtle</m> message, followed by a <m>llll</m> of the kind <b>[<m>x</m>, <m>y</m>]</b>
+	// @description The <m>turtle</m> message, followed by a <m>llll</m> of the kind <b>[<m>x</m> <m>y</m>]</b>
 	// sets the turtle on the nearest grain to the given (<m>x</m>, <m>y</m>) location, and outputs the grain content field(s)
 	// from the second outlet, preceded by the "turtle" symbol. <br />
     // If <m>relativeturtle</m> is on, the coordinates are expected to be between 0 and 1, relative to the current domain and range
@@ -448,7 +450,7 @@ int C74_EXPORT main(void)
     // @marg 1 @name column_value @optional 1 @type anything
     // @example turtle [0 10] @caption Set the turtle on the nearest grain to x=0, y=10, and output content
     // @example turtle name Warsaw @caption Set the turtle on the grain having "Warsaw" as content for the column "name", and output content
-	class_addmethod(c, (method)catart_anything,		"turtle",		A_GIMME,	0);
+	class_addmethod(c, (method)cartesian_anything,		"turtle",		A_GIMME,	0);
 
 	
 	// @method turtledelta @digest Move the turtle and output grain content
@@ -459,12 +461,12 @@ int C74_EXPORT main(void)
     // If <m>relativeturtle</m> is on, the coordinates are expected to be between 0 and 1, relative to the current domain and range
     // (caveat: more precisely, to the domain and range of the latest painted view of the object).
 	// @marg 0 @name delta_position @optional 0 @type llll
-	class_addmethod(c, (method)catart_anything,		"turtledelta",		A_GIMME,	0);
+	class_addmethod(c, (method)cartesian_anything,		"turtledelta",		A_GIMME,	0);
 	
 	
     // @method getturtle @digest Output turtle grain content
     // @description The <m>getturtle</m> message outputs the grain content for the grain where the turtle is currently located, if any.
-    class_addmethod(c, (method)catart_anything,		"getturtle",		A_GIMME,	0);
+    class_addmethod(c, (method)cartesian_anything,		"getturtle",		A_GIMME,	0);
 
     
 	// @method knn @digest Find nearest neighbors
@@ -474,7 +476,7 @@ int C74_EXPORT main(void)
     // (caveat: more precisely, to the domain and range of the latest painted view of the object).
 	// @marg 0 @name number_of_neighbors @optional 0 @type int
 	// @marg 1 @name position @optional 0 @type llll
-	class_addmethod(c, (method)catart_anything,		"knn",		A_GIMME,	0);
+	class_addmethod(c, (method)cartesian_anything,		"knn",		A_GIMME,	0);
 	
 
     // @method getnumgrains @digest Get the number of currently displayed grains
@@ -483,10 +485,10 @@ int C74_EXPORT main(void)
     // N.B.: the grain calculation is performed during the paint method; unless your object is repainted, this number won't be updated.
     // A "done" notification is sent through the third outlet whenever grains have been properly recomputed. Be sure to use such notification
     // to trigger a <m>getnumgrains</m> message.
-    class_addmethod(c, (method)catart_anything,		"getnumgrains",		A_GIMME,	0);
+    class_addmethod(c, (method)cartesian_anything,		"getnumgrains",		A_GIMME,	0);
 
     
-	class_addmethod(c, (method)catart_anything,	"anything",			A_GIMME,	0);
+	class_addmethod(c, (method)cartesian_anything,	"anything",			A_GIMME,	0);
 
     
     
@@ -495,28 +497,28 @@ int C74_EXPORT main(void)
 	llllobj_class_add_out_attr(c, LLLL_OBJ_UI);
 	
 	dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_SPLITXYZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_GRID | DADAOBJ_AXES | DADAOBJ_LABELS | DADAOBJ_MOUSEHOVER | DADAOBJ_AXES_SHOWDEFAULT | DADAOBJ_GRID_SHOWDEFAULT | DADAOBJ_LABELS_SHOWDEFAULT | DADAOBJ_EXPORTTOJITTER);
-	CLASS_ATTR_FILTER_CLIP(c, "zoom", 0.0001, 10000);
+	CLASS_ATTR_FILTER_CLIP(c, "zoom", 0.0001, 100000);
 
 	
 	CLASS_ATTR_DEFAULT(c, "patching_rect", 0, "0 0 300 300");
-	// @exclude dada.catart
+	// @exclude dada.cartesian
 	CLASS_ATTR_DEFAULT(c, "presentation_rect", 0, "0 0 300 300");
-	// @exclude dada.catart
+	// @exclude dada.cartesian
 	
 
 	CLASS_STICKY_ATTR(c,"category",0,"Color");
 	
-	CLASS_ATTR_RGBA(c, "legendcolor", 0, t_catart, j_legendcolor);
+	CLASS_ATTR_RGBA(c, "legendcolor", 0, t_cartesian, j_legendcolor);
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c, "legendcolor", 0, "0.25 0.25 0.25 1.");
 	CLASS_ATTR_STYLE_LABEL(c, "legendcolor", 0, "rgba", "Legend Text Color");
 	// @description Sets the color of the legend.
 
-	CLASS_ATTR_RGBA(c, "turtlecolor", 0, t_catart, j_turtlecolor);
+	CLASS_ATTR_RGBA(c, "turtlecolor", 0, t_cartesian, j_turtlecolor);
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c, "turtlecolor", 0, "0.34 0.87 0.20 1.");
 	CLASS_ATTR_STYLE_LABEL(c, "turtlecolor", 0, "rgba", "Turtle Color");
 	// @description Sets the color of the turtle.
 
-    CLASS_ATTR_RGBA(c, "graincolor", 0, t_catart, j_graincolor);
+    CLASS_ATTR_RGBA(c, "graincolor", 0, t_cartesian, j_graincolor);
     CLASS_ATTR_DEFAULT_SAVE_PAINT(c, "graincolor", 0, "0. 0. 0. 1.");
     CLASS_ATTR_STYLE_LABEL(c, "graincolor", 0, "rgba", "Default Grain Color");
     // @description Sets the default grain color.
@@ -527,20 +529,20 @@ int C74_EXPORT main(void)
 
 	CLASS_STICKY_ATTR(c,"category",0,"Settings");
 	
-	CLASS_ATTR_SYM(c,			"query",			ATTR_SET_DEFER_LOW,	t_catart, d_query);
-	CLASS_ATTR_ACCESSORS(c,		"query",			NULL, catart_set_query);
+	CLASS_ATTR_SYM(c,			"query",			ATTR_SET_DEFER_LOW,	t_cartesian, d_query);
+	CLASS_ATTR_ACCESSORS(c,		"query",			NULL, cartesian_set_query);
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"query",0,"");
 	CLASS_ATTR_INVISIBLE(c, "query", ATTR_GET_OPAQUE | ATTR_SET_OPAQUE);
-	// @exclude dada.catart
+	// @exclude dada.cartesian
 	
-	CLASS_ATTR_SYM(c, "where", ATTR_SET_DEFER, t_catart, d_where);
+	CLASS_ATTR_SYM(c, "where", ATTR_SET_DEFER, t_cartesian, d_where);
     CLASS_ATTR_STYLE_LABEL(c, "where", 0, "text", "Where Clause For Display Query"); 
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"where",0,"");
-    CLASS_ATTR_ACCESSORS(c,		"where",			NULL, catart_set_where);
+    CLASS_ATTR_ACCESSORS(c,		"where",			NULL, cartesian_set_where);
 	// @description Sets the SQLite 'WHERE' clause to sieve displayed data.
 
-	CLASS_ATTR_SYM(c,			"database",			ATTR_SET_DEFER_LOW,	t_catart, d_database);
-	CLASS_ATTR_ACCESSORS(c,		"database",			NULL, catart_set_database);
+	CLASS_ATTR_SYM(c,			"database",			ATTR_SET_DEFER_LOW,	t_cartesian, d_database);
+	CLASS_ATTR_ACCESSORS(c,		"database",			NULL, cartesian_set_database);
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"database",0,"");
 	CLASS_ATTR_SAVE(c,			"database",			0);
     CLASS_ATTR_STYLE_LABEL(c,	"database", 0, "text", "Database Name");
@@ -548,30 +550,30 @@ int C74_EXPORT main(void)
 	// @description Sets the database name. The database must be instantiated via a <o>dada.base</o> object having such name.
 	
 
-	CLASS_ATTR_SYM(c, "table", ATTR_SET_DEFER_LOW, t_catart, tablename);
+	CLASS_ATTR_SYM(c, "table", ATTR_SET_DEFER_LOW, t_cartesian, tablename);
     CLASS_ATTR_STYLE_LABEL(c, "table", 0, "text", "Table Name");
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"table",0,"");
     CLASS_ATTR_BASIC(c, "table", 0);
 	// @description Sets the name of the database table to be displayed.
     
 
-    CLASS_ATTR_CHAR(c, "mode", 0, t_catart, mode);
+    CLASS_ATTR_CHAR(c, "mode", 0, t_cartesian, mode);
     CLASS_ATTR_STYLE_LABEL(c, "mode", 0, "text", "Display Mode");
     CLASS_ATTR_ENUMINDEX(c,"mode", 0, "Cartesian Convex Combination");
     CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"mode",0,"");
     // @description Sets the display mode: Cartesian (default) or Convex Combination
     
-    CLASS_ATTR_DOUBLE_VARSIZE(c, "convexcombmin", 0, t_catart, field_convexcomb_min, field_convexcomb_size, DADA_CATART_MAX_CONVEXCOMB);
+    CLASS_ATTR_DOUBLE_VARSIZE(c, "convexcombmin", 0, t_cartesian, field_convexcomb_min, field_convexcomb_size, DADA_CARTESIAN_MAX_CONVEXCOMB);
     CLASS_ATTR_STYLE_LABEL(c, "convexcombmin", 0, "text", "Convex Combination Minimum Values");
     CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"convexcombmin",0,"");
     // @description Sets the minimum values for the fields to be used as vertices in Convex Combination <m>mode</m>.
 
-    CLASS_ATTR_DOUBLE_VARSIZE(c, "convexcombmax", 0, t_catart, field_convexcomb_max, field_convexcomb_size, DADA_CATART_MAX_CONVEXCOMB);
+    CLASS_ATTR_DOUBLE_VARSIZE(c, "convexcombmax", 0, t_cartesian, field_convexcomb_max, field_convexcomb_size, DADA_CARTESIAN_MAX_CONVEXCOMB);
     CLASS_ATTR_STYLE_LABEL(c, "convexcombmax", 0, "text", "Convex Combination Maximum Values");
     CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"convexcombmax",0,"");
     // @description Sets the maximum values for the fields to be used as vertices in Convex Combination <m>mode</m>.
     
-    CLASS_ATTR_ATOM(c, "convexcombp", 0, t_catart, field_convexcomb_norm);
+    CLASS_ATTR_ATOM(c, "convexcombp", 0, t_cartesian, field_convexcomb_norm);
     CLASS_ATTR_STYLE_LABEL(c, "convexcombp", 0, "text", "Convex Combination P Value");
     CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"convexcombp",0,"2.");
     // @description Sets the p value of the norm used in Convex Combination <m>mode</m>.
@@ -583,35 +585,35 @@ int C74_EXPORT main(void)
 
     CLASS_STICKY_ATTR(c,"category",0,"Fields");
 	
-	CLASS_ATTR_SYM(c, "xfield", 0, t_catart, field_x);
+	CLASS_ATTR_SYM(c, "xfield", 0, t_cartesian, field_x);
     CLASS_ATTR_STYLE_LABEL(c, "xfield", 0, "text", "X Axis Field");
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"xfield",0,"none");
     CLASS_ATTR_BASIC(c, "xfield", 0);
 	// @description Sets the name of the field (column) to be displayed on the X axis.
 
-	CLASS_ATTR_SYM(c, "yfield", 0, t_catart, field_y);
+	CLASS_ATTR_SYM(c, "yfield", 0, t_cartesian, field_y);
     CLASS_ATTR_STYLE_LABEL(c, "yfield", 0, "text", "Y Axis Field");
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"yfield",0,"none");
     CLASS_ATTR_BASIC(c, "yfield", 0);
 	// @description Sets the name of the field (column) to be displayed on the Y axis.
 
-	CLASS_ATTR_SYM(c, "sizefield", 0, t_catart, field_size);
+	CLASS_ATTR_SYM(c, "sizefield", 0, t_cartesian, field_size);
     CLASS_ATTR_STYLE_LABEL(c, "sizefield", 0, "text", "Size Range Field");
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"sizefield",0,"none");
 	// @description Sets the name of the field (column) to be mapped on the grain size, if any (use "none" to avoid defining it).
 
-	CLASS_ATTR_SYM(c, "colorfield", 0, t_catart, field_color);
+	CLASS_ATTR_SYM(c, "colorfield", 0, t_cartesian, field_color);
     CLASS_ATTR_STYLE_LABEL(c, "colorfield", 0, "text", "Color Spectrum Field");
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"colorfield",0,"none");
 	// @description Sets the name of the field (column) to be mapped on the grain color, if any (use "none" to avoid defining it).
 	
-	CLASS_ATTR_SYM(c, "shapefield", 0, t_catart, field_shape);
+	CLASS_ATTR_SYM(c, "shapefield", 0, t_cartesian, field_shape);
     CLASS_ATTR_STYLE_LABEL(c, "shapefield", 0, "text", "Shape Field");
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"shapefield",0,"none");
 	// @description Sets the name of the field (column) to be mapped on the grain shape, if any (use "none" to avoid defining it).
 	// Must be an integer field (1 being mapped to a circle, 2 to a triangle, 3 to a square, and so on)
 	
-    CLASS_ATTR_SYM_VARSIZE(c, "contentfield", 0, t_catart, field_content, field_content_size, DADA_CATART_MAX_CONTENTFIELDS);
+    CLASS_ATTR_SYM_VARSIZE(c, "contentfield", 0, t_cartesian, field_content, field_content_size, DADA_CARTESIAN_MAX_CONTENTFIELDS);
     CLASS_ATTR_STYLE_LABEL(c, "contentfield", 0, "text", "Content Field(s)");
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"contentfield",0,"content");
     CLASS_ATTR_BASIC(c, "contentfield", 0);
@@ -619,23 +621,23 @@ int C74_EXPORT main(void)
 	// when the grain is clicked or hovered (usually a score gathered syntax).
 
     
-    CLASS_ATTR_SYM_VARSIZE(c, "convexcombfield", 0, t_catart, field_convexcomb, field_convexcomb_size, DADA_CATART_MAX_CONVEXCOMB);
+    CLASS_ATTR_SYM_VARSIZE(c, "convexcombfield", 0, t_cartesian, field_convexcomb, field_convexcomb_size, DADA_CARTESIAN_MAX_CONVEXCOMB);
     CLASS_ATTR_STYLE_LABEL(c, "convexcombfield", 0, "text", "Convex Combination Fields");
     CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"convexcombfield",0,"none");
     // @description Sets the names of the fields to be used as vertices in Convex Combination <m>mode</m>.
     
     
-	CLASS_ATTR_SYM(c, "bpmfield", 0, t_catart, field_bpm);
+	CLASS_ATTR_SYM(c, "bpmfield", 0, t_cartesian, field_bpm);
     CLASS_ATTR_STYLE_LABEL(c, "bpmfield", 0, "text", "BPM Field");
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"bpmfield",0,"none");
 	// @description Sets the name of the field (column) bearing the BPM value, if any (use "none" to avoid defining it).
 	
-	CLASS_ATTR_SYM(c, "phasefield", 0, t_catart, field_phase);
+	CLASS_ATTR_SYM(c, "phasefield", 0, t_cartesian, field_phase);
     CLASS_ATTR_STYLE_LABEL(c, "phasefield", 0, "text", "BPM Phase Field");
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"phasefield",0,"none");
 	// @description Sets the name of the field (column) bearing the BPM phase value, if any (use "none" to avoid defining it).
 
-    CLASS_ATTR_SYM(c, "lengthfield", 0, t_catart, field_length);
+    CLASS_ATTR_SYM(c, "lengthfield", 0, t_cartesian, field_length);
     CLASS_ATTR_STYLE_LABEL(c, "lengthfield", 0, "text", "Length Field (Milliseconds)");
     CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"lengthfield",0,"none");
     // @description Sets the name of the field (column) bearing the length of the content (in milliseconds), if any (use "none" to avoid defining it).
@@ -647,19 +649,19 @@ int C74_EXPORT main(void)
 	
 	CLASS_STICKY_ATTR(c,"category",0,"Behavior");
 	
-	CLASS_ATTR_CHAR(c, "autozoomwhenupdated", 0, t_catart, autozoom);
+	CLASS_ATTR_CHAR(c, "autozoomwhenupdated", 0, t_cartesian, autozoom);
     CLASS_ATTR_STYLE_LABEL(c, "autozoomwhenupdated", 0, "onoff", "Auto Zoom When Updated");
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"autozoomwhenupdated",0,"1");
 	// @description Toggles the ability to zoom automatically when the database is updated.
 
-    CLASS_ATTR_CHAR(c, "relativeturtle", 0, t_catart, relative_turtling);
+    CLASS_ATTR_CHAR(c, "relativeturtle", 0, t_cartesian, relative_turtling);
     CLASS_ATTR_STYLE_LABEL(c, "relativeturtle", 0, "onoff", "Relative Turtling");
     CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"relativeturtle",0,"0");
     // @description If <m>relativeturtle</m> is on, the values used for the <m>turtle</m>, <m>setturtle</m> and <m>turtledelta</m> messages
     // are expected to be between 0 and 1, corresponding to the minimum and maximum coordinates displayed in the domain and range of the object
     // (caveat: more precisely, to the domain and range of the latest painted view of the object).
     
-    CLASS_ATTR_CHAR(c, "relativeknn", 0, t_catart, relative_knn);
+    CLASS_ATTR_CHAR(c, "relativeknn", 0, t_cartesian, relative_knn);
     CLASS_ATTR_STYLE_LABEL(c, "relativeknn", 0, "onoff", "Relative KNN");
     CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"relativeknn",0,"0");
     // @description If <m>relativeknn</m> is on, the values used for the <m>knn</m> message
@@ -672,37 +674,37 @@ int C74_EXPORT main(void)
 
     CLASS_STICKY_ATTR(c,"category",0,"Play");
 
-    CLASS_ATTR_CHAR(c, "beatsync", 0, t_catart, beat_sync);
+    CLASS_ATTR_CHAR(c, "beatsync", 0, t_cartesian, beat_sync);
     CLASS_ATTR_STYLE_LABEL(c, "beatsync", 0, "onoff", "Beat Synchronous Interface Play");
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"beatsync",0,"0");
     CLASS_ATTR_BASIC(c, "beatsync", 0);
 	// @description Toggles the ability to postpone playing of grains depending on the beat grid
 	// given from the current tempo (see <m>bpmfield</m>) and depending on the grain phase (see <m>phasefield</m>).
 
-    CLASS_ATTR_DOUBLE(c, "mindist", 0, t_catart, antibis_ms);
+    CLASS_ATTR_DOUBLE(c, "mindist", 0, t_cartesian, antibis_ms);
     CLASS_ATTR_STYLE_LABEL(c, "mindist", 0, "text", "Grains Scheduling Separation Time");
     CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"mindist",0,"0");
     // @description Sets a minimum distance (in milliseconds) for two grains to be scheduled.
     // In <m>beatsync</m> mode, this avoids multiple grains to be scheduled at the same moment.
     // Use a negative number to turn this behavior off.
     
-    CLASS_ATTR_CHAR(c, "looplast", 0, t_catart, loop_last);
+    CLASS_ATTR_CHAR(c, "looplast", 0, t_cartesian, loop_last);
     CLASS_ATTR_STYLE_LABEL(c, "looplast", 0, "onoff", "Loop Last Played Grain");
     CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"looplast",0,"0");
     // @description Toggles the ability to loop the last played grain if no other grain has been sequenced.
 
-    CLASS_ATTR_CHAR(c, "stoploopwhennothovered", 0, t_catart, interrupt_looping_when_not_hovering);
+    CLASS_ATTR_CHAR(c, "stoploopwhennothovered", 0, t_cartesian, interrupt_looping_when_not_hovering);
     CLASS_ATTR_STYLE_LABEL(c, "stoploopwhennothovered", 0, "onoff", "Stop Looped Playing When Mouse Is Not Hovering");
     CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"stoploopwhennothovered",0,"1");
     // @description Toggles the ability to stop looped playing when mouse is not hovering any point
 
-    CLASS_ATTR_CHAR(c, "stoplooponmouseleave", 0, t_catart, interrupt_looping_on_mouseleave);
+    CLASS_ATTR_CHAR(c, "stoplooponmouseleave", 0, t_cartesian, interrupt_looping_on_mouseleave);
     CLASS_ATTR_STYLE_LABEL(c, "stoplooponmouseleave", 0, "onoff", "Stop Looped Playing When Mouse Leaves");
     CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"stoplooponmouseleave",0,"1");
     // @description Toggles the ability to stop looped playing when mouse leaves the object.
     
     
-    CLASS_ATTR_CHAR(c, "stopbeatsonmouseleave", 0, t_catart, interrupt_beatsync_on_mouseleave);
+    CLASS_ATTR_CHAR(c, "stopbeatsonmouseleave", 0, t_cartesian, interrupt_beatsync_on_mouseleave);
     CLASS_ATTR_STYLE_LABEL(c, "stopbeatsonmouseleave", 0, "onoff", "Stop Beat Sync Bangs When Mouse Leaves");
     CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"stopbeatsonmouseleave",0,"0");
     // @description Toggles the ability to stop beat sync bangs to be sent out from the last outlet when mouse leaves the object.
@@ -713,32 +715,32 @@ int C74_EXPORT main(void)
 	
 	CLASS_STICKY_ATTR(c,"category",0,"Appearance");
 
-	CLASS_ATTR_DOUBLE(c, "minr", 0, t_catart, minradius);
+	CLASS_ATTR_DOUBLE(c, "minr", 0, t_cartesian, minradius);
     CLASS_ATTR_STYLE_LABEL(c, "minr", 0, "text", "Minimum Point Radius");
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"minr",0,"2");
 	// @description Sets a minimum radius for point display.
 	
-	CLASS_ATTR_DOUBLE(c, "maxr", 0, t_catart, maxradius);
+	CLASS_ATTR_DOUBLE(c, "maxr", 0, t_cartesian, maxradius);
     CLASS_ATTR_STYLE_LABEL(c, "maxr", 0, "text", "Maximum Point Radius");
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"maxr",0,"8");
 	// @description Sets a maximum radius for point display.
 	
-	CLASS_ATTR_CHAR(c, "showlegend", 0, t_catart, show_legend);
+	CLASS_ATTR_CHAR(c, "showlegend", 0, t_cartesian, show_legend);
     CLASS_ATTR_STYLE_LABEL(c, "showlegend", 0, "onoff", "Show Legend");
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"showlegend",0,"1");
 	// @description Toggles the ability to display the point legend on mousehover.
 
-	CLASS_ATTR_CHAR(c, "showturtle", 0, t_catart, show_turtle);
+	CLASS_ATTR_CHAR(c, "showturtle", 0, t_cartesian, show_turtle);
     CLASS_ATTR_STYLE_LABEL(c, "showturtle", 0, "onoff", "Show Turtle");
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"showturtle",0,"1");
 	// @description Toggles the ability to display the turtle.
 	
-	CLASS_ATTR_DOUBLE(c, "legendsize", 0, t_catart, legend_text_size);
+	CLASS_ATTR_DOUBLE(c, "legendsize", 0, t_cartesian, legend_text_size);
     CLASS_ATTR_STYLE_LABEL(c, "legendsize", 0, "text", "Legend Text Size");
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"legendsize",0,"12");
 	// @description Sets the text font size for the legend.
 
-	CLASS_ATTR_DOUBLE(c, "alpha", 0, t_catart, point_alpha);
+	CLASS_ATTR_DOUBLE(c, "alpha", 0, t_cartesian, point_alpha);
     CLASS_ATTR_STYLE_LABEL(c, "alpha", 0, "text", "Point Opacity");
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"alpha",0,"50");
 	// @description Sets the transparency/opacity of displayed grains.
@@ -747,22 +749,22 @@ int C74_EXPORT main(void)
 
 	
 	class_register(CLASS_BOX, c); /* CLASS_NOBOX */
-	catart_class = c;
+	cartesian_class = c;
 
 	ps_dbview_update = gensym("dbview_update");
 	ps_dbview_query_changed = gensym("dbview_query_changed");
 
-	dev_post("dada.catart compiled %s %s", __DATE__, __TIME__);
+	dev_post("dada.cartesian compiled %s %s", __DATE__, __TIME__);
 	return 0;
 }
 
-void view_create_deferred(t_catart *x, t_symbol *msg, long ac, t_atom *av)
+void view_create_deferred(t_cartesian *x, t_symbol *msg, long ac, t_atom *av)
 {
     db_view_create(x->d_db, x->d_query->s_name, &x->d_view);
     object_attach_byptr_register(x, x->d_view, _sym_nobox);
 }
 
-t_max_err catart_set_query(t_catart *x, void *attr, long argc, t_atom *argv)
+t_max_err cartesian_set_query(t_cartesian *x, void *attr, long argc, t_atom *argv)
 {
     if (argc && argv) {
         x->d_query = atom_getsym(argv);
@@ -776,7 +778,7 @@ t_max_err catart_set_query(t_catart *x, void *attr, long argc, t_atom *argv)
 	return MAX_ERR_NONE;
 }
 
-t_max_err catart_set_where(t_catart *x, void *attr, long argc, t_atom *argv)
+t_max_err cartesian_set_where(t_cartesian *x, void *attr, long argc, t_atom *argv)
 {
     if (!argc)
         x->d_where = _llllobj_sym_empty_symbol;
@@ -789,7 +791,7 @@ t_max_err catart_set_where(t_catart *x, void *attr, long argc, t_atom *argv)
 
 
 
-t_max_err catart_set_database(t_catart *x, void *attr, long argc, t_atom *argv)
+t_max_err cartesian_set_database(t_cartesian *x, void *attr, long argc, t_atom *argv)
 {
 	t_max_err err;
 	
@@ -812,7 +814,7 @@ t_max_err catart_set_database(t_catart *x, void *attr, long argc, t_atom *argv)
 
 
 
-t_max_err catart_notify(t_catart *x, t_symbol *s, t_symbol *msg, void *sender, void *data)
+t_max_err cartesian_notify(t_cartesian *x, t_symbol *s, t_symbol *msg, void *sender, void *data)
 {
 	if (msg == _sym_attr_modified) {
 		t_symbol *attr_name = (t_symbol *)object_method((t_object *)data, _sym_getname);
@@ -842,16 +844,16 @@ t_max_err catart_notify(t_catart *x, t_symbol *s, t_symbol *msg, void *sender, v
 			attr_name == gensym("xfield") ||  attr_name == gensym("yfield") || attr_name == gensym("lengthfield") ||
             attr_name == gensym("where") || attr_name == gensym("database") || attr_name == gensym("mode") || attr_name == gensym("convexcombfield") || attr_name == gensym("convexcombmin") || attr_name == gensym("convexcombmax") || attr_name == gensym("convexcombp") || attr_name == gensym("alpha") || attr_name == gensym("maxr") || attr_name == gensym("minr"))  {
 			x->need_rebuild_grains = true;
-            catart_iar(x);
+            cartesian_iar(x);
         } else if (attr_name == gensym("center") || attr_name == gensym("zoom") || attr_name == gensym("vzoom") || attr_name == gensym("grid") || attr_name == gensym("graincolor")) {
-            catart_iar(x);
+            cartesian_iar(x);
 		} else
             jbox_redraw((t_jbox *)x);
 		
 	} else
 	if (sender == x->d_view) {
 		if (msg == ps_dbview_update) {
-			catart_bang(x);
+			cartesian_bang(x);
 		}
 		else if (msg == ps_dbview_query_changed) {	// dump all of the columns
 			t_object	*column = NULL;
@@ -880,41 +882,41 @@ t_max_err catart_notify(t_catart *x, t_symbol *s, t_symbol *msg, void *sender, v
 
 /*
 
-void catart_begin_preset(t_catart *x, t_symbol *s, long argc, t_atom *argv)
+void cartesian_begin_preset(t_cartesian *x, t_symbol *s, long argc, t_atom *argv)
 {
 	dadaobj_begin_preset(dadaobj_cast(x), s, argc, argv);
 }
 
-void catart_restore_preset(t_catart *x, t_symbol *s, long argc, t_atom *argv)
+void cartesian_restore_preset(t_cartesian *x, t_symbol *s, long argc, t_atom *argv)
 {
 	dadaobj_restore_preset(dadaobj_cast(x), s, argc, argv);
 }
 
-void catart_end_preset(t_catart *x)
+void cartesian_end_preset(t_cartesian *x)
 {
 	dadaobj_end_preset(dadaobj_cast(x));
 }
 
-void catart_preset(t_catart *x) {
+void cartesian_preset(t_cartesian *x) {
 	dadaobj_preset(dadaobj_cast(x));
 }
 
 
-void catart_jsave(t_catart *x, t_dictionary *d)
+void cartesian_jsave(t_cartesian *x, t_dictionary *d)
 {
 	if (x->b_ob.d_ob.save_data_with_patcher){
 		if (x->b_ob.r_ob.l_dictll) {
-			llll_store_in_dictionary(x->b_ob.r_ob.l_dictll, d, "catart_data", NULL);
+			llll_store_in_dictionary(x->b_ob.r_ob.l_dictll, d, "cartesian_data", NULL);
 		} else {
-			t_llll *data = catart_get_state(x);
-			llll_store_in_dictionary(data, d, "catart_data", NULL);
+			t_llll *data = cartesian_get_state(x);
+			llll_store_in_dictionary(data, d, "cartesian_data", NULL);
 			llll_free(data);
 		}
 	} 
 }
 */		
 
-void catart_assist(t_catart *x, void *b, long m, long a, char *s)
+void cartesian_assist(t_cartesian *x, void *b, long m, long a, char *s)
 {
 	if (m == ASSIST_INLET) { // @in 0 @type anything @digest Incoming <m>knn</m> message or <m>bang</m> to refresh
 		sprintf(s, "knn message or bang to refresh");
@@ -933,7 +935,7 @@ void catart_assist(t_catart *x, void *b, long m, long a, char *s)
 	}
 }
 
-void catart_free(t_catart *x)
+void cartesian_free(t_cartesian *x)
 {
 	db_view_remove(x->d_db, &x->d_view);
 	db_close(&x->d_db);
@@ -944,14 +946,14 @@ void catart_free(t_catart *x)
 }
 
 
-void catart_dump(t_catart *x)
+void cartesian_dump(t_cartesian *x)
 {
 	t_llllelem *elem;
 	t_llll *res = llll_get();
 	
 	systhread_mutex_lock(x->b_ob.d_ob.l_mutex);
 	for (elem = x->grains->l_head; elem; elem = elem->l_next) {
-		t_catart_grain *gr = (t_catart_grain *)hatom_getobj(&elem->l_hatom);
+		t_cartesian_grain *gr = (t_cartesian_grain *)hatom_getobj(&elem->l_hatom);
 		t_llll *gr_ll = get_grain_contentfield(x, gr);
 		llll_appendllll(res, gr_ll, 0, WHITENULL_llll);
 	}
@@ -962,7 +964,7 @@ void catart_dump(t_catart *x)
 }
 
 //// beat synchronous processing
-void catart_task(t_catart *x)
+void cartesian_task(t_cartesian *x)
 {
 	// *first* we send a bang, so that user might send any other message such as knn or anything similar
 	llllobj_outlet_bang((t_object *)x, LLLL_OBJ_UI, 3);
@@ -978,23 +980,23 @@ void catart_task(t_catart *x)
 }
 
 
-void *catart_new(t_symbol *s, long argc, t_atom *argv)
+void *cartesian_new(t_symbol *s, long argc, t_atom *argv)
 {
-	t_catart *x = NULL;
+	t_cartesian *x = NULL;
 	t_dictionary *d = NULL;
 	long boxflags;
 	
 	if (!(d = object_dictionaryarg(argc,argv)))
 		return NULL;    
 	
-	if ((x = (t_catart *)object_alloc_debug(catart_class))) {
+	if ((x = (t_cartesian *)object_alloc_debug(cartesian_class))) {
 		
 		x->grains = llll_get();
         x->scheduled_times = llll_get();
 		x->curr_beat_ms = 1000;
-        x->loop_clock = clock_new(x, (method)catart_loop_tick);
+        x->loop_clock = clock_new(x, (method)cartesian_loop_tick);
         
-        for (long i = 0; i < DADA_CATART_MAX_CONVEXCOMB; i++)
+        for (long i = 0; i < DADA_CARTESIAN_MAX_CONVEXCOMB; i++)
             x->field_convexcomb_max[i] = 1.;
 
  		
@@ -1018,8 +1020,8 @@ void *catart_new(t_symbol *s, long argc, t_atom *argv)
 		x->b_ob.r_ob.l_box.b_firstin = (t_object *)x;
 //		object_obex_store((void *)x, _sym_dumpout, (t_object*)outlet_new(x, NULL));
 
-		dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_SPLITXYZOOM | DADAOBJ_CENTEROFFSET, build_pt(5, 5), 3, 4, 2, (dada_paint_ext_fn)catart_paint_ext, (invalidate_and_redraw_fn)catart_iar, "vn", 2, "b444");
-		dadaobj_addfunctions(dadaobj_cast(x), (dada_mousemove_fn)catart_mousemove, (method)catart_task, NULL, NULL, NULL, NULL, NULL, NULL);
+		dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_SPLITXYZOOM | DADAOBJ_CENTEROFFSET, build_pt(5, 5), 3, 4, 2, (dada_paint_ext_fn)cartesian_paint_ext, (invalidate_and_redraw_fn)cartesian_iar, "vn", 2, "b444");
+		dadaobj_addfunctions(dadaobj_cast(x), (dada_mousemove_fn)cartesian_mousemove, (method)cartesian_task, NULL, NULL, NULL, NULL, NULL, NULL);
 
 		x->d_columns = hashtab_new(13);
 		hashtab_flags(x->d_columns, OBJ_FLAG_DATA);
@@ -1027,7 +1029,7 @@ void *catart_new(t_symbol *s, long argc, t_atom *argv)
 		x->d_database = gensym("");
 		x->tablename = _sym_nothing;
 
-		catart_initdataview(x);
+		cartesian_initdataview(x);
         
         attr_dictionary_process(x,d);
 		
@@ -1042,7 +1044,7 @@ void *catart_new(t_symbol *s, long argc, t_atom *argv)
 	return x;
 }
 
-void catart_initdataview(t_catart *x)
+void cartesian_initdataview(t_cartesian *x)
 {
 	x->d_dataview = (t_object*)jdataview_new();
 	jdataview_setclient(x->d_dataview, (t_object*)x);
@@ -1051,28 +1053,28 @@ void catart_initdataview(t_catart *x)
 }	
 
 
-void catart_int(t_catart *x, t_atom_long num)
+void cartesian_int(t_cartesian *x, t_atom_long num)
 {
 	t_atom argv[1]; 
 	atom_setlong(argv, num);
-	catart_anything(x, _sym_list, 1, argv);
+	cartesian_anything(x, _sym_list, 1, argv);
 }
 
-void catart_float(t_catart *x, double num)
+void cartesian_float(t_cartesian *x, double num)
 {
 	t_atom argv[1]; 
 	atom_setfloat(argv, num);
-	catart_anything(x, _sym_list, 1, argv);
+	cartesian_anything(x, _sym_list, 1, argv);
 }
 
-void catart_autozoom(t_catart *x)
+void cartesian_autozoom(t_cartesian *x)
 {
     dadaobj_cast(x)->m_zoom.must_autozoom = true;
-    catart_iar(x);
+    cartesian_iar(x);
 }
 
 
-void catart_clock(t_catart *x, t_symbol *s)
+void cartesian_clock(t_cartesian *x, t_symbol *s)
 {
     void *old = x->b_ob.d_ob.m_play.setclock->s_thing;
     t_object *c = 0;
@@ -1092,10 +1094,10 @@ void catart_clock(t_catart *x, t_symbol *s)
 
 
 
-void catart_bang(t_catart *x)
+void cartesian_bang(t_cartesian *x)
 {	
 	x->need_rebuild_grains = true;
-	catart_iar(x);
+	cartesian_iar(x);
 	return;
 /*	
 	t_object	*result = NULL;
@@ -1143,12 +1145,12 @@ void catart_bang(t_catart *x)
 	} */
 }
 
-void catart_clear(t_catart *x, char also_outside_current_world)
+void cartesian_clear(t_cartesian *x, char also_outside_current_world)
 {	
 	jbox_redraw((t_jbox *)x);
 }
 
-void catart_dump(t_catart *x, char get_world, char get_notes)
+void cartesian_dump(t_cartesian *x, char get_world, char get_notes)
 {	
 	;
 }
@@ -1156,8 +1158,8 @@ void catart_dump(t_catart *x, char get_world, char get_notes)
 
 long sort_by_pt_distance_fn(void *data, t_llllelem *a, t_llllelem *b)
 {
-	t_catart_grain *a_gr = (t_catart_grain *)hatom_getobj(&a->l_hatom);
-	t_catart_grain *b_gr = (t_catart_grain *)hatom_getobj(&b->l_hatom);
+	t_cartesian_grain *a_gr = (t_cartesian_grain *)hatom_getobj(&a->l_hatom);
+	t_cartesian_grain *b_gr = (t_cartesian_grain *)hatom_getobj(&b->l_hatom);
 	t_pt coord = *((t_pt *)data);
 	
 	return (pt_pt_distance_squared(a_gr->coord, coord) <= pt_pt_distance_squared(b_gr->coord, coord));
@@ -1165,8 +1167,8 @@ long sort_by_pt_distance_fn(void *data, t_llllelem *a, t_llllelem *b)
 
 long sort_by_pt_distance_relative_fn(void *data, t_llllelem *a, t_llllelem *b)
 {
-    t_catart_grain *a_gr = (t_catart_grain *)hatom_getobj(&a->l_hatom);
-    t_catart_grain *b_gr = (t_catart_grain *)hatom_getobj(&b->l_hatom);
+    t_cartesian_grain *a_gr = (t_cartesian_grain *)hatom_getobj(&a->l_hatom);
+    t_cartesian_grain *b_gr = (t_cartesian_grain *)hatom_getobj(&b->l_hatom);
     t_pt coord = *((t_pt *)(((void **)data)[0]));
     t_rect relative_rect = *((t_rect *)(((void **)data)[1]));
     
@@ -1179,7 +1181,7 @@ long sort_by_pt_distance_relative_fn(void *data, t_llllelem *a, t_llllelem *b)
 
 
 
-t_llll *catart_get_knn(t_catart *x, long num_neighbors, t_pt coord, t_catart_grain *but_not_this_grain, char coord_are_01)
+t_llll *cartesian_get_knn(t_cartesian *x, long num_neighbors, t_pt coord, t_cartesian_grain *but_not_this_grain, char coord_are_01)
 {
 	t_llllelem *elem;
 	long count;
@@ -1198,7 +1200,7 @@ t_llll *catart_get_knn(t_catart *x, long num_neighbors, t_pt coord, t_catart_gra
 	
 	t_llll *res = llll_get();
 	for (elem = x->grains->l_head, count = 0; elem && count < num_neighbors; elem = elem->l_next){
-		if (but_not_this_grain && but_not_this_grain == (t_catart_grain *)hatom_getobj(&elem->l_hatom))
+		if (but_not_this_grain && but_not_this_grain == (t_cartesian_grain *)hatom_getobj(&elem->l_hatom))
 			continue;
 		llll_appendobj(res, hatom_getobj(&elem->l_hatom), 0, WHITENULL_llll);
 		count++;
@@ -1207,14 +1209,14 @@ t_llll *catart_get_knn(t_catart *x, long num_neighbors, t_pt coord, t_catart_gra
 	return res;
 }
 
-t_catart_grain *catart_get_1nn(t_catart *x, t_pt coord, t_catart_grain *but_not_this_grain, char coord_are_01)
+t_cartesian_grain *cartesian_get_1nn(t_cartesian *x, t_pt coord, t_cartesian_grain *but_not_this_grain, char coord_are_01)
 {
-	t_catart_grain *gr = NULL;
+	t_cartesian_grain *gr = NULL;
 	
-	t_llll *res = catart_get_knn(x, 1, coord, but_not_this_grain, coord_are_01);
+	t_llll *res = cartesian_get_knn(x, 1, coord, but_not_this_grain, coord_are_01);
 	
 	if (res->l_head) 
-		gr = (t_catart_grain *)hatom_getobj(&res->l_head->l_hatom);
+		gr = (t_cartesian_grain *)hatom_getobj(&res->l_head->l_hatom);
 	
 	llll_free(res);
 	return gr;
@@ -1223,17 +1225,17 @@ t_catart_grain *catart_get_1nn(t_catart *x, t_pt coord, t_catart_grain *but_not_
 
 
 
-t_catart_grain *catart_get_grain_from_table_id(t_catart *x, long table_id)
+t_cartesian_grain *cartesian_get_grain_from_table_id(t_cartesian *x, long table_id)
 {
     for (t_llllelem *elem = x->grains->l_head; elem; elem = elem->l_next) {
-        t_catart_grain *gr = (t_catart_grain *)hatom_getobj(&elem->l_hatom);
+        t_cartesian_grain *gr = (t_cartesian_grain *)hatom_getobj(&elem->l_hatom);
         if (gr->db_id == table_id)
             return gr;
     }
     return NULL;
 }
 
-t_catart_grain *catart_get_grain_from_field_value(t_catart *x, t_symbol *fieldname, char *value)
+t_cartesian_grain *cartesian_get_grain_from_field_value(t_cartesian *x, t_symbol *fieldname, char *value)
 {
     char query[2048];
     t_symbol *tablename = x->tablename;
@@ -1241,7 +1243,7 @@ t_catart_grain *catart_get_grain_from_field_value(t_catart *x, t_symbol *fieldna
     t_db_result	*result = NULL;
     snprintf_zero(query, 2048, "SELECT %s FROM %s WHERE %s IS %s", tablenameid->s_name, tablename->s_name, fieldname->s_name, value);
     t_max_err err = db_query(x->d_db, &result, query);
-    t_catart_grain *gr = NULL;
+    t_cartesian_grain *gr = NULL;
     
     if (err)
         object_error((t_object *)x, "Error while retrieving grain! Check the fieldname and value specifications.");
@@ -1251,7 +1253,7 @@ t_catart_grain *catart_get_grain_from_field_value(t_catart *x, t_symbol *fieldna
         
         if (numrecords >= 1 && numfields >= 1) {
             long id = db_result_long_local(result, 0, 0);
-            gr = catart_get_grain_from_table_id(x, id);
+            gr = cartesian_get_grain_from_table_id(x, id);
             if (!gr)
                 object_warn((t_object *)x, "Warning: the found grain is currently not displayed.");
         } else {
@@ -1266,27 +1268,27 @@ t_catart_grain *catart_get_grain_from_field_value(t_catart *x, t_symbol *fieldna
 
 // Beware, will modify args!!!!
 // But won't free it
-void catart_setturtle(t_catart *x, t_llll *args)
+void cartesian_setturtle(t_cartesian *x, t_llll *args)
 {
     dadaobj_mutex_lock(dadaobj_cast(x));
     if (hatom_gettype(&args->l_head->l_hatom) == H_LLLL) {
         // The grain can be the nearest grain to an (x y) value...
         t_pt pt = llll_to_pt(hatom_getllll(&args->l_head->l_hatom));
-        x->turtled_grain = catart_get_1nn(x, pt, NULL, x->relative_turtling);
+        x->turtled_grain = cartesian_get_1nn(x, pt, NULL, x->relative_turtling);
     } else if (hatom_gettype(&args->l_head->l_hatom) == H_SYM) {
         // ... or the grain having a certain field set to a certain value
         char *  valuestr = NULL;
         t_symbol *tablename = hatom_getsym(&args->l_head->l_hatom);
         llll_behead(args);
         llll_to_text_buf(args, &valuestr, 0, BACH_DEFAULT_MAXDECIMALS, LLLL_T_NONE, LLLL_TE_SQL_STYLE, LLLL_TB_SQL_STYLE, NULL);
-        x->turtled_grain = catart_get_grain_from_field_value(x, tablename, valuestr);
+        x->turtled_grain = cartesian_get_grain_from_field_value(x, tablename, valuestr);
         bach_freeptr(valuestr);
     }
     dadaobj_mutex_unlock(dadaobj_cast(x));
 }
 
 
-void catart_anything(t_catart *x, t_symbol *msg, long ac, t_atom *av)
+void cartesian_anything(t_cartesian *x, t_symbol *msg, long ac, t_atom *av)
 {
 	dadaobj_anything(dadaobj_cast(x), msg, ac, av);
 	
@@ -1298,11 +1300,11 @@ void catart_anything(t_catart *x, t_symbol *msg, long ac, t_atom *av)
         if (dadaobj_anything_handle_domain_or_range(dadaobj_cast(x), router, parsed, 2)) {
             // nothing to do!
         } else if (router == gensym("knn") && parsed->l_size >= 2 && hatom_gettype(&parsed->l_head->l_hatom) == H_LONG && hatom_gettype(&parsed->l_head->l_next->l_hatom) == H_LLLL) {
-            t_llll *grains_knn = catart_get_knn(x, hatom_getlong(&parsed->l_head->l_hatom), llll_to_pt(hatom_getllll(&parsed->l_head->l_next->l_hatom)), NULL, x->relative_knn);
+            t_llll *grains_knn = cartesian_get_knn(x, hatom_getlong(&parsed->l_head->l_hatom), llll_to_pt(hatom_getllll(&parsed->l_head->l_next->l_hatom)), NULL, x->relative_knn);
             t_llllelem *elem;
             t_llll *out = llll_get();
             for (elem = grains_knn->l_head; elem; elem = elem->l_next)  {
-                t_llll *this_content = get_grain_contentfield(x, (t_catart_grain *)hatom_getobj(&elem->l_hatom));
+                t_llll *this_content = get_grain_contentfield(x, (t_cartesian_grain *)hatom_getobj(&elem->l_hatom));
                 llll_appendllll(out, this_content, 0, WHITENULL_llll);
             }
             
@@ -1317,11 +1319,11 @@ void catart_anything(t_catart *x, t_symbol *msg, long ac, t_atom *av)
             llll_free(out);
             
         } else if (router == gensym("setturtle") && parsed->l_size >= 1) {
-            catart_setturtle(x, parsed);
+            cartesian_setturtle(x, parsed);
             jbox_redraw((t_jbox *)x);
             
         } else if (router == gensym("turtle") && parsed->l_size >= 1) {
-            catart_setturtle(x, parsed);
+            cartesian_setturtle(x, parsed);
             if (x->turtled_grain)
                 output_grain_contentfield(x, x->turtled_grain, gensym("turtle"), x->beat_sync);
             jbox_redraw((t_jbox *)x);
@@ -1337,7 +1339,7 @@ void catart_anything(t_catart *x, t_symbol *msg, long ac, t_atom *av)
             if (x->turtled_grain && x->relative_turtling) {
                 previous = build_pt((x->turtled_grain->coord.x - x->domain_min)/(x->domain_max - x->domain_min), (x->turtled_grain->coord.y - x->range_min)/(x->range_max - x->range_min));
             }
-            if ((x->turtled_grain = catart_get_1nn(x, pt_pt_sum(previous, delta), x->turtled_grain, x->relative_turtling)))
+            if ((x->turtled_grain = cartesian_get_1nn(x, pt_pt_sum(previous, delta), x->turtled_grain, x->relative_turtling)))
                 output_grain_contentfield(x, x->turtled_grain, gensym("turtle"), x->beat_sync);
             jbox_redraw((t_jbox *)x);
         }
@@ -1345,7 +1347,7 @@ void catart_anything(t_catart *x, t_symbol *msg, long ac, t_atom *av)
     llll_free(parsed);
 }
 
-void clear_grains(t_catart *x)
+void clear_grains(t_cartesian *x)
 {
     t_llllelem *elem;
 	for (elem = x->grains->l_head; elem; elem = elem->l_next)
@@ -1371,7 +1373,7 @@ void convexcomb_to_xy(double *val, long num_vals, double *xv, double *yv, double
 }
 
 
-long build_grains(t_catart *x)
+long build_grains(t_cartesian *x)
 {
     long num_output_grains = 0;
     
@@ -1609,7 +1611,7 @@ long build_grains(t_catart *x)
     char query[DADA_QUERY_ALLOC_CHAR_SIZE];
     long query_alloc = DADA_QUERY_ALLOC_CHAR_SIZE;
     
-    if (x->mode == DADA_CATART_MODE_CARTESIAN) {
+    if (x->mode == DADA_CARTESIAN_MODE_CARTESIAN) {
         snprintf_zero(query, query_alloc, "SELECT %s,%s,%s,%s,%s,%s,%s,%s,%s FROM %s",
                       idname->s_name, xfield->s_name, yfield->s_name, colorfield->s_name, sizefield->s_name, shapefield->s_name, bpmfield->s_name, phasefield->s_name, lengthfield->s_name, tablename->s_name);
     } else {
@@ -1641,11 +1643,11 @@ long build_grains(t_catart *x)
             if (!record) continue;
             
 			// add grain
-			t_catart_grain *gr = (t_catart_grain *)bach_newptr(sizeof(t_catart_grain));
+			t_cartesian_grain *gr = (t_cartesian_grain *)bach_newptr(sizeof(t_cartesian_grain));
 			double val_x, val_y, val_col, val_size, val_shape;
             num_output_grains++;
 			
-            if (x->mode == DADA_CATART_MODE_CARTESIAN) {
+            if (x->mode == DADA_CARTESIAN_MODE_CARTESIAN) {
                 if (x->field_x_is_string) {
                     atom_setsym(&gr->field_x, gensym(record[1]));
                     val_x = find_symbol_in_symbol_array(gr->field_x.a_w.w_sym, field_x_unique_sym, field_x_unique_sym_size);
@@ -1664,7 +1666,7 @@ long build_grains(t_catart *x)
             } else {
                 // convex combination
                 long j;
-                double res[DADA_CATART_MAX_CONVEXCOMB];
+                double res[DADA_CARTESIAN_MAX_CONVEXCOMB];
                 for (j = 0; j < x->field_convexcomb_size; j++) {
                     if (x->field_convexcomb_max[j] > x->field_convexcomb_min[j])
                         res[j] = CLAMP(atof(record[1+j]), x->field_convexcomb_min[j], x->field_convexcomb_max[j]);
@@ -1730,7 +1732,7 @@ long build_grains(t_catart *x)
 }
 
 
-void rebuild_grains(t_catart *x, char preserve_turtle)
+void rebuild_grains(t_cartesian *x, char preserve_turtle)
 {
     dadaobj_mutex_lock(dadaobj_cast(x));
     // preserve turtle?
@@ -1743,7 +1745,7 @@ void rebuild_grains(t_catart *x, char preserve_turtle)
     if (preserve_turtle && db_ID >= 0) {
         t_llllelem *elem;
         for (elem = x->grains->l_head; elem; elem = elem->l_next) {
-            t_catart_grain *gr = (t_catart_grain *)hatom_getobj(&elem->l_hatom);
+            t_cartesian_grain *gr = (t_cartesian_grain *)hatom_getobj(&elem->l_hatom);
             if (gr->db_id == db_ID) {
                 x->turtled_grain = gr;
                 break;
@@ -1766,7 +1768,7 @@ void rebuild_grains(t_catart *x, char preserve_turtle)
 
 
 //// GRAPHIC DRAWING
-void catart_paint_grains(t_catart *x, t_jgraphics *g, t_object *view, t_rect rect, t_pt center, t_dada_force_graphics *force_graphics)
+void cartesian_paint_grains(t_cartesian *x, t_jgraphics *g, t_object *view, t_rect rect, t_pt center, t_dada_force_graphics *force_graphics)
 {
 	
 	char use_layers = false;
@@ -1781,12 +1783,11 @@ void catart_paint_grains(t_catart *x, t_jgraphics *g, t_object *view, t_rect rec
 		
 		t_llllelem *elem;
 		for (elem = x->grains->l_head; elem; elem = elem->l_next) {
-			t_catart_grain *gr = (t_catart_grain *)hatom_getobj(&elem->l_hatom);
+			t_cartesian_grain *gr = (t_cartesian_grain *)hatom_getobj(&elem->l_hatom);
 			t_pt pt = coord_to_pix(dadaobj_cast(x), center, gr->coord);
             
             if (pt.x + gr->radius_px >= 0 && pt.x - gr->radius_px <= rect.width &&
                 pt.y + gr->radius_px >= 0 && pt.y - gr->radius_px <= rect.height) {
-                
                 if (gr->shape <= 0)
                     paint_circle_filled(g, gr->color, pt.x, pt.y, gr->radius_px);
                 else
@@ -1804,7 +1805,7 @@ void catart_paint_grains(t_catart *x, t_jgraphics *g, t_object *view, t_rect rec
 }
 
 
-char *catart_atom_to_string(t_atom *a, long max_decimals)
+char *cartesian_atom_to_string(t_atom *a, long max_decimals)
 {
     if (!a) {
         char *res = (char *)bach_newptr(1 * sizeof(char));
@@ -1827,7 +1828,7 @@ char *catart_atom_to_string(t_atom *a, long max_decimals)
 	}
 }
 
-void catart_paint_ext(t_catart *x, t_object *view, t_dada_force_graphics *force_graphics)
+void cartesian_paint_ext(t_cartesian *x, t_object *view, t_dada_force_graphics *force_graphics)
 {
 	
     t_jgraphics *g = force_graphics->graphic_context;
@@ -1839,7 +1840,7 @@ void catart_paint_ext(t_catart *x, t_object *view, t_dada_force_graphics *force_
         rebuild_grains(x, true);
     }
     if (view && dadaobj_cast(x)->m_zoom.must_autozoom) {
-        catart_autozoom_do(x, view);
+        cartesian_autozoom_do(x, view);
         dadaobj_cast(x)->m_zoom.must_autozoom = false;
     }
 
@@ -1854,7 +1855,7 @@ void catart_paint_ext(t_catart *x, t_object *view, t_dada_force_graphics *force_
     dadaobj_paint_grid(dadaobj_cast(x), view, force_graphics); // axis are inside here
 
 	// grains
-	catart_paint_grains(x, g, view, rect, center, force_graphics);
+	cartesian_paint_grains(x, g, view, rect, center, force_graphics);
 	
     // painting turtle, if any
     if (x->show_turtle && x->turtled_grain) {
@@ -1862,10 +1863,10 @@ void catart_paint_ext(t_catart *x, t_object *view, t_dada_force_graphics *force_
         paint_hexagon(g, &x->j_turtlecolor, NULL, pt, x->turtled_grain->radius_px + 4, 2, true);
     }
     
-    if (x->mode == DADA_CATART_MODE_CONVEXCOMB) {
+    if (x->mode == DADA_CARTESIAN_MODE_CONVEXCOMB) {
         t_jrgba polycolor = DADA_GREY_50;
         long i, n = x->field_convexcomb_size;
-        t_pt verts[DADA_CATART_MAX_CONVEXCOMB];
+        t_pt verts[DADA_CARTESIAN_MAX_CONVEXCOMB];
         for (i = 0; i < n; i++)
             verts[i] = coord_to_pix(dadaobj_cast(x), center, build_pt(cos(i * TWOPI/n), sin(i * TWOPI/n)));
 
@@ -1892,12 +1893,12 @@ void catart_paint_ext(t_catart *x, t_object *view, t_dada_force_graphics *force_
 	if (x->mousehover_grain) {
 		t_pt pt = coord_to_pix(dadaobj_cast(x), center, x->mousehover_grain->coord);
 //		post("%.2f, %.2f", x->mousehover_grain->coord.x, x->mousehover_grain->coord.y);
-		paint_circle_stroken(g, DADA_BLACK, pt.x, pt.y, x->mousehover_grain->radius_px + DADA_CATART_INTERFACE_GRAIN_TOLERANCE, 1);
+		paint_circle_stroken(g, DADA_BLACK, pt.x, pt.y, x->mousehover_grain->radius_px + DADA_CARTESIAN_INTERFACE_GRAIN_TOLERANCE, 1);
 		
 		if (x->show_legend) {
 			char legend[1024];
-            if (x->mode == DADA_CATART_MODE_CARTESIAN) {
-                char *str_x = catart_atom_to_string(&x->mousehover_grain->field_x, 2), *str_y = catart_atom_to_string(&x->mousehover_grain->field_y, 2);
+            if (x->mode == DADA_CARTESIAN_MODE_CARTESIAN) {
+                char *str_x = cartesian_atom_to_string(&x->mousehover_grain->field_x, 2), *str_y = cartesian_atom_to_string(&x->mousehover_grain->field_y, 2);
                 snprintf_zero(legend, 1024, "ID %ld, %s %s, %s %s", x->mousehover_grain->db_id, x->field_x->s_name, str_x, x->field_y->s_name, str_y);
                 bach_freeptr(str_x);
                 bach_freeptr(str_y);
@@ -1905,17 +1906,17 @@ void catart_paint_ext(t_catart *x, t_object *view, t_dada_force_graphics *force_
                 snprintf_zero(legend, 1024, "ID %ld", x->mousehover_grain->db_id);
 			
             if (!x->field_size_is_dummy) {
-				char *str_size = catart_atom_to_string(&x->mousehover_grain->field_size, 2);
+				char *str_size = cartesian_atom_to_string(&x->mousehover_grain->field_size, 2);
 				snprintf_zero(legend + strlen(legend), 1024 - strlen(legend), ", %s %s", x->field_size->s_name, str_size);
 				bach_freeptr(str_size);
 			}
 			if (!x->field_color_is_dummy) {
-				char *str_color = catart_atom_to_string(&x->mousehover_grain->field_color, 2);
+				char *str_color = cartesian_atom_to_string(&x->mousehover_grain->field_color, 2);
 				snprintf_zero(legend + strlen(legend), 1024 - strlen(legend), ", %s %s", x->field_color->s_name, str_color);
 				bach_freeptr(str_color);
 			}
 			if (!x->field_shape_is_dummy) {
-				char *str_shape = catart_atom_to_string(&x->mousehover_grain->field_shape, 2);
+				char *str_shape = cartesian_atom_to_string(&x->mousehover_grain->field_shape, 2);
 				snprintf_zero(legend + strlen(legend), 1024 - strlen(legend), ", %s %s", x->field_shape->s_name, str_shape);
 				bach_freeptr(str_shape);
 			}
@@ -1931,13 +1932,13 @@ void catart_paint_ext(t_catart *x, t_object *view, t_dada_force_graphics *force_
 }
 
 
-void catart_paint(t_catart *x, t_object *view)
+void cartesian_paint(t_cartesian *x, t_object *view)
 {
     dadaobj_paint(dadaobj_cast(x), view);
 }
 
 
-void catart_autozoom_do(t_catart *x, t_object *view)
+void cartesian_autozoom_do(t_cartesian *x, t_object *view)
 {
 	t_rect rect;
 	
@@ -1951,14 +1952,14 @@ void catart_autozoom_do(t_catart *x, t_object *view)
 	systhread_mutex_lock(x->b_ob.d_ob.l_mutex);
 
 	// Initialize
-	t_catart_grain *gr = (t_catart_grain *)hatom_getobj(&x->grains->l_head->l_hatom);
+	t_cartesian_grain *gr = (t_cartesian_grain *)hatom_getobj(&x->grains->l_head->l_hatom);
 	double max_x = gr->coord.x, min_x = gr->coord.x, max_y = gr->coord.y, min_y = gr->coord.y;
 
 	
-    if (x->mode == DADA_CATART_MODE_CARTESIAN) {
+    if (x->mode == DADA_CARTESIAN_MODE_CARTESIAN) {
         t_llllelem *elem;
         for (elem = x->grains->l_head->l_next; elem; elem = elem->l_next) {
-            t_catart_grain *gr = (t_catart_grain *)hatom_getobj(&elem->l_hatom);
+            t_cartesian_grain *gr = (t_cartesian_grain *)hatom_getobj(&elem->l_hatom);
             if (gr->coord.x > max_x)
                 max_x = gr->coord.x;
             if (gr->coord.y > max_y)
@@ -2001,23 +2002,23 @@ void catart_autozoom_do(t_catart *x, t_object *view)
 
 void popup_clear(t_dadaobj *d_ob, t_symbol *label, const t_llll *address) 
 {
-	t_catart *x = (t_catart *)d_ob->orig_obj;
-	catart_clear(x, false);
+	t_cartesian *x = (t_cartesian *)d_ob->orig_obj;
+	cartesian_clear(x, false);
 }
 
 void popup_evolve(t_dadaobj *d_ob, t_symbol *label, const t_llll *address) 
 {
-	t_catart *x = (t_catart *)d_ob->orig_obj;
-	catart_bang(x);
+	t_cartesian *x = (t_cartesian *)d_ob->orig_obj;
+	cartesian_bang(x);
 }
 
 void popup_random(t_dadaobj *d_ob, t_symbol *label, const t_llll *address) 
 {
-	t_catart *x = (t_catart *)d_ob->orig_obj;
-	catart_random(x, hatom_getlong(&address->l_tail->l_hatom) == 3 ? 1 : 0, DADA_LIFE_DEFAULT_RANDOM_DENSITY, false) ;
+	t_cartesian *x = (t_cartesian *)d_ob->orig_obj;
+	cartesian_random(x, hatom_getlong(&address->l_tail->l_hatom) == 3 ? 1 : 0, DADA_LIFE_DEFAULT_RANDOM_DENSITY, false) ;
 }
 
-void show_bg_popup_menu(t_catart *x, t_object *patcherview, t_pt pt, long modifiers)
+void show_bg_popup_menu(t_cartesian *x, t_object *patcherview, t_pt pt, long modifiers)
 {
 	ezdisplay_popup_menu(dadaobj_cast(x), patcherview,
 						 (char *)"Center View Reset Zoom Clear separator Next Generation separator (Random Configuration Uniform Gaussian)", 
@@ -2029,7 +2030,7 @@ void show_bg_popup_menu(t_catart *x, t_object *patcherview, t_pt pt, long modifi
 ////////// INTERFACE FUNCTIONS
 
 // returns the content field already cloned
-t_llll *get_grain_contentfield(t_catart *x, t_catart_grain *gr)
+t_llll *get_grain_contentfield(t_cartesian *x, t_cartesian_grain *gr)
 {
 	t_max_err	err = MAX_ERR_NONE;
 	t_symbol *tablename = x->tablename;
@@ -2044,7 +2045,7 @@ t_llll *get_grain_contentfield(t_catart *x, t_catart_grain *gr)
         snprintf_zero(query, 8192, "SELECT %s FROM %s WHERE %s = %ld", x->field_content[f]->s_name, tablename->s_name, idname->s_name, gr->db_id);
         err = db_query(x->d_db, &result, query);
         
-        long type = catart_colname_to_coltype(x, tablename, x->field_content[f]);
+        long type = cartesian_colname_to_coltype(x, tablename, x->field_content[f]);
         
         if (err)
             dev_post("Error while executing query!!!");
@@ -2090,7 +2091,7 @@ t_llll *get_grain_contentfield(t_catart *x, t_catart_grain *gr)
 	return out;
 }
 
-void catart_loop_tick(t_catart *x)
+void cartesian_loop_tick(t_cartesian *x)
 {
     if (x->lastplayed_grain)
         output_grain_contentfield(x, x->lastplayed_grain, x->seq_router, 3);
@@ -2098,13 +2099,13 @@ void catart_loop_tick(t_catart *x)
 //    clock_fdelay(x->m_clock, x->m_interval);
 }
 
-void catart_send_grain(t_catart *x, t_symbol *s, long argc, t_atom *argv)
+void cartesian_send_grain(t_cartesian *x, t_symbol *s, long argc, t_atom *argv)
 {
     if (x->lastplayed_grain)
         output_grain_contentfield(x, x->lastplayed_grain, atom_getsym(argv), atom_getlong(argv+1));
 }
 
-void output_none_contentfield(t_catart *x, t_symbol *router)
+void output_none_contentfield(t_cartesian *x, t_symbol *router)
 {
     t_llll *ll = llll_get();
     llll_appendsym(ll, router, 0, WHITENULL_llll);
@@ -2113,7 +2114,7 @@ void output_none_contentfield(t_catart *x, t_symbol *router)
 }
 
 // mode = 0, MAIN THREAD; mode = 1: BEAT SYNC; mode = 2: SCHEDULER WITH DELAY = 0, mode = 3: SCHEDULED WITH DELAY > 0
-void output_grain_contentfield(t_catart *x, t_catart_grain *gr, t_symbol *router, char mode)
+void output_grain_contentfield(t_cartesian *x, t_cartesian_grain *gr, t_symbol *router, char mode)
 {
     t_llll *out = gr ? get_grain_contentfield(x, gr) : symbol2llll(_llllobj_sym_none);
 	
@@ -2125,7 +2126,7 @@ void output_grain_contentfield(t_catart *x, t_catart_grain *gr, t_symbol *router
         
         switch (mode) {
             case 1:
-                catart_schedule_interface_grain_llll(x, gr, out);
+                cartesian_schedule_interface_grain_llll(x, gr, out);
                 break;
             case 2:
             {
@@ -2156,20 +2157,20 @@ void output_grain_contentfield(t_catart *x, t_catart_grain *gr, t_symbol *router
 }
 
 
-t_catart_grain *pix_to_grain(t_catart *x, t_pt center, t_pt pix)
+t_cartesian_grain *pix_to_grain(t_cartesian *x, t_pt center, t_pt pix)
 {
 	t_llllelem *elem;
 	for (elem = x->grains->l_head; elem; elem = elem->l_next) {
-		t_catart_grain *gr = (t_catart_grain *)hatom_getobj(&elem->l_hatom);
+		t_cartesian_grain *gr = (t_cartesian_grain *)hatom_getobj(&elem->l_hatom);
 		t_pt pix1 = coord_to_pix(dadaobj_cast(x), center, gr->coord);
-		double radius = gr->radius_px + DADA_CATART_INTERFACE_GRAIN_TOLERANCE;
+		double radius = gr->radius_px + DADA_CARTESIAN_INTERFACE_GRAIN_TOLERANCE;
 		if (pt_pt_distance_squared(pix, pix1) < radius * radius)
 			return gr; 
 	}
 	return NULL;
 }
 
-t_catart_grain *pix_to_grain_from_view(t_catart *x, t_object *patcherview, t_pt pix)
+t_cartesian_grain *pix_to_grain_from_view(t_cartesian *x, t_object *patcherview, t_pt pix)
 {
 	t_rect rect;
 	t_pt center;
@@ -2179,18 +2180,18 @@ t_catart_grain *pix_to_grain_from_view(t_catart *x, t_object *patcherview, t_pt 
 	return pix_to_grain(x, center, pix);
 }
 
-void catart_focusgained(t_catart *x, t_object *patcherview) {
+void cartesian_focusgained(t_cartesian *x, t_object *patcherview) {
 	if (dadaobj_focusgained(dadaobj_cast(x), patcherview))
 		return;
 }
 
-void catart_focuslost(t_catart *x, t_object *patcherview) {
+void cartesian_focuslost(t_cartesian *x, t_object *patcherview) {
 	if (dadaobj_focuslost(dadaobj_cast(x), patcherview))
 		return;
 	dada_set_cursor(dadaobj_cast(x), patcherview, BACH_CURSOR_DEFAULT);
 }
 							 
-void do_send_llll(t_catart *x, t_symbol *s, long ac, t_atom *av)
+void do_send_llll(t_cartesian *x, t_symbol *s, long ac, t_atom *av)
 {
 	t_llll *ll = (t_llll *) av[0].a_w.w_obj;
 	llllobj_outlet_llll((t_object *)x, LLLL_OBJ_UI, 1, ll);
@@ -2198,7 +2199,7 @@ void do_send_llll(t_catart *x, t_symbol *s, long ac, t_atom *av)
 }
 							 
 							 
-void catart_schedule_interface_grain_llll(t_catart *x, t_catart_grain *gr, t_llll *ll)
+void cartesian_schedule_interface_grain_llll(t_cartesian *x, t_cartesian_grain *gr, t_llll *ll)
 {
     if (!gr)
         return;
@@ -2248,13 +2249,13 @@ void catart_schedule_interface_grain_llll(t_catart *x, t_catart_grain *gr, t_lll
     dadaobj_mutex_unlock(dadaobj_cast(x));
 }
 
-void catart_mousemove(t_catart *x, t_object *patcherview, t_pt pt, long modifiers) {
+void cartesian_mousemove(t_cartesian *x, t_object *patcherview, t_pt pt, long modifiers) {
 
 	llll_format_modifiers(&modifiers, NULL);
 	if (dadaobj_mousemove(dadaobj_cast(x), patcherview, pt, modifiers))
 		return;
 
-	t_catart_grain *new_mousehover_grain = NULL;
+	t_cartesian_grain *new_mousehover_grain = NULL;
 	if (x->b_ob.d_ob.m_interface.allow_mouse_hover) 
 		 new_mousehover_grain = pix_to_grain_from_view(x, patcherview, pt);
 	
@@ -2279,7 +2280,7 @@ void catart_mousemove(t_catart *x, t_object *patcherview, t_pt pt, long modifier
 }
 
 
-void catart_mousedown(t_catart *x, t_object *patcherview, t_pt pt, long modifiers){
+void cartesian_mousedown(t_cartesian *x, t_object *patcherview, t_pt pt, long modifiers){
 
 	if (dadaobj_mousedown(dadaobj_cast(x), patcherview, pt, modifiers))
 		return;
@@ -2295,11 +2296,11 @@ void catart_mousedown(t_catart *x, t_object *patcherview, t_pt pt, long modifier
 /*	if (modifiers & ePopupMenu)
 		show_bg_popup_menu(x, patcherview, pt, modifiers);
 	else
-		catart_mousedrag(x, patcherview, pt, modifiers);
+		cartesian_mousedrag(x, patcherview, pt, modifiers);
 */
 }
 
-void catart_mouseup(t_catart *x, t_object *patcherview, t_pt pt, long modifiers){
+void cartesian_mouseup(t_cartesian *x, t_object *patcherview, t_pt pt, long modifiers){
 	x->mousedown_grain = NULL;
 	llll_format_modifiers(&modifiers, NULL);
 	
@@ -2307,7 +2308,7 @@ void catart_mouseup(t_catart *x, t_object *patcherview, t_pt pt, long modifiers)
 		return;
 }
 
-void catart_mousedrag(t_catart *x, t_object *patcherview, t_pt pt, long modifiers){
+void cartesian_mousedrag(t_cartesian *x, t_object *patcherview, t_pt pt, long modifiers){
 
 	llll_format_modifiers(&modifiers, NULL);
 	
@@ -2331,9 +2332,9 @@ void catart_mousedrag(t_catart *x, t_object *patcherview, t_pt pt, long modifier
 			max_y = min_y + pen_size - 1;
 			for (i = min_x; i <= max_x; i++)
 				for (j = min_y; j <= max_y; j++)
-					catart_set_cell_from_mousedrag(x, i, j, modifiers);
+					cartesian_set_cell_from_mousedrag(x, i, j, modifiers);
 		} else
-			catart_set_cell_from_mousedrag(x, round(coord.x), round(coord.y), modifiers);
+			cartesian_set_cell_from_mousedrag(x, round(coord.x), round(coord.y), modifiers);
 		
 			jbox_invalidate_layer((t_object *)x, NULL, gensym("world"));
 		jbox_redraw((t_jbox *)x);
@@ -2341,7 +2342,7 @@ void catart_mousedrag(t_catart *x, t_object *patcherview, t_pt pt, long modifier
 */
 }
 
-long catart_keyup(t_catart *x, t_object *patcherview, long keycode, long modifiers, long textcharacter){
+long cartesian_keyup(t_cartesian *x, t_object *patcherview, long keycode, long modifiers, long textcharacter){
 			
 	llll_format_modifiers(&modifiers, &keycode);
 
@@ -2351,7 +2352,7 @@ long catart_keyup(t_catart *x, t_object *patcherview, long keycode, long modifie
 	return 0;
 }
 
-long catart_key(t_catart *x, t_object *patcherview, long keycode, long modifiers, long textcharacter){
+long cartesian_key(t_cartesian *x, t_object *patcherview, long keycode, long modifiers, long textcharacter){
 	llll_format_modifiers(&modifiers, &keycode);
 	
 	if (dadaobj_key(dadaobj_cast(x), patcherview, keycode, modifiers, textcharacter))
@@ -2359,7 +2360,7 @@ long catart_key(t_catart *x, t_object *patcherview, long keycode, long modifiers
 
 	switch (keycode) {
 		case JKEY_TAB:
-			catart_autozoom_do(x, patcherview);
+			cartesian_autozoom_do(x, patcherview);
 			return 1;
 		default:
 			break;
@@ -2367,16 +2368,16 @@ long catart_key(t_catart *x, t_object *patcherview, long keycode, long modifiers
 	return 0;
 }
 
-void catart_mousewheel(t_catart *x, t_object *view, t_pt pt, long modifiers, double x_inc, double y_inc){
+void cartesian_mousewheel(t_cartesian *x, t_object *view, t_pt pt, long modifiers, double x_inc, double y_inc){
 	llll_format_modifiers(&modifiers, NULL);  
 	
 	if (dadaobj_mousewheel(dadaobj_cast(x), view, pt, modifiers, x_inc, y_inc)) {
-		catart_iar(x);
+		cartesian_iar(x);
 		return;
 	}
 }
 
-void catart_mouseenter(t_catart *x, t_object *patcherview, t_pt pt, long modifiers) 
+void cartesian_mouseenter(t_cartesian *x, t_object *patcherview, t_pt pt, long modifiers)
 {
     if (x->interrupt_beatsync_on_mouseleave && x->beat_sync) {
         setclock_fdelay(x->b_ob.d_ob.m_play.setclock->s_thing, x->b_ob.d_ob.m_play.m_clock, 0);
@@ -2386,7 +2387,7 @@ void catart_mouseenter(t_catart *x, t_object *patcherview, t_pt pt, long modifie
 		return;
 }
 
-void catart_mouseleave(t_catart *x, t_object *patcherview, t_pt pt, long modifiers) 
+void cartesian_mouseleave(t_cartesian *x, t_object *patcherview, t_pt pt, long modifiers)
 {
     if (x->b_ob.d_ob.m_interface.allow_mouse_hover && x->mousehover_grain)
         output_none_contentfield(x, gensym("hover"));
@@ -2408,7 +2409,7 @@ void catart_mouseleave(t_catart *x, t_object *patcherview, t_pt pt, long modifie
 ////////////////// UNDO HANDLING
 
 /*
-void catart_undo_postprocess(t_catart *x)
+void cartesian_undo_postprocess(t_cartesian *x)
 {
 	jbox_invalidate_layer((t_object *)x, NULL, gensym("sampling_points"));
 	process_change(x);
@@ -2416,9 +2417,9 @@ void catart_undo_postprocess(t_catart *x)
 }
 
 
-void catart_undo_step_push_sampling_points(t_catart *x, t_symbol *operation)
+void cartesian_undo_step_push_sampling_points(t_cartesian *x, t_symbol *operation)
 {
-	undo_add_interface_step(dadaobj_cast(x), DADA_FUNC_v_oX, (method)catart_set_sampling , NULL, DADA_FUNC_X_o, (method)catart_get_sampling, NULL, operation);
+	undo_add_interface_step(dadaobj_cast(x), DADA_FUNC_v_oX, (method)cartesian_set_sampling , NULL, DADA_FUNC_X_o, (method)cartesian_get_sampling, NULL, operation);
 }
 */
 

@@ -11,11 +11,11 @@
 <refpage name='dada.terrain~.maxref.xml'/>
 <refpage name='dada.bodies.maxref.xml'/>
 <refpage name='dada.distances.maxref.xml'/>
-<refpage name='dada.catart.maxref.xml'/>
 <refpage name='dada.life.maxref.xml'/>
 <refpage name='dada.platform.maxref.xml'/>
 <refpage name='dada.bounce.maxref.xml'/>
 <refpage name='dada.graph.maxref.xml'/>
+<refpage name='dada.cartesian.maxref.xml'/>
 <refpage name='dada.machines.maxref.xml'/>
 <refpage name='dada.analysis.spread.maxref.xml'/>
 <refpage name='dada.analysis.minmax.maxref.xml'/>

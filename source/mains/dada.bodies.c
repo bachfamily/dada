@@ -2527,8 +2527,9 @@ void compute_label_for_all_arrownotes(t_bodies *x, long body_idx){
 
 
 void snap_coord_to_grid(t_bodies *x, t_pt *coord){
-	coord->x = round(coord->x/x->b_ob.d_ob.m_grid.grid_size.x) * x->b_ob.d_ob.m_grid.grid_size.x;
-	coord->y = round(coord->y/x->b_ob.d_ob.m_grid.grid_size.y) * x->b_ob.d_ob.m_grid.grid_size.y;
+    t_pt grid_size = dadaobj_get_grid_size(dadaobj_cast(x));
+	coord->x = round(coord->x/grid_size.x) * grid_size.x;
+	coord->y = round(coord->y/grid_size.y) * grid_size.y;
 }
 
 

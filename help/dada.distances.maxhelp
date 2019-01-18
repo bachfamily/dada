@@ -2,13 +2,14 @@
 	"patcher" : 	{
 		"fileversion" : 1,
 		"appversion" : 		{
-			"major" : 7,
-			"minor" : 3,
-			"revision" : 4,
+			"major" : 8,
+			"minor" : 0,
+			"revision" : 2,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
+		"classnamespace" : "box",
 		"rect" : [ 100.0, 100.0, 837.0, 692.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
@@ -49,13 +50,14 @@
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
-							"major" : 7,
-							"minor" : 3,
-							"revision" : 4,
+							"major" : 8,
+							"minor" : 0,
+							"revision" : 2,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
+						"classnamespace" : "box",
 						"rect" : [ 0.0, 26.0, 837.0, 666.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
@@ -113,11 +115,9 @@
 						"digest" : "",
 						"fontsize" : 13.0,
 						"globalpatchername" : "",
-						"style" : "",
 						"tags" : ""
 					}
 ,
-					"style" : "",
 					"text" : "p commons",
 					"varname" : "basic_tab[8]"
 				}
@@ -134,13 +134,14 @@
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
-							"major" : 7,
-							"minor" : 3,
-							"revision" : 4,
+							"major" : 8,
+							"minor" : 0,
+							"revision" : 2,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
+						"classnamespace" : "box",
 						"rect" : [ 0.0, 26.0, 837.0, 666.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
@@ -177,7 +178,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
 									"patching_rect" : [ 20.0, 117.0, 64.0, 23.0 ],
-									"style" : "",
 									"text" : "loadbang"
 								}
 
@@ -190,7 +190,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 419.5, 285.0, 228.0, 25.0 ],
-									"style" : "",
 									"text" : "Clear history for repetition avoiding"
 								}
 
@@ -202,8 +201,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 348.666656, 285.0, 68.0, 23.0 ],
-									"style" : "",
+									"patching_rect" : [ 348.666655999999989, 285.0, 68.0, 23.0 ],
 									"text" : "turtleclear"
 								}
 
@@ -217,7 +215,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 395.0, 232.0, 298.0, 40.0 ],
-									"style" : "",
 									"text" : "Avoid repetitions of turtled grain before infinite steps; i.e. never reach the same node twice!"
 								}
 
@@ -230,7 +227,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 316.5, 244.0, 75.0, 23.0 ],
-									"style" : "",
 									"text" : "memory inf"
 								}
 
@@ -243,7 +239,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 385.0, 211.0, 298.0, 25.0 ],
-									"style" : "",
 									"text" : "Avoid repetitions of turtled grain before 3 steps"
 								}
 
@@ -256,7 +251,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 308.5, 211.0, 68.0, 23.0 ],
-									"style" : "",
 									"text" : "memory 3"
 								}
 
@@ -269,7 +263,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 371.5, 180.0, 298.0, 25.0 ],
-									"style" : "",
 									"text" : "Avoid repetitions of turtled grain before 2 steps"
 								}
 
@@ -282,7 +275,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 295.0, 180.0, 68.0, 23.0 ],
-									"style" : "",
 									"text" : "memory 2"
 								}
 
@@ -295,7 +287,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 350.5, 149.0, 235.0, 25.0 ],
-									"style" : "",
 									"text" : "Avoid repetition of last step (default)"
 								}
 
@@ -308,7 +299,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 274.0, 149.0, 68.0, 23.0 ],
-									"style" : "",
 									"text" : "memory 1"
 								}
 
@@ -321,7 +311,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 64.0, 177.0, 126.0, 23.0 ],
-									"style" : "",
 									"text" : "setturtle name Paris"
 								}
 
@@ -335,7 +324,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 295.0, 86.0, 325.0, 54.0 ],
-									"style" : "",
 									"text" : "\"turtlemarkov\" interprets the distances representation as a Markov graph, and randomly goes to a neighbour point (if any!)"
 								}
 
@@ -348,7 +336,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 199.0, 101.5, 82.0, 23.0 ],
-									"style" : "",
 									"text" : "turtlemarkov"
 								}
 
@@ -361,7 +348,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 20.0, 149.0, 87.0, 23.0 ],
-									"style" : "",
 									"text" : "setturtle [0 0]"
 								}
 
@@ -372,19 +358,17 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 373.666656, 594.0, 100.0, 23.0 ],
-									"style" : "",
+									"patching_rect" : [ 373.666655999999989, 594.0, 100.0, 23.0 ],
 									"text" : "print @popup 1"
 								}
 
 							}
 , 							{
 								"box" : 								{
-									"center" : [ 51.2895, 183.386922 ],
+									"center" : [ 51.289499999999997, 183.386921999999998 ],
 									"contentfield" : [ "name" ],
 									"database" : "mydisthelpdb",
 									"distancetable" : "dists",
-									"grid" : [ 100.0, 100.0 ],
 									"id" : "obj-12",
 									"labelfield" : "name",
 									"maxclass" : "dada.distances",
@@ -413,7 +397,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 10.0, 10.0, 313.475464, 57.567627 ]
+									"patching_rect" : [ 10.0, 10.0, 313.475463999999988, 57.567627000000002 ]
 								}
 
 							}
@@ -497,11 +481,9 @@
 						"digest" : "",
 						"fontsize" : 13.0,
 						"globalpatchername" : "",
-						"style" : "",
 						"tags" : ""
 					}
 ,
-					"style" : "",
 					"text" : "p \"turtling and memory\"",
 					"varname" : "basic_tab[2]"
 				}
@@ -518,14 +500,15 @@
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
-							"major" : 7,
-							"minor" : 3,
-							"revision" : 4,
+							"major" : 8,
+							"minor" : 0,
+							"revision" : 2,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 0.0, 26.0, 837.0, 666.0 ],
+						"classnamespace" : "box",
+						"rect" : [ 100.0, 126.0, 837.0, 666.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -556,14 +539,38 @@
 						"boxes" : [ 							{
 								"box" : 								{
 									"bubble" : 1,
-									"id" : "obj-9",
-									"linecount" : 3,
+									"id" : "obj-20",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 540.0, 217.0, 207.0, 54.0 ],
-									"style" : "",
-									"text" : "Set the grid size\n(if any of the entry is 0 the grid size is automatically computed)"
+									"patching_rect" : [ 171.73773193359375, 115.0, 306.0, 25.0 ],
+									"presentation_linecount" : 2,
+									"text" : "First of all, toggle this on to comute uniform grids"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"attr" : "uniformpar",
+									"id" : "obj-10",
+									"maxclass" : "attrui",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 30.571060180664062, 145.5, 150.0, 23.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"bubble" : 1,
+									"id" : "obj-9",
+									"linecount" : 2,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 248.0, 175.5, 406.0, 40.0 ],
+									"text" : "Set the number of entries per row and column\n(if any of the entry is 0 the grid size is automatically computed)"
 								}
 
 							}
@@ -575,8 +582,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 316.0, 234.0, 219.0, 23.0 ],
-									"style" : ""
+									"patching_rect" : [ 39.23773193359375, 184.0, 219.0, 23.0 ]
 								}
 
 							}
@@ -590,7 +596,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 10.0, 61.625, 782.0, 50.0 ],
-									"style" : "",
 									"text" : "dada.distances can force the display to approximate an uniform grid. By default the number of rows and columns of the rectangle is chosen automatically in order to best approximate a square. Beware: if you have a prime number of points, no rectangle can be obtained, just a sequence of equally spaced points. In this case you might want to se thte \"uniformsize\" attribute explicitly.",
 									"textcolor" : [ 0.5, 0.5, 0.5, 1.0 ]
 								}
@@ -604,8 +609,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 60.737732, 254.0, 231.0, 23.0 ],
-									"style" : ""
+									"patching_rect" : [ 60.73773193359375, 293.0, 231.0, 23.0 ]
 								}
 
 							}
@@ -618,15 +622,14 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 384.0, 521.0, 121.0, 23.0 ],
-									"style" : "",
+									"patching_rect" : [ 384.0, 533.0, 121.0, 23.0 ],
 									"text" : "bach.m2jitcellblock"
 								}
 
 							}
 , 							{
 								"box" : 								{
-									"cols" : 6,
+									"cols" : 1,
 									"colwidth" : 18,
 									"fontface" : 0,
 									"fontname" : "Arial",
@@ -636,8 +639,8 @@
 									"numinlets" : 2,
 									"numoutlets" : 4,
 									"outlettype" : [ "list", "", "", "" ],
-									"patching_rect" : [ 384.0, 554.0, 134.0, 94.0 ],
-									"rows" : 4
+									"patching_rect" : [ 384.0, 566.0, 134.0, 94.0 ],
+									"rows" : 1
 								}
 
 							}
@@ -648,12 +651,11 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
-									"patching_rect" : [ 588.5, 489.0, 110.0, 23.0 ],
+									"patching_rect" : [ 588.5, 501.0, 110.0, 23.0 ],
 									"saved_object_attributes" : 									{
 										"versionnumber" : 80001
 									}
 ,
-									"style" : "",
 									"text" : "bach.keys capital"
 								}
 
@@ -665,12 +667,11 @@
 									"numinlets" : 2,
 									"numoutlets" : 2,
 									"outlettype" : [ "", "" ],
-									"patching_rect" : [ 384.0, 489.0, 185.0, 23.0 ],
+									"patching_rect" : [ 384.0, 501.0, 185.0, 23.0 ],
 									"saved_object_attributes" : 									{
 										"versionnumber" : 80001
 									}
 ,
-									"style" : "",
 									"text" : "bach.mapelem @maxdepth -3"
 								}
 
@@ -683,8 +684,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 106.57106, 171.5, 297.0, 40.0 ],
-									"style" : "",
+									"patching_rect" : [ 113.571060180664062, 222.5, 297.0, 40.0 ],
 									"text" : "Get the grid (i.e. the contentfield of each point, organized in matrix form)"
 								}
 
@@ -698,15 +698,14 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 333.0, 322.0, 121.0, 23.0 ],
-									"style" : "",
+									"patching_rect" : [ 333.0, 346.0, 121.0, 23.0 ],
 									"text" : "bach.m2jitcellblock"
 								}
 
 							}
 , 							{
 								"box" : 								{
-									"cols" : 6,
+									"cols" : 1,
 									"colwidth" : 68,
 									"fontface" : 0,
 									"fontname" : "Arial",
@@ -716,8 +715,8 @@
 									"numinlets" : 2,
 									"numoutlets" : 4,
 									"outlettype" : [ "list", "", "", "" ],
-									"patching_rect" : [ 333.0, 354.0, 438.0, 116.0 ],
-									"rows" : 4
+									"patching_rect" : [ 333.0, 378.0, 438.0, 116.0 ],
+									"rows" : 1
 								}
 
 							}
@@ -728,12 +727,11 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
-									"patching_rect" : [ 540.0, 281.0, 105.0, 23.0 ],
+									"patching_rect" : [ 540.0, 305.0, 105.0, 23.0 ],
 									"saved_object_attributes" : 									{
 										"versionnumber" : 80001
 									}
 ,
-									"style" : "",
 									"text" : "bach.keys name"
 								}
 
@@ -745,12 +743,11 @@
 									"numinlets" : 2,
 									"numoutlets" : 2,
 									"outlettype" : [ "", "" ],
-									"patching_rect" : [ 333.0, 281.0, 185.0, 23.0 ],
+									"patching_rect" : [ 333.0, 305.0, 185.0, 23.0 ],
 									"saved_object_attributes" : 									{
 										"versionnumber" : 80001
 									}
 ,
-									"style" : "",
 									"text" : "bach.mapelem @maxdepth -3"
 								}
 
@@ -761,12 +758,11 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 203.07106, 583.0, 104.0, 23.0 ],
+									"patching_rect" : [ 203.071060180664062, 607.0, 104.0, 23.0 ],
 									"saved_object_attributes" : 									{
 										"versionnumber" : 80001
 									}
 ,
-									"style" : "",
 									"text" : "bach.print GRID"
 								}
 
@@ -778,8 +774,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 46.57106, 180.0, 50.0, 23.0 ],
-									"style" : "",
+									"patching_rect" : [ 53.571060180664062, 231.0, 50.0, 23.0 ],
 									"text" : "getgrid"
 								}
 
@@ -792,9 +787,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 182.57106, 128.5, 297.0, 40.0 ],
-									"style" : "",
-									"text" : "Change this (between 0. to 1.) to force alignment of points to a uniform grid"
+									"patching_rect" : [ 180.73773193359375, 137.0, 297.0, 40.0 ],
+									"text" : "Then set this between 0. to 1. (0 = no snapping, 1 = full snapping)"
 								}
 
 							}
@@ -806,8 +800,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 22.308792, 137.0, 150.0, 23.0 ],
-									"style" : ""
+									"patching_rect" : [ 19.73773193359375, 115.0, 150.0, 23.0 ]
 								}
 
 							}
@@ -819,18 +812,16 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 60.737732, 227.0, 176.0, 23.0 ],
-									"style" : ""
+									"patching_rect" : [ 60.73773193359375, 266.0, 176.0, 23.0 ]
 								}
 
 							}
 , 							{
 								"box" : 								{
-									"center" : [ 51.289523, 183.386953 ],
+									"center" : [ 51.289499783889937, 183.386922320632607 ],
 									"contentfield" : [ "name", "capital" ],
 									"database" : "mydisthelpdb",
 									"distancetable" : "dists",
-									"grid" : [ 100.0, 100.0 ],
 									"id" : "obj-12",
 									"labelfield" : "name",
 									"maxclass" : "dada.distances",
@@ -839,12 +830,12 @@
 									"numoutlets" : 4,
 									"out" : "nnn",
 									"outlettype" : [ "", "", "", "bang" ],
-									"patching_rect" : [ 19.737732, 308.0, 294.0, 263.0 ],
+									"patching_rect" : [ 19.73773193359375, 332.0, 294.0, 263.0 ],
 									"query" : "SELECT * FROM cities",
 									"table" : "cities",
 									"uniform" : 1,
 									"versionnumber" : 10000,
-									"zoom" : 1.93087
+									"zoom" : 1.930869913243118
 								}
 
 							}
@@ -860,12 +851,19 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 10.0, 10.0, 313.475464, 57.567627 ]
+									"patching_rect" : [ 10.0, 10.0, 313.448028564453125, 57.599853515625 ]
 								}
 
 							}
  ],
 						"lines" : [ 							{
+								"patchline" : 								{
+									"destination" : [ "obj-12", 0 ],
+									"source" : [ "obj-10", 0 ]
+								}
+
+							}
+, 							{
 								"patchline" : 								{
 									"destination" : [ "obj-18", 0 ],
 									"order" : 0,
@@ -989,11 +987,9 @@
 						"digest" : "",
 						"fontsize" : 13.0,
 						"globalpatchername" : "",
-						"style" : "",
 						"tags" : ""
 					}
 ,
-					"style" : "",
 					"text" : "p \"uniform grid\"",
 					"varname" : "basic_tab[1]"
 				}
@@ -1010,13 +1006,14 @@
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
-							"major" : 7,
-							"minor" : 3,
-							"revision" : 4,
+							"major" : 8,
+							"minor" : 0,
+							"revision" : 2,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
+						"classnamespace" : "box",
 						"rect" : [ 0.0, 26.0, 837.0, 666.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
@@ -1053,7 +1050,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 471.0, 325.0, 126.0, 23.0 ],
-									"style" : "",
 									"text" : "where \"capital == 1\""
 								}
 
@@ -1066,7 +1062,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 526.5, 469.0, 125.0, 25.0 ],
-									"style" : "",
 									"text" : "Output the graph"
 								}
 
@@ -1079,7 +1074,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 461.5, 469.0, 62.0, 23.0 ],
-									"style" : "",
 									"text" : "getgraph"
 								}
 
@@ -1092,7 +1086,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 526.5, 411.0, 86.0, 25.0 ],
-									"style" : "",
 									"text" : "Remove it"
 								}
 
@@ -1105,7 +1098,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 471.0, 411.0, 46.0, 23.0 ],
-									"style" : "",
 									"text" : "where"
 								}
 
@@ -1119,7 +1111,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 533.0, 240.5, 188.0, 54.0 ],
-									"style" : "",
 									"text" : "Turn this on to give knn coordinates from 0 and 1 (for domain and range)"
 								}
 
@@ -1132,8 +1123,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 375.0, 256.0, 150.0, 23.0 ],
-									"style" : ""
+									"patching_rect" : [ 375.0, 256.0, 150.0, 23.0 ]
 								}
 
 							}
@@ -1146,7 +1136,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 608.0, 315.0, 129.0, 69.0 ],
-									"style" : "",
 									"text" : "Sets a \"WHERE\" condition on the points to be displayed"
 								}
 
@@ -1159,7 +1148,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 471.0, 361.0, 126.0, 23.0 ],
-									"style" : "",
 									"text" : "where \"capital == 0\""
 								}
 
@@ -1173,7 +1161,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 489.0, 182.0, 204.0, 54.0 ],
-									"style" : "",
 									"text" : "Find the 4 nearest neighbors to the point (400, 6000) and output their content"
 								}
 
@@ -1186,7 +1173,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 375.0, 201.0, 80.0, 23.0 ],
-									"style" : "",
 									"text" : "knn 4 [0 20]"
 								}
 
@@ -1200,7 +1186,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 409.0, 100.0, 116.0, 40.0 ],
-									"style" : "",
 									"text" : "Dump content of all grains"
 								}
 
@@ -1211,12 +1196,11 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 294.666656, 566.5, 68.0, 23.0 ],
+									"patching_rect" : [ 294.666655999999989, 566.5, 68.0, 23.0 ],
 									"saved_object_attributes" : 									{
 										"versionnumber" : 80001
 									}
 ,
-									"style" : "",
 									"text" : "bach.print"
 								}
 
@@ -1232,7 +1216,6 @@
 										"versionnumber" : 80001
 									}
 ,
-									"style" : "",
 									"text" : "bach.post Dump @maxdepth 1"
 								}
 
@@ -1245,7 +1228,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 358.0, 108.5, 43.0, 23.0 ],
-									"style" : "",
 									"text" : "dump"
 								}
 
@@ -1258,7 +1240,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 221.0, 159.0, 217.0, 25.0 ],
-									"style" : "",
 									"text" : "Get the current X or Y axis range"
 								}
 
@@ -1271,7 +1252,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 150.0, 159.0, 62.0, 23.0 ],
-									"style" : "",
 									"text" : "getrange"
 								}
 
@@ -1284,7 +1264,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 60.0, 159.0, 71.0, 23.0 ],
-									"style" : "",
 									"text" : "getdomain"
 								}
 
@@ -1300,9 +1279,8 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 143.0, 233.0, 115.0, 69.0 ],
-									"style" : "",
 									"text" : "or click on the object and press Tab",
-									"textcolor" : [ 0.784314, 0.145098, 0.023529, 1.0 ]
+									"textcolor" : [ 0.784313976764679, 0.145098000764847, 0.023529000580311, 1.0 ]
 								}
 
 							}
@@ -1315,7 +1293,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 149.0, 196.0, 145.0, 40.0 ],
-									"style" : "",
 									"text" : "Set domain and range automatically"
 								}
 
@@ -1328,7 +1305,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 79.0, 208.0, 68.0, 23.0 ],
-									"style" : "",
 									"text" : "autozoom"
 								}
 
@@ -1341,7 +1317,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 150.0, 115.0, 145.0, 25.0 ],
-									"style" : "",
 									"text" : "Set the Y axis range"
 								}
 
@@ -1354,7 +1329,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 37.0, 115.0, 99.0, 23.0 ],
-									"style" : "",
 									"text" : "range -800 800"
 								}
 
@@ -1367,18 +1341,16 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 124.0, 78.0, 145.0, 25.0 ],
-									"style" : "",
 									"text" : "Set the X axis range"
 								}
 
 							}
 , 							{
 								"box" : 								{
-									"center" : [ 51.289523, 183.386953 ],
+									"center" : [ 51.289523000000003, 183.386953000000005 ],
 									"contentfield" : [ "name" ],
 									"database" : "mydisthelpdb",
 									"distancetable" : "dists",
-									"grid" : [ 100.0, 100.0 ],
 									"id" : "obj-10",
 									"labelfield" : "name",
 									"maxclass" : "dada.distances",
@@ -1387,7 +1359,7 @@
 									"numoutlets" : 4,
 									"out" : "nnn",
 									"outlettype" : [ "", "", "", "bang" ],
-									"patching_rect" : [ 18.0, 293.0, 433.999969, 259.0 ],
+									"patching_rect" : [ 18.0, 293.0, 433.999969000000021, 259.0 ],
 									"query" : "SELECT * FROM cities",
 									"table" : "cities",
 									"versionnumber" : 10000,
@@ -1403,7 +1375,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 18.0, 78.0, 108.0, 23.0 ],
-									"style" : "",
 									"text" : "domain -800 800"
 								}
 
@@ -1420,7 +1391,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 10.0, 10.0, 313.475464, 57.567627 ]
+									"patching_rect" : [ 10.0, 10.0, 313.475463999999988, 57.567627000000002 ]
 								}
 
 							}
@@ -1532,11 +1503,9 @@
 						"digest" : "",
 						"fontsize" : 13.0,
 						"globalpatchername" : "",
-						"style" : "",
 						"tags" : ""
 					}
 ,
-					"style" : "",
 					"text" : "p more",
 					"varname" : "basic_tab[3]"
 				}
@@ -1558,7 +1527,6 @@
 						"parameter_enable" : 0
 					}
 ,
-					"style" : "",
 					"text" : "js helpstarter.js dada.turtle"
 				}
 
@@ -1574,14 +1542,15 @@
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
-							"major" : 7,
-							"minor" : 3,
-							"revision" : 4,
+							"major" : 8,
+							"minor" : 0,
+							"revision" : 2,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 100.0, 126.0, 837.0, 666.0 ],
+						"classnamespace" : "box",
+						"rect" : [ 0.0, 26.0, 837.0, 666.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -1617,8 +1586,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 656.0, 489.0, 150.0, 23.0 ],
-									"style" : ""
+									"patching_rect" : [ 656.0, 489.0, 150.0, 23.0 ]
 								}
 
 							}
@@ -1630,8 +1598,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 656.0, 464.0, 150.0, 23.0 ],
-									"style" : ""
+									"patching_rect" : [ 656.0, 464.0, 150.0, 23.0 ]
 								}
 
 							}
@@ -1644,7 +1611,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 529.0, 142.5, 176.0, 40.0 ],
-									"style" : "",
 									"text" : "Number of iterations for multidimensional scaling"
 								}
 
@@ -1657,8 +1623,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 348.0, 151.0, 176.0, 23.0 ],
-									"style" : ""
+									"patching_rect" : [ 348.0, 151.0, 176.0, 23.0 ]
 								}
 
 							}
@@ -1671,7 +1636,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 137.5, 420.0, 164.0, 40.0 ],
-									"style" : "",
 									"text" : "Set turtle on a given ID from the \"cities\" table"
 								}
 
@@ -1684,7 +1648,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 17.0, 420.0, 119.0, 23.0 ],
-									"style" : "",
 									"text" : "setturtle citie_id 12"
 								}
 
@@ -1698,7 +1661,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 158.0, 358.5, 186.0, 54.0 ],
-									"style" : "",
 									"text" : "Set the turtle to the point whose field \"name\" has the value \"Warsaw\" (if any)"
 								}
 
@@ -1711,7 +1673,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 17.0, 374.0, 143.0, 23.0 ],
-									"style" : "",
 									"text" : "setturtle name Warsaw"
 								}
 
@@ -1726,7 +1687,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 672.0, 331.0, 101.0, 55.0 ],
-									"style" : "",
 									"text" : "Change content field(s)"
 								}
 
@@ -1739,7 +1699,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 656.0, 299.0, 152.0, 23.0 ],
-									"style" : "",
 									"text" : "contentfield name capital"
 								}
 
@@ -1752,7 +1711,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 656.0, 269.0, 113.0, 23.0 ],
-									"style" : "",
 									"text" : "contentfield name"
 								}
 
@@ -1766,7 +1724,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 109.0, 479.0, 194.0, 83.0 ],
-									"style" : "",
 									"text" : "\"turtlemarkov\" interprets the distances representation as a Markov graph, and randomly goes to a neighbour point (if any!)"
 								}
 
@@ -1779,7 +1736,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 17.0, 509.0, 82.0, 23.0 ],
-									"style" : "",
 									"text" : "turtlemarkov"
 								}
 
@@ -1793,7 +1749,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 111.0, 288.5, 167.0, 54.0 ],
-									"style" : "",
 									"text" : "Set the turtle to the nearest point from a given (x y) position"
 								}
 
@@ -1806,7 +1761,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 17.0, 304.0, 87.0, 23.0 ],
-									"style" : "",
 									"text" : "setturtle [0 0]"
 								}
 
@@ -1819,8 +1773,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 547.0, 185.113647, 226.0, 69.0 ],
-									"style" : "",
+									"patching_rect" : [ 547.0, 185.113646999999986, 226.0, 69.0 ],
 									"text" : "Maximum represented distance (edge) between points. \nPoints whose distances are over this threshold are disconnected."
 								}
 
@@ -1833,8 +1786,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 137.5, 180.113647, 169.0, 54.0 ],
-									"style" : "",
+									"patching_rect" : [ 137.5, 180.113646999999986, 169.0, 54.0 ],
 									"text" : "Look inside: a good way to define distances in a dada.base"
 								}
 
@@ -1848,7 +1800,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 10.0, 115.625, 689.0, 21.0 ],
-									"style" : "",
 									"text" : "dada.distances approximates in a 2D space a set of points defined only by their distances.",
 									"textcolor" : [ 0.5, 0.5, 0.5, 1.0 ]
 								}
@@ -1863,9 +1814,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 16.0, 595.625, 733.0, 36.0 ],
-									"style" : "",
-									"text" : "Most features and messages in dada.distances are identical to the ones in dada.catart. This include turtle/setturtle/knn messages, beat-sync playing, and more. Refer to dada.catart help files or to dada.distances reference sheet to know more.",
+									"patching_rect" : [ 16.0, 595.625, 735.0, 36.0 ],
+									"text" : "Most features and messages in dada.distances are identical to the ones in dada.cartesian. This include turtle/setturtle/knn messages, beat-sync playing, and more. Refer to dada.cartesian help files or to dada.distances reference sheet to know more.",
 									"textcolor" : [ 0.5, 0.5, 0.5, 1.0 ]
 								}
 
@@ -1876,8 +1826,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 439.666656, 545.0, 100.0, 23.0 ],
-									"style" : "",
+									"patching_rect" : [ 439.666655999999989, 545.0, 100.0, 23.0 ],
 									"text" : "print @popup 1"
 								}
 
@@ -1890,18 +1839,16 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 362.0, 208.113647, 176.0, 23.0 ],
-									"style" : ""
+									"patching_rect" : [ 362.0, 208.113646999999986, 176.0, 23.0 ]
 								}
 
 							}
 , 							{
 								"box" : 								{
-									"center" : [ 51.2895, 183.386922 ],
+									"center" : [ 51.289499783889937, 183.386922320632607 ],
 									"contentfield" : [ "name" ],
 									"database" : "mydisthelpdb",
 									"distancetable" : "dists",
-									"grid" : [ 100.0, 100.0 ],
 									"id" : "obj-12",
 									"labelfield" : "name",
 									"maxclass" : "dada.distances",
@@ -1914,7 +1861,7 @@
 									"query" : "SELECT * FROM cities",
 									"table" : "cities",
 									"versionnumber" : 10000,
-									"zoom" : 1.93087
+									"zoom" : 1.930869913243118
 								}
 
 							}
@@ -1928,13 +1875,14 @@
 									"patcher" : 									{
 										"fileversion" : 1,
 										"appversion" : 										{
-											"major" : 7,
-											"minor" : 3,
-											"revision" : 4,
+											"major" : 8,
+											"minor" : 0,
+											"revision" : 2,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
 ,
+										"classnamespace" : "box",
 										"rect" : [ 372.0, 150.0, 955.0, 587.0 ],
 										"bglocked" : 0,
 										"openinpresentation" : 0,
@@ -1970,7 +1918,6 @@
 													"numoutlets" : 1,
 													"outlettype" : [ "int" ],
 													"patching_rect" : [ 310.0, 262.0, 29.5, 22.0 ],
-													"style" : "",
 													"text" : "!- 1"
 												}
 
@@ -1983,7 +1930,6 @@
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
 													"patching_rect" : [ 246.0, 436.0, 75.0, 22.0 ],
-													"style" : "",
 													"text" : "bach.lookup"
 												}
 
@@ -1996,7 +1942,6 @@
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
 													"patching_rect" : [ 378.0, 507.0, 41.0, 22.0 ],
-													"style" : "",
 													"text" : "erase"
 												}
 
@@ -2008,8 +1953,7 @@
 													"numinlets" : 3,
 													"numoutlets" : 3,
 													"outlettype" : [ "int", "", "" ],
-													"patching_rect" : [ 310.0, 235.91391, 349.0, 22.0 ],
-													"style" : "",
+													"patching_rect" : [ 310.0, 235.913909999999987, 349.0, 22.0 ],
 													"text" : "bach.belong Barcelona Hamburg Milan Munich SaintPetersburg"
 												}
 
@@ -2022,7 +1966,6 @@
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
 													"patching_rect" : [ 271.5, 293.0, 57.5, 22.0 ],
-													"style" : "",
 													"text" : "pack s f"
 												}
 
@@ -2035,7 +1978,6 @@
 													"numoutlets" : 3,
 													"outlettype" : [ "bang", "bang", "bang" ],
 													"patching_rect" : [ 50.0, 85.0, 543.0, 22.0 ],
-													"style" : "",
 													"text" : "t b b b"
 												}
 
@@ -2047,12 +1989,11 @@
 													"numinlets" : 2,
 													"numoutlets" : 2,
 													"outlettype" : [ "", "" ],
-													"patching_rect" : [ 91.0, 432.772705, 136.0, 22.0 ],
+													"patching_rect" : [ 91.0, 432.772704999999974, 136.0, 22.0 ],
 													"saved_object_attributes" : 													{
 														"versionnumber" : 80001
 													}
 ,
-													"style" : "",
 													"text" : "bach.mapelem @out t"
 												}
 
@@ -2064,8 +2005,7 @@
 													"numinlets" : 2,
 													"numoutlets" : 2,
 													"outlettype" : [ "", "" ],
-													"patching_rect" : [ 50.0, 466.772705, 57.0, 22.0 ],
-													"style" : "",
+													"patching_rect" : [ 50.0, 466.772704999999974, 57.0, 22.0 ],
 													"text" : "zl join"
 												}
 
@@ -2077,8 +2017,7 @@
 													"numinlets" : 2,
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
-													"patching_rect" : [ 50.0, 502.772705, 245.0, 22.0 ],
-													"style" : "",
+													"patching_rect" : [ 50.0, 502.772704999999974, 245.0, 22.0 ],
 													"text" : "adddistanceentry dists cities name $2 $3 $1"
 												}
 
@@ -2090,12 +2029,11 @@
 													"numinlets" : 2,
 													"numoutlets" : 3,
 													"outlettype" : [ "", "", "" ],
-													"patching_rect" : [ 50.0, 399.772705, 101.0, 22.0 ],
+													"patching_rect" : [ 50.0, 399.772704999999974, 101.0, 22.0 ],
 													"saved_object_attributes" : 													{
 														"versionnumber" : 80001
 													}
 ,
-													"style" : "",
 													"text" : "bach.iter @out t"
 												}
 
@@ -2107,8 +2045,7 @@
 													"numinlets" : 2,
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
-													"patching_rect" : [ 271.5, 326.386353, 222.0, 22.0 ],
-													"style" : "",
+													"patching_rect" : [ 271.5, 326.386352999999986, 222.0, 22.0 ],
 													"text" : "addentry cities [ name $1 ] [ capital $2 ]"
 												}
 
@@ -2120,12 +2057,11 @@
 													"numinlets" : 2,
 													"numoutlets" : 3,
 													"outlettype" : [ "", "", "" ],
-													"patching_rect" : [ 271.5, 203.386353, 101.0, 22.0 ],
+													"patching_rect" : [ 271.5, 203.386353000000014, 101.0, 22.0 ],
 													"saved_object_attributes" : 													{
 														"versionnumber" : 80001
 													}
 ,
-													"style" : "",
 													"text" : "bach.iter @out t"
 												}
 
@@ -2137,23 +2073,21 @@
 													"numinlets" : 2,
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
-													"patching_rect" : [ 574.0, 203.386353, 346.0, 22.0 ],
-													"style" : "",
+													"patching_rect" : [ 574.0, 203.386353000000014, 346.0, 22.0 ],
 													"text" : "addtable cities [name s] [capital i], adddistancetable dists cities"
 												}
 
 											}
 , 											{
 												"box" : 												{
-													"fontsize" : 9.130261,
+													"fontsize" : 9.130261000000001,
 													"id" : "obj-5",
 													"linecount" : 3,
 													"maxclass" : "message",
 													"numinlets" : 2,
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
-													"patching_rect" : [ 271.5, 131.780182, 307.0, 39.0 ],
-													"style" : "",
+													"patching_rect" : [ 271.5, 131.780181999999996, 307.0, 39.0 ],
 													"text" : "Barcelona Belgrade Berlin Brussels Bucharest Budapest Copenhagen Dublin Hamburg Istanbul Kiev London Madrid Milan Moscow Munich Paris Prague Rome SaintPetersburg Sofia Stockholm Vienna Warsaw"
 												}
 
@@ -2167,8 +2101,7 @@
 													"numinlets" : 2,
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
-													"patching_rect" : [ 50.0, 122.129211, 204.0, 255.0 ],
-													"style" : "",
+													"patching_rect" : [ 50.0, 122.129210999999998, 204.0, 255.0 ],
 													"text" : "[ 0 1528.13 1497.61 1062.89 1968.42 1498.79 1757.54 1469.29 1471.78 2230.42 2391.06 1137.67 504.64 725.12 3006.93 1054.55 831.59 1353.9 856.69 2813.02 1745.55 2276.51 1347.43 1862.33] [ 1528.13 0 999.25 1372.59 447.34 316.41 1327.24 2145.39 1229.93 809.48 976.02 1688.97 2026.94 885.32 1710.99 773.33 1445.7 738.1 721.55 1797.75 329.46 1620.96 489.28 826.66] [ 1497.61 999.25 0 651.62 1293.4 689.06 354.03 1315.16 254.51 1735.01 1204. 929.97 1867.69 840.72 1607.99 501.97 876.96 280.34 1181.67 1319.62 1318.67 810.38 523.61 516.06] [ 1062.89 1372.59 651.62 0 1769.69 1131.52 766.67 773.2 489.76 2178.85 1836.2 318.72 1314.3 696.61 2253.26 601.87 261.29 721.08 1171.34 1903.66 1697.83 1280.88 914.81 1159.85] [ 1968.42 447.34 1293.4 1769.69 0 639.77 1571.54 2534.72 1544.17 445.62 744.44 2088.42 2469.71 1331.46 1497.56 1186.37 1869.95 1076.82 1137.38 1740.39 296.68 1742.25 855.32 946.12] [ 1498.79 316.41 689.06 1131.52 639.77 0 1011.31 1894.95 927.92 1064.76 894.29 1450.12 1975.38 788.56 1565.19 563.93 1247.61 443.26 811.11 1556.51 629.63 1316.59 216.98 545.29] [ 1757.54 1327.24 354.03 766.67 1571.54 1011.31 0 1238.38 287.97 2017.17 1326.33 955.13 2071.75 1157.89 1558.52 838. 1025.9 633.05 1529.69 1143.4 1635.54 521.68 868.87 667.80] [ 1469.29 2145.39 1315.16 773.2 2534.72 1894.95 1238.38 0 1073.36 2950.11 2513.69 462.6 1449.96 1413.37 2792.41 1374.91 776.83 1465.61 1882.22 2314.19 2471.02 1626.56 1680. 1823.72] [ 1471.78 1229.93 254.51 489.76 1544.17 927.92 287.97 1073.36 0 1983.75 1440.34 720.12 1785.33 900.01 1779.93 610.17 744.63 492.25 1307.51 1414.16 1554.82 809.65 742.79 750.49] [ 2230.42 809.48 1735.01 2178.85 445.62 1064.76 2017.17 2950.11 1983.75 0 1052.95 2496.39 2734.6 1669.43 1753.97 1582.16 2253.98 1507.55 1373.81 2099.29 502.61 2171.65 1273.88 1386.08] [ 2391.06 976.02 1204. 1836.2 744.44 894.29 1326.33 2513.69 1440.34 1052.95 0 2131.2 2859.32 1672.69 756.61 1391.36 2022.76 1138.61 1673.74 1051.39 1020.76 1265.79 1052.76 690.12] [ 1137.67 1688.97 929.97 318.72 2088.42 1450.12 955.13 462.6 720.12 2496.39 2131.2 0 1263.37 957.91 2498.32 916.23 340.55 1034.57 1431.21 2093.69 2012.7 1431.07 1233.48 1445.85) ( 504.64 2026.94 1867.69 1314.3 2469.71 1975.38 2071.75 1449.96 1785.33 2734.6 2859.32 1263.37 0 1187.73 3437.7 1484.53 1053.4 1773.73 1360.8 3183.43 2250.1 2591.53 1807.09 2288.42) ( 725.12 885.32 840.72 696.61 1331.46 788.56 1157.89 1413.37 900.01 1669.43 1672.69 957.91 1187.73 0 2283.19 348.89 641.31 646.04 476. 2122.15 1166.83 1650.12 623.36 1143.01) ( 3006.93 1710.99 1607.99 2253.26 1497.56 1565.19 1558.52 2792.41 1779.93 1753.97 756.61 2498.32 3437.7 2283.19 0 1957.15 2484.92 1664.04 2374.26 632.59 1777.35 1227.38 1669.22 1149.41) ( 1054.55 773.33 501.97 601.87 1186.37 563.93 838. 1374.91 610.17 1582.16 1391.36 916.23 1484.53 348.89 1957.15 0 685.14 300.16 698.04 1773.83 1096.54 1311.8 354.42 809.02) ( 831.59 1445.7 876.96 261.29 1869.95 1247.61 1025.9 776.83 744.63 2253.98 2022.76 340.55 1053.4 641.31 2484.92 685.14 0 885.38 1105.76 2157.99 1758.03 1541.83 1033.73 1365.91) ( 1353.9 738.1 280.34 721.08 1076.82 443.26 633.05 1465.61 492.25 1507.55 1138.61 1034.57 1773.73 646.04 1664.04 300.16 885.38 0 922. 1476.73 1064.43 1052.85 250.71 514.69) ( 856.69 721.55 1181.67 1171.34 1137.38 811.11 1529.69 1882.22 1307.51 1373.81 1673.74 1431.21 1360.8 476. 2374.26 698.04 1105.76 922. 0 2339.22 894.06 1974.79 763.26 1316.24) ( 2813.02 1797.75 1319.62 1903.66 1740.39 1556.51 1143.4 2314.19 1414.16 2099.29 1051.39 2093.69 3183.43 2122.15 632.59 1773.83 2157.99 1476.73 2339.22 0 1969.82 688.33 1577.56 1023.41) ( 1745.55 329.46 1318.67 1697.83 296.68 629.63 1635.54 2471.02 1554.82 502.61 1020.76 2012.7 2250.1 1166.83 1777.35 1096.54 1758.03 1064.43 894.06 1969.82 0 1884.91 817.45 1076.99) ( 2276.51 1620.96 810.38 1280.88 1742.25 1316.59 521.68 1626.56 809.65 2171.65 1265.79 1431.07 2591.53 1650.12 1227.38 1311.8 1541.83 1052.85 1974.79 688.33 1884.91 0 1241.9 808.14) ( 1347.43 489.28 523.61 914.81 855.32 216.98 868.87 1680. 742.79 1273.88 1052.76 1233.48 1807.09 623.36 1669.22 354.42 1033.73 250.71 763.26 1577.56 817.45 1241.9 0 557.43) ( 1862.33 826.66 516.06 1159.85 946.12 545.29 667.8 1823.72 750.49 1386.08 690.12 1445.85 2288.42 1143.01 1149.41 809.02 1365.91 514.69 1316.24 1023.41 1076.99 808.14 557.43 0)"
 												}
 
@@ -2182,8 +2115,7 @@
 													"numinlets" : 0,
 													"numoutlets" : 1,
 													"outlettype" : [ "bang" ],
-													"patching_rect" : [ 50.0, 25.0, 30.0, 30.0 ],
-													"style" : ""
+													"patching_rect" : [ 50.0, 25.0, 30.0, 30.0 ]
 												}
 
 											}
@@ -2195,8 +2127,7 @@
 													"maxclass" : "outlet",
 													"numinlets" : 1,
 													"numoutlets" : 0,
-													"patching_rect" : [ 125.0, 565.386353, 30.0, 30.0 ],
-													"style" : ""
+													"patching_rect" : [ 125.0, 565.386352999999986, 30.0, 30.0 ]
 												}
 
 											}
@@ -2363,16 +2294,14 @@
  ]
 									}
 ,
-									"patching_rect" : [ 16.0, 195.613647, 113.0, 23.0 ],
+									"patching_rect" : [ 16.0, 195.613646999999986, 113.0, 23.0 ],
 									"saved_object_attributes" : 									{
 										"description" : "",
 										"digest" : "",
 										"globalpatchername" : "",
-										"style" : "",
 										"tags" : ""
 									}
 ,
-									"style" : "",
 									"text" : "p build_letters_db"
 								}
 
@@ -2385,7 +2314,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
 									"patching_rect" : [ 16.0, 160.0, 64.0, 23.0 ],
-									"style" : "",
 									"text" : "loadbang"
 								}
 
@@ -2398,7 +2326,6 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"patching_rect" : [ 16.0, 238.0, 151.0, 23.0 ],
-									"style" : "",
 									"text" : "dada.base mydisthelpdb"
 								}
 
@@ -2520,11 +2447,9 @@
 						"digest" : "",
 						"fontsize" : 13.0,
 						"globalpatchername" : "",
-						"style" : "",
 						"tags" : ""
 					}
 ,
-					"style" : "",
 					"text" : "p basic",
 					"varname" : "basic_tab"
 				}
@@ -2542,7 +2467,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 10.0, 10.0, 233.14032, 57.567627 ]
+					"patching_rect" : [ 10.0, 10.0, 233.140320000000003, 57.567627000000002 ]
 				}
 
 			}
@@ -2557,13 +2482,14 @@
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
-							"major" : 7,
-							"minor" : 3,
-							"revision" : 4,
+							"major" : 8,
+							"minor" : 0,
+							"revision" : 2,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
+						"classnamespace" : "box",
 						"rect" : [ 0.0, 26.0, 837.0, 666.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
@@ -2602,11 +2528,9 @@
 						"digest" : "",
 						"fontsize" : 13.0,
 						"globalpatchername" : "",
-						"style" : "",
 						"tags" : ""
 					}
 ,
-					"style" : "",
 					"text" : "p ?",
 					"varname" : "q_tab"
 				}
@@ -2614,6 +2538,19 @@
 			}
  ],
 		"lines" : [  ],
+		"parameters" : 		{
+			"obj-15::obj-7::obj-8::obj-74" : [ "toggle", "toggle", 0 ],
+			"obj-15::obj-7::obj-8::obj-59" : [ "number", "number", 0 ],
+			"obj-15::obj-7::obj-8::obj-78" : [ "button[1]", "button[1]", 0 ],
+			"obj-15::obj-7::obj-8::obj-54" : [ "slider", "slider", 0 ],
+			"obj-15::obj-7::obj-8::obj-86" : [ "toggle[1]", "toggle[1]", 0 ],
+			"obj-15::obj-7::obj-8::obj-35" : [ "button", "button", 0 ],
+			"parameterbanks" : 			{
+
+			}
+
+		}
+,
 		"dependency_cache" : [ 			{
 				"name" : "helpname.js",
 				"bootpath" : "C74:/help/resources",
@@ -2657,14 +2594,14 @@
 				"name" : "dada.commons.maxpat",
 				"bootpath" : "~/Documents/Max 7/Packages/dada/help",
 				"patcherrelativepath" : ".",
-				"type" : "JSON",
+				"type" : "TEXT",
 				"implicit" : 1
 			}
 , 			{
 				"name" : "mydadastuff.png",
 				"bootpath" : "/private/tmp",
 				"patcherrelativepath" : "../../../../../../../private/tmp",
-				"type" : "PNG ",
+				"type" : "PNG",
 				"implicit" : 1
 			}
 , 			{
@@ -2740,11 +2677,31 @@
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "dada.catart.mxo",
+				"name" : "dada.cartesian.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "dada.multibrot.mxo",
 				"type" : "iLaX"
 			}
 , 			{
 				"name" : "mira.multitouch.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "dada.platform.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.roll.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.transcribe.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.flat.mxo",
 				"type" : "iLaX"
 			}
  ],

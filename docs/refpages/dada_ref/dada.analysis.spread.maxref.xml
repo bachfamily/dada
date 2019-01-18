@@ -114,7 +114,7 @@
 	<!--SEEALSO-->
 	<seealsolist>
 		<seealso name="dada.segment" />
-		<seealso name="dada.catart" />
+		<seealso name="dada.cartesian" />
 		<seealso name="dada.analysis.centroid" />
 	</seealsolist>
 

@@ -225,6 +225,8 @@ void dadaobj_setup(t_object *ob, t_dadaobj *r_ob, e_llllobj_obj_types llllobj_ty
 	dada_undo_setup(&r_ob->m_undo);
 	
 	initialize_popup_menus(r_ob);
+    
+    r_ob->m_grid.must_update_grid_size = true;
 	
 	r_ob->m_cursors.curr_cursor = BACH_CURSOR_DEFAULT;
 	load_cursors(r_ob);
@@ -388,6 +390,7 @@ t_max_err dadaobj_setattr_zoom(t_dadaobj *d_ob, t_object *attr, long ac, t_atom 
 			d_ob->m_zoom.zoom = build_pt(d_ob->m_zoom.zoom_static_additional.x * d_ob->m_zoom.zoom_perc / 100., d_ob->m_zoom.zoom_static_additional.y * d_ob->m_zoom.zoom_y_perc / 100.);
 		else
 			d_ob->m_zoom.zoom = pt_number_prod(d_ob->m_zoom.zoom_static_additional, d_ob->m_zoom.zoom_perc / 100.);
+        d_ob->m_grid.must_update_grid_size = true;
         dadaobj_invalidate_and_redraw(d_ob);
 	}
 	return MAX_ERR_NONE;
@@ -404,6 +407,7 @@ t_max_err dadaobj_setattr_vzoom(t_dadaobj *d_ob, t_object *attr, long ac, t_atom
 			d_ob->m_zoom.zoom = build_pt(d_ob->m_zoom.zoom_static_additional.x * d_ob->m_zoom.zoom_perc / 100., d_ob->m_zoom.zoom_static_additional.y * d_ob->m_zoom.zoom_y_perc / 100.);
 		else
 			d_ob->m_zoom.zoom = pt_number_prod(d_ob->m_zoom.zoom_static_additional, d_ob->m_zoom.zoom_perc / 100.);
+        d_ob->m_grid.must_update_grid_size = true;
         dadaobj_invalidate_and_redraw(d_ob);
 	}
 	return MAX_ERR_NONE;
@@ -413,8 +417,8 @@ t_max_err dadaobj_setattr_vzoom(t_dadaobj *d_ob, t_object *attr, long ac, t_atom
 t_max_err dadaobj_setattr_grid(t_dadaobj *d_ob, t_object *attr, long ac, t_atom *av)
 {
     if (ac && av && is_atom_number(av)) {
-        d_ob->m_grid.grid_size.x = atom_getfloat(av);
-        d_ob->m_grid.grid_size.y = ac > 1 ? atom_getfloat(av + 1) : atom_getfloat(av);
+        d_ob->m_grid.grid_size_fixed.x = atom_getfloat(av);
+        d_ob->m_grid.grid_size_fixed.y = ac > 1 ? atom_getfloat(av + 1) : atom_getfloat(av);
         jbox_invalidate_layer(d_ob->orig_obj, NULL, gensym("grid"));
         jbox_redraw((t_jbox *)d_ob->orig_obj);
     }
@@ -430,6 +434,19 @@ t_max_err dadaobj_setattr_showgrid(t_dadaobj *d_ob, t_object *attr, long ac, t_a
     }
     return MAX_ERR_NONE;
 }
+
+t_max_err dadaobj_setattr_gridmode(t_dadaobj *d_ob, t_object *attr, long ac, t_atom *av)
+{
+    if (ac && av && is_atom_number(av)) {
+        d_ob->m_grid.grid_mode = atom_getlong(av);
+        object_attr_setdisabled(d_ob->orig_obj, gensym("grid"), d_ob->m_grid.grid_mode == 1);
+        d_ob->m_grid.must_update_grid_size = true;
+        jbox_invalidate_layer(d_ob->orig_obj, NULL, gensym("grid"));
+        jbox_redraw((t_jbox *)d_ob->orig_obj);
+    }
+    return MAX_ERR_NONE;
+}
+
 
 t_max_err dadaobj_setattr_gridcolor(t_dadaobj *d_ob, t_object *attr, long ac, t_atom *av)
 {
@@ -615,6 +632,11 @@ t_max_err dadaobj_jbox_setattr_showgrid(t_dadaobj_jbox *b_ob, t_object *attr, lo
     return dadaobj_setattr_showgrid(&b_ob->d_ob, attr, ac, av);
 }
 
+t_max_err dadaobj_jbox_setattr_gridmode(t_dadaobj_jbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+    return dadaobj_setattr_gridmode(&b_ob->d_ob, attr, ac, av);
+}
+
 
 t_max_err dadaobj_jbox_setattr_gridcolor(t_dadaobj_jbox *b_ob, t_object *attr, long ac, t_atom *av)
 {
@@ -702,6 +724,11 @@ t_max_err dadaobj_pxjbox_setattr_grid(t_dadaobj_pxjbox *b_ob, t_object *attr, lo
 t_max_err dadaobj_pxjbox_setattr_showgrid(t_dadaobj_pxjbox *b_ob, t_object *attr, long ac, t_atom *av)
 {
     return dadaobj_setattr_showgrid(&b_ob->d_ob, attr, ac, av);
+}
+
+t_max_err dadaobj_pxjbox_setattr_gridmode(t_dadaobj_pxjbox *b_ob, t_object *attr, long ac, t_atom *av)
+{
+    return dadaobj_setattr_gridmode(&b_ob->d_ob, attr, ac, av);
 }
 
 t_max_err dadaobj_pxjbox_setattr_gridcolor(t_dadaobj_pxjbox *b_ob, t_object *attr, long ac, t_atom *av)
@@ -978,12 +1005,22 @@ void dadaobj_class_init(t_class *c, e_llllobj_obj_types type, long flags)
             // @includeifflagged DADAOBJ_GRID+DADAOBJ_SNAPTOGRID
         }
         
-        DADAOBJ_CLASS_ATTR_DOUBLE_ARRAY_SUBSTRUCTURE(c, type, "grid",0, t_dadaobj, m_grid, t_grid_manager, grid_size, 2);
-		CLASS_ATTR_STYLE_LABEL(c, "grid", 0, "text", "Grid Size");
-		CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"grid",0,"10 10");
-		CLASS_ATTR_CATEGORY(c, "grid", 0, "Axes And Grid");
-        CLASS_ATTR_ACCESSORS(c, "grid", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_grid : (method)dadaobj_pxjbox_setattr_grid);
-		// @description Sets the grid size, in coordinates.
+        DADAOBJ_CLASS_ATTR_CHAR_SUBSTRUCTURE(c, type, "gridmode",0, t_dadaobj, m_grid, t_grid_manager, grid_mode);
+        CLASS_ATTR_STYLE_LABEL(c,"gridmode",0,"enumindex","Grid Mode");
+        CLASS_ATTR_DEFAULT_SAVE(c,"gridmode",0, flags & DADAOBJ_GRID_FIXEDDEFAULT ? "0" : "1");
+        CLASS_ATTR_ENUMINDEX(c,"gridmode", 0, "Fixed Automatic");
+        CLASS_ATTR_CATEGORY(c, "gridmode", 0, "Axes And Grid");
+        CLASS_ATTR_ACCESSORS(c, "gridmode", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_gridmode : (method)dadaobj_pxjbox_setattr_gridmode);
+        // @description Sets the grid mode, either Fixed (0) or Automatic (1 = default). In Automatic mode the space between grid lines
+        // is automatically adapted according to the level of zoom.
+        // @includeifflagged DADAOBJ_GRID
+        
+        DADAOBJ_CLASS_ATTR_DOUBLE_ARRAY_SUBSTRUCTURE(c, type, "gridstep",0, t_dadaobj, m_grid, t_grid_manager, grid_size_fixed, 2);
+		CLASS_ATTR_STYLE_LABEL(c, "gridstep", 0, "text", "Grid Size");
+		CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"gridstep",0,"10 10");
+		CLASS_ATTR_CATEGORY(c, "gridstep", 0, "Axes And Grid");
+        CLASS_ATTR_ACCESSORS(c, "gridstep", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_grid : (method)dadaobj_pxjbox_setattr_grid);
+		// @description Sets the grid size, in coordinates (only useful if <m>gridmode</m> is set to 0 = Fixed)
 		// @includeifflagged DADAOBJ_GRID
 
 		DADAOBJ_CLASS_ATTR_CHAR_SUBSTRUCTURE(c, type, "showgrid",0, t_dadaobj, m_grid, t_grid_manager, show_grid);
@@ -1155,11 +1192,11 @@ long dadaobj_anything_handle_domain_or_range(t_dadaobj *r_ob, t_symbol *router, 
         outletnum = r_ob->m_interface.notifications_out_num;
     
     if (router == gensym("getdomain")) {
-        // set the displayed domain (only works for first view)
-//        t_object *view = jpatcher_get_firstview((t_object *)gensym("#P")->s_thing);
-        t_object *view = jpatcher_get_firstview(r_ob->orig_obj);
-        double min, max;
+        // get the displayed domain (only works for first view)
+        t_object *view = jpatcher_get_firstview(dadaobj_get_patcher(r_ob));
+        
         t_llll *res = llll_get();
+        double min, max;
         dadaobj_getdomain(r_ob, view, &min, &max, NULL);
         
         llll_appendsym(res, _llllobj_sym_domain);
@@ -1171,8 +1208,8 @@ long dadaobj_anything_handle_domain_or_range(t_dadaobj *r_ob, t_symbol *router, 
         
     } else if (router == gensym("getrange")) {
         // set the displayed domain (only works for first view)
-//        t_object *view = jpatcher_get_firstview((t_object *)gensym("#P")->s_thing);
-        t_object *view = jpatcher_get_firstview(r_ob->orig_obj);
+        t_object *view = jpatcher_get_firstview(dadaobj_get_patcher(r_ob));
+
         double min, max;
         t_llll *res = llll_get();
         dadaobj_getrange(r_ob, view, &min, &max, NULL);
@@ -1359,6 +1396,143 @@ void dadaobj_double_to_string(double val, char *buf, int max_decimals, char also
 
 void dadaobj_paint_grid(t_dadaobj *r_ob, t_object *view, t_dada_force_graphics *force_graphics)
 {
+    if (r_ob->m_grid.must_update_grid_size) {
+        dadaobj_update_grid_size(r_ob, view);
+        r_ob->m_grid.must_update_grid_size = false;
+    }
+    
+    if (!r_ob->m_grid.show_grid && !r_ob->m_grid.show_axes && !r_ob->m_grid.show_labels)
+        return;
+    
+    t_rect rect = force_graphics->rect;
+    t_pt center = force_graphics->center_pix;
+    t_jgraphics *g = view ? jbox_start_layer(r_ob->orig_obj, view, gensym("grid"), rect.width, rect.height) : force_graphics->graphic_context;
+    
+    t_pt grid_size = dadaobj_get_grid_size(r_ob);
+    if (g) {
+        if (r_ob->m_grid.show_grid) {
+            
+            double pix;
+            t_pt pix_step = build_pt(grid_size.x * r_ob->m_zoom.zoom.x, grid_size.y * r_ob->m_zoom.zoom.y);
+            
+            if (pix_step.x <= 0) pix_step.x = 1;
+            if (pix_step.y <= 0) pix_step.y = 1;
+            
+            for (pix = center.x; pix < rect.width; pix += pix_step.x)
+                if (pix > 0 && pix < rect.width)
+                    paint_line_fast(g, r_ob->m_grid.j_gridcolor, pix, 0, pix, rect.height, 1);
+            
+            for (pix = center.x - pix_step.x; pix > 0; pix -= pix_step.x)
+                if (pix > 0 && pix < rect.width)
+                    paint_line_fast(g, r_ob->m_grid.j_gridcolor, pix, 0, pix, rect.height, 1);
+            
+            for (pix = center.y; pix < rect.height; pix += pix_step.y)
+                if (pix > 0 && pix < rect.height)
+                    paint_line_fast(g, r_ob->m_grid.j_gridcolor, 0, pix, rect.width, pix, 1);
+            
+            for (pix = center.y - pix_step.y; pix > 0; pix -= pix_step.y)
+                if (pix > 0 && pix < rect.height)
+                    paint_line_fast(g, r_ob->m_grid.j_gridcolor, 0, pix, rect.width, pix, 1);
+        }
+        
+        if (r_ob->m_grid.show_axes) {
+            t_pt origin = view ? get_center_pix(r_ob, view, NULL) : force_graphics->center_pix;
+            const double PAD = 10, PAD_2 = 3;
+            
+            if (origin.x > -PAD && origin.x < rect.width + PAD)
+                paint_arrow(g, r_ob->m_grid.j_axescolor, origin.x, rect.height, origin.x, 0 + PAD_2, 1, DADA_AXIS_ARROW_SIZE, DADA_AXIS_ARROW_SIZE);
+            
+            if (origin.y > -PAD && origin.y < rect.height + PAD)
+                paint_arrow(g, r_ob->m_grid.j_axescolor, 0, origin.y, rect.width - PAD_2, origin.y, 1, DADA_AXIS_ARROW_SIZE, DADA_AXIS_ARROW_SIZE);
+        }
+        
+        if (r_ob->m_grid.show_labels || (r_ob->m_grid.show_axes && r_ob->m_grid.show_axes_labels)) {
+            t_pt origin = view ? get_center_pix(r_ob, view, NULL) : force_graphics->center_pix;
+            t_pt coord = build_pt(0, 0);
+            t_pt pix_step = build_pt(grid_size.x * r_ob->m_zoom.zoom.x, grid_size.y * r_ob->m_zoom.zoom.y);
+            t_jfont *jf_labels = jfont_create_debug("Arial", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL, r_ob->m_grid.labelsfontsize);
+            double pix;
+            char text[16];
+            char labels_are_on_axes = r_ob->m_grid.show_axes;
+            
+            const double PIX_THRESH = 5 * r_ob->m_grid.labelsfontsize;
+            double AXIS_PAD = 3;
+            
+            double y_pos = CLAMP(origin.y, 0, rect.height);
+            double x_pos = CLAMP(origin.x, 0, rect.width);
+            long y_align = (y_pos > rect.height/2 ? -1 : 1);
+            long x_align = (x_pos > rect.width/2 ? -1 : 1);
+            
+            if (!labels_are_on_axes) {
+                y_pos = rect.height;
+                y_align = -1;
+                x_pos = 0;
+                x_align = 1;
+            }
+            
+            
+            if (r_ob->m_grid.show_labels) {
+                long x_step = pix_step.x <= 0.01 ? 0 : (pix_step.x < PIX_THRESH ? PIX_THRESH/pix_step.x : 1);
+                long y_step = pix_step.y <= 0.01 ? 0 : (pix_step.y < PIX_THRESH ? PIX_THRESH/pix_step.y : 1);
+                
+                pix_step.x *= x_step;
+                pix_step.y *= y_step;
+                
+                if (pix_step.x > 0) {
+                    for (pix = center.x + pix_step.x * labels_are_on_axes, coord = build_pt(x_step * grid_size.x * labels_are_on_axes, 0); pix < rect.width; pix += pix_step.x, coord.x += x_step * grid_size.x)
+                        if (pix > 0 && pix < rect.width) {
+                            dadaobj_double_to_string(coord.x, text, 4, true);
+                            write_text(g, jf_labels, r_ob->m_grid.j_labelscolor, text, pix - 100, y_pos - (y_align < 0) * 100 + (y_align < 0 ? -AXIS_PAD : AXIS_PAD), 200, 100, JGRAPHICS_TEXT_JUSTIFICATION_HCENTERED | (y_align < 0 ? JGRAPHICS_TEXT_JUSTIFICATION_BOTTOM : JGRAPHICS_TEXT_JUSTIFICATION_TOP), true, false);
+                        }
+                    
+                    for (pix = center.x - pix_step.x, coord = build_pt(-x_step * grid_size.x, 0); pix > 0; pix -= pix_step.x, coord.x -= x_step * grid_size.x)
+                        if (pix > 0 && pix < rect.width) {
+                            dadaobj_double_to_string(coord.x, text, 4, true);
+                            write_text(g, jf_labels, r_ob->m_grid.j_labelscolor, text, pix - 100, y_pos - (y_align < 0) * 100 + (y_align < 0 ? -AXIS_PAD : AXIS_PAD), 200, 100, JGRAPHICS_TEXT_JUSTIFICATION_HCENTERED | (y_align < 0 ? JGRAPHICS_TEXT_JUSTIFICATION_BOTTOM : JGRAPHICS_TEXT_JUSTIFICATION_TOP), true, false);
+                        }
+                }
+                
+                if (pix_step.y > 0) {
+                    for (pix = center.y + pix_step.y * labels_are_on_axes, coord = build_pt(0, -y_step * grid_size.y * labels_are_on_axes); pix < rect.height; pix += pix_step.y, coord.y -= y_step * grid_size.y)
+                        if (pix > 0 && pix < rect.height) {
+                            dadaobj_double_to_string(coord.y, text, 4, true);
+                            write_text(g, jf_labels, r_ob->m_grid.j_labelscolor, text, x_pos - (x_align < 0) * 100 + (x_align < 0 ? -AXIS_PAD : AXIS_PAD), pix - 100, 100, 200, JGRAPHICS_TEXT_JUSTIFICATION_VCENTERED | (x_align < 0 ? JGRAPHICS_TEXT_JUSTIFICATION_RIGHT : JGRAPHICS_TEXT_JUSTIFICATION_LEFT), true, false);
+                        }
+                    
+                    for (pix = center.y - pix_step.y, coord = build_pt(0, y_step * grid_size.y); pix > 0; pix -= pix_step.y, coord.y += y_step * grid_size.y)
+                        if (pix > 0 && pix < rect.height) {
+                            dadaobj_double_to_string(coord.y, text, 4, true);
+                            write_text(g, jf_labels, r_ob->m_grid.j_labelscolor, text, x_pos - (x_align < 0) * 100 + (x_align < 0 ? -AXIS_PAD : AXIS_PAD), pix - 100, 100, 200, JGRAPHICS_TEXT_JUSTIFICATION_VCENTERED | (x_align < 0 ? JGRAPHICS_TEXT_JUSTIFICATION_RIGHT : JGRAPHICS_TEXT_JUSTIFICATION_LEFT), true, false);
+                        }
+                }
+                
+                jfont_destroy(jf_labels);
+            }
+            
+            if (r_ob->m_grid.show_axes && r_ob->m_grid.show_axes_labels) {
+                t_jfont *jf_labels = jfont_create_debug("Arial", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL, r_ob->m_grid.axeslabelsfontsize);
+                if (r_ob->m_grid.x_label && r_ob->m_grid.x_label->s_name && strlen(r_ob->m_grid.x_label->s_name) > 0)
+                    write_text(g, jf_labels, r_ob->m_grid.j_axeslabelscolor, r_ob->m_grid.x_label->s_name, 0, y_align < 0 ? y_pos + AXIS_PAD : 0, rect.width  - AXIS_PAD, y_align < 0 ? rect.height - (y_pos + AXIS_PAD) : y_pos - AXIS_PAD, JGRAPHICS_TEXT_JUSTIFICATION_RIGHT | (y_align < 0 ? JGRAPHICS_TEXT_JUSTIFICATION_TOP : JGRAPHICS_TEXT_JUSTIFICATION_BOTTOM), true, true);
+                if (r_ob->m_grid.y_label && r_ob->m_grid.y_label->s_name && strlen(r_ob->m_grid.y_label->s_name) > 0)
+                    write_text_in_vertical(g, jf_labels, r_ob->m_grid.j_axeslabelscolor, r_ob->m_grid.y_label->s_name, x_align > 0 ? 0 : x_pos + AXIS_PAD, AXIS_PAD, x_align > 0 ? x_pos - AXIS_PAD : rect.width - (x_pos + AXIS_PAD), rect.height - AXIS_PAD, JGRAPHICS_TEXT_JUSTIFICATION_TOP | (x_align > 0 ? JGRAPHICS_TEXT_JUSTIFICATION_RIGHT : JGRAPHICS_TEXT_JUSTIFICATION_LEFT), 1.);
+                jfont_destroy(jf_labels);
+            }
+        }
+        
+        
+        if (view)
+            jbox_end_layer(r_ob->orig_obj, view, gensym("grid"));
+    }
+    
+    if (view)
+        jbox_paint_layer(r_ob->orig_obj, view, gensym("grid"), 0., 0.);    // position of the layer
+}
+
+
+
+/*
+void dadaobj_paint_grid_old(t_dadaobj *r_ob, t_object *view, t_dada_force_graphics *force_graphics)
+{
     if (!r_ob->m_grid.show_grid && !r_ob->m_grid.show_axes && !r_ob->m_grid.show_labels)
         return;
     
@@ -1484,6 +1658,7 @@ void dadaobj_paint_grid(t_dadaobj *r_ob, t_object *view, t_dada_force_graphics *
     if (view)
         jbox_paint_layer(r_ob->orig_obj, view, gensym("grid"), 0., 0.);	// position of the layer
 }
+*/
 
 void dadaobj_jbox_set_state_and_free_llll(t_object *x, t_llll *ll)
 {

@@ -199,6 +199,7 @@
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Features" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Add Label To Features" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
 		</attribute>
@@ -212,6 +213,7 @@
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Features" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Add Measure Number To Features" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
 		</attribute>
@@ -254,6 +256,7 @@
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Features" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Add Point In Measure To Features" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
 		</attribute>
@@ -468,7 +471,7 @@
 	<!--SEEALSO-->
 	<seealsolist>
 		<seealso name="dada.match" />
-		<seealso name="dada.catart" />
+		<seealso name="dada.cartesian" />
 		<seealso name="dada.base" />
 		<seealso name="dada.analysis.centroid" />
 		<seealso name="dada.analysis.energy" />

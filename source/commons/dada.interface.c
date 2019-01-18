@@ -519,6 +519,8 @@ void dadaobj_setdomain(t_dadaobj *r_ob, t_object *view, double min, double max)
     
     dadaobj_setcenteroffset(r_ob, build_pt(vals[0], vals[1]));
     
+    r_ob->m_grid.must_update_grid_size = true;
+    
     if (!(r_ob->flags & DADAOBJ_SPLITXYZOOM))
         dadaobj_setzoom(r_ob, build_pt(r_ob->m_zoom.zoom_perc, r_ob->m_zoom.zoom_perc)); // re-putting zoom equal both for x and y
 }
@@ -554,6 +556,7 @@ void dadaobj_setrange(t_dadaobj *r_ob, t_object *view, double min, double max)
     
     dadaobj_setcenteroffset(r_ob, build_pt(vals[0], vals[1]));
 
+    r_ob->m_grid.must_update_grid_size = true;
 
     if (!(r_ob->flags & DADAOBJ_SPLITXYZOOM))
         dadaobj_setzoom(r_ob, build_pt(r_ob->m_zoom.zoom_y_perc, r_ob->m_zoom.zoom_y_perc)); // re-putting zoom equal both for x and y
@@ -679,10 +682,40 @@ void drag_coord_delta(t_dadaobj *r_ob, t_pt *delta_coord, char snap_to_grid)
 
 /// GRIDS
 
+t_pt get_best_grid(t_dadaobj *r_ob, t_object *view)
+{
+    const double LOG5 = 0.69897;
+    double width = 100. / r_ob->m_zoom.zoom.x;
+    double height = 100. / r_ob->m_zoom.zoom.y;
+    double l10w = log10(width);
+    double l10h = log10(height);
+    double fl_l10w = floor(l10w);
+    double fl_l10h = floor(l10h);
+    double step_x = pow(10., fl_l10w)*(l10w - fl_l10w < LOG5 ? 1. : 5.);
+    double step_y = pow(10., fl_l10h)*(l10h - fl_l10h < LOG5 ? 1. : 5.);
+    return build_pt(step_x, step_y);
+}
+
+
+void dadaobj_update_grid_size(t_dadaobj *r_ob, t_object *view)
+{
+    if (r_ob->m_grid.grid_mode == 1) {
+        r_ob->m_grid.grid_size_curr = get_best_grid(r_ob, view);
+    }
+}
+
+
+t_pt dadaobj_get_grid_size(t_dadaobj *r_ob)
+{
+    if (r_ob->m_grid.grid_mode == 1)
+        return r_ob->m_grid.grid_size_curr;
+    else
+        return r_ob->m_grid.grid_size_fixed;
+}
 
 void snap_coord_to_grid(t_dadaobj *r_ob, t_pt *coord)
 {
-	t_pt grid_size = r_ob->m_grid.grid_size;
+	t_pt grid_size = dadaobj_get_grid_size(r_ob);
 	coord->x = round(coord->x / grid_size.x) * grid_size.x;
 	coord->y = round(coord->y / grid_size.y) * grid_size.y;
 }

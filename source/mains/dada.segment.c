@@ -32,7 +32,7 @@
 	score, segment, chunk, grain, split 
 	
 	@seealso
-	dada.match, dada.catart, dada.base, dada.analysis.centroid, dada.analysis.energy, dada.analysis.count, dada.analysis.spread
+	dada.match, dada.cartesian, dada.base, dada.analysis.centroid, dada.analysis.energy, dada.analysis.count, dada.analysis.spread
 	
 	@owner
 	Daniele Ghisi

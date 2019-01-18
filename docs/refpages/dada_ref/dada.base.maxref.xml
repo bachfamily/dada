@@ -388,7 +388,7 @@
 	<seealsolist>
 		<seealso name="bach.shelf" />
 		<seealso name="dada.segment" />
-		<seealso name="dada.catart" />
+		<seealso name="dada.cartesian" />
 		<seealso name="dada.distances" />
 	</seealsolist>
 

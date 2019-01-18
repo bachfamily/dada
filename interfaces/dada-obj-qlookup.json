@@ -38,7 +38,7 @@
     "seealso": [
       "bach.shelf",
       "dada.segment",
-      "dada.catart",
+      "dada.cartesian",
       "dada.distances"
     ]
   },
@@ -82,7 +82,7 @@
     ],
     "seealso": [
       "dada.match",
-      "dada.catart",
+      "dada.cartesian",
       "dada.base",
       "dada.analysis.centroid",
       "dada.analysis.energy",
@@ -247,30 +247,7 @@
     "seealso": [
       "dada.base",
       "dada.segment",
-      "dada.catart"
-    ]
-  },
-  "dada.catart": {
-    "digest": "Symbolic concatenative synthesis interface",
-    "module": "dada",
-    "category": [
-      "dada",
-      "dada interfaces",
-      "dada corpus-based tools",
-      "dada geometry"
-    ],
-    "keywords": [
-      "catart",
-      "corpus",
-      "database",
-      "concatenative",
-      "synthesis",
-      "exploration"
-    ],
-    "seealso": [
-      "dada.base",
-      "dada.segment",
-      "dada.distances"
+      "dada.cartesian"
     ]
   },
   "dada.life": {
@@ -352,6 +329,29 @@
       "bach.poset"
     ]
   },
+  "dada.cartesian": {
+    "digest": "Cartesian display of database",
+    "module": "dada",
+    "category": [
+      "dada",
+      "dada interfaces",
+      "dada corpus-based tools",
+      "dada geometry"
+    ],
+    "keywords": [
+      "cartesian",
+      "corpus",
+      "database",
+      "concatenative",
+      "synthesis",
+      "exploration"
+    ],
+    "seealso": [
+      "dada.base",
+      "dada.segment",
+      "dada.distances"
+    ]
+  },
   "dada.machines": {
     "digest": "Machine networks",
     "module": "dada",
@@ -391,7 +391,7 @@
     ],
     "seealso": [
       "dada.segment",
-      "dada.catart",
+      "dada.cartesian",
       "dada.analysis.centroid"
     ]
   },
@@ -420,7 +420,7 @@
     ],
     "seealso": [
       "dada.segment",
-      "dada.catart"
+      "dada.cartesian"
     ]
   },
   "dada.analysis.rhythmdistrib": {
@@ -443,7 +443,7 @@
     ],
     "seealso": [
       "dada.segment",
-      "dada.catart"
+      "dada.cartesian"
     ]
   },
   "dada.analysis.centroid": {
@@ -462,7 +462,7 @@
     ],
     "seealso": [
       "dada.segment",
-      "dada.catart",
+      "dada.cartesian",
       "dada.analysis.spread"
     ]
   },
@@ -594,7 +594,7 @@
     ],
     "seealso": [
       "dada.segment",
-      "dada.catart"
+      "dada.cartesian"
     ]
   },
   "dada.analysis.duration": {
@@ -614,7 +614,7 @@
     ],
     "seealso": [
       "dada.segment",
-      "dada.catart",
+      "dada.cartesian",
       "dada.analysis.count"
     ]
   },
@@ -636,7 +636,7 @@
     ],
     "seealso": [
       "dada.segment",
-      "dada.catart",
+      "dada.cartesian",
       "dada.analysis.centroid",
       "dada.analysis.spread"
     ]
@@ -657,7 +657,7 @@
     ],
     "seealso": [
       "dada.segment",
-      "dada.catart"
+      "dada.cartesian"
     ]
   }
 }

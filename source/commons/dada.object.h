@@ -139,6 +139,7 @@ typedef enum _dadaobj_flags
     DADAOBJ_LABELS_SHOWDEFAULT= 0x400000,	///< Show labels is the default
     DADAOBJ_BORDER_SHOWDEFAULT= 0x800000,	///< Show border by default
     DADAOBJ_EXPORTTOJITTER    = 0x1000000,    ///< Supports export to Jitter
+    DADAOBJ_GRID_FIXEDDEFAULT  = 0x2000000,    ///< Use fixed grid by default
 } e_dadaobj_flags;
 
 
@@ -513,8 +514,12 @@ typedef struct _item_class_manager
 typedef struct _grid_manager
 {
 	char			snap_to_grid;
-	t_pt			grid_size;
 
+    char            grid_mode; // 0 = fixed, 1 = auto;
+	t_pt			grid_size_fixed; // only meaningful if grid_mode == 0
+    t_pt            grid_size_curr;  // current grid size, used if grid_mode == 1
+    char            must_update_grid_size;
+    
     char			show_grid;
 	t_jrgba			j_gridcolor;
 

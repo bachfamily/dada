@@ -33,7 +33,7 @@
 	spread, analysis, pitch, standard deviation, variance
 
 	@seealso
-	dada.segment, dada.catart, dada.analysis.centroid
+	dada.segment, dada.cartesian, dada.analysis.centroid
 	
 	@owner
 	Daniele Ghisi

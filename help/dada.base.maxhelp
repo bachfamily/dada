@@ -9,7 +9,7 @@
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 100.0, 100.0, 825.0, 610.0 ],
+		"rect" : [ 147.0, 79.0, 825.0, 610.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -1371,7 +1371,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 100.0, 126.0, 825.0, 584.0 ],
+						"rect" : [ 0.0, 26.0, 825.0, 584.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -2496,7 +2496,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 0.0, 26.0, 825.0, 584.0 ],
+						"rect" : [ 147.0, 105.0, 825.0, 584.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -2840,7 +2840,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 101.0, 234.0, 349.0, 38.0 ],
+									"patching_rect" : [ 101.0, 234.0, 352.0, 38.0 ],
 									"style" : "",
 									"text" : "addentry myscores [content [roll [ [ 0. [ 7900. 405. 100 0 ] 0 ] 0 ]]] [title Sol] [page 5] [bpm 60.5]"
 								}
@@ -2856,7 +2856,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 62.0, 177.0, 401.0, 52.0 ],
+									"patching_rect" : [ 62.0, 177.0, 402.0, 52.0 ],
 									"style" : "",
 									"text" : "addentry myscores [content [roll [ [ 0. [ 6000. 405. 100 0 ] 0 ] [ 400. [ 7200. 405. 100 0 ] [ 7600. 405. 100 0 ] 0 ] [ 800. [ 7200. 405. 100 0 ] [ 7600. 405. 100 0 ] 0 ] 0 ] ]] [title UmPa] [page 5] [bpm 72.]"
 								}

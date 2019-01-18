@@ -1902,7 +1902,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 366.0, 462.0, 220.0, 21.0 ],
 									"style" : "",
-									"text" : "(... or use dada.catart to visualize it!)",
+									"text" : "(... or use dada.cartesian to visualize it!)",
 									"textcolor" : [ 0.5, 0.5, 0.5, 1.0 ]
 								}
 

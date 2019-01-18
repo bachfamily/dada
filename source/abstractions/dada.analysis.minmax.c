@@ -32,7 +32,7 @@
 	analysis, minimum, maximum, min, max, minima, maxima, cents, pitch, velocity, velocities, duration, onset
 
 	@seealso
-	dada.segment, dada.catart
+	dada.segment, dada.cartesian
 	
 	@owner
 	Daniele Ghisi

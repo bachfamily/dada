@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1E73404F1AF3A06800B9F6CF"
-               BuildableName = "dada.catart.mxo"
-               BlueprintName = "dada.catart"
+               BuildableName = "dada.cartesian.mxo"
+               BlueprintName = "dada.cartesian"
                ReferencedContainer = "container:dada.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -26,6 +26,7 @@
       buildConfiguration = "Development"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      language = ""
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
@@ -36,6 +37,7 @@
       buildConfiguration = "Development"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      language = ""
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
@@ -46,8 +48,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1E73404F1AF3A06800B9F6CF"
-            BuildableName = "dada.catart.mxo"
-            BlueprintName = "dada.catart"
+            BuildableName = "dada.cartesian.mxo"
+            BlueprintName = "dada.cartesian"
             ReferencedContainer = "container:dada.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -64,8 +66,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1E73404F1AF3A06800B9F6CF"
-            BuildableName = "dada.catart.mxo"
-            BlueprintName = "dada.catart"
+            BuildableName = "dada.cartesian.mxo"
+            BlueprintName = "dada.cartesian"
             ReferencedContainer = "container:dada.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

@@ -3425,7 +3425,8 @@ void platform_mousedown(t_platform *x, t_object *patcherview, t_pt pt, long modi
 
 char platform_snap_selection_to_grid_fn(t_dadaobj *r_ob, t_dadaitem *item, void *data)
 {
-	dadaitem_move(r_ob, item, build_pt(round(item->coord.x / r_ob->m_grid.grid_size.x) * r_ob->m_grid.grid_size.x, round(item->coord.y / r_ob->m_grid.grid_size.y) * r_ob->m_grid.grid_size.y), DIA_INTERFACE + DIA_UNDO);
+    t_pt grid_size = dadaobj_get_grid_size(r_ob);
+	dadaitem_move(r_ob, item, build_pt(round(item->coord.x / grid_size.x) * grid_size.x, round(item->coord.y / grid_size.y) * grid_size.y), DIA_INTERFACE + DIA_UNDO);
 	return 0;
 }
 

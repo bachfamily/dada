@@ -688,7 +688,6 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Continuously Output bang if Changed " />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
@@ -742,22 +741,6 @@
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
 		</attribute>
-		<attribute name="grid" get="1" set="1" type="" size="1">
-			<digest>
-				Grid Size
-			</digest>
-			<description>
-				Sets the grid size, in coordinates.
-			</description>
-			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Axes And Grid" />
-				<attribute name="default" get="1" set="1" type="" size="1" value="10 10" />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Grid Size" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
-			</attributelist>
-		</attribute>
 		<attribute name="gridcolor" get="1" set="1" type="" size="1">
 			<digest>
 				Grid Color
@@ -801,6 +784,38 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Axes And Grid" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="8." />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Grid Labels Font Size" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
+			</attributelist>
+		</attribute>
+		<attribute name="gridmode" get="1" set="1" type="" size="1">
+			<digest>
+				Grid Mode
+			</digest>
+			<description>
+				Sets the grid mode, either Fixed (0) or Automatic (1 = default). In Automatic mode the space between grid lines
+				is automatically adapted according to the level of zoom.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Axes And Grid" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Grid Mode" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="enumindex" />
+			</attributelist>
+		</attribute>
+		<attribute name="gridstep" get="1" set="1" type="" size="1">
+			<digest>
+				Grid Size
+			</digest>
+			<description>
+				Sets the grid size, in coordinates (only useful if <m>gridmode</m> is set to 0 = Fixed)
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Axes And Grid" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="10 10" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Grid Size" />
 				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
@@ -865,7 +880,6 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="50" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Maximum Number Of Undo Steps" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
 			</attributelist>
@@ -881,7 +895,6 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Send bang Upon Messages" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
@@ -979,7 +992,6 @@
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Outlet Types" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
 			</attributelist>
 		</attribute>
@@ -1212,7 +1224,6 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Axes And Grid" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Snap To Grid" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
@@ -1259,7 +1270,6 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="1" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Send bang Upon Undo" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
@@ -1307,7 +1317,6 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Post Undo/Redo Steps" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>

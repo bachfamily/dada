@@ -441,8 +441,15 @@ void base_dblclick(t_base *x)
     llll_to_text_buf_pretty(ll, &buf, 0, BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART, NULL);
 //    llll_to_text_buf_pretty(ll, &buf, 0, BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, 0, NULL);
 //    llll_to_text_buf(ll, &buf);
-    object_method(x->m_editor, gensym("settext"), buf, gensym("utf-8"));
-    object_attr_setsym(x->m_editor, gensym("title"), gensym("Database as llll"));
+
+    void *rv = object_method(x->m_editor, gensym("settext"), buf, gensym("utf-8"));  // non-0 if the text was too long
+    if (rv) {
+        t_object *ed = x->m_editor;
+        x->m_editor = NULL;
+        object_free(ed);
+    } else {
+        object_attr_setsym(x->m_editor, gensym("title"), gensym("Database as llll"));
+    }
     llll_free(ll);
 }
 

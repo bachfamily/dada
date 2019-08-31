@@ -264,8 +264,10 @@ void shape_offset(t_shape *shape, double how_much)
         {
             t_polygon *p = NULL;
             dadapolygon_to_polygon(&shape->shape.polygon, &p);
-            polygon_offset_smart_inplace(&p, how_much, 0, NULL, 0, NULL, false, 0, NULL, NULL);
-            polygon_to_dadapolygon(p, &shape->shape.polygon);
+            //            polygon_offset_smart_inplace(&p, how_much, 0, NULL, 0, NULL, false, 0, NULL, NULL);
+            t_polygon *p_offset = polygon_offset_simple(p, how_much);
+            polygon_free(p);
+            polygon_to_dadapolygon(p_offset, &shape->shape.polygon);
             polygon_free(p);
         }
             break;

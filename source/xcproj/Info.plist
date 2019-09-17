@@ -11,9 +11,9 @@
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
-	<string>0.1.2</string>
+	<string>0.2</string>
 	<key>CFBundleLongVersionString</key>
-	<string>${PRODUCT_NAME} ${PRODUCT_VERSION}, Copyright 2018 Daniele Ghisi</string>
+	<string>${PRODUCT_NAME} ${PRODUCT_VERSION}, Copyright 2017-2019 Daniele Ghisi</string>
 	<key>CFBundlePackageType</key>
 	<string>iLaX</string>
 	<key>CFBundleShortVersionString</key>
@@ -21,7 +21,7 @@
 	<key>CFBundleSignature</key>
 	<string>max2</string>
 	<key>CFBundleVersion</key>
-	<string>1567261008</string>
+	<string>1568762128</string>
 	<key>CSResourcesFileMapped</key>
 	<true/>
 </dict>

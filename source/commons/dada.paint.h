@@ -13,7 +13,7 @@
 
 #include "dada.h"
 #include "dada.commons.h"
-#include "notation.h"
+#include "notation/notation.h"
 #include "dada.geometry.h"
 
 /** Line styles.	@ingroup graphs */

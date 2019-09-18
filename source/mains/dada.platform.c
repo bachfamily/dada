@@ -42,7 +42,7 @@
 #include "dada.interface.h"
 #include "dada.geometry.h"
 #include "dada.paint.h"
-#include "notation.h"
+#include "notation/notation.h"
 //#include "dada.cursors.data.c"
 #include "dada.math.h"
 #include "dada.popupmenu.h"

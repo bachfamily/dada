@@ -10,7 +10,7 @@
 #define _DADA_OBJECT_H_
 
 #include "dada.h"
-#include "notation.h"
+#include "notation/notation.h"
 
 
 #define	DADA_DEFAULT_MAX_DECIMALS 6

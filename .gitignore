@@ -66,8 +66,6 @@ source/xcproj/bach.xcodeproj/*.mode*
 
 # Folders #
 ###########
-source/lib/SimpleMatrix_v4.1
-source/lib/SimpleMatrix_v4.1/*
 
 
 

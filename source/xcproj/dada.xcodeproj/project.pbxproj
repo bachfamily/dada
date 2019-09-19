@@ -2454,13 +2454,13 @@
 				GENERATE_PKGINFO_FILE = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"../lib/gmp/**",
-					"../lib/mpfr/**",
+					"/usr/local/opt/gmp/include/**",
+					"/usr/local/opt/mpfr/include/**",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"../lib/gmp/**",
-					"../lib/mpfr/**",
+					"/usr/local/opt/gmp/lib/**",
+					"/usr/local/opt/mpfr/lib/**",
 				);
 				OTHER_CFLAGS = (
 					"-DU_HAVE_GCC_ATOMICS=0",
@@ -2469,8 +2469,8 @@
 				OTHER_LDFLAGS = (
 					"-framework",
 					JitterAPI,
-					../lib/gmp/6.1.2_2/lib/libgmp.a,
-					../lib/mpfr/4.0.1/lib/libmpfr.a,
+					/usr/local/opt/gmp/lib/libgmp.a,
+					/usr/local/opt/mpfr/lib/libmpfr.a,
 					"$(C74_SYM_LINKER_FLAGS)",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bachproject.dada.music;
@@ -2492,13 +2492,13 @@
 				GENERATE_PKGINFO_FILE = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"../lib/gmp/**",
-					"../lib/mpfr/**",
+					"/usr/local/opt/gmp/include/**",
+					"/usr/local/opt/mpfr/include/**",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"../lib/gmp/**",
-					"../lib/mpfr/**",
+					"/usr/local/opt/gmp/lib/**",
+					"/usr/local/opt/mpfr/lib/**",
 				);
 				OTHER_CFLAGS = (
 					"-DU_HAVE_GCC_ATOMICS=0",
@@ -2507,8 +2507,8 @@
 				OTHER_LDFLAGS = (
 					"-framework",
 					JitterAPI,
-					../lib/gmp/6.1.2_2/lib/libgmp.a,
-					../lib/mpfr/4.0.1/lib/libmpfr.a,
+					/usr/local/opt/gmp/lib/libgmp.a,
+					/usr/local/opt/mpfr/lib/libmpfr.a,
 					"$(C74_SYM_LINKER_FLAGS)",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bachproject.dada.music;
@@ -2567,7 +2567,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					../lib/boost/1.60.0_2/include,
+					/usr/local/opt/boost/include/,
 				);
 				OTHER_CFLAGS = (
 					"-fvisibility=hidden",
@@ -2590,7 +2590,7 @@
 				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					../lib/boost/1.60.0_2/include,
+					/usr/local/opt/boost/include/,
 				);
 				OTHER_CFLAGS = (
 					"-fvisibility=hidden",

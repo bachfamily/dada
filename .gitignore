@@ -39,6 +39,8 @@ source/vs/.vs/*
 
 # Compiled source #
 ###################
+extensions/*
+externals/*
 *.mxo
 *.mxe
 *.mxe64

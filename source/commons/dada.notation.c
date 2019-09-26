@@ -419,7 +419,7 @@ char is_symbol_notename(t_symbol *s)
         return 0;
     
     for (i = 0; i < l; i++)
-        if (isupper(s->s_name[i]) || isnumber(s->s_name[i])) {
+        if (isupper(s->s_name[i]) || isdigit(s->s_name[i])) {
             // might still be a notename
         } else
             return 0;
@@ -2375,7 +2375,7 @@ void dada_roll_uncollapse(t_llll *gs, t_llll *voice_flags, char also_uncollapse_
 	}
 	
 	t_llll *out_voices = llll_get();
-	t_llll *voice_ll[num_voices];
+	t_llll **voice_ll = (t_llll **)bach_newptr(num_voices * sizeof(t_llll *));
 	for (i = 0; i < num_voices; i++) {
 		voice_ll[i] = llll_get();
 		llll_appendllll(out_voices, voice_ll[i], 0, WHITENULL_llll);
@@ -2466,6 +2466,7 @@ void dada_roll_uncollapse(t_llll *gs, t_llll *voice_flags, char also_uncollapse_
 	
 	// Chaining new content
 	llll_chain(gs, out_voices);
+	bach_freeptr(voice_ll);
 }
 
 /*

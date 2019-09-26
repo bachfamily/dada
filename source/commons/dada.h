@@ -24,6 +24,9 @@
 #include "foundation/llll_commons_ext.h"
 #include "graphics/bach_jit.h"
 
+#ifdef WIN_VERSION
+#define DADA_VERSION "0.2.0"
+#endif
 
 // DEBUG FLAGS
 // #define DADA_DEBUG_UNDO

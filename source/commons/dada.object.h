@@ -95,7 +95,10 @@ class_addmethod(c, (method) dadaobj_jbox_paintjit, "paintjit", A_SYM, 0); \
 class_addmethod(c, (method) dadaobj_jbox_mt, "mt", A_GIMME, 0);
 
 
-
+#ifdef WIN_VERSION
+#define strncasecmp _strnicmp
+#define strcasecmp _stricmp
+#endif
 
 /** A thread-safe storage cache for lists, in GIMME signature form */
 /*typedef struct _dadaobj_store

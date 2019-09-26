@@ -807,7 +807,9 @@ void find_convex_hull(long num_points, t_pt *points, t_dadapolygon *poly)
 	}
 	
     // Initialize Result
-    int next[n], done[n];
+	int *next = (int*)bach_newptr(n * sizeof(int));
+	int *done = (int*)bach_newptr(n * sizeof(int));
+	
     for (int i = 0; i < n; i++) {
         next[i] = -1;
         done[i] = 0;
@@ -846,6 +848,8 @@ void find_convex_hull(long num_points, t_pt *points, t_dadapolygon *poly)
 		poly->vertex[poly->num_vertices++] = points[next[i]];
 		i = next[i];
 	}
+	bach_freeptr(next);
+	bach_freeptr(done);
 }
 
 

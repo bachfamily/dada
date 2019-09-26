@@ -38,24 +38,28 @@
     <ClCompile Include="..\..\commons\dada.windows.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\commons\dada.h" />
-    <ClCompile Include="..\..\commons\dada.commons.h" />
-    <ClCompile Include="..\..\commons\dada.cursors.h" />
-    <ClCompile Include="..\..\commons\dada.cursors.data.h" />
-    <ClCompile Include="..\..\commons\dada.db.h" />
-    <ClCompile Include="..\..\commons\dada.geometry.h" />
-    <ClCompile Include="..\..\commons\dada.graphs.h" />
-    <ClCompile Include="..\..\commons\dada.inspector.h" />
-    <ClCompile Include="..\..\commons\dada.interface.h" />
-    <ClCompile Include="..\..\commons\dada.items.h" />
-    <ClCompile Include="..\..\commons\dada.math.h" />
-    <ClCompile Include="..\..\commons\dada.notation.h" />
-    <ClCompile Include="..\..\commons\dada.notation_spectral.h" />
-    <ClCompile Include="..\..\commons\dada.object.h" />
-    <ClCompile Include="..\..\commons\dada.paint.h" />
-    <ClCompile Include="..\..\commons\dada.popupmenu.h" />
-    <ClCompile Include="..\..\commons\dada.undo.h" />
-    <ClCompile Include="..\..\commons\dada.windows.h" />
+    <ClInclude Include="..\..\commons\dada.commons.h" />
+    <ClInclude Include="..\..\commons\dada.cursors.data.h" />
+    <ClInclude Include="..\..\commons\dada.cursors.h" />
+    <ClInclude Include="..\..\commons\dada.db.h" />
+    <ClInclude Include="..\..\commons\dada.doc.commons.h" />
+    <ClInclude Include="..\..\commons\dada.doc.substitutions.h" />
+    <ClInclude Include="..\..\commons\dada.geometry.h" />
+    <ClInclude Include="..\..\commons\dada.graphs.h" />
+    <ClInclude Include="..\..\commons\dada.h" />
+    <ClInclude Include="..\..\commons\dada.inspector.h" />
+    <ClInclude Include="..\..\commons\dada.interface.h" />
+    <ClInclude Include="..\..\commons\dada.items.h" />
+    <ClInclude Include="..\..\commons\dada.math.h" />
+    <ClInclude Include="..\..\commons\dada.notation.h" />
+    <ClInclude Include="..\..\commons\dada.notation_spectral.h" />
+    <ClInclude Include="..\..\commons\dada.object.h" />
+    <ClInclude Include="..\..\commons\dada.paint.h" />
+    <ClInclude Include="..\..\commons\dada.popupmenu.h" />
+    <ClInclude Include="..\..\commons\dada.undo.h" />
+    <ClInclude Include="..\..\commons\dada.windows.h" />
+    <ClInclude Include="..\..\commons\dada_doc_commons.h" />
+    <ClInclude Include="..\..\commons\dada_doc_substitutions.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{DF55A42A-CBF8-4F3D-9BF4-E99E6219CD31}</ProjectGuid>
@@ -195,6 +199,9 @@
       <ImportLibrary>$(IntDir)$(ProjectName).lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
+    <Lib>
+      <AdditionalDependencies>Shlwapi.lib</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -235,6 +242,9 @@
       <ImportLibrary>$(IntDir)$(ProjectName).lib</ImportLibrary>
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
+    <Lib>
+      <AdditionalDependencies>Shlwapi.lib</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -283,6 +293,9 @@
       <ImportLibrary>$(IntDir)$(ProjectName).lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
+    <Lib>
+      <AdditionalDependencies>Shlwapi.lib</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -330,6 +343,9 @@
       <ImportLibrary>$(IntDir)$(ProjectName).lib</ImportLibrary>
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
+    <Lib>
+      <AdditionalDependencies>Shlwapi.lib</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

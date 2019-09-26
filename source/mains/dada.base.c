@@ -43,6 +43,9 @@
 #include "ext_obex.h"
 #include "ext_database.h"
 #include "dada.db.h"
+#ifdef WIN_VERSION
+#include "io.h"
+#endif
 
 
 // Data Structures
@@ -1724,7 +1727,7 @@ void xbase_set_header_from_llll(t_xbase *b, t_llll *ll)
 long file_exists(char *fname) {
     char temp[MAX_PATH_CHARS];
     path_nameconform(fname, temp, PATH_STYLE_MAX, PATH_TYPE_BOOT);
-    if( access(temp, F_OK ) != -1 ) {
+    if (access(temp, 0) != -1 ) {
         // file exists
         return 1;
     } else {

@@ -98,6 +98,8 @@ class_addmethod(c, (method) dadaobj_jbox_mt, "mt", A_GIMME, 0);
 #ifdef WIN_VERSION
 #define strncasecmp _strnicmp
 #define strcasecmp _stricmp
+#include "Shlwapi.h"
+#define strcasestr StrStrI
 #endif
 
 /** A thread-safe storage cache for lists, in GIMME signature form */

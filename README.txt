@@ -33,7 +33,7 @@ You can start by having a look at the dada.overview patcher inside the Extras me
 If you want to compile *dada*:
 * you'll need the `bach library <http://www.bachproject.net>`_, with its sources, installed as a Max package (at the same location where the *dada* folder is) and its dependencies (including the `Max SDK <https://cycling74.com/downloads/sdk>`_)
 * If you want to compile dada.music~, you need to have the GNU `GMP <https://gmplib.org/>`_ and `MPFR <https://www.mpfr.org/>`_ libraries installed; they are expected to be at /usr/local/opt/gmp and /usr/local/opt/mpfr respectively (modify the Xcode parameters if you have them elsewhere). If you install them with Homebrew, they should be in those places.
-* If you want to compile dada.graph, you need to have the `Boost <https://www.boost.org/>`_ library, version 1.71 installed at /usr/local/opt/boost (modify the Xcode parameters if you have it elsewhere).  If you install them with Homebrew, it should be in that place.
+* If you want to compile dada.graph, you need to have the `Boost <https://www.boost.org/>`_ library (version 1.71 works properly) installed at /usr/local/opt/boost (modify the Xcode parameters if you have it elsewhere).  If you install it with Homebrew, it should be in that place.
 * The dada.distances target uses the a modified version of the `SimpleMatrix <https://github.com/wq2012/SimpleMatrix>`_ library, included by permission of its creator Quan Wang.
 
 The Max documentation for all modules is compiled from the sources by running `Doctor Max <https://github.com/danieleghisi/DoctorMax>`_ with the preferences stored in the file "docs/dada_DoctorMax_settings.txt", which needs to be modified for your own machine.

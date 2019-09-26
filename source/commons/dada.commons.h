@@ -57,6 +57,13 @@ return; \
 }
 
 
+#ifdef WIN_VERSION
+#define strncasecmp _strnicmp
+#define strcasecmp _stricmp
+#include "Shlwapi.h"
+#define strcasestr StrStrI
+#define qsort_r(base, nmemb, size, arg, cmpfn) qsort_s(base, nmemb, size, cmpfn, arg)
+#endif
 
 
 t_symbol *dada_ezlocate_file(t_symbol *file_name, t_fourcc *file_type);

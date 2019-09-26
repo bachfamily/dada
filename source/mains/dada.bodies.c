@@ -1332,7 +1332,7 @@ void bodies_preset(t_bodies *x){
 		 
 	void *preset_buf;// Binbuf that stores the preset 
 	short atomCount = (short)(ac + 3); // number of atoms we’re storing 
-	t_atom atomArray[atomCount];// array of atoms to be stored 
+	t_atom* atomArray = (t_atom *) bach_newptr(atomCount * sizeof(t_atom)); // array of atoms to be stored 
 	// 1. prepare the preset "header" information 
 	atom_setobj(atomArray,x); 
 	atom_setsym(atomArray+1,ob_sym(x)); 
@@ -1348,6 +1348,7 @@ void bodies_preset(t_bodies *x){
 	
 	if (av) 
 		sysmem_freeptr(av);
+	bach_freeptr(atomArray);
 }
 
 /*

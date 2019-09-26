@@ -1350,12 +1350,6 @@ void distances_clear(t_distances *x, char also_outside_current_world)
 	jbox_redraw((t_jbox *)x);
 }
 
-void distances_dump(t_distances *x, char get_world, char get_notes)
-{	
-	;
-}
-
-
 long sort_by_pt_distance_fn(void *data, t_llllelem *a, t_llllelem *b)
 {
     t_distances *x = ((t_distances *)(((void **)data)[0]));
@@ -2058,7 +2052,7 @@ void build_grains(t_distances *x)
                 
                 distances_get_boundaries(x, &xmin, &xmax, &ymin, &ymax);
                 
-                if (std::isnan(xmin) || std::isnan(xmax) || std::isnan(ymin) || std::isnan(ymax)) {
+                if (isnan(xmin) || isnan(xmax) || isnan(ymin) || isnan(ymax)) {
                     distances_get_boundaries(x, &xmin, &xmax, &ymin, &ymax);
                     xmin = xmax = ymin = ymax = 0;
                     num_cols = num_rows = 1;
@@ -2399,13 +2393,13 @@ void distances_get_boundaries(t_distances *x, double *min_x, double *max_x, doub
 
     for (elem = x->grains->l_head->l_next; elem; elem = elem->l_next) {
         t_distances_grain *gr = (t_distances_grain *)hatom_getobj(&elem->l_hatom);
-        if (!std::isnan(gr->coord.x) && gr->coord.x > *max_x)
+        if (!isnan(gr->coord.x) && gr->coord.x > *max_x)
             *max_x = gr->coord.x;
-        if (!std::isnan(gr->coord.y) && gr->coord.y > *max_y)
+        if (!isnan(gr->coord.y) && gr->coord.y > *max_y)
             *max_y = gr->coord.y;
-        if (!std::isnan(gr->coord.x) && gr->coord.x < *min_x)
+        if (!isnan(gr->coord.x) && gr->coord.x < *min_x)
             *min_x = gr->coord.x;
-        if (!std::isnan(gr->coord.y) && gr->coord.y < *min_y)
+        if (!isnan(gr->coord.y) && gr->coord.y < *min_y)
             *min_y = gr->coord.y;
     }
 }
@@ -2522,7 +2516,7 @@ t_llll *get_grain_contentfield(t_distances *x, t_distances_grain *gr)
     t_llll *out = llll_get();
     
     if (!gr)
-        return;
+        return out;
     
     for (f = 0; f < x->field_content_size; f++) {
         t_db_result	*result = NULL;

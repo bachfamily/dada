@@ -107,7 +107,7 @@ typedef struct _bounce
 {
 	t_dadaobj_jbox		b_ob; // root object
 
-    char                metadata_type;
+    long                metadata_type;
     
 	// balls
 	t_dada_ball			*balls;

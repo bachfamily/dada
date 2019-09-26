@@ -1329,11 +1329,12 @@ void terrain_post_array(t_terrain *x, long num_elems, double *elems)
 {
 #ifdef DADA_TERRAIN_DEBUG
     if (x->dsp_debug) {
-        t_atom a[num_elems];
+        t_atom *a = (t_atom *) bach_newptr(num_elems * sizeof(t_atom));
         long i;
         for (i = 0; i < num_elems; i++)
             atom_setfloat(a+i, elems[i]);
         defer_low(x, (method)terrain_post_array_do, NULL, num_elems, a);
+		bach_freeptr(a);
     }
 #endif
 }

@@ -32,6 +32,11 @@
 *.app
 
 
+# Temp build locations #
+source/vs/vs_stuff/*
+source/vs/.vs/*
+**/macosxbuild/*
+
 # Compiled source #
 ###################
 *.mxo

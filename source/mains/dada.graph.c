@@ -39,7 +39,7 @@
 	Daniele Ghisi
 */
 
-#define BOOST_NO_CXX11_VARIADIC_TEMPLATES
+//#define BOOST_NO_CXX11_VARIADIC_TEMPLATES
 
 #define DADA_GRAPH_SUPPORT_VERTEX_PLACEMENT
 
@@ -1358,7 +1358,7 @@ autoposition_nodes_do(Graph*, t_dada_graph *dada_graph, t_uigraph *x)
 //    print_graph_layout(g, get(vertex_position, g), square_topology<>(50.));
     assign_points(g, get(vertex_position, g), square_topology<>(50.), dada_graph);
 }
-
+#endif
 
 
 
@@ -1469,7 +1469,6 @@ void uigraph_autoposition(t_uigraph *x)
     bach_freeptr(edge_array);
 }*/
 
-#endif
 
 
 

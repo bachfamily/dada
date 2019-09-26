@@ -9,7 +9,6 @@
 #include "dada.math.h"
 
 
-
 double fast_pow(double a, double b) {
 	union {
 		double d;

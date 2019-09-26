@@ -10,10 +10,6 @@
 #define _DADA_MATH_H_
 
 
-#include "dada.math.h"
-
-
-
 double fast_pow(double a, double b);
 double rand_range(double min, double max);
 void normalize_array(double *val, long num_vals, double norm);

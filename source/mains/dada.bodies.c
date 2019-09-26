@@ -892,7 +892,7 @@ t_llll *sort_arrownotes_as_llll(t_bodies *x, t_llll *arrownotes_as_llll, long *i
 //	llll_mergesort(cloned, &out, sort_by_first_fn, NULL);	// this is destructive on <cloned>
 
 	
-	t_llll **lists_to_order = (t_llll **) sysmem_newptr(2 * sizeof(t_llll *));
+	t_llll **lists_to_order = (t_llll **) bach_newptr(2 * sizeof(t_llll *));
 	lists_to_order[0] = cloned;
 	lists_to_order[1] = get_arithm_ser(0, arrownotes_as_llll->l_size - 1);
 	llll_multisort(lists_to_order, lists_to_order, 2, sort_by_first_fn);
@@ -903,7 +903,7 @@ t_llll *sort_arrownotes_as_llll(t_bodies *x, t_llll *arrownotes_as_llll, long *i
 	llll_free(lists_to_order[1]);
 	cloned = lists_to_order[0];
 	
-	sysmem_freeptr(lists_to_order);
+	bach_freeptr(lists_to_order);
 	
 	return cloned;
 }

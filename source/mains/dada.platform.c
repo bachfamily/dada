@@ -596,7 +596,7 @@ char platform_load_default_font(void)
 }
 
 void ext_main(void *moduleRef)
-//int C74_EXPORT main(void)
+//void C74_EXPORT ext_main(void *moduleRef)
 {	
 	t_class *c;
 	

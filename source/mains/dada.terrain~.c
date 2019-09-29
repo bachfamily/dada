@@ -350,7 +350,7 @@ t_max_err terrain_notify(t_terrain *x, t_symbol *s, t_symbol *msg, void *sender,
     return jbox_notify((t_jbox *)x, s, msg, sender, data);
 }
 
-int C74_EXPORT main(void)
+void C74_EXPORT ext_main(void *moduleRef)
 {
     common_symbols_init();
     
@@ -360,7 +360,7 @@ int C74_EXPORT main(void)
     
     if (dada_check_bach_version() || llllobj_test()) {
         dada_error_bachcheck();
-        return 1;
+        return;
     }
 
     t_class *c;

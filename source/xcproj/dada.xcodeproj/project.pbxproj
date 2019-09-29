@@ -411,7 +411,7 @@
 		1E53FB5F1BA0767400FF1F3D /* dada.bodies.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dada.bodies.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E53FB731BA0769700FF1F3D /* dada.bodies.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.bodies.c; path = ../mains/dada.bodies.c; sourceTree = SOURCE_ROOT; };
 		1E53FCF1198FAE02006333EA /* dada.machines.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dada.machines.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
-		1E53FCF8198FAE2A006333EA /* dada.machines.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; name = dada.machines.c; path = ../mains/dada.machines.c; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.c; };
+		1E53FCF8198FAE2A006333EA /* dada.machines.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; name = dada.machines.c; path = ../mains/dada.machines.c; sourceTree = SOURCE_ROOT; };
 		1E5AF16E1997DA4D00CE6392 /* dada.kaleido.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dada.kaleido.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E6E12511AF3B7B000E91285 /* dada.db.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.db.c; path = ../commons/dada.db.c; sourceTree = SOURCE_ROOT; };
 		1E6E12521AF3B7B000E91285 /* dada.db.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dada.db.h; path = ../commons/dada.db.h; sourceTree = SOURCE_ROOT; };

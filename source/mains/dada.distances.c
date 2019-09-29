@@ -332,7 +332,7 @@ void process_change(t_distances *x)
 
 
 
-int C74_EXPORT main(void)
+void C74_EXPORT ext_main(void *moduleRef)
 {	
 	t_class *c;
 	
@@ -342,7 +342,7 @@ int C74_EXPORT main(void)
 
 	if (dada_check_bach_version() || llllobj_test()) {
 		dada_error_bachcheck();
-		return 1;
+		return;
 	}
 
 	srand(time(NULL)); // needed for the random function
@@ -875,7 +875,7 @@ int C74_EXPORT main(void)
 	ps_dbview_query_changed = gensym("dbview_query_changed");
 
 	dev_post("dada.distances compiled %s %s", __DATE__, __TIME__);
-	return 0;
+	return;
 }
 
 void view_create_deferred(t_distances *x, t_symbol *msg, long ac, t_atom *av)

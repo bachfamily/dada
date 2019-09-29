@@ -351,7 +351,7 @@ void change_label(t_uigraph *x, long idx, t_llll *new_label)
 //////////////////////// global class pointer variable
 t_class *uigraph_class;
 
-int C74_EXPORT main(void)
+void C74_EXPORT ext_main(void *moduleRef)
 {	
 	t_class *c;
 	
@@ -362,7 +362,7 @@ int C74_EXPORT main(void)
 
 	if (dada_check_bach_version() || llllobj_test()) {
 		dada_error_bachcheck();
-		return 1;
+		return;
 	}
 
 
@@ -695,7 +695,7 @@ int C74_EXPORT main(void)
 	uigraph_class = c;
 
 	dev_post("dada.uigraph compiled %s %s", __DATE__, __TIME__);
-	return 0;
+	return;
 }
 
 

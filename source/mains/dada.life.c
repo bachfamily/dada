@@ -615,7 +615,7 @@ void life_set_custom_rule(t_life *x, t_symbol *rule)
 //////////////////////// global class pointer variable
 t_class *life_class;
 
-int C74_EXPORT main(void)
+void C74_EXPORT ext_main(void *moduleRef)
 {	
 	t_class *c;
 	
@@ -625,7 +625,7 @@ int C74_EXPORT main(void)
 
 	if (dada_check_bach_version() || llllobj_test()) {
 		dada_error_bachcheck();
-		return 1;
+		return;
 	}
 
 	srand(time(NULL)); // needed for the random function
@@ -1072,7 +1072,7 @@ int C74_EXPORT main(void)
 	life_class = c;
 
 	dev_post("dada.life compiled %s %s", __DATE__, __TIME__);
-	return 0;
+	return;
 }
 
 

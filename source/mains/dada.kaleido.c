@@ -920,7 +920,7 @@ long duplicate_sampling_point(t_kaleido *x, long idx, t_pt new_coord, char trans
 //////////////////////// global class pointer variable
 t_class *kaleido_class;
 
-int C74_EXPORT main(void)
+void C74_EXPORT ext_main(void *moduleRef)
 {	
 	t_class *c;
 	
@@ -931,7 +931,7 @@ int C74_EXPORT main(void)
 
 	if (dada_check_bach_version() || llllobj_test()) {
 		dada_error_bachcheck();
-		return 1;
+		return;
 	}
 
 
@@ -1272,7 +1272,7 @@ int C74_EXPORT main(void)
 	kaleido_class = c;
 
 	dev_post("dada.kaleido compiled %s %s", __DATE__, __TIME__);
-	return 0;
+	return ;
 }
 
 void rebuild_main_corolla_dadapolygon(t_kaleido *x)

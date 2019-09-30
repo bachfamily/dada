@@ -60,8 +60,8 @@ namespace smat
 		T trace(); // trace
 		double fnorm(); // Frobenius norm
 		double pnorm(double p); // p-norm
-		T maxEl(int &r, int &c); // max element
-		T minEl(int &r, int &c); // min element
+		T maxEl(int &r, int &c); // sm_max element
+		T minEl(int &r, int &c); // sm_min element
 		double mean(); // mean of elements
 		T sum(); // sum of elements
 		double std(); // standard deviation of elements
@@ -97,14 +97,14 @@ namespace smat
 	**********************************************/
 
 	template<class T>
-	T min(T v1, T v2)
+	T sm_min(T v1, T v2)
 	{
 		if(v1<v2) return v1;
 		else return v2;
 	}
 	
 	template<class T>
-	T max(T v1, T v2)
+	T sm_max(T v1, T v2)
 	{
 		if(v1>v2) return v1;
 		else return v2;
@@ -490,7 +490,7 @@ namespace smat
 	T Matrix<T>::trace() // trace
 	{
 		T x=0;
-		for(int i=0;i<min<int>(rows_,columns_);i++)
+		for(int i=0;i<sm_min<int>(rows_,columns_);i++)
 		{
 			x+=v[i][i];
 		}
@@ -526,7 +526,7 @@ namespace smat
 	}
 	
 	template<class T>
-	T Matrix<T>::maxEl(int &r, int &c) // max element
+	T Matrix<T>::maxEl(int &r, int &c) // sm_max element
 	{
 		T x=v[0][0];
 		r=0;
@@ -547,7 +547,7 @@ namespace smat
 	}
 	
 	template<class T>
-	T Matrix<T>::minEl(int &r, int &c) // min element
+	T Matrix<T>::minEl(int &r, int &c) // sm_min element
 	{
 		T x=v[0][0];
 		r=0;

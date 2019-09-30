@@ -107,7 +107,7 @@ typedef struct _bounce
 {
 	t_dadaobj_jbox		b_ob; // root object
 
-    char                metadata_type;
+    long                metadata_type;
     
 	// balls
 	t_dada_ball			*balls;
@@ -583,7 +583,7 @@ void move_connected_component_delta(t_bounce *x, long idx, t_pt delta_coord, cha
 //////////////////////// global class pointer variable
 t_class *bounce_class;
 
-int C74_EXPORT main(void)
+void C74_EXPORT ext_main(void *moduleRef)
 {	
 	t_class *c;
 	
@@ -594,7 +594,7 @@ int C74_EXPORT main(void)
 
 	if (dada_check_bach_version() || llllobj_test()) {
 		dada_error_bachcheck();
-		return 1;
+		return;
 	}
 
 
@@ -995,7 +995,7 @@ int C74_EXPORT main(void)
 	bounce_class = c;
 
 	dev_post("dada.bounce compiled %s %s", __DATE__, __TIME__);
-	return 0;
+	return;
 }
 
 t_max_err bounce_notify(t_bounce *x, t_symbol *s, t_symbol *msg, void *sender, void *data)

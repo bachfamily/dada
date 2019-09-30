@@ -128,14 +128,14 @@ static t_symbol	*ps_event = NULL;
 /**********************************************************************/
 // Class Definition and Life Cycle
 
-int C74_EXPORT main(void)
+void C74_EXPORT ext_main(void *moduleRef)
 {
 	common_symbols_init();
 	llllobj_common_symbols_init();
 
 	if (dada_check_bach_version() || llllobj_test()) {
 		dada_error_bachcheck();
-		return 1;
+		return;
 	}
 	
 	t_class *c; 
@@ -302,7 +302,7 @@ int C74_EXPORT main(void)
 	class_register(CLASS_BOX, c);
 	s_segment_class = c;
 	ps_event = gensym("event");
-	return 0;
+	return;
 }
 
 

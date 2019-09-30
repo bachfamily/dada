@@ -723,7 +723,7 @@ void boids_delete_rule_prototype(t_boids *x, t_symbol *name)
 //////////////////////// global class pointer variable
 t_class *boids_class;
 
-int C74_EXPORT main(void)
+void C74_EXPORT ext_main(void *moduleRef)
 {	
 	t_class *c;
 	
@@ -732,7 +732,7 @@ int C74_EXPORT main(void)
 	
 	if (dada_check_bach_version() || llllobj_test()) {
 		dada_error_bachcheck();
-		return 1;
+		return;
 	}
 	
 	
@@ -1021,7 +1021,7 @@ int C74_EXPORT main(void)
 	boids_class = c;
 	
 	dev_post("dada.boids compiled %s %s", __DATE__, __TIME__);
-	return 0;
+	return;
 }
 
 t_max_err boids_notify(t_boids *x, t_symbol *s, t_symbol *msg, void *sender, void *data)

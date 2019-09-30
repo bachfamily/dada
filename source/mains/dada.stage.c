@@ -238,7 +238,7 @@ void postprocess_cards(t_dadaobj *d_ob)
 //////////////////////// global class pointer variable
 t_class *stage_class;
 
-int C74_EXPORT main(void)
+void C74_EXPORT ext_main(void *moduleRef)
 {	
 	t_class *c;
 	
@@ -247,7 +247,7 @@ int C74_EXPORT main(void)
 	
 	if (dada_check_bach_version() || llllobj_test()) {
 		dada_error_bachcheck();
-		return 1;
+		return;
 	}
 	
 	
@@ -490,7 +490,7 @@ int C74_EXPORT main(void)
 	stage_class = c;
 	
 	dev_post("dada.stage compiled %s %s", __DATE__, __TIME__);
-	return 0;
+	return;
 }
 
 t_max_err stage_notify(t_stage *x, t_symbol *s, t_symbol *msg, void *sender, void *data)

@@ -357,7 +357,7 @@ void bodies_jsave(t_bodies *x, t_dictionary *d)
 	llll_free(whole_info);
 }
 
-int C74_EXPORT main(void)
+void C74_EXPORT ext_main(void *moduleRef)
 {
 	t_class *c;
 	
@@ -366,7 +366,7 @@ int C74_EXPORT main(void)
 	
 	if (dada_check_bach_version() || llllobj_test()) {
 		dada_error_bachcheck();
-		return 1;
+		return;
 	}
 	
 	c = class_new("dada.bodies", 
@@ -771,7 +771,7 @@ int C74_EXPORT main(void)
 	class_register(CLASS_BOX, s_bodies_class);
 
 	post("dada.bodies compiled %s %s", __DATE__, __TIME__);
-	return 0;
+	return;
 }
 
 t_max_err bodies_setattr_law(t_bodies *x, void *attr, long ac, t_atom *av)
@@ -1332,7 +1332,7 @@ void bodies_preset(t_bodies *x){
 		 
 	void *preset_buf;// Binbuf that stores the preset 
 	short atomCount = (short)(ac + 3); // number of atoms we’re storing 
-	t_atom atomArray[atomCount];// array of atoms to be stored 
+	t_atom* atomArray = (t_atom *) bach_newptr(atomCount * sizeof(t_atom)); // array of atoms to be stored 
 	// 1. prepare the preset "header" information 
 	atom_setobj(atomArray,x); 
 	atom_setsym(atomArray+1,ob_sym(x)); 
@@ -1348,6 +1348,7 @@ void bodies_preset(t_bodies *x){
 	
 	if (av) 
 		sysmem_freeptr(av);
+	bach_freeptr(atomArray);
 }
 
 /*

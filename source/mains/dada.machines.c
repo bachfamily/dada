@@ -863,7 +863,7 @@ void machines_autozoom(t_machines *x)
 //////////////////////// global class pointer variable
 t_class *machines_class;
 
-int C74_EXPORT main(void)
+void C74_EXPORT ext_main(void *moduleRef)
 {	
 	t_class *c;
 	
@@ -874,7 +874,7 @@ int C74_EXPORT main(void)
 
 	if (dada_check_bach_version() || llllobj_test()) {
 		dada_error_bachcheck();
-		return 1;
+		return;
 	}
 
 
@@ -1101,7 +1101,7 @@ int C74_EXPORT main(void)
 	machines_class = c;
 
 	dev_post("dada.machines compiled %s %s", __DATE__, __TIME__);
-	return 0;
+	return;
 }
 
 t_max_err machines_setattr_linestyle(t_machines *x, t_object *attr, long ac, t_atom *av)

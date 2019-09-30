@@ -7,7 +7,8 @@
 */
 
 #include "dada.math.h"
-
+#include <math.h>
+#include <stdlib.h>
 
 double fast_pow(double a, double b) {
 	union {

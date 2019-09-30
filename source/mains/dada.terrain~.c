@@ -350,7 +350,7 @@ t_max_err terrain_notify(t_terrain *x, t_symbol *s, t_symbol *msg, void *sender,
     return jbox_notify((t_jbox *)x, s, msg, sender, data);
 }
 
-int C74_EXPORT main(void)
+void C74_EXPORT ext_main(void *moduleRef)
 {
     common_symbols_init();
     
@@ -360,7 +360,7 @@ int C74_EXPORT main(void)
     
     if (dada_check_bach_version() || llllobj_test()) {
         dada_error_bachcheck();
-        return 1;
+        return;
     }
 
     t_class *c;
@@ -1329,11 +1329,12 @@ void terrain_post_array(t_terrain *x, long num_elems, double *elems)
 {
 #ifdef DADA_TERRAIN_DEBUG
     if (x->dsp_debug) {
-        t_atom a[num_elems];
+        t_atom *a = (t_atom *) bach_newptr(num_elems * sizeof(t_atom));
         long i;
         for (i = 0; i < num_elems; i++)
             atom_setfloat(a+i, elems[i]);
         defer_low(x, (method)terrain_post_array_do, NULL, num_elems, a);
+		bach_freeptr(a);
     }
 #endif
 }

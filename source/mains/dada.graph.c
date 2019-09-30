@@ -350,34 +350,34 @@ void change_label(t_uigraph *x, long idx, t_llll *new_label)
 //////////////////////// global class pointer variable
 t_class *uigraph_class;
 
-int C74_EXPORT main(void)
-{
-    t_class *c;
-    
-    common_symbols_init();
-    llllobj_common_symbols_init();
-    
-    srand(time(NULL));
-    
-    if (dada_check_bach_version() || llllobj_test()) {
-        dada_error_bachcheck();
-        return 1;
-    }
-    
-    
-    CLASS_NEW_CHECK_SIZE(c, "dada.graph", (method)uigraph_new, (method)uigraph_free, (long)sizeof(t_uigraph),
-                         0L /* leave NULL!! */, A_GIMME, 0);
-    
-    c->c_flags |= CLASS_FLAG_NEWDICTIONARY;
-    jbox_initclass(c, JBOX_FONTATTR);    // include textfield and Fonts attributes
-    //    jbox_initclass(c, 0);
-    
-    // paint & utilities
-    class_addmethod(c, (method) uigraph_paint,            "paint", A_CANT, 0);
-    class_addmethod(c, (method) uigraph_assist,            "assist",        A_CANT, 0);
-    class_addmethod(c, (method)    uigraph_notify,            "bachnotify",        A_CANT,        0);
-    
-    // save & preset
+void C74_EXPORT ext_main(void *moduleRef)
+{	
+	t_class *c;
+	
+	common_symbols_init();
+	llllobj_common_symbols_init();
+	
+	srand(time(NULL)); 
+
+	if (dada_check_bach_version() || llllobj_test()) {
+		dada_error_bachcheck();
+		return;
+	}
+
+
+	CLASS_NEW_CHECK_SIZE(c, "dada.graph", (method)uigraph_new, (method)uigraph_free, (long)sizeof(t_uigraph), 
+				  0L /* leave NULL!! */, A_GIMME, 0);
+	
+	c->c_flags |= CLASS_FLAG_NEWDICTIONARY;
+	jbox_initclass(c, JBOX_FONTATTR);	// include textfield and Fonts attributes
+	//	jbox_initclass(c, 0);
+	
+	// paint & utilities
+	class_addmethod(c, (method) uigraph_paint,			"paint", A_CANT, 0);
+	class_addmethod(c, (method) uigraph_assist,			"assist",		A_CANT, 0);  
+	class_addmethod(c, (method)	uigraph_notify,			"bachnotify",		A_CANT,		0);
+
+	// save & preset
     class_addmethod(c, (method) uigraph_preset, "preset", 0);
     class_addmethod(c, (method) uigraph_begin_preset, "begin_preset", A_GIMME, 0);
     class_addmethod(c, (method) uigraph_restore_preset, "restore_preset", A_GIMME, 0);
@@ -687,14 +687,14 @@ int C74_EXPORT main(void)
     CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"edgeretouch",0,"1");
     // @description Sets the edge retouch mode.
     
-    CLASS_STICKY_ATTR_CLEAR(c, "category");
-    
-    
-    class_register(CLASS_BOX, c); /* CLASS_NOBOX */
-    uigraph_class = c;
-    
-    dev_post("dada.uigraph compiled %s %s", __DATE__, __TIME__);
-    return 0;
+	CLASS_STICKY_ATTR_CLEAR(c, "category");
+
+		
+	class_register(CLASS_BOX, c); /* CLASS_NOBOX */
+	uigraph_class = c;
+
+	dev_post("dada.uigraph compiled %s %s", __DATE__, __TIME__);
+	return;
 }
 
 
@@ -1381,92 +1381,93 @@ void uigraph_autocoord_do(t_uigraph *x)
  {
  t_dada_graph *dada_graph = &x->network_graph;
  
- // create a typedef for the Graph type
- typedef adjacency_list<vecS, vecS, bidirectionalS> Graph;
- //    typedef adjacency_list<vecS, vecS, undirectedS, VertexProperties, EdgeProperty> Graph
- 
- // Make convenient labels for the vertices
- //    enum { A, B, C, D, E, N };
- const int num_vertices = dada_graph->num_vertices;
- const char* name = "ABCDE";
- 
- // writing out the edges in the graph
- typedef std::pair<int, int> Edge;
- //    Edge edge_array[] = { Edge(A,B), Edge(A,D), Edge(C,A), Edge(D,C), Edge(C,E), Edge(B,D), Edge(D,E) };
- const int num_edges = dada_graph->num_edges;
- Edge *edge_array = (Edge *)bach_newptr(dada_graph->num_edges * sizeof(Edge));
- for (long i = 0; i < dada_graph->num_edges; i++)
- Edge(dada_graph->edges[i].start, dada_graph->edges[i].end);
- 
- // declare a graph object
- //    Graph g(num_vertices);
- Graph g(edge_array, edge_array + sizeof(edge_array) / sizeof(Edge), num_vertices);
- 
- 
- // add the edges to the graph object
- for (int i = 0; i < num_edges; ++i)
- add_edge(edge_array[i].first, edge_array[i].second, g);
- 
- 
- typedef graph_traits<Graph>::vertex_descriptor Vertex;
- 
- // get the property map for vertex indices
- typedef property_map<Graph, vertex_index_t>::type IndexMap;
- IndexMap index = get(vertex_index, g);
- 
- post("vertices(g) = ");
- typedef graph_traits<Graph>::vertex_iterator vertex_iter;
- std::pair<vertex_iter, vertex_iter> vp;
- for (vp = vertices(g); vp.first != vp.second; ++vp.first) {
- Vertex v = *vp.first;
- post("%ld", index[v]);
- }
- 
- 
- 
- 
- typedef typename graph_traits<Graph>::edge_iterator edge_iterator;
- typedef typename graph_traits<Graph>::vertex_iterator vertex_iterator;
- 
- vertex_iterator vi, vi_end;
- int i = 0;
- for (tie(vi, vi_end) = vertices(g); vi != vi_end; ++vi)
- put(vertex_index, g, *vi, i++);
- 
- edge_iterator ei, ei_end;
- for (tie(ei, ei_end) = edges(g); ei != ei_end; ++ei) {
- put(edge_weight, g, *ei, 1.0);
- std::cerr << "(" << (char)(get(vertex_index, g, source(*ei, g)) + 'A')
- << ", " << (char)(get(vertex_index, g, target(*ei, g)) + 'A')
- << ") ";
- }
- std::cerr << std::endl;
- 
- 
- 
- minstd_rand gen;
- typedef square_topology<> Topology;
- Topology topology(gen, 50.0);
- std::vector<Topology::point_difference_type> displacements(num_vertices);
- rectangle_topology<> rect_top(gen, 0, 0, 50, 50);
- random_graph_layout(g, get(vertex_position, g), rect_top);
- 
- fruchterman_reingold_force_directed_layout(g,
- get(vertex_position, g),
- topology,
- square_distance_attractive_force(),
- square_distance_repulsive_force(),
- all_force_pairs(),
- linear_cooling<double>(100),
- make_iterator_property_map(displacements.begin(),
- get(vertex_index, g),
- Topology::point_difference_type()));
- 
- std::cout << "Cube layout (Fruchterman-Reingold).\n";
- print_graph_layout(g, get(vertex_position, g), square_topology<>(50.));
- 
- bach_freeptr(edge_array);
- }*/
+    // create a typedef for the Graph type
+    typedef adjacency_list<vecS, vecS, bidirectionalS> Graph;
+//    typedef adjacency_list<vecS, vecS, undirectedS, VertexProperties, EdgeProperty> Graph
+    
+    // Make convenient labels for the vertices
+//    enum { A, B, C, D, E, N };
+    const int num_vertices = dada_graph->num_vertices;
+    const char* name = "ABCDE";
+    
+    // writing out the edges in the graph
+    typedef std::pair<int, int> Edge;
+    //    Edge edge_array[] = { Edge(A,B), Edge(A,D), Edge(C,A), Edge(D,C), Edge(C,E), Edge(B,D), Edge(D,E) };
+    const int num_edges = dada_graph->num_edges;
+    Edge *edge_array = (Edge *)bach_newptr(dada_graph->num_edges * sizeof(Edge));
+    for (long i = 0; i < dada_graph->num_edges; i++)
+        Edge(dada_graph->edges[i].start, dada_graph->edges[i].end);
+    
+    // declare a graph object
+    //    Graph g(num_vertices);
+    Graph g(edge_array, edge_array + sizeof(edge_array) / sizeof(Edge), num_vertices);
+    
+    
+    // add the edges to the graph object
+    for (int i = 0; i < num_edges; ++i)
+        add_edge(edge_array[i].first, edge_array[i].second, g);
+    
+    
+    typedef graph_traits<Graph>::vertex_descriptor Vertex;
+    
+    // get the property map for vertex indices
+    typedef property_map<Graph, vertex_index_t>::type IndexMap;
+    IndexMap index = get(vertex_index, g);
+    
+    post("vertices(g) = ");
+    typedef graph_traits<Graph>::vertex_iterator vertex_iter;
+    std::pair<vertex_iter, vertex_iter> vp;
+    for (vp = vertices(g); vp.first != vp.second; ++vp.first) {
+        Vertex v = *vp.first;
+        post("%ld", index[v]);
+    }
+    
+    
+    
+    
+    typedef typename graph_traits<Graph>::edge_iterator edge_iterator;
+    typedef typename graph_traits<Graph>::vertex_iterator vertex_iterator;
+    
+    vertex_iterator vi, vi_end;
+    int i = 0;
+    for (tie(vi, vi_end) = vertices(g); vi != vi_end; ++vi)
+        put(vertex_index, g, *vi, i++);
+    
+    edge_iterator ei, ei_end;
+    for (tie(ei, ei_end) = edges(g); ei != ei_end; ++ei) {
+        put(edge_weight, g, *ei, 1.0);
+        std::cerr << "(" << (char)(get(vertex_index, g, source(*ei, g)) + 'A')
+        << ", " << (char)(get(vertex_index, g, target(*ei, g)) + 'A')
+        << ") ";
+    }
+    std::cerr << std::endl;
+    
+    
+    
+    minstd_rand gen;
+    typedef square_topology<> Topology;
+    Topology topology(gen, 50.0);
+    std::vector<Topology::point_difference_type> displacements(num_vertices);
+    rectangle_topology<> rect_top(gen, 0, 0, 50, 50);
+    random_graph_layout(g, get(vertex_position, g), rect_top);
+    
+    fruchterman_reingold_force_directed_layout(g,
+                                               get(vertex_position, g),
+                                               topology,
+                                               square_distance_attractive_force(),
+                                               square_distance_repulsive_force(),
+                                               all_force_pairs(),
+                                               linear_cooling<double>(100),
+                                               make_iterator_property_map(displacements.begin(),
+                                                                          get(vertex_index, g),
+                                                                          Topology::point_difference_type()));
+    
+    std::cout << "Cube layout (Fruchterman-Reingold).\n";
+    print_graph_layout(g, get(vertex_position, g), square_topology<>(50.));
+    
+    bach_freeptr(edge_array);
+}*/
+
 
 
 

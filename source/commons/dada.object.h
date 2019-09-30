@@ -96,7 +96,6 @@ class_addmethod(c, (method) dadaobj_jbox_mt, "mt", A_GIMME, 0);
 
 
 
-
 /** A thread-safe storage cache for lists, in GIMME signature form */
 /*typedef struct _dadaobj_store
 {

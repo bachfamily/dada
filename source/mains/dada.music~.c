@@ -300,7 +300,7 @@ t_max_err music_notify(t_music *x, t_symbol *s, t_symbol *msg, void *sender, voi
     return jbox_notify((t_jbox *)x, s, msg, sender, data); */
 }
 
-int C74_EXPORT main(void)
+void C74_EXPORT ext_main(void *moduleRef)
 {
     common_symbols_init();
     

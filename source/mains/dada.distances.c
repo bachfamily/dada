@@ -332,7 +332,7 @@ void process_change(t_distances *x)
 
 
 
-int C74_EXPORT main(void)
+void C74_EXPORT ext_main(void *moduleRef)
 {	
 	t_class *c;
 	
@@ -342,7 +342,7 @@ int C74_EXPORT main(void)
 
 	if (dada_check_bach_version() || llllobj_test()) {
 		dada_error_bachcheck();
-		return 1;
+		return;
 	}
 
 	srand(time(NULL)); // needed for the random function
@@ -875,7 +875,7 @@ int C74_EXPORT main(void)
 	ps_dbview_query_changed = gensym("dbview_query_changed");
 
 	dev_post("dada.distances compiled %s %s", __DATE__, __TIME__);
-	return 0;
+	return;
 }
 
 void view_create_deferred(t_distances *x, t_symbol *msg, long ac, t_atom *av)
@@ -2052,7 +2052,7 @@ void build_grains(t_distances *x)
                 
                 distances_get_boundaries(x, &xmin, &xmax, &ymin, &ymax);
                 
-                if (std::isnan(xmin) || std::isnan(xmax) || std::isnan(ymin) || std::isnan(ymax)) {
+                if (isnan(xmin) || isnan(xmax) || isnan(ymin) || isnan(ymax)) {
                     distances_get_boundaries(x, &xmin, &xmax, &ymin, &ymax);
                     xmin = xmax = ymin = ymax = 0;
                     num_cols = num_rows = 1;
@@ -2393,13 +2393,13 @@ void distances_get_boundaries(t_distances *x, double *min_x, double *max_x, doub
 
     for (elem = x->grains->l_head->l_next; elem; elem = elem->l_next) {
         t_distances_grain *gr = (t_distances_grain *)hatom_getobj(&elem->l_hatom);
-        if (!std::isnan(gr->coord.x) && gr->coord.x > *max_x)
+        if (!isnan(gr->coord.x) && gr->coord.x > *max_x)
             *max_x = gr->coord.x;
-        if (!std::isnan(gr->coord.y) && gr->coord.y > *max_y)
+        if (!isnan(gr->coord.y) && gr->coord.y > *max_y)
             *max_y = gr->coord.y;
-        if (!std::isnan(gr->coord.x) && gr->coord.x < *min_x)
+        if (!isnan(gr->coord.x) && gr->coord.x < *min_x)
             *min_x = gr->coord.x;
-        if (!std::isnan(gr->coord.y) && gr->coord.y < *min_y)
+        if (!isnan(gr->coord.y) && gr->coord.y < *min_y)
             *min_y = gr->coord.y;
     }
 }
@@ -2516,7 +2516,7 @@ t_llll *get_grain_contentfield(t_distances *x, t_distances_grain *gr)
     t_llll *out = llll_get();
     
     if (!gr)
-        return;
+        return out;
     
     for (f = 0; f < x->field_content_size; f++) {
         t_db_result	*result = NULL;

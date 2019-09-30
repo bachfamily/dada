@@ -32,8 +32,15 @@
 *.app
 
 
+# Temp build locations #
+source/vs/vs_stuff/*
+source/vs/.vs/*
+**/macosxbuild/*
+
 # Compiled source #
 ###################
+extensions/*
+externals/*
 *.mxo
 *.mxe
 *.mxe64
@@ -52,11 +59,17 @@ Thumbs.db
 
 # XCode User Data #
 ###################
-source/xcproj/bach.xcodeproj/project.xcworkspace
-source/xcproj/bach.xcodeproj/xcuserdata
-source/xcproj/bach.xcodeproj/*.pbxuser
-source/xcproj/bach.xcodeproj/*.mode*
+*.xcworkspace
+**/xcuserdata/*
+*.pbxuser
+*.mode*
 
+
+# Visual Studio User Data #
+###########################
+*.vcxproj.user
+UpgradeLog.htm
+*.aps
 
 
 # Emacs temp files for .gitignore and .gitattributes #

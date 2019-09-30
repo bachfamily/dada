@@ -65,6 +65,12 @@ Thumbs.db
 *.mode*
 
 
+# Visual Studio User Data #
+###########################
+*.vcxproj.user
+UpgradeLog.htm
+*.aps
+
 
 # Emacs temp files for .gitignore and .gitattributes #
 #########

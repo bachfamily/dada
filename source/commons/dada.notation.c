@@ -1961,7 +1961,7 @@ t_llll *dada_score_multisplit_measures(t_llll *gs, long num_splits, long *split_
     
     
 	t_llllelem *voice, *meas;
-	char must_add_tempo;
+	char must_add_tempo = 0;
     for (voice = get_first_nonheader_elem(gs); voice; voice = voice->l_next) {
 		if (hatom_gettype(&voice->l_hatom) != H_LLLL)
 			continue;

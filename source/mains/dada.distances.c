@@ -1350,12 +1350,6 @@ void distances_clear(t_distances *x, char also_outside_current_world)
 	jbox_redraw((t_jbox *)x);
 }
 
-void distances_dump(t_distances *x, char get_world, char get_notes)
-{	
-	;
-}
-
-
 long sort_by_pt_distance_fn(void *data, t_llllelem *a, t_llllelem *b)
 {
     t_distances *x = ((t_distances *)(((void **)data)[0]));
@@ -2316,15 +2310,6 @@ void distances_paint_ext(t_distances *x, t_object *view, t_dada_force_graphics *
 	t_jfont *jf = jfont_create_debug("Arial", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL, x->legend_text_size);
     t_jfont *jf_labels = jfont_create_debug("Arial", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL, x->labels_text_size);
 
-	if (x->need_rebuild_grains) {
-        rebuild_grains(x, true);
-	}
-    
-    if (view && dadaobj_cast(x)->m_zoom.must_autozoom) {
-        distances_autozoom_do(x, view);
-        dadaobj_cast(x)->m_zoom.must_autozoom = false;
-    }
-    
     dadaobj_getdomain(dadaobj_cast(x), view, &x->domain_min, &x->domain_max, force_graphics);
     dadaobj_getrange(dadaobj_cast(x), view, &x->range_min, &x->range_max, force_graphics);
 
@@ -2384,6 +2369,15 @@ void distances_paint_ext(t_distances *x, t_object *view, t_dada_force_graphics *
 
 void distances_paint(t_distances *x, t_object *view)
 {
+    if (x->need_rebuild_grains) {
+        rebuild_grains(x, true);
+    }
+    
+    if (view && dadaobj_cast(x)->m_zoom.must_autozoom) {
+        distances_autozoom_do(x, view);
+        dadaobj_cast(x)->m_zoom.must_autozoom = false;
+    }
+    
     dadaobj_paint(dadaobj_cast(x), view);
 }
 

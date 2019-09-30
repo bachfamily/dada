@@ -1989,18 +1989,8 @@ void uigraph_paint_ext(t_uigraph *x, t_object *view, t_dada_force_graphics *forc
 {
     t_rect rect = force_graphics->rect;
     t_jgraphics *g = force_graphics->graphic_context;
-    
-    if (x->need_recompute_nodes_width_height) {
-        uigraph_recompute_nodes_width_height(x);
-        x->need_recompute_nodes_width_height = false;
-    }
-    
-    if (view && dadaobj_cast(x)->m_zoom.must_autozoom) {
-        uigraph_autozoom_do(x, view);
-        dadaobj_cast(x)->m_zoom.must_autozoom = false;
-    }
-    
     t_pt center = force_graphics->center_pix;
+    
     jgraphics_set_source_rgba(g, 0, 0, 0, 1); // alpha = 1;
     
     dadaobj_paint_background(dadaobj_cast(x), g, &rect);
@@ -2024,6 +2014,16 @@ void uigraph_paint_ext(t_uigraph *x, t_object *view, t_dada_force_graphics *forc
 
 void uigraph_paint(t_uigraph *x, t_object *view)
 {
+    if (x->need_recompute_nodes_width_height) {
+        uigraph_recompute_nodes_width_height(x);
+        x->need_recompute_nodes_width_height = false;
+    }
+    
+    if (view && dadaobj_cast(x)->m_zoom.must_autozoom) {
+        uigraph_autozoom_do(x, view);
+        dadaobj_cast(x)->m_zoom.must_autozoom = false;
+    }
+    
     dadaobj_paint(dadaobj_cast(x), view);
 }
 

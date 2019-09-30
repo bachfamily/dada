@@ -1836,14 +1836,6 @@ void cartesian_paint_ext(t_cartesian *x, t_object *view, t_dada_force_graphics *
 	t_pt center = force_graphics->center_pix;
 	t_jfont *jf = jfont_create_debug("Arial", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL, x->legend_text_size);
 
-    if (x->need_rebuild_grains) {
-        rebuild_grains(x, true);
-    }
-    if (view && dadaobj_cast(x)->m_zoom.must_autozoom) {
-        cartesian_autozoom_do(x, view);
-        dadaobj_cast(x)->m_zoom.must_autozoom = false;
-    }
-
     // getting rectangle dimensions
     dadaobj_getdomain(dadaobj_cast(x), view, &x->domain_min, &x->domain_max, force_graphics);
     dadaobj_getrange(dadaobj_cast(x), view, &x->range_min, &x->range_max, force_graphics);
@@ -1934,6 +1926,15 @@ void cartesian_paint_ext(t_cartesian *x, t_object *view, t_dada_force_graphics *
 
 void cartesian_paint(t_cartesian *x, t_object *view)
 {
+    if (x->need_rebuild_grains) {
+        rebuild_grains(x, true);
+    }
+    
+    if (view && dadaobj_cast(x)->m_zoom.must_autozoom) {
+        cartesian_autozoom_do(x, view);
+        dadaobj_cast(x)->m_zoom.must_autozoom = false;
+    }
+
     dadaobj_paint(dadaobj_cast(x), view);
 }
 

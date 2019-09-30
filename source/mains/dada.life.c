@@ -2128,16 +2128,20 @@ void life_anything(t_life *x, t_symbol *msg, long ac, t_atom *av)
             t_llll *ll = symbol_and_long_to_llll(gensym("cellsum"), life_getcellsum(x));
             llllobj_outlet_llll((t_object *)x, LLLL_OBJ_UI, 1, ll);
 
-        } else if (router == gensym("exportpng")) {
+/*        } else if (router == gensym("exportpng")) {
             long dpi;
             t_symbol *filename;
             double width, height;
             t_pt exportcenter;
             if (!dadaobj_parse_export_png_syntax(dadaobj_cast(x), NULL, parsed, &filename, &dpi, &width, &height, &exportcenter))
-                life_exportpng(x, filename, dpi, width, height, exportcenter);
+                life_exportpng(x, filename, dpi, width, height, exportcenter); */
 		} else if (router == gensym("rule")) {
-			if (parsed->l_head && hatom_gettype(&parsed->l_head->l_hatom) == H_SYM)
-				life_set_custom_rule(x, hatom_getsym(&parsed->l_head->l_hatom));
+            char *buf = NULL;
+            llll_to_text_buf(parsed, &buf);
+            life_set_custom_rule(x, gensym(buf));
+//			if (parsed->l_head && hatom_gettype(&parsed->l_head->l_hatom) == H_SYM)
+//				life_set_custom_rule(x, hatom_getsym(&parsed->l_head->l_hatom));
+            bach_freeptr(buf);
 		}
 		
 	} else if (parsed) {

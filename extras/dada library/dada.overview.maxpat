@@ -298,7 +298,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 253.0, 3643.0, 303.0, 35.0 ],
+									"patching_rect" : [ 253.0, 3628.0, 303.0, 35.0 ],
 									"text" : ";\rmax launchbrowser https://github.com/bachfamily/dada"
 								}
 
@@ -311,7 +311,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 2,
 									"outlettype" : [ "bang", "" ],
-									"patching_rect" : [ 46.0, 3590.0, 145.0, 22.0 ],
+									"patching_rect" : [ 46.0, 3575.0, 145.0, 22.0 ],
 									"text" : "sel .bachproject.net/dada"
 								}
 
@@ -346,8 +346,8 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 7.0, 3405.0, 362.0, 65.0 ],
-									"text" : "The official web page is http://www.bachproject.net/dada\nThe official repository is https://github.com/bachfamily/dada\n\n© 2017 - 2019 • Daniele Ghisi",
+									"patching_rect" : [ 7.0, 3405.0, 437.0, 65.0 ],
+									"text" : "The official web page is http://www.bachproject.net/dada\nThe official repository for source files is https://github.com/bachfamily/dada\n\n© 2017 - 2019 • Daniele Ghisi",
 									"textcolor" : [ 0.25, 0.25, 0.25, 1.0 ]
 								}
 
@@ -363,7 +363,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 46.0, 3629.0, 181.0, 49.0 ],
+									"patching_rect" : [ 46.0, 3614.0, 181.0, 49.0 ],
 									"text" : ";\rmax launchbrowser http://www.bachproject.net/cage"
 								}
 
@@ -373,12 +373,12 @@
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
 									"id" : "obj-4",
-									"linecount" : 5,
+									"linecount" : 4,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 7.0, 3309.0, 880.0, 79.0 ],
-									"text" : "dada is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\ndada is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. Read the LICENSE.txt file for more details.",
+									"patching_rect" : [ 7.0, 3324.0, 880.0, 65.0 ],
+									"text" : "dada is distributed under the terms of the GNU General Public License version 3 (GPL-v3.0).\n\ndada is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. Read the LICENSE.txt file for more details.",
 									"textcolor" : [ 0.25, 0.25, 0.25, 1.0 ]
 								}
 
@@ -520,11 +520,12 @@
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
 									"id" : "obj-48",
+									"linecount" : 2,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 7.0, 3282.0, 880.0, 21.0 ],
-									"text" : "dada is part of Daniele Ghisi's PhD project, supported by UPMC, CNRS, IRCAM (STMS Lab) and Sorbonne University.",
+									"patching_rect" : [ 7.0, 3282.0, 880.0, 36.0 ],
+									"text" : "dada is part of Daniele Ghisi's PhD project, supported by UPMC, CNRS, IRCAM (STMS Lab) and Sorbonne University.\nThe windows porting of **dada** has been carried out by Andrea Agostini.",
 									"textcolor" : [ 0.25, 0.25, 0.25, 1.0 ]
 								}
 

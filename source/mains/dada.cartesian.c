@@ -202,6 +202,8 @@ typedef struct _cartesian
     
     char            relative_turtling;
     char            relative_knn;
+    
+    char            db_ok;
 } t_cartesian;
 
 
@@ -802,6 +804,7 @@ t_max_err cartesian_set_database(t_cartesian *x, void *attr, long argc, t_atom *
 		x->d_database = atom_getsym(argv);
 		err = db_open(x->d_database, NULL, &x->d_db);
 		if (!err && x->d_db && x->d_query) {
+            x->db_ok = true;
 //			db_view_create(x->d_db, x->d_query->s_name, &x->d_view);
 //			object_attach_byptr_register(x, x->d_view, _sym_nobox);
             defer_low(x, (method)view_create_deferred, NULL, 0, NULL);
@@ -1378,12 +1381,14 @@ long build_grains(t_cartesian *x)
     long num_output_grains = 0;
     
     if (!x->d_database || strlen(x->d_database->s_name) <= 0 || !x->tablename || strlen(x->tablename->s_name) <= 0) {
-        object_error((t_object *)x, "Define a valid database and table name.");
+//        object_error((t_object *)x, "Define a valid database and table name.");
+        if (!x->d_database || strlen(x->d_database->s_name) <= 0)
+            x->db_ok = false;
         return 0; // nothing to build
     }
 
-    if (!x->field_x || strlen(x->field_x->s_name) <= 0 || !x->field_y || strlen(x->field_y->s_name) <= 0) {
-        object_error((t_object *)x, "Define valid 'xfield' and 'yfield' attributes.");
+    if (!x->field_x || strlen(x->field_x->s_name) <= 0 || !x->field_y || strlen(x->field_y->s_name) <= 0 || x->field_x == _sym_none || x->field_y == _sym_none) {
+//        object_error((t_object *)x, "Define valid 'xfield' and 'yfield' attributes.");
         return 0;
     }
 	
@@ -1830,12 +1835,28 @@ char *cartesian_atom_to_string(t_atom *a, long max_decimals)
 
 void cartesian_paint_ext(t_cartesian *x, t_object *view, t_dada_force_graphics *force_graphics)
 {
-	
     t_jgraphics *g = force_graphics->graphic_context;
 	t_rect rect = force_graphics->rect;
 	t_pt center = force_graphics->center_pix;
 	t_jfont *jf = jfont_create_debug("Arial", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL, x->legend_text_size);
 
+
+    if (!x->db_ok) {
+        dadaobj_paint_background(dadaobj_cast(x), g, &rect);
+        write_text(g, jf, DADA_GREY_50, "(must set 'database' and 'table' attributes)", 0, 0, rect.width, rect.height, JGRAPHICS_TEXT_JUSTIFICATION_CENTERED, true, true);
+        return;
+    } else if (!x->tablename || strlen(x->tablename->s_name) == 0) {
+        dadaobj_paint_background(dadaobj_cast(x), g, &rect);
+        write_text(g, jf, DADA_GREY_50, "(must set 'table' attribute)", 0, 0, rect.width, rect.height, JGRAPHICS_TEXT_JUSTIFICATION_CENTERED, true, true);
+        return;
+    } else if (!x->field_x || strlen(x->field_x->s_name) <= 0 || !x->field_y || strlen(x->field_y->s_name) <= 0 || x->field_x == _sym_none || x->field_y == _sym_none) {
+        dadaobj_paint_background(dadaobj_cast(x), g, &rect);
+        write_text(g, jf, DADA_GREY_50, "(must set 'xfield' and/or 'yfield' attributes)", 0, 0, rect.width, rect.height, JGRAPHICS_TEXT_JUSTIFICATION_CENTERED, true, true);
+        return;
+    }
+
+    
+    
     // getting rectangle dimensions
     dadaobj_getdomain(dadaobj_cast(x), view, &x->domain_min, &x->domain_max, force_graphics);
     dadaobj_getrange(dadaobj_cast(x), view, &x->range_min, &x->range_max, force_graphics);

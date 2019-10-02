@@ -560,10 +560,12 @@ t_base* base_new(t_symbol *s, short argc, t_atom *argv)
             if (true_ac >= 2 && atom_gettype(argv) == A_SYM) {
                 x->d_filename = atom_getsym(argv + 1); //dada_ezlocate_file(atom_getsym(argv + 1), &x->d_filetype);
                 if (filename_is_not_sql_file(x->d_filename)) {
-                    if (!dada_ezlocate_file(x->d_filename, &x->d_filetype)) { // create one!
+                    t_symbol *located = dada_ezlocate_file(x->d_filename, &x->d_filetype);
+                    if (!located) { // create one!
                         llll_writetxt((t_object *)x, llll_get(), symbol2llll(x->d_filename), BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART);
                         x->d_filename = dada_ezlocate_file(x->d_filename, &x->d_filetype);
-                    }
+                    } else
+                        x->d_filename = located;
                 }
             }
 			

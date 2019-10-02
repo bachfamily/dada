@@ -1851,7 +1851,7 @@ void cartesian_paint_ext(t_cartesian *x, t_object *view, t_dada_force_graphics *
         return;
     } else if (!x->field_x || strlen(x->field_x->s_name) <= 0 || !x->field_y || strlen(x->field_y->s_name) <= 0 || x->field_x == _sym_none || x->field_y == _sym_none) {
         dadaobj_paint_background(dadaobj_cast(x), g, &rect);
-        write_text(g, jf, DADA_GREY_50, "(must set 'xfield' and/or 'yfield' attributes)", 0, 0, rect.width, rect.height, JGRAPHICS_TEXT_JUSTIFICATION_CENTERED, true, true);
+        write_text(g, jf, DADA_GREY_50, "(must set both 'xfield' and 'yfield' attributes)", 0, 0, rect.width, rect.height, JGRAPHICS_TEXT_JUSTIFICATION_CENTERED, true, true);
         return;
     }
 

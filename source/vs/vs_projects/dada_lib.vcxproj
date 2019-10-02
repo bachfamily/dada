@@ -126,36 +126,36 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <TargetExt>.lib</TargetExt>
-    <OutDir>..\vs_stuff\lib\</OutDir>
+    <OutDir>..\vs_stuff\lib\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>..\vs_stuff\lib_temp\</IntDir>
-    <TargetName>dada_lib32</TargetName>
+    <TargetName>dada_lib</TargetName>
     <IncludePath>..\..\commons;..\..\..\..\bach\source\commons;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\..\max-sdk-7.3.3\source\c74support\max-includes;..\..\..\..\max-sdk-7.3.3\source\c74support\msp-includes;..\..\..\..\max-sdk-7.3.3\source\c74support\jit-includes;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <TargetExt>.lib</TargetExt>
-    <OutDir>..\vs_stuff\lib\</OutDir>
+    <OutDir>..\vs_stuff\lib\$(Configuration)\$(Platform)</OutDir>
     <IntDir>..\vs_stuff\lib_temp\</IntDir>
-    <TargetName>dada_lib64</TargetName>
+    <TargetName>dada_lib</TargetName>
     <IncludePath>..\..\commons;..\..\..\..\bach\source\commons;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\..\max-sdk-7.3.3\source\c74support\max-includes\x64;..\..\..\..\max-sdk-7.3.3\source\c74support\msp-includes\x64;..\..\..\..\max-sdk-7.3.3\source\c74support\jit-includes\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <TargetExt>.lib</TargetExt>
-    <OutDir>..\vs_stuff\lib\</OutDir>
+    <OutDir>..\vs_stuff\lib\$(Configuration)\$(Platform)</OutDir>
     <IntDir>..\vs_stuff\lib_temp\</IntDir>
-    <TargetName>dada_lib32</TargetName>
+    <TargetName>dada_lib</TargetName>
     <IncludePath>..\..\commons;..\..\..\..\bach\source\commons;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\..\max-sdk-7.3.3\source\c74support\max-includes;..\..\..\..\max-sdk-7.3.3\source\c74support\msp-includes;..\..\..\..\max-sdk-7.3.3\source\c74support\jit-includes;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <TargetExt>.lib</TargetExt>
-    <OutDir>..\vs_stuff\lib\</OutDir>
+    <OutDir>..\vs_stuff\lib\$(Configuration)\$(Platform)</OutDir>
     <IntDir>..\vs_stuff\lib_temp\</IntDir>
-    <TargetName>dada_lib64</TargetName>
+    <TargetName>dada_lib</TargetName>
     <IncludePath>..\..\commons;..\..\..\..\bach\source\commons;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\..\max-sdk-7.3.3\source\c74support\max-includes\x64;..\..\..\..\max-sdk-7.3.3\source\c74support\msp-includes\x64;..\..\..\..\max-sdk-7.3.3\source\c74support\jit-includes\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
@@ -201,7 +201,8 @@
     </Link>
     <Lib>
       <AdditionalDependencies>Shlwapi.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\..\source\vs\vs_stuff\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -245,7 +246,8 @@
     </Link>
     <Lib>
       <AdditionalDependencies>Shlwapi.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\..\source\vs\vs_stuff\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -296,7 +298,8 @@
     </Link>
     <Lib>
       <AdditionalDependencies>Shlwapi.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\..\source\vs\vs_stuff\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -347,7 +350,8 @@
     </Link>
     <Lib>
       <AdditionalDependencies>Shlwapi.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\..\source\vs\vs_stuff\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

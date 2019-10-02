@@ -1264,7 +1264,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1ED9C9B4190D1326001973B8 /* Build configuration list for PBXNativeTarget "lib_dada" */;
 			buildPhases = (
-				1EF79E811FCDBC1D009E3605 /* ShellScript */,
 				1ED9C9AD190D1224001973B8 /* Headers */,
 				1ED9C9AE190D1224001973B8 /* Sources */,
 				1ED9C9AF190D1224001973B8 /* Frameworks */,
@@ -1605,22 +1604,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXRezBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		1EF79E811FCDBC1D009E3605 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "#!/bin/bash\nbuildNumber=$(date +%s)\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"$INFOPLIST_FILE\"";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		1E045A301AEE91D600A1F2B9 /* Sources */ = {

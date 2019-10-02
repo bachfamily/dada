@@ -310,7 +310,7 @@ void C74_EXPORT ext_main(void *moduleRef)
     
     if (dada_check_bach_version() || llllobj_test()) {
         dada_error_bachcheck();
-        return 1;
+        return;
     }
 
     t_class *c;
@@ -1205,6 +1205,7 @@ void music_post_array_do(t_music *x, t_symbol *msg, long ac, t_atom *av)
 
 void music_post_array(t_music *x, long num_elems, double *elems)
 {
+#ifdef MAC_VERSION
 #ifdef DADA_MUSIC_DEBUG
     if (x->dsp_debug) {
         t_atom a[num_elems];
@@ -1213,6 +1214,7 @@ void music_post_array(t_music *x, long num_elems, double *elems)
             atom_setfloat(a+i, elems[i]);
         defer_low(x, (method)music_post_array_do, NULL, num_elems, a);
     }
+#endif
 #endif
 }
 

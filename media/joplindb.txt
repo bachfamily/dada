@@ -128460,7 +128460,7 @@
 							tempo
 								[ 1/4 82.68996 ]
 							]
-							[ 0.0 "W.S.Trachtman - MIDI file - [warren@trachtman.org]" none ]
+							[ 0.0 `W.S.Trachtman\ -\ MIDI\ file\ -\ [warren@trachtman.org] none ]
 							[ 725.602
 								[ ]
 							division ]

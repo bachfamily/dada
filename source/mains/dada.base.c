@@ -66,7 +66,7 @@ typedef struct _base {
     
     t_object *m_editor;
     
-    
+    char        read_only;
     char        creating_new_obj;
 } t_base;
 
@@ -331,7 +331,11 @@ void C74_EXPORT ext_main(void *moduleRef)
 
 	CLASS_STICKY_ATTR(c,"category",0,"Settings");
 	
-	CLASS_ATTR_CHAR(c,"outputcolnames",0, t_base, output_fieldnames);
+    CLASS_ATTR_CHAR(c,"readonly",0, t_base, read_only);
+    CLASS_ATTR_STYLE_LABEL(c,"readonly",0,"onoff","Read-Only Dataset File");
+    // @description Toggles the ability to only allow reading for a file-attached database.
+
+    CLASS_ATTR_CHAR(c,"outputcolnames",0, t_base, output_fieldnames);
 	CLASS_ATTR_STYLE_LABEL(c,"outputcolnames",0,"onoff","Output Column Names");
 	// @description Toggles the ability to output the column names in query answers. Defaults to 1.
 
@@ -502,26 +506,31 @@ t_symbol *filename_to_metafilename(t_symbol *s)
 
 void base_appendtodictionary(t_base *x, t_dictionary *d)
 {
-	if (xbase_attach_to_text_file(x->xbase)) {
-		t_llll *ll = db_to_llll(x->xbase, true);
-//        llll_print(ll, NULL, 0, 0, NULL);
-		if (x->d_filetype == 1280068684) // 'LLLL': file was native
-            llll_writenative((t_object *) x, x->xbase->d_filename, ll);
-        else { // textual
-            t_llll *args = llll_get();
-            llll_appendsym(args, x->xbase->d_filename);
-            llll_writetxt((t_object *) x, ll, args, BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART);
-            llll_free(args);
+    if (!x->read_only && x->xbase && x->xbase->d_dirty) {
+        
+        if (xbase_attach_to_text_file(x->xbase)) {
+            t_llll *ll = db_to_llll(x->xbase, true);
+            //        llll_print(ll, NULL, 0, 0, NULL);
+            if (x->d_filetype == 1280068684) // 'LLLL': file was native
+                llll_writenative((t_object *) x, x->xbase->d_filename, ll);
+            else { // textual
+                t_llll *args = llll_get();
+                llll_appendsym(args, x->xbase->d_filename);
+                llll_writetxt((t_object *) x, ll, args, BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART);
+                llll_free(args);
+            }
         }
-	}
-    
-    if (!x->creating_new_obj) {
-        if (xbase_attach_to_sql_file(x->xbase)) {
-            t_llll *ll = xbase_get_all_table_headers(x->xbase);
-            t_llll *arguments = llll_get();
-            llll_appendsym(arguments, filename_to_metafilename(x->xbase->d_filename));
-            llll_writetxt((t_object *)x, ll, arguments, BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART);
+        
+        if (!x->creating_new_obj) {
+            if (xbase_attach_to_sql_file(x->xbase)) {
+                t_llll *ll = xbase_get_all_table_headers(x->xbase);
+                t_llll *arguments = llll_get();
+                llll_appendsym(arguments, filename_to_metafilename(x->xbase->d_filename));
+                llll_writetxt((t_object *)x, ll, arguments, BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART);
+            }
         }
+        
+        x->xbase->d_dirty = false;
     }
 }
 
@@ -572,14 +581,19 @@ t_base* base_new(t_symbol *s, short argc, t_atom *argv)
 			object_attr_setsym(x, _sym_name, dbname);
 		} else
             object_attr_setsym(x, _sym_name, symbol_unique());
-            
-		attr_args_process(x, argc, argv);
+        
+        if (x->xbase)
+            x->xbase->d_nodirty = true;
+        attr_args_process(x, argc, argv);
 		
 		if (xbase_attach_to_text_file(x->xbase))
 			base_read(x, x->xbase->d_filename);
         
-        x->d_filename = x->xbase->d_filename;
+        if (x->xbase)
+            x->d_filename = x->xbase->d_filename;
         x->creating_new_obj = false;
+        if (x->xbase)
+            x->xbase->d_nodirty = false;
 	}
 	return x;
 }
@@ -707,7 +721,13 @@ long llll_obj_to_sym_fn(void *data, t_hatom *a, const t_llll *address)
     return 1;
 }
 
-
+void xbase_set_dirty(t_xbase *b)
+{
+    if (!b->d_nodirty) {
+        b->d_dirty = true;
+        // TO DO: set dirty flag for patch too.
+    }
+}
 
 void xbase_entry_create_do(t_xbase *b, t_symbol *table_name, t_llllelem *specs_head, t_llll *only_these_fields, char escape_single_quotes, char convert_null_to_default)
 {
@@ -715,7 +735,9 @@ void xbase_entry_create_do(t_xbase *b, t_symbol *table_name, t_llllelem *specs_h
         xbase_error(b, "No entry has been specified!");
 		return;
     }
-	
+    
+    xbase_set_dirty(b);
+
 	long tableidx = table_name ? tablename_to_tableidx(b, table_name) : -1;
 	char firstname = true;
 	if (tableidx > -1) {
@@ -920,6 +942,8 @@ void xbase_distanceentries_create_bulk_from_idxs_do(t_xbase *b, t_symbol *distta
         long safety_limit = 3600;
         query[0] = 0;
         
+        xbase_set_dirty(b);
+
         for (elem = vals->l_head; elem; ) {
             if (!xbase_util_llllelem_to_ids_and_dist(elem, &id1, &id2, &dist)) {
                 if (cursor == 0) {
@@ -956,6 +980,9 @@ void xbase_distanceentry_create_do(t_xbase *b, t_symbol *disttable, t_symbol *re
     char *name1 = NULL, *name2 = NULL;
     char *name1ok = NULL, *name2ok = NULL;
     t_symbol *reftableidname = table_name_to_idname(reftable);
+
+    xbase_set_dirty(b);
+
     hatom_to_text_buf(val1, &name1);
     if (hatom_gettype(val1) == H_SYM) {
         long len = strlen(name1);
@@ -1186,6 +1213,8 @@ void xbase_entry_destroy(t_xbase *b, t_symbol *tablename, long event_id)
 {
 	t_max_err	err = MAX_ERR_NONE;
 	t_symbol *idname = table_name_to_idname(tablename);
+
+    xbase_set_dirty(b);
 	err = db_query(b->d_db, NULL, "DELETE FROM %s WHERE %s = %ld", tablename->s_name, idname->s_name);
 
 	if (err)
@@ -1203,7 +1232,8 @@ void xbase_table_destroy(t_xbase *b, t_symbol *tablename)
 {
 	long table_idx = tablename_to_tableidx(b, tablename);
 	if (table_idx > -1) {
-		db_query(b->d_db, NULL, "DROP TABLE IF EXISTS %s", tablename->s_name);
+        xbase_set_dirty(b);
+        db_query(b->d_db, NULL, "DROP TABLE IF EXISTS %s", tablename->s_name);
 		memcpy(&b->table[table_idx + 1], &b->table[table_idx], (DADA_XBASE_MAX_TABLES - table_idx - 1) * sizeof(t_db_table));
 		b->num_tables--;
 	}
@@ -1220,9 +1250,11 @@ void xbase_destroy_all_tables(t_xbase *b)
 {
 	long i;
     if (!b->d_db) return;
-	for (i = 0; i < b->num_tables; i++)
+    xbase_set_dirty(b);
+    for (i = 0; i < b->num_tables; i++)
 		db_query(b->d_db, NULL, "DROP TABLE IF EXISTS %s", b->table[i].name->s_name);
 	b->num_tables = 0;
+    xbase_set_dirty(b);
 }
 
 
@@ -1233,6 +1265,8 @@ void xbase_table_create_do(t_xbase *b, t_symbol *tablename, t_llll *specs, long 
 		return;
 	}
 	
+    xbase_set_dirty(b);
+
 	b->table[b->num_tables].num_columns = 0;
 	b->table[b->num_tables].name = tablename ? tablename : _sym_table;
 	
@@ -1304,13 +1338,15 @@ void base_distancetable_create(t_base *x, t_symbol *msg, long ac, t_atom *av)
 
 void xbase_clear_table(t_xbase *b, t_symbol *tablename)
 {
-	db_query(b->d_db, NULL, "DELETE FROM %s", tablename->s_name);
+    xbase_set_dirty(b);
+    db_query(b->d_db, NULL, "DELETE FROM %s", tablename->s_name);
 }
 
 void xbase_clear_all_tables(t_xbase *b)
 {
 	long i;
-	for (i = 0; i < b->num_tables; i++)
+    xbase_set_dirty(b);
+    for (i = 0; i < b->num_tables; i++)
 		xbase_clear_table(b, b->table[i].name);
 }
 
@@ -1325,9 +1361,13 @@ void base_bang(t_base *x)
 
 void base_dump(t_base *x)
 {
-    t_llll *ll = db_to_llll(x->xbase, x->output_fieldnames);
-    llllobj_outlet_llll((t_object *)x, LLLL_OBJ_VANILLA, 0, ll);
-    llll_free(ll);
+    if (x->xbase) {
+        x->xbase->d_nodirty = true;
+        t_llll *ll = db_to_llll(x->xbase, x->output_fieldnames);
+        llllobj_outlet_llll((t_object *)x, LLLL_OBJ_VANILLA, 0, ll);
+        llll_free(ll);
+        x->xbase->d_nodirty = false;
+    }
 }
 
 t_llll *getcols(t_xbase *b)
@@ -1389,6 +1429,7 @@ t_max_err llll_to_db(t_xbase *b, t_llll *ll, char escape_single_quotes, char con
 	t_llllelem *elem, *item;
 	t_max_err err = MAX_ERR_NONE;
 	
+    xbase_set_dirty(b);
 	xbase_destroy_all_tables(b);
 	
 	// setting columns
@@ -1492,7 +1533,9 @@ t_llll *xbase_db_query(t_xbase *b, char *buf, char output_fieldnames)
 {
 	t_max_err	err = MAX_ERR_NONE;
 	t_db_result	*result = NULL;
-	
+    
+    xbase_set_dirty(b);
+
 //    err = db_query(b->d_db, &result, "%s", buf);
     // it's extremely important that we don't do this:
     // err = db_query(b->d_db, &result, buf);
@@ -1704,8 +1747,8 @@ void xbase_set_header_from_llll(t_xbase *b, t_llll *ll)
     }
     
     b->num_tables = 0;
-    
-    
+    xbase_set_dirty(b);
+
     // setting columns
     for (t_llllelem *elem = ll->l_head; elem; elem = elem->l_next) {
         if (hatom_gettype(&elem->l_hatom) == H_LLLL) {
@@ -1856,6 +1899,8 @@ t_xbase *xbase_new(t_symbol *name)
         b->d_db = NULL;
         b->d_name = name;
         b->magic = DADA_XBASE_MAGIC_GOOD;
+        b->d_dirty = false;
+        b->d_nodirty = true;
         b->table = (t_db_table *)bach_newptr(DADA_XBASE_MAX_TABLES * sizeof(t_db_table));
         for (i = 0; i < DADA_XBASE_MAX_TABLES; i++)
             b->table[i].lllls = llll_get();
@@ -1908,6 +1953,8 @@ t_max_err base_attr_name_set(t_base *x, void *attr, long argc, t_atom *argv)
         rebuild_database(x->xbase);
     }
     x->xbase->ref_count++;
+    
+    x->xbase->d_nodirty = false;
     
     return MAX_ERR_NONE;
 }

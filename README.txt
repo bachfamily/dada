@@ -21,6 +21,7 @@ Acknowledgments
 * `Sorbonne Universités <http://www.sorbonne-university.com/>`_ (Paris, France)
 * `CNRS <http://www.cnrs.fr/>`_ (France)
 
+The windows porting of **dada** has been carried out by Andrea Agostini.
 
 
 Install

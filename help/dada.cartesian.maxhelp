@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 0,
-			"revision" : 4,
+			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -52,7 +52,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 0,
-							"revision" : 4,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -136,7 +136,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 0,
-							"revision" : 4,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -312,7 +312,7 @@
 									"patching_rect" : [ 401.0, 297.0, 300.0, 300.0 ],
 									"query" : "SELECT * FROM similarities",
 									"table" : "similarities",
-									"versionnumber" : 10100,
+									"versionnumber" : 10200,
 									"vzoom" : 1000.0,
 									"xfield" : "A",
 									"yfield" : "B",
@@ -637,7 +637,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 0,
-							"revision" : 4,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -869,7 +869,7 @@
 									"patching_rect" : [ 30.0, 283.5, 300.0, 300.0 ],
 									"query" : "SELECT * FROM scores",
 									"table" : "scores",
-									"versionnumber" : 10100,
+									"versionnumber" : 10200,
 									"vzoom" : 179.847207999999995,
 									"xfield" : "tc5",
 									"yfield" : "bpm",
@@ -911,7 +911,7 @@
 									"pitcheditrange" : [ "null" ],
 									"stafflines" : [ 5 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"versionnumber" : 80005,
+									"versionnumber" : 80100,
 									"voicenames" : [ "[", "]" ],
 									"voicespacing" : [ 0.0, 17.0 ],
 									"zoom" : 151.679687999999999
@@ -1110,7 +1110,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 0,
-							"revision" : 4,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -1290,7 +1290,7 @@
 									"pitcheditrange" : [ "null" ],
 									"stafflines" : [ 5, 5, 5 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"versionnumber" : 80005,
+									"versionnumber" : 80100,
 									"voicenames" : [ "[", "]", "[", "]", "[", "]" ],
 									"voicespacing" : [ 0.0, 17.0, 17.0, 17.0 ]
 								}
@@ -1440,7 +1440,7 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 0,
-											"revision" : 4,
+											"revision" : 5,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -1682,7 +1682,7 @@
 									"showgridlabels" : 0,
 									"sizefield" : "loudness",
 									"table" : "scores",
-									"versionnumber" : 10100,
+									"versionnumber" : 10200,
 									"vzoom" : 1.0,
 									"xfield" : "spread",
 									"yfield" : "centroid",
@@ -1949,7 +1949,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 0,
-							"revision" : 4,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -1985,26 +1985,51 @@
 						"showontab" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
+									"attr" : "ylabel",
+									"id" : "obj-12",
+									"maxclass" : "attrui",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 470.0, 410.0, 192.0, 23.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"attr" : "xlabel",
+									"id" : "obj-8",
+									"maxclass" : "attrui",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 470.0, 382.0, 192.0, 23.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
 									"attr" : "showgridlabels",
 									"id" : "obj-11",
 									"maxclass" : "attrui",
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 471.0, 469.0, 191.0, 23.0 ],
+									"patching_rect" : [ 471.0, 479.0, 191.0, 23.0 ],
 									"text_width" : 139.0
 								}
 
 							}
 , 							{
 								"box" : 								{
-									"attr" : "grid",
+									"attr" : "showaxeslabels",
 									"id" : "obj-7",
 									"maxclass" : "attrui",
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 471.0, 436.0, 191.0, 23.0 ]
+									"patching_rect" : [ 471.0, 436.0, 191.0, 23.0 ],
+									"text_width" : 134.0
 								}
 
 							}
@@ -2041,7 +2066,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 631.0, 338.0, 129.0, 69.0 ],
+									"patching_rect" : [ 629.0, 293.0, 129.0, 69.0 ],
 									"text" : "Sets a \"WHERE\" condition on the points to be displayed"
 								}
 
@@ -2053,7 +2078,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 472.0, 361.0, 149.0, 23.0 ],
+									"patching_rect" : [ 470.0, 316.0, 149.0, 23.0 ],
 									"text" : "where \"centroid > 6400\""
 								}
 
@@ -2253,7 +2278,7 @@
 							}
 , 							{
 								"box" : 								{
-									"center" : [ -712.745347807499911, -5345.375 ],
+									"center" : [ -768.240659634537337, -3598.635126288215815 ],
 									"colorfield" : "tonalcentroid5th",
 									"convexcombmax" : [ 1.0 ],
 									"convexcombmin" : [ 0.0 ],
@@ -2268,13 +2293,16 @@
 									"patching_rect" : [ 18.0, 293.0, 434.0, 245.0 ],
 									"query" : "SELECT * FROM scores",
 									"shapefield" : "filename",
+									"showaxeslabels" : 1,
 									"sizefield" : "loudness",
 									"table" : "scores",
-									"versionnumber" : 10100,
-									"vzoom" : 1.201201201201201,
+									"versionnumber" : 10200,
+									"vzoom" : 0.540409581389709,
 									"xfield" : "spread",
+									"xlabel" : "spread",
 									"yfield" : "centroid",
-									"zoom" : 5.509214025381743
+									"ylabel" : "centroid",
+									"zoom" : 5.030717373198907
 								}
 
 							}
@@ -2325,6 +2353,13 @@
 								"patchline" : 								{
 									"destination" : [ "obj-10", 0 ],
 									"source" : [ "obj-11", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-10", 0 ],
+									"source" : [ "obj-12", 0 ]
 								}
 
 							}
@@ -2394,6 +2429,13 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-10", 0 ],
+									"source" : [ "obj-8", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-10", 0 ],
 									"source" : [ "obj-9", 0 ]
 								}
 
@@ -2428,7 +2470,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 0,
-							"revision" : 4,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -2629,7 +2671,7 @@
 									"showmeasurenumbers" : [ 1, 1 ],
 									"stafflines" : [ 5, 5 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"versionnumber" : 80005,
+									"versionnumber" : 80100,
 									"voicenames" : [ "[", "]", "[", "]" ],
 									"voicespacing" : [ -13.5, 26.0, 26.0 ],
 									"vzoom" : 60.0
@@ -2729,7 +2771,7 @@
 									"phasefield" : "phase",
 									"query" : "SELECT * FROM scores",
 									"table" : "scores",
-									"versionnumber" : 10100,
+									"versionnumber" : 10200,
 									"vzoom" : 937.263793999999962,
 									"xfield" : "measure",
 									"yfield" : "phase",
@@ -2761,7 +2803,7 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 0,
-											"revision" : 4,
+											"revision" : 5,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -3068,7 +3110,7 @@
 									"showmeasurenumbers" : [ 1, 1 ],
 									"stafflines" : [ 5, 5 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"versionnumber" : 80005,
+									"versionnumber" : 80100,
 									"voicenames" : [ "[", "]", "[", "]" ],
 									"voicespacing" : [ 0.0, 26.0, 26.0 ],
 									"vzoom" : 70.0,
@@ -3092,7 +3134,7 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 0,
-											"revision" : 4,
+											"revision" : 5,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -3610,7 +3652,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 0,
-							"revision" : 4,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -3845,7 +3887,7 @@
 									"showmeasurenumbers" : [ 1, 1 ],
 									"stafflines" : [ 5, 5 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"versionnumber" : 80005,
+									"versionnumber" : 80100,
 									"voicenames" : [ "[", "]", "[", "]" ],
 									"voicespacing" : [ -13.5, 26.0, 26.0 ],
 									"vzoom" : 60.0,
@@ -3927,7 +3969,7 @@
 									"patching_rect" : [ 10.0, 187.0, 298.0, 155.0 ],
 									"query" : "SELECT * FROM scores",
 									"table" : "scores",
-									"versionnumber" : 10100,
+									"versionnumber" : 10200,
 									"vzoom" : 937.263793999999962,
 									"xfield" : "measure",
 									"yfield" : "phase",
@@ -4115,7 +4157,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 0,
-							"revision" : 4,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -4284,7 +4326,7 @@
 									"pitcheditrange" : [ "null" ],
 									"stafflines" : [ 5, 5, 5 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"versionnumber" : 80005,
+									"versionnumber" : 80100,
 									"voicenames" : [ "[", "]", "[", "]", "[", "]" ],
 									"voicespacing" : [ 0.0, 17.0, 17.0, 17.0 ],
 									"vzoom" : 50.0
@@ -4613,7 +4655,7 @@
 									"shapefield" : "filename",
 									"sizefield" : "loudness",
 									"table" : "scores",
-									"versionnumber" : 10100,
+									"versionnumber" : 10200,
 									"vzoom" : 1.362995648709935,
 									"xfield" : "spread",
 									"yfield" : "centroid",
@@ -4883,7 +4925,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 0,
-							"revision" : 4,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -4939,8 +4981,8 @@
 		"lines" : [  ],
 		"parameters" : 		{
 			"obj-15::obj-7::obj-8::obj-54" : [ "slider", "slider", 0 ],
-			"obj-15::obj-7::obj-8::obj-35" : [ "button", "button", 0 ],
 			"obj-15::obj-7::obj-8::obj-78" : [ "button[1]", "button[1]", 0 ],
+			"obj-15::obj-7::obj-8::obj-35" : [ "button", "button", 0 ],
 			"obj-15::obj-7::obj-8::obj-74" : [ "toggle", "toggle", 0 ],
 			"obj-15::obj-7::obj-8::obj-59" : [ "number", "number", 0 ],
 			"obj-15::obj-7::obj-8::obj-86" : [ "toggle[1]", "toggle[1]", 0 ],
@@ -5120,6 +5162,13 @@
 				"bootpath" : "~/Documents/Max 7/Packages/dada/help",
 				"patcherrelativepath" : ".",
 				"type" : "JSON",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "mydadastuff.png",
+				"bootpath" : "/private/tmp",
+				"patcherrelativepath" : "../../../../../../../private/tmp",
+				"type" : "PNG",
 				"implicit" : 1
 			}
 , 			{

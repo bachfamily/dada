@@ -201,7 +201,8 @@
     </Link>
     <Lib>
       <AdditionalDependencies>Shlwapi.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\..\source\vs\vs_stuff\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -245,7 +246,8 @@
     </Link>
     <Lib>
       <AdditionalDependencies>Shlwapi.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\..\source\vs\vs_stuff\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -296,7 +298,8 @@
     </Link>
     <Lib>
       <AdditionalDependencies>Shlwapi.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\..\source\vs\vs_stuff\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -347,7 +350,8 @@
     </Link>
     <Lib>
       <AdditionalDependencies>Shlwapi.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\..\source\vs\vs_stuff\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

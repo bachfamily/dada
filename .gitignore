@@ -36,6 +36,7 @@
 source/vs/vs_stuff/*
 source/vs/.vs/*
 **/macosxbuild/*
+**/enc_temp_folder/*
 
 # Compiled source #
 ###################

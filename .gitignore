@@ -70,6 +70,7 @@ Thumbs.db
 *.vcxproj.user
 UpgradeLog.htm
 *.aps
+source/vs/Debug/*
 
 
 # Emacs temp files for .gitignore and .gitattributes #

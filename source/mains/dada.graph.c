@@ -40,7 +40,9 @@
  */
 
 /// This define needs Boost to be loaded
+//#ifdef MAC_VERSION
 #define DADA_GRAPH_SUPPORT_VERTEX_PLACEMENT
+//#endif
 
 #include "dada.interface.h"
 #include "dada.geometry.h"
@@ -56,6 +58,7 @@
 //#include "gvc.h"
 
 
+
 #ifdef DADA_GRAPH_SUPPORT_VERTEX_PLACEMENT
 #include <boost/config.hpp>
 #include <boost/graph/fruchterman_reingold.hpp>
@@ -68,6 +71,10 @@
 #include <boost/limits.hpp>
 
 using namespace boost;
+
+#ifdef BOOST_NO_EXCEPTIONS
+int foo = 1;
+#endif
 
 enum vertex_position_t { vertex_position };
 namespace boost { BOOST_INSTALL_PROPERTY(vertex, position); }

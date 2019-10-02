@@ -676,8 +676,7 @@ void dada_atomic_unlock(t_dadaobj *r_ob);
 
 
 void dadaobj_setup(t_object *ob, t_dadaobj *r_ob, long flags, t_pt zoom_static_additional,
-				   long playout_outlet, long changebang_outlet, long notification_outlet, dada_paint_ext_fn paint_ext, invalidate_and_redraw_fn invalidate_and_redraw,
-				   const char *tools, long stores, const char *outlets, ...);
+				   long playout_outlet, long changebang_outlet, long notification_outlet, dada_paint_ext_fn paint_ext, invalidate_and_redraw_fn invalidate_and_redraw, const char *tools);
 void dadaobj_pxjbox_setup(t_dadaobj_pxjbox *b_ob, long flags, t_pt zoom_static_additional,
 						  long playout_outlet, long changebang_outlet, long notification_outlet, dada_paint_ext_fn paint_ext, invalidate_and_redraw_fn invalidate_and_redraw,
 						  const char *tools, long stores, const char *outlets, ...);

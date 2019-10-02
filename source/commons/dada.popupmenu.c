@@ -285,8 +285,7 @@ char display_popup_menu(t_dadaobj *r_ob, t_object *view, t_llll *structure, t_ll
 	return res;
 }
 
-char ezdisplay_popup_menu_for_dadaitem(t_dadaobj *r_ob, t_object *view, t_dadaitem *item, long autodisplay_flags, const char *structure, const char *functions_llll_model,
-									   const char *checked, const char *disabled, const char *icons, const char *textcolors, ...)
+char ezdisplay_popup_menu_for_dadaitem(t_dadaobj *r_ob, t_object *view, t_dadaitem *item, long autodisplay_flags, const char *structure, const char *functions_llll_model, const char *checked, const char *disabled, const char *icons, const char *textcolors, ...)
 {
 	t_llll *structure_ll = llll_from_text_buf((char *)structure, false);
 	t_llll *functions_model_ll = llll_from_text_buf((char *)functions_llll_model, false);

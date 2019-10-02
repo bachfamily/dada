@@ -164,13 +164,8 @@ long get_mousedown_ptr_index(void *rob)
 }
 
 void dadaobj_setup(t_object *ob, t_dadaobj *r_ob, e_llllobj_obj_types llllobj_type, long flags, t_pt zoom_static_additional,
-				   long playout_outlet, long changebang_outlet, long notification_outlet, dada_paint_ext_fn paint_ext, invalidate_and_redraw_fn invalidate_and_redraw,
-				   const char *tools, 
-				   long stores, const char *outlets, ...)
+				   long playout_outlet, long changebang_outlet, long notification_outlet, dada_paint_ext_fn paint_ext, invalidate_and_redraw_fn invalidate_and_redraw, const char *tools)
 {
-    va_list args;
-    va_start(args, outlets);
-	
 	r_ob->orig_obj = ob;
     r_ob->llllobj_type = llllobj_type;
     r_ob->m_paint.paint_ext = paint_ext;
@@ -243,7 +238,8 @@ void dadaobj_jbox_setup(t_dadaobj_jbox *b_ob, long flags, t_pt zoom_static_addit
     va_start(args, outlets);
 
 	llllobj_jbox_setup((t_llllobj_jbox *)b_ob, stores, outlets, args);
-	dadaobj_setup((t_object *)b_ob, &b_ob->d_ob, LLLL_OBJ_UI, flags, zoom_static_additional, playout_outlet, changebang_outlet, notification_outlet, paint_ext, invalidate_and_redraw, tools, stores, outlets, args);
+	dadaobj_setup((t_object *)b_ob, &b_ob->d_ob, LLLL_OBJ_UI, flags, zoom_static_additional, playout_outlet, changebang_outlet, notification_outlet, paint_ext, invalidate_and_redraw, tools);
+    va_end(args);
 }
 
 void dadaobj_pxjbox_setup(t_dadaobj_pxjbox *b_ob, long flags, t_pt zoom_static_additional,
@@ -254,7 +250,8 @@ void dadaobj_pxjbox_setup(t_dadaobj_pxjbox *b_ob, long flags, t_pt zoom_static_a
     va_start(args, outlets);
 	
 	llllobj_pxjbox_setup((t_llllobj_pxjbox *)b_ob, stores, outlets, args);
-	dadaobj_setup((t_object *)b_ob, &b_ob->d_ob, LLLL_OBJ_UIMSP, flags, zoom_static_additional, playout_outlet, changebang_outlet, notification_outlet, paint_ext, invalidate_and_redraw, tools, stores, outlets, args);
+	dadaobj_setup((t_object *)b_ob, &b_ob->d_ob, LLLL_OBJ_UIMSP, flags, zoom_static_additional, playout_outlet, changebang_outlet, notification_outlet, paint_ext, invalidate_and_redraw, tools);
+    va_end(args);
 }
 
 void dadaobj_addfunctions(t_dadaobj *d_ob, dada_mousemove_fn mousemove_fn, method clock_task, method undo_postprocess, 

@@ -158,6 +158,9 @@ typedef struct _terrain {
     // debug stuff
     char                dsp_debug;
     char                debug;
+    
+    
+    char                creating_new_object;
 } t_terrain;
 
 
@@ -567,6 +570,8 @@ void *terrain_new(t_symbol *s, long argc, t_atom *argv)
         x->buffers_as_llll = llll_get();
         x->path_num_points = 0;
         x->startclock = false;
+        
+        x->creating_new_object = true;
 
         jbox_new((t_jbox *)x, boxflags, argc, argv);
         x->b_ob.r_ob.l_ob.z_box.b_firstin = (t_object *)x;
@@ -592,6 +597,8 @@ void *terrain_new(t_symbol *s, long argc, t_atom *argv)
         jbox_ready((t_jbox *)x);
         
         dadaobj_set_current_version_number(dadaobj_cast(x));
+        
+        x->creating_new_object = false;
 
         return x;
     }
@@ -714,7 +721,8 @@ void terrain_set_custom_staticfunction(t_terrain *x, t_symbol *code)
     t_object *string;
     
     if (!code || strlen(code->s_name) == 0) {
-        object_error((t_object *)x, "No custom rule defined!");
+        if (!x->creating_new_object)
+            object_error((t_object *)x, "No custom rule defined!");
         return;
     }
     

@@ -406,9 +406,6 @@ typedef struct _interface_manager
 	t_dadaitem				*mousemove_item;
 	struct _dadaitem_identifier	mousemove_item_identifier;
 
-	pixel_to_dadaitem_fn				pixel_to_dadaitem;
-	preselect_items_in_rectangle_fn		preselect_items_in_rectangle;
-	
 	t_llll			*preselection;
 	t_llll			*selection;
     
@@ -419,6 +416,10 @@ typedef struct _interface_manager
 	char			continuously_send_changebang; // upon drag
 	char			send_bang_from_messages;
 	char			send_bang_upon_undo;
+
+    pixel_to_dadaitem_fn                pixel_to_dadaitem;
+    preselect_items_in_rectangle_fn        preselect_items_in_rectangle;
+    
 } t_interface_manager;
 
 
@@ -473,8 +474,9 @@ typedef struct _dadaitem_class
     long                    *num_items_field;   //< If this is not null, this has the precedence on the num_items statically assigned
 	long					num_items;
 	
-	method				postprocess_fn; // process after modification
-	
+    char                selectable;
+    char                include_in_background;
+
 	// Whole class set/get
 	e_dada_func_types	data_set_type;
 	method				data_set_fn;
@@ -493,12 +495,10 @@ typedef struct _dadaitem_class
 	method				data_single_get_fn;
 	t_llll				*data_single_get_args;
 
-	char				selectable;
-    char                include_in_background;
-		
 	method				free_fn;		// Function to free the single dada item, if needed (or NULL)
 	method				identifier_to_dadaitem_fn;
-	
+    method              postprocess_fn; // process after modification
+
 	char				dirty; // utility flag for undo
 } t_dadaitem_class;
 
@@ -580,11 +580,12 @@ typedef struct _bg_manager
 
 typedef struct _paint_manager
 {
-    invalidate_and_redraw_fn    invalidate_and_redraw;
-    dada_paint_ext_fn           paint_ext;              ///< Actual generalized paint function
     t_symbol                    *jit_destination_matrix;
     char                        dont_repaint;            ///< When this flag is 1, the object is not repainted from dada API
     char                        notify_when_painted;
+
+    invalidate_and_redraw_fn    invalidate_and_redraw;
+    dada_paint_ext_fn           paint_ext;              ///< Actual generalized paint function
 } t_paint_manager;
 
 typedef struct _mt_manager
@@ -622,24 +623,24 @@ typedef struct dadaobj
     t_paint_manager             m_paint;
     t_mt_manager                m_mt;
 	
+    t_dada_atomic_lock        l_lock;
+    t_systhread_mutex        l_mutex;        ///< Generic mutex for the object
+    
+    t_shashtable    *IDtable;                ///< A simple hash table containing item hash
+    
 	// Behavior
 	char			save_data_with_patcher;
-    update_solos_fn             update_solos;
+    char            curr_change_is_from_message;
 
 	// Preset fields 
+    t_atom           *preset_av;
+    long            preset_ac;
 	get_state_fn	get_state;
 	set_state_fn	set_state;
-	t_atom			*preset_av;		
-	long			preset_ac;		
 	
 	// Notifications
-	dadanotify_fn	dadanotify;
-	char			curr_change_is_from_message;
-
-	t_dada_atomic_lock		l_lock;
-	t_systhread_mutex		l_mutex;		///< Generic mutex for the object
-
-	t_shashtable	*IDtable;				///< A simple hash table containing item hash
+	dadanotify_fn	    dadanotify;
+    update_solos_fn     update_solos;
 
 } t_dadaobj;
 

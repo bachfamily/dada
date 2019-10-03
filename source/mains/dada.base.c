@@ -541,6 +541,8 @@ t_base* base_new(t_symbol *s, short argc, t_atom *argv)
 	
 	long true_ac = attr_args_offset(argc, argv);
 
+	post("creating dada.base");
+
 	x = (t_base*)object_alloc(s_base_class);
 	if (x) {
         x->creating_new_obj = true;

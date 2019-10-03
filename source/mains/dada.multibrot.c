@@ -566,6 +566,9 @@ void *multibrot_new(t_symbol *s, long argc, t_atom *argv)
 	long boxflags;
 	t_llll *llll_for_rebuild = NULL;
 	
+
+	post("creating dada.multibrot");
+
 	if (!(d = object_dictionaryarg(argc,argv)))
 		return NULL;    
 	

@@ -546,7 +546,7 @@ void *terrain_new(t_symbol *s, long argc, t_atom *argv)
     
 	if (!(d=object_dictionaryarg(argc,argv)))
 		return NULL;
-	post("creating dada.terrain");
+
     if ((x = (t_terrain *)object_alloc_debug(s_terrain_class))) {
         boxflags = 0
         | JBOX_DRAWFIRSTIN

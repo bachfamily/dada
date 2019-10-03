@@ -1413,8 +1413,6 @@ t_bodies* bodies_new(t_symbol *s, long argc, t_atom *argv)
 	t_dictionary *d;
 	long flags;
 	
-	post("creating dada.bodies");
-
 	if (!(d=object_dictionaryarg(argc,argv)))
 		return NULL;
 

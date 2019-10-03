@@ -988,9 +988,6 @@ void *cartesian_new(t_symbol *s, long argc, t_atom *argv)
 	t_cartesian *x = NULL;
 	t_dictionary *d = NULL;
 	long boxflags;
-	
-	post("creating dada.cartesian");
-
 
 	if (!(d = object_dictionaryarg(argc,argv)))
 		return NULL;    

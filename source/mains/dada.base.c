@@ -151,7 +151,7 @@ void C74_EXPORT ext_main(void *moduleRef)
 	CLASS_NEW_CHECK_SIZE(c, "dada.base",
 				  (method)base_new,
 				  (method)base_free,
-				  (short)sizeof(t_base),
+				  (long)sizeof(t_base),
 				  (method)NULL,
 				  A_GIMME,
 				  0L);
@@ -540,8 +540,6 @@ t_base* base_new(t_symbol *s, short argc, t_atom *argv)
 	t_base* x;
 	
 	long true_ac = attr_args_offset(argc, argv);
-
-	post("creating dada.base");
 
 	x = (t_base*)object_alloc(s_base_class);
 	if (x) {

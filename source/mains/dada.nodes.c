@@ -730,7 +730,7 @@ void C74_EXPORT ext_main(void *moduleRef)
 	class_register(CLASS_BOX, c); /* CLASS_NOBOX */
 	nodes_class = c;
 
-	dev_post("dada.surf compiled %s %s", __DATE__, __TIME__);
+	dev_post("dada.nodes compiled %s %s", __DATE__, __TIME__);
 	return;
 }
 

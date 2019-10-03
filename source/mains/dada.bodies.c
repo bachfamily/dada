@@ -466,7 +466,7 @@ void C74_EXPORT ext_main(void *moduleRef)
     // and it doesn't work for a custom <m>law</m>.
     // @marg 0 @name planet_index @optional 0 @type int
     // @marg 1 @name period_ms @optional 0 @type float
-    class_addmethod(c, (method) bodies_forceperiod, "forceperiod", A_GIMME);
+    class_addmethod(c, (method) bodies_forceperiod, "forceperiod", A_GIMME, 0);
 
     
     // @method forceperiod @digest Force a planet to have circular motion
@@ -478,7 +478,7 @@ void C74_EXPORT ext_main(void *moduleRef)
     // putting the planet right above the star, with a rightward pointing horizontal velocity.
     // @marg 0 @name planet_index @optional 0 @type int
     // @marg 0 @name zero_position @optional 1 @type symbol
-    class_addmethod(c, (method) bodies_forcecircular, "forcecircular", A_GIMME);
+    class_addmethod(c, (method) bodies_forcecircular, "forcecircular", A_GIMME, 0);
 
 
     // @method llll @digest Set state
@@ -579,7 +579,7 @@ void C74_EXPORT ext_main(void *moduleRef)
     // @method settime @digest Set time
     // @description Sets the current time to a given value, in milliseconds.
     // @marg 0 @name time_ms @optional 0 @type float
-    class_addmethod(c, (method) bodies_settime, "settime", A_FLOAT);
+    class_addmethod(c, (method) bodies_settime, "settime", A_FLOAT, 0);
 	
     
     // @method domain @digest Set the X domain

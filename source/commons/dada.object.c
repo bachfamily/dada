@@ -850,7 +850,7 @@ void dadaobj_class_init(t_class *c, e_llllobj_obj_types type, long flags)
         DADAOBJ_CLASS_ATTR_SYM_SUBSTRUCTURE(c,type, "bgimage", 0, t_dadaobj, m_bg, t_bg_manager, bg_image);
         CLASS_ATTR_DEFAULT_SAVE_PAINT(c, "bgimage", 0, "none");
         CLASS_ATTR_STYLE_LABEL(c, "bgimage", 0, "text", "Background Image");
-        CLASS_ATTR_ACCESSORS(c, "bgimage", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_bgimage : (method)dadaobj_pxjbox_setattr_bgimage);
+        CLASS_ATTR_ACCESSORS(c, "bgimage", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_bgimage : (type == LLLL_OBJ_UIMSP ?(method)dadaobj_pxjbox_setattr_bgimage : (method)NULL));
         CLASS_ATTR_CATEGORY(c, "bgimage", 0, "Appearance");
         CLASS_ATTR_BASIC(c, "bgimage", 0);
         // @description Sets a background image texture, tiling the plane. Use "" or "none" to remove the image.
@@ -864,7 +864,7 @@ void dadaobj_class_init(t_class *c, e_llllobj_obj_types type, long flags)
 		CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"zoom",0,"100");
 		CLASS_ATTR_BASIC(c, "zoom", 0);
 		CLASS_ATTR_CATEGORY(c, "zoom", 0, "Appearance");
-		CLASS_ATTR_ACCESSORS(c, "zoom", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_zoom : (method)dadaobj_pxjbox_setattr_zoom);
+        CLASS_ATTR_ACCESSORS(c, "zoom", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_zoom : (type == LLLL_OBJ_UIMSP ?(method)dadaobj_pxjbox_setattr_zoom : (method)NULL));
 		// @description Sets the object zoom percentage (or horizontal zoom, if the object is separately zoommable on horizontal and on vertical axis).
 		// @includeifflagged DADAOBJ_ZOOMX+DADAOBJ_ZOOMY+DADAOBJ_SPLITXYZOOM
         
@@ -874,7 +874,7 @@ void dadaobj_class_init(t_class *c, e_llllobj_obj_types type, long flags)
 			CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"vzoom",0,"100");
 			CLASS_ATTR_BASIC(c, "vzoom", 0);
 			CLASS_ATTR_CATEGORY(c, "vzoom", 0, "Appearance");
-			CLASS_ATTR_ACCESSORS(c, "vzoom", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_vzoom : (method)dadaobj_pxjbox_setattr_vzoom);
+            CLASS_ATTR_ACCESSORS(c, "vzoom", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_vzoom : (type == LLLL_OBJ_UIMSP ? (method)dadaobj_pxjbox_setattr_vzoom : (method)NULL));
 			// @description Sets the object vertical zoom percentage
 			// @includeifflagged DADAOBJ_ZOOMX+DADAOBJ_ZOOMY+DADAOBJ_SPLITXYZOOM
 		}
@@ -936,7 +936,7 @@ void dadaobj_class_init(t_class *c, e_llllobj_obj_types type, long flags)
 		CLASS_ATTR_STYLE_LABEL(c,"maxundosteps",0,"text","Maximum Number Of Undo Steps");
 		CLASS_ATTR_DEFAULT_SAVE(c,"maxundosteps",0,"50");
 		CLASS_ATTR_CATEGORY(c, "maxundosteps", 0, "Behavior");
-		CLASS_ATTR_ACCESSORS(c, "maxundosteps", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_maxundosteps : (method)dadaobj_pxjbox_setattr_maxundosteps);
+        CLASS_ATTR_ACCESSORS(c, "maxundosteps", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_maxundosteps : (type == LLLL_OBJ_UIMSP ? (method)dadaobj_pxjbox_setattr_maxundosteps : (method) NULL));
 		// @description Sets the maximum number of undo steps (0 being: no undo).
 		// @includeifflagged DADAOBJ_UNDO
 
@@ -1007,7 +1007,7 @@ void dadaobj_class_init(t_class *c, e_llllobj_obj_types type, long flags)
         CLASS_ATTR_DEFAULT_SAVE(c,"gridmode",0, flags & DADAOBJ_GRID_FIXEDDEFAULT ? "0" : "1");
         CLASS_ATTR_ENUMINDEX(c,"gridmode", 0, "Fixed Automatic");
         CLASS_ATTR_CATEGORY(c, "gridmode", 0, "Axes And Grid");
-        CLASS_ATTR_ACCESSORS(c, "gridmode", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_gridmode : (method)dadaobj_pxjbox_setattr_gridmode);
+        CLASS_ATTR_ACCESSORS(c, "gridmode", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_gridmode : (type == LLLL_OBJ_UIMSP ?(method)dadaobj_pxjbox_setattr_gridmode : (method)NULL));
         // @description Sets the grid mode, either Fixed (0) or Automatic (1 = default). In Automatic mode the space between grid lines
         // is automatically adapted according to the level of zoom.
         // @includeifflagged DADAOBJ_GRID
@@ -1016,7 +1016,7 @@ void dadaobj_class_init(t_class *c, e_llllobj_obj_types type, long flags)
 		CLASS_ATTR_STYLE_LABEL(c, "gridstep", 0, "text", "Grid Size");
 		CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"gridstep",0,"10 10");
 		CLASS_ATTR_CATEGORY(c, "gridstep", 0, "Axes And Grid");
-        CLASS_ATTR_ACCESSORS(c, "gridstep", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_grid : (method)dadaobj_pxjbox_setattr_grid);
+        CLASS_ATTR_ACCESSORS(c, "gridstep", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_grid : (type == LLLL_OBJ_UIMSP ?(method)dadaobj_pxjbox_setattr_grid : (method)NULL));
 		// @description Sets the grid size, in coordinates (only useful if <m>gridmode</m> is set to 0 = Fixed)
 		// @includeifflagged DADAOBJ_GRID
 
@@ -1024,7 +1024,7 @@ void dadaobj_class_init(t_class *c, e_llllobj_obj_types type, long flags)
 		CLASS_ATTR_STYLE_LABEL(c,"showgrid",0,"onoff","Show Grid");
         CLASS_ATTR_DEFAULT_SAVE(c,"showgrid",0, flags & DADAOBJ_GRID_SHOWDEFAULT ? "1" : "0");
 		CLASS_ATTR_CATEGORY(c, "showgrid", 0, "Axes And Grid");
-        CLASS_ATTR_ACCESSORS(c, "showgrid", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_showgrid : (method)dadaobj_pxjbox_setattr_showgrid);
+        CLASS_ATTR_ACCESSORS(c, "showgrid", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_showgrid : (type == LLLL_OBJ_UIMSP ?(method)dadaobj_pxjbox_setattr_showgrid : (method)NULL));
 		// @description Toggles the display of the grid.
 		// @includeifflagged DADAOBJ_GRID
 
@@ -1032,7 +1032,7 @@ void dadaobj_class_init(t_class *c, e_llllobj_obj_types type, long flags)
 		CLASS_ATTR_DEFAULT_SAVE_PAINT(c, "gridcolor", 0, "0. 0. 0. 0.1");
 		CLASS_ATTR_STYLE_LABEL(c, "gridcolor", 0, "rgba", "Grid Color");
 		CLASS_ATTR_CATEGORY(c, "gridcolor", 0, "Color");
-        CLASS_ATTR_ACCESSORS(c, "gridcolor", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_gridcolor : (method)dadaobj_pxjbox_setattr_gridcolor);
+        CLASS_ATTR_ACCESSORS(c, "gridcolor", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_gridcolor : (type == LLLL_OBJ_UIMSP ?(method)dadaobj_pxjbox_setattr_gridcolor : (method) NULL));
 		// @description Sets the grid color.
 		// @includeifflagged DADAOBJ_GRID
 	}
@@ -1042,14 +1042,14 @@ void dadaobj_class_init(t_class *c, e_llllobj_obj_types type, long flags)
         CLASS_ATTR_STYLE_LABEL(c,"showaxes",0,"onoff","Show Axes");
         CLASS_ATTR_DEFAULT_SAVE(c,"showaxes",0, flags & DADAOBJ_AXES_SHOWDEFAULT ? "1" : "0");
         CLASS_ATTR_CATEGORY(c, "showaxes", 0, "Axes And Grid");
-        CLASS_ATTR_ACCESSORS(c, "showaxes", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_showaxes : (method)dadaobj_pxjbox_setattr_showaxes);
+        CLASS_ATTR_ACCESSORS(c, "showaxes", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_showaxes : (type == LLLL_OBJ_UIMSP ?(method)dadaobj_pxjbox_setattr_showaxes : (method)NULL));
         // @description Toggles the display of the x and y axes.
         // @includeifflagged DADAOBJ_AXES
         
         DADAOBJ_CLASS_ATTR_RGBA_SUBSTRUCTURE(c,type, "axescolor", 0, t_dadaobj, m_grid, t_grid_manager, j_axescolor);
         CLASS_ATTR_DEFAULT_SAVE_PAINT(c, "axescolor", 0, "0.4 0.4 0.4 1.");
         CLASS_ATTR_STYLE_LABEL(c, "axescolor", 0, "rgba", "Axes Color");
-        CLASS_ATTR_ACCESSORS(c, "axescolor", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_axescolor : (method)dadaobj_pxjbox_setattr_axescolor);
+        CLASS_ATTR_ACCESSORS(c, "axescolor", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_axescolor : (type == LLLL_OBJ_UIMSP ?(method)dadaobj_pxjbox_setattr_axescolor : (method)NULL));
         CLASS_ATTR_CATEGORY(c, "axescolor", 0, "Color");
         // @description Sets the color of the x and y axes.
         // @includeifflagged DADAOBJ_AXES
@@ -1060,14 +1060,14 @@ void dadaobj_class_init(t_class *c, e_llllobj_obj_types type, long flags)
         CLASS_ATTR_STYLE_LABEL(c,"showgridlabels",0,"onoff","Show Grid Labels");
         CLASS_ATTR_DEFAULT_SAVE(c,"showgridlabels",0, flags & DADAOBJ_LABELS_SHOWDEFAULT ? "1" : "0");
         CLASS_ATTR_CATEGORY(c, "showgridlabels", 0, "Axes And Grid");
-        CLASS_ATTR_ACCESSORS(c, "showgridlabels", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_showgridlabels : (method)dadaobj_pxjbox_setattr_showgridlabels);
+        CLASS_ATTR_ACCESSORS(c, "showgridlabels", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_showgridlabels : (type == LLLL_OBJ_UIMSP ?(method)dadaobj_pxjbox_setattr_showgridlabels : (method)NULL));
         // @description Toggles the display of the grid labels.
         // @includeifflagged DADAOBJ_LABELS
         
         DADAOBJ_CLASS_ATTR_RGBA_SUBSTRUCTURE(c,type, "gridlabelscolor", 0, t_dadaobj, m_grid, t_grid_manager, j_labelscolor);
         CLASS_ATTR_DEFAULT_SAVE_PAINT(c, "gridlabelscolor", 0, "0.4 0.4 0.4 1.");
         CLASS_ATTR_STYLE_LABEL(c, "gridlabelscolor", 0, "rgba", "Grid Labels Color");
-        CLASS_ATTR_ACCESSORS(c, "gridlabelscolor", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_gridlabelscolor : (method)dadaobj_pxjbox_setattr_gridlabelscolor);
+        CLASS_ATTR_ACCESSORS(c, "gridlabelscolor", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_gridlabelscolor : (type == LLLL_OBJ_UIMSP ?(method)dadaobj_pxjbox_setattr_gridlabelscolor : (method)NULL));
         CLASS_ATTR_CATEGORY(c, "gridlabelscolor", 0, "Color");
         // @description Sets the color of the grid labels.
         // @includeifflagged DADAOBJ_LABELS
@@ -1077,7 +1077,7 @@ void dadaobj_class_init(t_class *c, e_llllobj_obj_types type, long flags)
         CLASS_ATTR_STYLE_LABEL(c,"gridlabelsfontsize",0,"text","Grid Labels Font Size");
         CLASS_ATTR_DEFAULT_SAVE(c,"gridlabelsfontsize",0, "8.");
         CLASS_ATTR_CATEGORY(c, "gridlabelsfontsize", 0, "Axes And Grid");
-        CLASS_ATTR_ACCESSORS(c, "gridlabelsfontsize", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_gridlabelsfontsize : (method)dadaobj_pxjbox_setattr_gridlabelsfontsize);
+        CLASS_ATTR_ACCESSORS(c, "gridlabelsfontsize", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_gridlabelsfontsize : (type == LLLL_OBJ_UIMSP ?(method)dadaobj_pxjbox_setattr_gridlabelsfontsize : (method)NULL));
         // @description Sets the size of the grid labels font.
         // @includeifflagged DADAOBJ_LABELS
         
@@ -1086,14 +1086,14 @@ void dadaobj_class_init(t_class *c, e_llllobj_obj_types type, long flags)
         CLASS_ATTR_STYLE_LABEL(c,"showaxeslabels",0,"onoff","Show Axes Labels");
         CLASS_ATTR_DEFAULT_SAVE(c,"showaxeslabels",0, "0");
         CLASS_ATTR_CATEGORY(c, "showaxeslabels", 0, "Axes And Grid");
-        CLASS_ATTR_ACCESSORS(c, "showaxeslabels", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_showaxeslabels : (method)dadaobj_pxjbox_setattr_showaxeslabels);
+        CLASS_ATTR_ACCESSORS(c, "showaxeslabels", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_showaxeslabels : (type == LLLL_OBJ_UIMSP ?(method)dadaobj_pxjbox_setattr_showaxeslabels : (method)NULL));
         // @description Toggles the display of the x and y axes labels.
         // @includeifflagged DADAOBJ_AXES+DADAOBJ_LABELS
         
         DADAOBJ_CLASS_ATTR_RGBA_SUBSTRUCTURE(c,type, "axeslabelscolor", 0, t_dadaobj, m_grid, t_grid_manager, j_axeslabelscolor);
         CLASS_ATTR_DEFAULT_SAVE_PAINT(c, "axeslabelscolor", 0, "0.4 0.4 0.4 1.");
         CLASS_ATTR_STYLE_LABEL(c, "axeslabelscolor", 0, "rgba", "Axes Labels Color");
-        CLASS_ATTR_ACCESSORS(c, "axeslabelscolor", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_axeslabelscolor : (method)dadaobj_pxjbox_setattr_axeslabelscolor);
+        CLASS_ATTR_ACCESSORS(c, "axeslabelscolor", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_axeslabelscolor : (type == LLLL_OBJ_UIMSP ?(method)dadaobj_pxjbox_setattr_axeslabelscolor : (method)NULL));
         CLASS_ATTR_CATEGORY(c, "axeslabelscolor", 0, "Color");
         // @description Sets the color of the x and y axes labels.
         // @includeifflagged DADAOBJ_AXES+DADAOBJ_LABELS
@@ -1102,14 +1102,14 @@ void dadaobj_class_init(t_class *c, e_llllobj_obj_types type, long flags)
         CLASS_ATTR_STYLE_LABEL(c,"axeslabelsfontsize",0,"text","Axes Labels Font Size");
         CLASS_ATTR_DEFAULT_SAVE(c,"axeslabelsfontsize",0, "10.");
         CLASS_ATTR_CATEGORY(c, "axeslabelsfontsize", 0, "Axes And Grid");
-        CLASS_ATTR_ACCESSORS(c, "axeslabelsfontsize", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_axeslabelsfontsize : (method)dadaobj_pxjbox_setattr_axeslabelsfontsize);
+        CLASS_ATTR_ACCESSORS(c, "axeslabelsfontsize", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_axeslabelsfontsize : (type == LLLL_OBJ_UIMSP ? (method)dadaobj_pxjbox_setattr_axeslabelsfontsize : (method)NULL));
         // @description Sets the size of the axes labels font.
         // @includeifflagged DADAOBJ_LABELS
         
         DADAOBJ_CLASS_ATTR_SYM_SUBSTRUCTURE(c,type, "xlabel", 0, t_dadaobj, m_grid, t_grid_manager, x_label);
         CLASS_ATTR_DEFAULT_SAVE_PAINT(c, "xlabel", 0, "");
         CLASS_ATTR_STYLE_LABEL(c, "xlabel", 0, "text", "X Axis Label");
-        CLASS_ATTR_ACCESSORS(c, "xlabel", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_xlabel : (method)dadaobj_pxjbox_setattr_xlabel);
+        CLASS_ATTR_ACCESSORS(c, "xlabel", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_xlabel : (type == LLLL_OBJ_UIMSP ?(method)dadaobj_pxjbox_setattr_xlabel : (method)NULL));
         CLASS_ATTR_CATEGORY(c, "xlabel", 0, "Axes And Grid");
         // @description Sets the label for the x axis.
         // @includeifflagged DADAOBJ_AXES+DADAOBJ_LABELS
@@ -1117,7 +1117,7 @@ void dadaobj_class_init(t_class *c, e_llllobj_obj_types type, long flags)
         DADAOBJ_CLASS_ATTR_SYM_SUBSTRUCTURE(c,type, "ylabel", 0, t_dadaobj, m_grid, t_grid_manager, y_label);
         CLASS_ATTR_DEFAULT_SAVE_PAINT(c, "ylabel", 0, "");
         CLASS_ATTR_STYLE_LABEL(c, "ylabel", 0, "text", "Y Axis Label");
-        CLASS_ATTR_ACCESSORS(c, "ylabel", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_ylabel : (method)dadaobj_pxjbox_setattr_ylabel);
+        CLASS_ATTR_ACCESSORS(c, "ylabel", (method)NULL, type == LLLL_OBJ_UI ? (method)dadaobj_jbox_setattr_ylabel : (type == LLLL_OBJ_UIMSP ?(method)dadaobj_pxjbox_setattr_ylabel : (method)NULL));
         CLASS_ATTR_CATEGORY(c, "ylabel", 0, "Axes And Grid");
         // @description Sets the label for the y axis.
         // @includeifflagged DADAOBJ_AXES+DADAOBJ_LABELS

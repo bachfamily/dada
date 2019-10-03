@@ -315,7 +315,7 @@ void C74_EXPORT ext_main(void *moduleRef)
 
     t_class *c;
 
-	c = class_new("dada.music~", (method)music_new, (method)music_free, sizeof(t_music), 0L, A_GIMME, 0);
+    CLASS_NEW_CHECK_SIZE(c, "dada.music~", (method)music_new, (method)music_free, (long)sizeof(t_music), 0L /* leave NULL!! */, A_GIMME, 0);
 
 	c->c_flags |= CLASS_FLAG_NEWDICTIONARY;
     jbox_initclass(c, JBOX_FONTATTR);	// include fonts

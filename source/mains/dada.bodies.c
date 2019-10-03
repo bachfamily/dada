@@ -369,13 +369,7 @@ void C74_EXPORT ext_main(void *moduleRef)
 		return;
 	}
 	
-	c = class_new("dada.bodies", 
-							(method)bodies_new,
-							(method)bodies_free,
-							sizeof(t_bodies),
-							(method)NULL,
-							A_GIMME,
-							0L);
+    CLASS_NEW_CHECK_SIZE(c, "dada.bodies", (method)bodies_new, (method)bodies_free, (long)sizeof(t_bodies), 0L /* leave NULL!! */, A_GIMME, 0);
 	
 	c->c_flags |= CLASS_FLAG_NEWDICTIONARY;
 	

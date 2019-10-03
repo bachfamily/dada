@@ -109,7 +109,7 @@ typedef struct _terrain {
     long                num_buffers;
     double              buffer_angle[DADA_TERRAIN_MAX_NUM_BUFFERS];
     t_buffer_ref        *buffer_reference[DADA_TERRAIN_MAX_NUM_BUFFERS];
-    t_buffer_info       buffer_info[DADA_TERRAIN_MAX_NUM_BUFFERS];
+    t_buffer_info       *buffer_info;
     
     char                terrain_type;
     char                polar;
@@ -122,7 +122,7 @@ typedef struct _terrain {
     t_jrgba             j_path_color;
     double              path_line_width;
     long                path_max_points;
-    t_pt                path[DADA_TERRAIN_MAX_NUM_PATH_PT];
+    t_pt                *path;
     long                path_curr_idx;
     long                path_num_points;
     
@@ -368,7 +368,7 @@ void C74_EXPORT ext_main(void *moduleRef)
 
     t_class *c;
 
-	c = class_new("dada.terrain~", (method)terrain_new, (method)terrain_free, sizeof(t_terrain), 0L, A_GIMME, 0);
+    CLASS_NEW_CHECK_SIZE(c, "dada.terrain~", (method)terrain_new, (method)terrain_free, (long)sizeof(t_terrain), 0L /* leave NULL!! */, A_GIMME, 0);
 
 	c->c_flags |= CLASS_FLAG_NEWDICTIONARY;
     jbox_initclass(c, JBOX_FONTATTR);	// include fonts
@@ -565,6 +565,8 @@ void *terrain_new(t_symbol *s, long argc, t_atom *argv)
         //		| JBOX_TEXTFIELD
         ;
         
+        x->path = (t_pt *)bach_newptr(DADA_TERRAIN_MAX_NUM_PATH_PT * sizeof(t_pt));
+        x->buffer_info = (t_buffer_info *)bach_newptr(DADA_TERRAIN_MAX_NUM_BUFFERS * sizeof(t_buffer_info));
         x->autozoom = 1;
         x->num_out_channels = 1;
         x->buffers_as_llll = llll_get();
@@ -612,6 +614,8 @@ void terrain_free(t_terrain *x)
     object_free_debug(x->clang_wheel);
     object_free_debug(x->clang_static);
     
+    bach_freeptr(x->path);
+    bach_freeptr(x->buffer_info);
     qelem_free(x->refresh_buffers_qelem);
     
     freeobject((t_object *)x->clock);

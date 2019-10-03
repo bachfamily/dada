@@ -2192,6 +2192,8 @@ void *platform_new(t_symbol *s, long argc, t_atom *argv)
 	t_dictionary *d = NULL;
 	long boxflags;
 	t_llll *llll_for_rebuild = NULL;
+
+	post("creating dada.platform");
 	
 	if (!(d = object_dictionaryarg(argc,argv)))
 		return NULL;    

@@ -358,7 +358,7 @@ void C74_EXPORT ext_main(void *moduleRef)
 	class_register(CLASS_BOX, c); /* CLASS_NOBOX */
 	multibrot_class = c;
 
-	dev_post("dada.surf compiled %s %s", __DATE__, __TIME__);
+	dev_post("dada.multibrot compiled %s %s", __DATE__, __TIME__);
 	return;
 }
 
@@ -566,6 +566,9 @@ void *multibrot_new(t_symbol *s, long argc, t_atom *argv)
 	long boxflags;
 	t_llll *llll_for_rebuild = NULL;
 	
+
+	post("creating dada.multibrot");
+
 	if (!(d = object_dictionaryarg(argc,argv)))
 		return NULL;    
 	

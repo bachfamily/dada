@@ -291,7 +291,7 @@ void C74_EXPORT ext_main(void *moduleRef)
 
 	llllobj_class_add_out_attr(c, LLLL_OBJ_UI);
 	dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BORDER | DADAOBJ_BORDER_SHOWDEFAULT | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_AXES | DADAOBJ_GRID | DADAOBJ_LABELS | DADAOBJ_EXPORTTOJITTER);
-    CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"grid",0,"0.2 0.2");
+    CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"gridstep",0,"0.2 0.2");
 
     CLASS_ATTR_FILTER_CLIP(c, "zoom", 10, ATOM_LONG_MAX); // default clipping for zoom
 

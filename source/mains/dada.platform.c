@@ -911,7 +911,7 @@ void ext_main(void *moduleRef)
 	llllobj_class_add_out_attr(c, LLLL_OBJ_UI);
 	dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BORDER | DADAOBJ_BORDER_SHOWDEFAULT | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_UNDO | DADAOBJ_EMBED | DADAOBJ_GRID | DADAOBJ_LABELS | DADAOBJ_SNAPTOGRID | DADAOBJ_MOUSEHOVER | DADAOBJ_PLAY | DADAOBJ_NOTIFICATIONS | DADAOBJ_EXPORTTOJITTER);
 
-    CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"grid",0,"1 1"); // finer grid by default.
+    CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"gridstep",0,"1 1"); // finer grid by default.
     CLASS_ATTR_DEFAULT_SAVE(c,"snaptogrid",0,"1");  // snapped to grid by default.
 
     

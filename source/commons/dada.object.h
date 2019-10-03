@@ -31,52 +31,8 @@
 // Utility to cast a pointer to a class to the dadaobj (which is the second element, after the root object
 #define dadaobj_cast(x) (&x->b_ob.d_ob)
 
-// Utility to calculate the offset between the dadaobj class and a given structure
-#define dadaobj_jbox_calcoffset(x,y) (calcoffset(x,y)-sizeof(t_llllobj_jbox))
 
 
-// ATTRIBUTES MACROS WITH SUBSTRUCTURES
-#define headersize(type) (type == LLLL_OBJ_UI ? sizeof(t_llllobj_jbox) : (type == LLLL_OBJ_UIMSP ? sizeof(t_llllobj_pxjbox) : (type == LLLL_OBJ_MSP ? sizeof(t_llllobj_pxobject) : (type == LLLL_OBJ_VANILLA ? sizeof(t_llllobj_object) : 0)))) 
-
-#define DADAOBJ_CLASS_ATTR_DOUBLE(c,type,attrname,flags,structname,structmember) \
-class_addattr((c),attr_offset_new(attrname,USESYM(float64),(flags),(method)0L,(method)0L,calcoffset(structname,structmember)+headersize(type)))
-
-#define DADAOBJ_CLASS_ATTR_CHAR(c,type,attrname,flags,structname,structmember) \
-class_addattr((c),attr_offset_new(attrname,USESYM(char),(flags),(method)0L,(method)0L,calcoffset(structname,structmember)+headersize(type)))
-
-#define DADAOBJ_CLASS_ATTR_LONG(c,type,attrname,flags,structname,structmember) \
-class_addattr((c),attr_offset_new(attrname,USESYM(long),(flags),(method)0L,(method)0L,calcoffset(structname,structmember)+headersize(type)))
-
-#define DADAOBJ_CLASS_ATTR_DOUBLE_ARRAY(c,type,attrname,flags,structname,structmember,size) \
-class_addattr((c),attr_offset_array_new(attrname,USESYM(float64),(size),(flags),(method)0L,(method)0L,0/*fix*/,calcoffset(structname,structmember)+headersize(type)))
-
-
-    #define DADAOBJ_CLASS_ATTR_CHAR_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember) \
-        class_addattr((c),attr_offset_new(attrname,USESYM(char),(flags),(method)0L,(method)0L,calcoffset(structname,structmember)+calcoffset(substructname,substructmember)+headersize(type)))
-
-#define DADAOBJ_CLASS_ATTR_LONG_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember) \
-	{		\
-		C74_STATIC_ASSERT(structmembersize(substructname,substructmember)==sizeof(long), "structmember must be long type"); \
-		class_addattr((c),attr_offset_new(attrname,USESYM(long),(flags),(method)0L,(method)0L,calcoffset(structname,structmember)+calcoffset(substructname,substructmember)+headersize(type))); \
-	}
-
-#define DADAOBJ_CLASS_ATTR_DOUBLE_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember) \
-	class_addattr((c),attr_offset_new(attrname,USESYM(float64),(flags),(method)0L,(method)0L,calcoffset(structname,structmember) + calcoffset(substructname,substructmember)+headersize(type)))
-
-#define DADAOBJ_CLASS_ATTR_DOUBLE_ARRAY_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember,size) \
-	class_addattr((c),attr_offset_array_new(attrname,USESYM(float64),(size),(flags),(method)0L,(method)0L,0/*fix*/,calcoffset(structname,structmember)+calcoffset(substructname,substructmember)+headersize(type)))
-
-#define DADAOBJ_CLASS_ATTR_SYM_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember) \
-class_addattr((c),attr_offset_new(attrname,USESYM(symbol),(flags),(method)0L,(method)0L,calcoffset(structname,structmember)+calcoffset(substructname,substructmember)+headersize(type)))
-
-#define DADAOBJ_CLASS_ATTR_ATOM_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember) \
-class_addattr((c),attr_offset_new(attrname,USESYM(atom),(flags),(method)0L,(method)0L,calcoffset(structname,structmember)+calcoffset(substructname,substructmember)+headersize(type)))
-
-
-#define DADAOBJ_CLASS_ATTR_RGBA_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember) \
-	{	DADAOBJ_CLASS_ATTR_DOUBLE_ARRAY_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember,4); \
-		CLASS_ATTR_ACCESSORS(c,attrname,NULL,jgraphics_attr_setrgba); \
-		CLASS_ATTR_PAINT(c,attrname,0); }
 
 
 #define DADAOBJ_JBOX_DECLARE_READWRITE_METHODS(c) \
@@ -644,6 +600,19 @@ typedef struct dadaobj
 
 } t_dadaobj;
 
+
+typedef struct dadaobj_object
+{
+    t_llllobj_object         r_ob;
+    t_dadaobj                d_ob;
+} t_dadaobj_object;
+
+typedef struct dadaobj_pxobject
+{
+    t_llllobj_pxobject       r_ob;
+    t_dadaobj                d_ob;
+} t_dadaobj_pxobject;
+
 typedef struct dadaobj_jbox
 {
 	t_llllobj_jbox			r_ob;
@@ -755,4 +724,56 @@ void dadaobj_mutex_unlock(t_dadaobj *r_ob);
 long dadaobj_anything_handle_domain_or_range(t_dadaobj *r_ob, t_symbol *router, t_llll *args, long outletnum = -1); // -1 means: use notification outlet
 
 long dadaobj_parse_export_png_syntax(t_dadaobj *r_ob, t_object *view, t_llll *ll, t_symbol **filename, long *dpi, double *width, double *height, t_pt *exportcenter);
+
+
+
+
+
+
+// ATTRIBUTES MACROS WITH SUBSTRUCTURES
+//#define headersize(type) (type == LLLL_OBJ_UI ? sizeof(t_llllobj_jbox) : (type == LLLL_OBJ_UIMSP ? sizeof(t_llllobj_pxjbox) : (type == LLLL_OBJ_MSP ? sizeof(t_llllobj_pxobject) : (type == LLLL_OBJ_VANILLA ? sizeof(t_llllobj_object) : 0))))
+
+#define headersize(type) (type == LLLL_OBJ_UI ? calcoffset(t_dadaobj_jbox, d_ob) : (type == LLLL_OBJ_UIMSP ? calcoffset(t_dadaobj_pxjbox, d_ob) : (type == LLLL_OBJ_MSP ? calcoffset(t_dadaobj_pxobject, d_ob) : (type == LLLL_OBJ_VANILLA ? calcoffset(t_dadaobj_object, d_ob) : 0))))
+
+#define DADAOBJ_CLASS_ATTR_DOUBLE(c,type,attrname,flags,structname,structmember) \
+class_addattr((c),attr_offset_new(attrname,USESYM(float64),(flags),(method)0L,(method)0L,calcoffset(structname,structmember)+headersize(type)))
+
+#define DADAOBJ_CLASS_ATTR_CHAR(c,type,attrname,flags,structname,structmember) \
+class_addattr((c),attr_offset_new(attrname,USESYM(char),(flags),(method)0L,(method)0L,calcoffset(structname,structmember)+headersize(type)))
+
+#define DADAOBJ_CLASS_ATTR_LONG(c,type,attrname,flags,structname,structmember) \
+class_addattr((c),attr_offset_new(attrname,USESYM(long),(flags),(method)0L,(method)0L,calcoffset(structname,structmember)+headersize(type)))
+
+#define DADAOBJ_CLASS_ATTR_DOUBLE_ARRAY(c,type,attrname,flags,structname,structmember,size) \
+class_addattr((c),attr_offset_array_new(attrname,USESYM(float64),(size),(flags),(method)0L,(method)0L,0/*fix*/,calcoffset(structname,structmember)+headersize(type)))
+
+
+#define DADAOBJ_CLASS_ATTR_CHAR_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember) \
+class_addattr((c),attr_offset_new(attrname,USESYM(char),(flags),(method)0L,(method)0L,calcoffset(structname,structmember)+calcoffset(substructname,substructmember)+headersize(type)))
+
+#define DADAOBJ_CLASS_ATTR_LONG_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember) \
+{        \
+C74_STATIC_ASSERT(structmembersize(substructname,substructmember)==sizeof(long), "structmember must be long type"); \
+class_addattr((c),attr_offset_new(attrname,USESYM(long),(flags),(method)0L,(method)0L,calcoffset(structname,structmember)+calcoffset(substructname,substructmember)+headersize(type))); \
+}
+
+#define DADAOBJ_CLASS_ATTR_DOUBLE_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember) \
+class_addattr((c),attr_offset_new(attrname,USESYM(float64),(flags),(method)0L,(method)0L,calcoffset(structname,structmember) + calcoffset(substructname,substructmember)+headersize(type)))
+
+#define DADAOBJ_CLASS_ATTR_DOUBLE_ARRAY_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember,size) \
+class_addattr((c),attr_offset_array_new(attrname,USESYM(float64),(size),(flags),(method)0L,(method)0L,0/*fix*/,calcoffset(structname,structmember)+calcoffset(substructname,substructmember)+headersize(type)))
+
+#define DADAOBJ_CLASS_ATTR_SYM_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember) \
+class_addattr((c),attr_offset_new(attrname,USESYM(symbol),(flags),(method)0L,(method)0L,calcoffset(structname,structmember)+calcoffset(substructname,substructmember)+headersize(type)))
+
+#define DADAOBJ_CLASS_ATTR_ATOM_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember) \
+class_addattr((c),attr_offset_new(attrname,USESYM(atom),(flags),(method)0L,(method)0L,calcoffset(structname,structmember)+calcoffset(substructname,substructmember)+headersize(type)))
+
+
+#define DADAOBJ_CLASS_ATTR_RGBA_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember) \
+{    DADAOBJ_CLASS_ATTR_DOUBLE_ARRAY_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember,4); \
+CLASS_ATTR_ACCESSORS(c,attrname,NULL,jgraphics_attr_setrgba); \
+CLASS_ATTR_PAINT(c,attrname,0); }
+
+
 #endif // _DADA_OBJECT_H_

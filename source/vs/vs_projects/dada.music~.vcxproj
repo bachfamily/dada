@@ -113,7 +113,7 @@
     <IntDir>..\vs_stuff\ext_temp\</IntDir>
     <TargetName>$(ProjectName)</TargetName>
     <IncludePath>..\..\commons;..\..\..\..\bach\source\commons;C:\Program Files\mpir;C:\Program Files\mpfr\src;$(IncludePath)</IncludePath>
-    <LibraryPath>..\..\..\max-sdk-7.3.3\source\c74support\max-includes\x64;..\..\..\..\max-sdk-7.3.3\source\c74support\msp-includes\x64;..\..\..\..\max-sdk-7.3.3\source\c74support\jit-includes\x64;$(LibraryPath)</LibraryPath>
+    <LibraryPath>..\..\..\max-sdk-7.3.3\source\c74support\max-includes\x64;..\..\..\..\max-sdk-7.3.3\source\c74support\msp-includes\x64;..\..\..\..\max-sdk-7.3.3\source\c74support\jit-includes\x64;C:\Program Files\mpfr\lib\x64\Debug;C:\Program Files\mpir\lib\x64\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

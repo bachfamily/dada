@@ -7,6 +7,9 @@
 	
 	@realname 
 	dada.cartesian
+ 
+    @hiddenalias
+    dada.catart
 
 	@type
 	object

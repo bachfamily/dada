@@ -1,9 +1,5 @@
 {
 	"maxdb" : {
-		"aliases" : {
-			"dada.loudness" : "dada.energy"
-		},
-		
-		"exclusions" : ["dada.loudness"]
+		"exclusions" : ["dada.loudness", "dada.catart"]
 	}
 }

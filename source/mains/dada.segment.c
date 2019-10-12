@@ -1361,7 +1361,7 @@ t_llll *segment_score(t_segment *x, t_llll *score, t_llll **meta)
                 }
             }
         }
-        llll_print(header);
+//        llll_print(header);
         
         long i = 1;
         for (; elem; elem = elem->l_next, i++)

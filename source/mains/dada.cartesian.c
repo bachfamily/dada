@@ -207,6 +207,7 @@ typedef struct _cartesian
     char            relative_knn;
     
     char            db_ok;
+    char            is_creating_new_obj;
 } t_cartesian;
 
 
@@ -253,6 +254,8 @@ void output_grain_contentfield(t_cartesian *x, t_cartesian_grain *gr, t_symbol *
 void cartesian_loop_tick(t_cartesian *x);
 void cartesian_schedule_interface_grain_llll(t_cartesian *x, t_cartesian_grain *gr, t_llll *ll);
 void do_send_llll(t_cartesian *x, t_symbol *s, long ac, t_atom *av);
+void rebuild_grains(t_cartesian *x, char preserve_turtle);
+void rebuild_grains_defer_low(t_cartesian *x, char preserve_turtle);
 
 
 /* void cartesian_jsave(t_cartesian *x, t_dictionary *d);
@@ -763,6 +766,7 @@ void C74_EXPORT ext_main(void *moduleRef)
 	return;
 }
 
+
 void view_create_deferred(t_cartesian *x, t_symbol *msg, long ac, t_atom *av)
 {
     db_view_create(x->d_db, x->d_query->s_name, &x->d_view);
@@ -850,6 +854,8 @@ t_max_err cartesian_notify(t_cartesian *x, t_symbol *s, t_symbol *msg, void *sen
 			attr_name == gensym("xfield") ||  attr_name == gensym("yfield") || attr_name == gensym("lengthfield") ||
             attr_name == gensym("where") || attr_name == gensym("database") || attr_name == gensym("mode") || attr_name == gensym("convexcombfield") || attr_name == gensym("convexcombmin") || attr_name == gensym("convexcombmax") || attr_name == gensym("convexcombp") || attr_name == gensym("alpha") || attr_name == gensym("maxr") || attr_name == gensym("minr"))  {
 			x->need_rebuild_grains = true;
+            if (!x->is_creating_new_obj)
+                rebuild_grains(x, true); // straight away
             cartesian_iar(x);
         } else if (attr_name == gensym("center") || attr_name == gensym("zoom") || attr_name == gensym("vzoom") || attr_name == gensym("grid") || attr_name == gensym("graincolor")) {
             cartesian_iar(x);
@@ -1001,6 +1007,7 @@ void *cartesian_new(t_symbol *s, long argc, t_atom *argv)
         x->scheduled_times = llll_get();
 		x->curr_beat_ms = 1000;
         x->loop_clock = clock_new(x, (method)cartesian_loop_tick);
+        x->is_creating_new_obj = true;
         
         for (long i = 0; i < DADA_CARTESIAN_MAX_CONVEXCOMB; i++)
             x->field_convexcomb_max[i] = 1.;
@@ -1038,7 +1045,9 @@ void *cartesian_new(t_symbol *s, long argc, t_atom *argv)
 		cartesian_initdataview(x);
         
         attr_dictionary_process(x,d);
-		
+
+        x->is_creating_new_obj = false;
+
 		// changing min and max zoom
 		x->b_ob.d_ob.m_zoom.max_zoom_perc = build_pt(10000, 10000);
 		x->b_ob.d_ob.m_zoom.min_zoom_perc = build_pt(0.01, 0.01);
@@ -1046,7 +1055,13 @@ void *cartesian_new(t_symbol *s, long argc, t_atom *argv)
 		jbox_ready((t_jbox *)x);
         
         dadaobj_set_current_version_number(dadaobj_cast(x));
-	}
+
+        if (x->need_rebuild_grains) {
+            x->need_rebuild_grains = false;
+            rebuild_grains_defer_low(x, false); // has to be deferred, because it should not happen before database has been set (and that operation was deferred)
+        }
+
+    }
 	return x;
 }
 
@@ -1103,6 +1118,7 @@ void cartesian_clock(t_cartesian *x, t_symbol *s)
 void cartesian_bang(t_cartesian *x)
 {	
 	x->need_rebuild_grains = true;
+    rebuild_grains(x, true); // straight away
 	cartesian_iar(x);
 	return;
 /*	
@@ -1772,6 +1788,18 @@ void rebuild_grains(t_cartesian *x, char preserve_turtle)
     llllobj_outlet_llll((t_object *)x, LLLL_OBJ_UI, 2, numgrains_ll);
 }
 
+
+void rebuild_grains_defer_low_do(t_cartesian *x, t_symbol *msg, long ac, t_atom *av)
+{
+    rebuild_grains(x, ac ? atom_getlong(av) : 0);
+}
+
+void rebuild_grains_defer_low(t_cartesian *x, char preserve_turtle)
+{
+    t_atom av;
+    atom_setlong(&av, preserve_turtle);
+    defer_low(x, (method)rebuild_grains_defer_low_do, NULL, 1, &av);
+}
 
 
 

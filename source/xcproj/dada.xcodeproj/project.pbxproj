@@ -56,7 +56,6 @@
 		1E4B99EB1C39F25E0043EE55 /* dada.multibrot.c in Sources */ = {isa = PBXBuildFile; fileRef = 1E4B99EA1C39F25E0043EE55 /* dada.multibrot.c */; };
 		1E4ECD2F1D4E1810002FEA2A /* dada.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */; };
 		1E4ECD331D4E1810002FEA2A /* lib_dada.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED9C9B1190D1224001973B8 /* lib_dada.a */; };
-		1E4ECD341D4E1810002FEA2A /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E4B958519F2F6B700584112 /* MaxAudioAPI.framework */; };
 		1E4ECD3C1D4E1828002FEA2A /* dada.terrain~.c in Sources */ = {isa = PBXBuildFile; fileRef = 1E4ECD3B1D4E1828002FEA2A /* dada.terrain~.c */; };
 		1E53990B1D43ECE100439855 /* dada.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */; };
 		1E53990F1D43ECE100439855 /* lib_dada.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED9C9B1190D1224001973B8 /* lib_dada.a */; };
@@ -78,7 +77,6 @@
 		1E7851271AF294C70079E361 /* dada.segment.c in Sources */ = {isa = PBXBuildFile; fileRef = 1E7851261AF294C70079E361 /* dada.segment.c */; };
 		1E89141A1EFDB906009EBADE /* dada.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */; };
 		1E89141E1EFDB906009EBADE /* lib_dada.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED9C9B1190D1224001973B8 /* lib_dada.a */; };
-		1E89141F1EFDB906009EBADE /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E4B958519F2F6B700584112 /* MaxAudioAPI.framework */; };
 		1E8914271EFDB967009EBADE /* dada.music~.c in Sources */ = {isa = PBXBuildFile; fileRef = 1E8914261EFDB967009EBADE /* dada.music~.c */; };
 		1E8CCB4C19B7E04E002D2CB0 /* lib_dada.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED9C9B1190D1224001973B8 /* lib_dada.a */; };
 		1E8CCB5E19B7E05D002D2CB0 /* dada.stage.c in Sources */ = {isa = PBXBuildFile; fileRef = 1E8CCB5D19B7E05D002D2CB0 /* dada.stage.c */; };
@@ -138,6 +136,8 @@
 		1ED646EC1DAD4023003CA9B1 /* icon_portal.png in Resources */ = {isa = PBXBuildFile; fileRef = 1ED646E71DAD4011003CA9B1 /* icon_portal.png */; };
 		1EE2A75E1982FDEE00B335ED /* lib_dada.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED9C9B1190D1224001973B8 /* lib_dada.a */; };
 		1EE2A7811982FE0000B335ED /* dada.life.c in Sources */ = {isa = PBXBuildFile; fileRef = 1EE2A7801982FE0000B335ED /* dada.life.c */; };
+		91BE10352359273F00730199 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91BE1033235925B000730199 /* MaxAudioAPI.framework */; };
+		91BE10362359274B00730199 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91BE1033235925B000730199 /* MaxAudioAPI.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -401,7 +401,6 @@
 		1E3906591BE2DB8300009A7F /* lib_bach.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = lib_bach.a; path = ../../../bach/source/lib/lib_bach.a; sourceTree = "<group>"; };
 		1E43459B197D2C04007DB98F /* dada.bounce.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dada.bounce.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E4345A4197D2C15007DB98F /* dada.bounce.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.bounce.c; path = ../mains/dada.bounce.c; sourceTree = SOURCE_ROOT; };
-		1E4B958519F2F6B700584112 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../../../Users/danieleghisi/max-sdk-7.0.3/source/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = DEVELOPER_DIR; };
 		1E4B99E81C39F2410043EE55 /* dada.multibrot.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dada.multibrot.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E4B99EA1C39F25E0043EE55 /* dada.multibrot.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.multibrot.c; path = ../mains/dada.multibrot.c; sourceTree = SOURCE_ROOT; };
 		1E4ECD391D4E1810002FEA2A /* dada.terrain~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "dada.terrain~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -479,6 +478,7 @@
 		1EE2A7631982FDEE00B335ED /* dada.life.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dada.life.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		1EE2A7801982FE0000B335ED /* dada.life.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.life.c; path = ../mains/dada.life.c; sourceTree = SOURCE_ROOT; };
 		91B76B9E233CD1AE00DC6B02 /* dada */ = {isa = PBXFileReference; lastKnownFileType = folder; name = dada; path = ../..; sourceTree = "<group>"; };
+		91BE1033235925B000730199 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../../max-sdk-7.3.3/source/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -529,7 +529,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1E4ECD331D4E1810002FEA2A /* lib_dada.a in Frameworks */,
-				1E4ECD341D4E1810002FEA2A /* MaxAudioAPI.framework in Frameworks */,
+				91BE10362359274B00730199 /* MaxAudioAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -586,7 +586,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1E89141E1EFDB906009EBADE /* lib_dada.a in Frameworks */,
-				1E89141F1EFDB906009EBADE /* MaxAudioAPI.framework in Frameworks */,
+				91BE10352359273F00730199 /* MaxAudioAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -640,11 +640,11 @@
 				1ECA8C2E1A45B30E001B9251 /* dada_lib.xcconfig */,
 				1ECA8C241A45B2FB001B9251 /* dada.xcconfig */,
 				1EDCC426196AE6F900638665 /* Info.plist */,
-				1E4B958519F2F6B700584112 /* MaxAudioAPI.framework */,
 				1E9339F8190BF9D500062899 /* Source */,
 				19C28FB4FE9D528D11CA2CBB /* Products */,
 				1ED0A62F1DABCF4300BE2DE7 /* External Frameworks */,
 				91B76B9E233CD1AE00DC6B02 /* dada */,
+				91BE1032235925AF00730199 /* Frameworks */,
 			);
 			name = iterator;
 			sourceTree = "<group>";
@@ -784,6 +784,14 @@
 				1E3906591BE2DB8300009A7F /* lib_bach.a */,
 			);
 			name = libraries;
+			sourceTree = "<group>";
+		};
+		91BE1032235925AF00730199 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				91BE1033235925B000730199 /* MaxAudioAPI.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

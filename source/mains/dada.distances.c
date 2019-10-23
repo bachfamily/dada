@@ -874,6 +874,7 @@ void C74_EXPORT ext_main(void *moduleRef)
 	
 	class_register(CLASS_BOX, c); /* CLASS_NOBOX */
 	distances_class = c;
+    dadaobj_class_add_fileusage_method(c);
 
 	ps_dbview_update = gensym("dbview_update");
 	ps_dbview_query_changed = gensym("dbview_query_changed");

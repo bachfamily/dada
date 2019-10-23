@@ -13,7 +13,7 @@
 			buildPhases = (
 			);
 			dependencies = (
-				1E09054C1F73C61C00A515E3 /* PBXTargetDependency */,
+				1E097C9A2358E154007C4DAA /* PBXTargetDependency */,
 				1E2A754E1DC0041D00F5D685 /* PBXTargetDependency */,
 				1E4ECD3F1D4E2C3E002FEA2A /* PBXTargetDependency */,
 				1E5399191D43ED4300439855 /* PBXTargetDependency */,
@@ -155,7 +155,7 @@
 			remoteGlobalIDString = 1E045A2A1AEE91D600A1F2B9;
 			remoteInfo = dada.base;
 		};
-		1E09054B1F73C61C00A515E3 /* PBXContainerItemProxy */ = {
+		1E097C992358E154007C4DAA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
 			proxyType = 1;
@@ -1788,10 +1788,10 @@
 			target = 1E045A2A1AEE91D600A1F2B9 /* dada.base */;
 			targetProxy = 1E045A431AEE91FD00A1F2B9 /* PBXContainerItemProxy */;
 		};
-		1E09054C1F73C61C00A515E3 /* PBXTargetDependency */ = {
+		1E097C9A2358E154007C4DAA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 1E8914151EFDB906009EBADE /* dada.music~ */;
-			targetProxy = 1E09054B1F73C61C00A515E3 /* PBXContainerItemProxy */;
+			targetProxy = 1E097C992358E154007C4DAA /* PBXContainerItemProxy */;
 		};
 		1E2A3AC81DBF55D40009CF52 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

@@ -356,8 +356,9 @@ void C74_EXPORT ext_main(void *moduleRef)
 	class_register(CLASS_BOX, c);
 	s_base_class = c;
 	ps_event = gensym("event");
-    
-    
+    dadaobj_class_add_fileusage_method(c);
+
+
     
     
     //// REGISTERING THE XBASE CLASS

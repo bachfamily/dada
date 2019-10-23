@@ -763,6 +763,7 @@ void C74_EXPORT ext_main(void *moduleRef)
 
 	s_bodies_class = c;
 	class_register(CLASS_BOX, s_bodies_class);
+    dadaobj_class_add_fileusage_method(c);
 
 	post("dada.bodies compiled %s %s", __DATE__, __TIME__);
 	return;

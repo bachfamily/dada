@@ -470,6 +470,7 @@ void C74_EXPORT ext_main(void *moduleRef)
     
 	class_register(CLASS_BOX, c);
 	s_music_class = c;
+    dadaobj_class_add_fileusage_method(c);
 }
 
 void change_precision(t_music *x, long new_precision)

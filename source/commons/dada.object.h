@@ -640,6 +640,9 @@ long dada_get_current_version_number();
 void dadaobj_set_version_number(t_dadaobj *d_ob, long version_number);
 void dadaobj_set_current_version_number(t_dadaobj *d_ob);
 
+// handling package inclusion
+void dadaobj_class_add_fileusage_method(t_class *c);
+
 /// atomic locks
 void dada_atomic_lock(t_dadaobj *r_ob);
 void dada_atomic_unlock(t_dadaobj *r_ob);

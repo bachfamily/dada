@@ -1156,7 +1156,8 @@ void ext_main(void *moduleRef)
 		
 	class_register(CLASS_BOX, c); /* CLASS_NOBOX */
 	platform_class = c;
-	
+    dadaobj_class_add_fileusage_method(c);
+
 	
 	dev_post("dada.platform compiled %s %s", __DATE__, __TIME__);
 	return;

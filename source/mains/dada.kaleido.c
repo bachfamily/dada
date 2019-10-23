@@ -1270,6 +1270,7 @@ void C74_EXPORT ext_main(void *moduleRef)
 	
 	class_register(CLASS_BOX, c); /* CLASS_NOBOX */
 	kaleido_class = c;
+    dadaobj_class_add_fileusage_method(c);
 
 	dev_post("dada.kaleido compiled %s %s", __DATE__, __TIME__);
 	return ;

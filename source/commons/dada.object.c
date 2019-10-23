@@ -1155,6 +1155,43 @@ void dadaobj_class_init(t_class *c, e_llllobj_obj_types type, long flags)
 
 }
 
+
+void dadaobj_fileusage(t_object *x, void *w)
+{
+    t_atom a;
+    t_atomarray *aa = atomarray_new(0, NULL);
+    atom_setsym(&a, gensym("extensions")); // add any package folders you need explicitly
+    atomarray_appendatom(aa, &a);
+    atom_setsym(&a, gensym("externals"));
+    atomarray_appendatom(aa, &a);
+    atom_setsym(&a, gensym("init"));
+    atomarray_appendatom(aa, &a);
+    atom_setsym(&a, gensym("interfaces"));
+    atomarray_appendatom(aa, &a);
+    atom_setsym(&a, gensym("fonts"));
+    atomarray_appendatom(aa, &a);
+
+    fileusage_addpackage(w, "bach", (t_object*)aa);
+
+    t_atomarray *aab = atomarray_new(0, NULL);
+    atom_setsym(&a, gensym("externals"));
+    atomarray_appendatom(aab, &a);
+    atom_setsym(&a, gensym("init"));
+    atomarray_appendatom(aab, &a);
+    atom_setsym(&a, gensym("interfaces"));
+    atomarray_appendatom(aab, &a);
+    
+    fileusage_addpackage(w, "dada", (t_object*)aab);
+
+    // fileusage takes ownership of aa and thus will take care of freeing it
+}
+
+void dadaobj_class_add_fileusage_method(t_class *c)
+{
+    class_addmethod(c, (method)dadaobj_fileusage, "fileusage", A_CANT, 0);
+}
+
+
 void dadaobj_mutex_lock(t_dadaobj *r_ob)
 {
 	systhread_mutex_lock(r_ob->l_mutex);

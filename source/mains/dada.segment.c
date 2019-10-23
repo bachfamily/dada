@@ -302,6 +302,8 @@ void C74_EXPORT ext_main(void *moduleRef)
 	class_register(CLASS_BOX, c);
 	s_segment_class = c;
 	ps_event = gensym("event");
+    dadaobj_class_add_fileusage_method(c);
+
 	return;
 }
 

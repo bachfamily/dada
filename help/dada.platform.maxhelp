@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 346.0, 79.0, 934.0, 662.0 ],
+		"rect" : [ 100.0, 79.0, 934.0, 662.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -58,7 +58,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 934.0, 636.0 ],
+						"rect" : [ 100.0, 105.0, 934.0, 636.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -88,6 +88,31 @@
 						"showontab" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
+									"bubble" : 1,
+									"id" : "obj-6",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 542.0, 136.0, 131.0, 25.0 ],
+									"presentation_linecount" : 2,
+									"text" : "Delete an element"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-5",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 421.5, 137.0, 116.0, 23.0 ],
+									"text" : "delete gamechar 2"
+								}
+
+							}
+, 							{
+								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
 									"id" : "obj-28",
@@ -95,8 +120,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 497.0, 542.432373000000098, 247.0, 50.0 ],
-									"presentation_linecount" : 3,
+									"patching_rect" : [ 497.0, 542.432373000000098, 251.0, 50.0 ],
 									"text" : "(On some occasions, may be handier to edit text files directly in an external editor! See \"saving\" tab...)",
 									"textcolor" : [ 0.501961, 0.501961, 0.501961, 1.0 ]
 								}
@@ -109,7 +133,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 67.0, 227.0, 41.0, 23.0 ],
+									"patching_rect" : [ 67.0, 270.0, 41.0, 23.0 ],
 									"text" : "dump"
 								}
 
@@ -125,7 +149,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 644.0, 10.0, 200.0, 55.0 ],
-									"presentation_linecount" : 2,
 									"text" : "add a brand new gamechar/coin/block/portal"
 								}
 
@@ -150,8 +173,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 333.0, 196.0, 155.0, 25.0 ],
-									"presentation_linecount" : 2,
+									"patching_rect" : [ 333.0, 231.0, 155.0, 25.0 ],
 									"text" : "Use it for the first coin!"
 								}
 
@@ -163,7 +185,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 162.0, 196.0, 169.0, 23.0 ],
+									"patching_rect" : [ 162.0, 231.0, 169.0, 23.0 ],
 									"text" : "set coin 1 [ sprite newbrick ]"
 								}
 
@@ -175,7 +197,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 780.0, 168.0, 122.0, 25.0 ],
+									"patching_rect" : [ 780.0, 203.0, 122.0, 25.0 ],
 									"text" : "Add a new sprite"
 								}
 
@@ -187,8 +209,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 149.0, 168.0, 602.0, 23.0 ],
-									"presentation_linecount" : 2,
+									"patching_rect" : [ 149.0, 203.0, 602.0, 23.0 ],
 									"text" : "addsprite [ name newbrick ] [ pics star1.png star2.png ] [ rect 0. 0. 16. 16. ] [ stretch 1 ] [ slidetime 150. ]"
 								}
 
@@ -200,7 +221,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 49.5, 196.0, 81.0, 23.0 ],
+									"patching_rect" : [ 49.5, 239.0, 81.0, 23.0 ],
 									"text" : "dump blocks"
 								}
 
@@ -212,7 +233,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 36.0, 168.0, 83.0, 23.0 ],
+									"patching_rect" : [ 36.0, 211.0, 83.0, 23.0 ],
 									"text" : "dump sprites"
 								}
 
@@ -225,7 +246,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 183.0, 306.0, 440.0, 52.0 ],
+									"patching_rect" : [ 183.0, 306.0, 443.0, 52.0 ],
 									"text" : "platform [ levelinfo [ title Level 1 ] [ hero Juan ] [ bgsprite newbackground ] [ gravity 15. ] [ maxtime none ] [ height 10. ] [ width 100. ] [ groundfriction 5. ] [ airfriction 1. ] [ textcolor 0. 0. 0. 1. ] [ intro 0 ] ]"
 								}
 
@@ -251,7 +272,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 199.0, 76.0, 200.0, 40.0 ],
-									"presentation_linecount" : 4,
 									"text" : "Set a new attribute for a gamechar/coin/block/portal"
 								}
 
@@ -303,7 +323,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 644.0, 306.0, 122.0, 54.0 ],
+									"patching_rect" : [ 644.0, 306.0, 125.0, 54.0 ],
 									"text" : "Redefine the levelinfo with the new sprite"
 								}
 
@@ -316,7 +336,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 768.0, 267.5, 122.0, 40.0 ],
+									"patching_rect" : [ 768.0, 267.5, 126.0, 40.0 ],
 									"text" : "Add a new sprite for background"
 								}
 
@@ -341,7 +361,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 49.5, 138.0, 873.0, 21.0 ],
+									"patching_rect" : [ 49.5, 173.0, 873.0, 21.0 ],
 									"text" : "Sprites are either defined in the object dump syntax (and you can obtain them via a \"dump sprites\" message), or one by one via an addsprite message",
 									"textcolor" : [ 0.501961, 0.501961, 0.501961, 1.0 ]
 								}
@@ -467,6 +487,14 @@
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
 									"source" : [ "obj-4", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-1", 0 ],
+									"midpoints" : [ 431.0, 166.0, 19.5, 166.0 ],
+									"source" : [ "obj-5", 0 ]
 								}
 
 							}
@@ -3135,7 +3163,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 346.0, 105.0, 934.0, 636.0 ],
+						"rect" : [ 0.0, 26.0, 934.0, 636.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,

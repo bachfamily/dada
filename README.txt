@@ -10,6 +10,15 @@ The official website is www.bachproject.net/dada
 
 The official repository is https://github.com/bachfamily/dada. You can find the source code there.
 
+THIS IS VERSION, 0.1.99b A MAC ONLY PRERELEASE of 0.2b, RELEASED AS THE LAST RELEASE WITH MAC 32-bit SUPPORT (***32 bits IS STILL SUPPORTED ON WINDOWS***)
+
+USE THIS RELEASE ONLY IF YOU 
+1) ARE ON MAC OS
+2) NEED 32-bit SUPPORT
+3) NEED NEW FEATURES
+
+
+
 
 Acknowledgments
 ===================

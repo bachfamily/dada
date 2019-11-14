@@ -1,0 +1,37 @@
+{
+	"author" : "Daniele Ghisi",
+	"authors" : [  ],
+	"description" : "dada: non-standard user interface for computer-aided composition",
+	"displayname" : "",
+	"extends" : "",
+	"extensible" : 0,
+	"homepatcher" : "dada.overview.maxpat",
+	"max_version_max" : "none",
+	"max_version_min" : "6.1",
+	"name" : "cage",
+	"os" : 	{
+		"macintosh" : 		{
+			"platform" : [ "ia32", "x64" ],
+			"min_version" : "10.7.x"
+		}
+,
+		"windows" : 		{
+			"platform" : [ "ia32", "x64" ],
+			"min_version" : "XP"
+		}
+
+	}
+,
+	"tags" : [  ],
+	"version" : "0.2.0",
+	"website" : "http://www.bachproject.net/dada",
+	"filelist" : 	{
+		"patchers" : [  ],
+		"help" : [  ],
+		"interfaces" : [  ],
+		"media" : [  ],
+		"docs" : [  ],
+		"extras" : [  ]
+	}
+
+}

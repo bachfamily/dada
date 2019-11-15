@@ -32,7 +32,7 @@
 	database, llll, storage 
 	
 	@seealso
-	bach.shelf, dada.segment, dada.catart, dada.distances
+	bach.shelf, dada.segment, dada.cartesian, dada.distances
 	
 	@owner
 	Daniele Ghisi
@@ -43,6 +43,9 @@
 #include "ext_obex.h"
 #include "ext_database.h"
 #include "dada.db.h"
+#ifdef WIN_VERSION
+#include "io.h"
+#endif
 
 
 // Data Structures
@@ -63,7 +66,7 @@ typedef struct _base {
     
     t_object *m_editor;
     
-    
+    char        read_only;
     char        creating_new_obj;
 } t_base;
 
@@ -133,14 +136,14 @@ static t_symbol	*ps_event = NULL;
 /**********************************************************************/
 // Class Definition and Life Cycle
 
-int C74_EXPORT main(void)
+void C74_EXPORT ext_main(void *moduleRef)
 {
 	common_symbols_init();
 	llllobj_common_symbols_init();
 
-	if (llllobj_check_version(bach_get_current_llll_version()) || llllobj_test()) {
+	if (dada_check_bach_version() || llllobj_test()) {
         dada_error_bachcheck();
-		return 1;
+		return;
 	}
 	
 	t_class *c; 
@@ -148,7 +151,7 @@ int C74_EXPORT main(void)
 	CLASS_NEW_CHECK_SIZE(c, "dada.base",
 				  (method)base_new,
 				  (method)base_free,
-				  (short)sizeof(t_base),
+				  (long)sizeof(t_base),
 				  (method)NULL,
 				  A_GIMME,
 				  0L);
@@ -201,11 +204,11 @@ int C74_EXPORT main(void)
     // @method dump @digest Output entire database as llll
     // @description Outputs the entire database in llll form (also outputs the column names depending on the
     // <m>outputcolnames</m> attribute).
-    // Syntax is: <b><m>TABLE1</m> <m>TABLE2</m>...</b>, where each table is <b>(<m>TABLE_HEADER</m> <m>TABLE_CONTENT</m>)</b>,
+    // Syntax is: <b><m>TABLE1</m> <m>TABLE2</m>...</b>, where each table is <b>[<m>TABLE_HEADER</m> <m>TABLE_CONTENT</m>]</b>,
     // where <m>TABLE_HEADER</m> is
-    // <b>(<m>table_name</m> (<m>column_name1</m> <m>column_type1</m>) (<m>column_name2</m> <m>column_type2</m>)...)</b>
+    // <b>[<m>table_name</m> [<m>column_name1</m> <m>column_type1</m>] [<m>column_name2</m> <m>column_type2</m>]...]</b>
     // and <m>TABLE_CONTENT</m> is
-    // <b>((<m>table_id_name</m> <m>id</m>) (<m>field1_name</m> <m>content1</m>) (<m>field2_name</m> <m>content2</m>)...)</b>
+    // <b>[[<m>table_id_name</m> <m>id</m>] [<m>field1_name</m> <m>content1</m>] [<m>field2_name</m> <m>content2</m>]...]</b>
     // and the <m>table_id_name</m> name is the singularized version of the table name, with the "_id" suffix (e.g.
     // for a table named "waves" this will be "wave_id").
     class_addmethod(c, (method)base_dump,			"dump", 0);
@@ -213,7 +216,7 @@ int C74_EXPORT main(void)
     // @method getcols @digest Output column names and types as llll
     // @description Outputs the table header for each table in the database, i.e. the column names and types.
     // Syntax is: <b><m>TABLE1</m> <m>TABLE2</m>...</b>, where each table is
-    // <b>(<m>table_name</m> (<m>column_name1</m> <m>column_type1</m>) (<m>column_name2</m> <m>column_type2</m>)...)</b>
+    // <b>[<m>table_name</m> [<m>column_name1</m> <m>column_type1</m>] [<m>column_name2</m> <m>column_type2</m>]...]</b>
     class_addmethod(c, (method)base_getcols,			"getcols", 0);
 
     
@@ -239,10 +242,10 @@ int C74_EXPORT main(void)
 	
 	// @method addentry @digest Add an entry to a table
 	// @description An <m>addentry</m> message followed by a table name and some entry specification 
-	// will add an entry to the table (if existing). Entry specification be in the form <b>(<m>columnname1</m> <m>content1</m>) (<m>columnname2</m> <m>content2</m>)... </b>.
+	// will add an entry to the table (if existing). Entry specification be in the form <b>[<m>columnname1</m> <m>content1</m>] [<m>columnname2</m> <m>content2</m>]... </b>.
 	// @marg 0 @name table_name @optional 0 @type symbol	
 	// @marg 1 @name specs @optional 0 @type llll
-    // @example addentry towns (name NewYork) (population 8406000) @caption add an entry in the table "towns".
+    // @example addentry towns [name NewYork] [population 8406000] @caption add an entry in the table "towns".
 	class_addmethod(c, (method)base_entry_create,		"addentry",		A_GIMME, 0);
 	class_addmethod(c, (method)base_entry_destroy,		"deleteentry",		A_SYM, A_LONG, 0); // ????? Are we sure???
     
@@ -281,8 +284,8 @@ int C74_EXPORT main(void)
     // @description Appends the content of a given text file (second argument) to a table (first argument).
     // The file should contain a properly formatted <m>llll</m> in the form
     // <b><m>ENTRY1</m> <m>ENTRY2</m>...</b>, where each <b><m>ENTRY</m></b> is in the form
-    // <b>((<m>column_name</m> <m>value(s)</m>) (<m>column_name</m> <m>value(s)</m>)...)</b>. <br />
-    // If a third specification of the kind <b>(cols <m>colname1</m> <m>colname2</m>...)</b> is set,
+    // <b>[[<m>column_name</m> <m>value[s]</m>] [<m>column_name</m> <m>value[s]</m>]...]</b>. <br />
+    // If a third specification of the kind <b>[cols <m>colname1</m> <m>colname2</m>...]</b> is set,
     // only the specified columns will be imported into the database. <br />
     // If you have a massive amount of symbol entries in your table, this should be the preferred method of loading
     // them into a <o>dada.base</o> object, since it bypasses the Max symbol table, inserting strings directly into the SQLite database.
@@ -295,11 +298,11 @@ int C74_EXPORT main(void)
 	// @method addtable @digest Add a table to the database
 	// @description An <m>addtable</m> message followed by a table name and some columns specifications 
 	// will add a table to the database having the given number and types of columns. 
-	// Column specification must be in the form <b>(<m>name1</m> <m>type1</m>) (<m>name2</m> <m>type2</m>)... </b>
+	// Column specification must be in the form <b>[<m>name1</m> <m>type1</m>] [<m>name2</m> <m>type2</m>]... </b>
 	// where each <m>name</m> is a symbol and each type is one of the symbols: "f" (float), "i" (integer), "s" (symbol), "r" (rational), "l" (llll).
 	// @marg 0 @name table_name @optional 0 @type symbol	
 	// @marg 1 @name columns @optional 0 @type llll
-    // @example addtable towns (name s) (population i) @caption add a table named "towns" with two columns: name (symbol) and popuplation (integer)
+    // @example addtable towns [name s] [population i] @caption add a table named "towns" with two columns: name (symbol) and popuplation (integer)
 	class_addmethod(c, (method)base_table_create,		"addtable",		A_GIMME, 0);
 
     
@@ -328,7 +331,11 @@ int C74_EXPORT main(void)
 
 	CLASS_STICKY_ATTR(c,"category",0,"Settings");
 	
-	CLASS_ATTR_CHAR(c,"outputcolnames",0, t_base, output_fieldnames);
+    CLASS_ATTR_CHAR(c,"readonly",0, t_base, read_only);
+    CLASS_ATTR_STYLE_LABEL(c,"readonly",0,"onoff","Read-Only Dataset File");
+    // @description Toggles the ability to only allow reading for a file-attached database.
+
+    CLASS_ATTR_CHAR(c,"outputcolnames",0, t_base, output_fieldnames);
 	CLASS_ATTR_STYLE_LABEL(c,"outputcolnames",0,"onoff","Output Column Names");
 	// @description Toggles the ability to output the column names in query answers. Defaults to 1.
 
@@ -349,8 +356,9 @@ int C74_EXPORT main(void)
 	class_register(CLASS_BOX, c);
 	s_base_class = c;
 	ps_event = gensym("event");
-    
-    
+    dadaobj_class_add_fileusage_method(c);
+
+
     
     
     //// REGISTERING THE XBASE CLASS
@@ -366,7 +374,7 @@ int C74_EXPORT main(void)
     s_xbase_class = d;
 
     
-	return 0;
+	return;
 }
 
 
@@ -441,8 +449,15 @@ void base_dblclick(t_base *x)
     llll_to_text_buf_pretty(ll, &buf, 0, BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART, NULL);
 //    llll_to_text_buf_pretty(ll, &buf, 0, BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, 0, NULL);
 //    llll_to_text_buf(ll, &buf);
-    object_method(x->m_editor, gensym("settext"), buf, gensym("utf-8"));
-    object_attr_setsym(x->m_editor, gensym("title"), gensym("Database as llll"));
+
+    void *rv = object_method(x->m_editor, gensym("settext"), buf, gensym("utf-8"));  // non-0 if the text was too long
+    if (rv) {
+        t_object *ed = x->m_editor;
+        x->m_editor = NULL;
+        object_free(ed);
+    } else {
+        object_attr_setsym(x->m_editor, gensym("title"), gensym("Database as llll"));
+    }
     llll_free(ll);
 }
 
@@ -492,26 +507,31 @@ t_symbol *filename_to_metafilename(t_symbol *s)
 
 void base_appendtodictionary(t_base *x, t_dictionary *d)
 {
-	if (xbase_attach_to_text_file(x->xbase)) {
-		t_llll *ll = db_to_llll(x->xbase, true);
-//        llll_print(ll, NULL, 0, 0, NULL);
-		if (x->d_filetype == 1280068684) // 'LLLL': file was native
-            llll_writenative((t_object *) x, x->xbase->d_filename, ll);
-        else { // textual
-            t_llll *args = llll_get();
-            llll_appendsym(args, x->xbase->d_filename);
-            llll_writetxt((t_object *) x, ll, args, BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART);
-            llll_free(args);
+    if (!x->read_only && x->xbase && x->xbase->d_dirty) {
+        
+        if (xbase_attach_to_text_file(x->xbase)) {
+            t_llll *ll = db_to_llll(x->xbase, true);
+            //        llll_print(ll, NULL, 0, 0, NULL);
+            if (x->d_filetype == 1280068684) // 'LLLL': file was native
+                llll_writenative((t_object *) x, x->xbase->d_filename, ll);
+            else { // textual
+                t_llll *args = llll_get();
+                llll_appendsym(args, x->xbase->d_filename);
+                llll_writetxt((t_object *) x, ll, args, BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART);
+                llll_free(args);
+            }
         }
-	}
-    
-    if (!x->creating_new_obj) {
-        if (xbase_attach_to_sql_file(x->xbase)) {
-            t_llll *ll = xbase_get_all_table_headers(x->xbase);
-            t_llll *arguments = llll_get();
-            llll_appendsym(arguments, filename_to_metafilename(x->xbase->d_filename));
-            llll_writetxt((t_object *)x, ll, arguments, BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART);
+        
+        if (!x->creating_new_obj) {
+            if (xbase_attach_to_sql_file(x->xbase)) {
+                t_llll *ll = xbase_get_all_table_headers(x->xbase);
+                t_llll *arguments = llll_get();
+                llll_appendsym(arguments, filename_to_metafilename(x->xbase->d_filename));
+                llll_writetxt((t_object *)x, ll, arguments, BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART);
+            }
         }
+        
+        x->xbase->d_dirty = false;
     }
 }
 
@@ -550,24 +570,31 @@ t_base* base_new(t_symbol *s, short argc, t_atom *argv)
             if (true_ac >= 2 && atom_gettype(argv) == A_SYM) {
                 x->d_filename = atom_getsym(argv + 1); //dada_ezlocate_file(atom_getsym(argv + 1), &x->d_filetype);
                 if (filename_is_not_sql_file(x->d_filename)) {
-                    if (!dada_ezlocate_file(x->d_filename, &x->d_filetype)) { // create one!
+                    t_symbol *located = dada_ezlocate_file(x->d_filename, &x->d_filetype);
+                    if (!located) { // create one!
                         llll_writetxt((t_object *)x, llll_get(), symbol2llll(x->d_filename), BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART);
                         x->d_filename = dada_ezlocate_file(x->d_filename, &x->d_filetype);
-                    }
+                    } else
+                        x->d_filename = located;
                 }
             }
 			
 			object_attr_setsym(x, _sym_name, dbname);
 		} else
             object_attr_setsym(x, _sym_name, symbol_unique());
-            
-		attr_args_process(x, argc, argv);
+        
+        if (x->xbase)
+            x->xbase->d_nodirty = true;
+        attr_args_process(x, argc, argv);
 		
 		if (xbase_attach_to_text_file(x->xbase))
 			base_read(x, x->xbase->d_filename);
         
-        x->d_filename = x->xbase->d_filename;
+        if (x->xbase)
+            x->d_filename = x->xbase->d_filename;
         x->creating_new_obj = false;
+        if (x->xbase)
+            x->xbase->d_nodirty = false;
 	}
 	return x;
 }
@@ -695,7 +722,13 @@ long llll_obj_to_sym_fn(void *data, t_hatom *a, const t_llll *address)
     return 1;
 }
 
-
+void xbase_set_dirty(t_xbase *b)
+{
+    if (!b->d_nodirty) {
+        b->d_dirty = true;
+        // TO DO: set dirty flag for patch too.
+    }
+}
 
 void xbase_entry_create_do(t_xbase *b, t_symbol *table_name, t_llllelem *specs_head, t_llll *only_these_fields, char escape_single_quotes, char convert_null_to_default)
 {
@@ -703,7 +736,9 @@ void xbase_entry_create_do(t_xbase *b, t_symbol *table_name, t_llllelem *specs_h
         xbase_error(b, "No entry has been specified!");
 		return;
     }
-	
+    
+    xbase_set_dirty(b);
+
 	long tableidx = table_name ? tablename_to_tableidx(b, table_name) : -1;
 	char firstname = true;
 	if (tableidx > -1) {
@@ -908,6 +943,8 @@ void xbase_distanceentries_create_bulk_from_idxs_do(t_xbase *b, t_symbol *distta
         long safety_limit = 3600;
         query[0] = 0;
         
+        xbase_set_dirty(b);
+
         for (elem = vals->l_head; elem; ) {
             if (!xbase_util_llllelem_to_ids_and_dist(elem, &id1, &id2, &dist)) {
                 if (cursor == 0) {
@@ -944,6 +981,9 @@ void xbase_distanceentry_create_do(t_xbase *b, t_symbol *disttable, t_symbol *re
     char *name1 = NULL, *name2 = NULL;
     char *name1ok = NULL, *name2ok = NULL;
     t_symbol *reftableidname = table_name_to_idname(reftable);
+
+    xbase_set_dirty(b);
+
     hatom_to_text_buf(val1, &name1);
     if (hatom_gettype(val1) == H_SYM) {
         long len = strlen(name1);
@@ -1174,6 +1214,8 @@ void xbase_entry_destroy(t_xbase *b, t_symbol *tablename, long event_id)
 {
 	t_max_err	err = MAX_ERR_NONE;
 	t_symbol *idname = table_name_to_idname(tablename);
+
+    xbase_set_dirty(b);
 	err = db_query(b->d_db, NULL, "DELETE FROM %s WHERE %s = %ld", tablename->s_name, idname->s_name);
 
 	if (err)
@@ -1191,7 +1233,8 @@ void xbase_table_destroy(t_xbase *b, t_symbol *tablename)
 {
 	long table_idx = tablename_to_tableidx(b, tablename);
 	if (table_idx > -1) {
-		db_query(b->d_db, NULL, "DROP TABLE IF EXISTS %s", tablename->s_name);
+        xbase_set_dirty(b);
+        db_query(b->d_db, NULL, "DROP TABLE IF EXISTS %s", tablename->s_name);
 		memcpy(&b->table[table_idx + 1], &b->table[table_idx], (DADA_XBASE_MAX_TABLES - table_idx - 1) * sizeof(t_db_table));
 		b->num_tables--;
 	}
@@ -1208,9 +1251,11 @@ void xbase_destroy_all_tables(t_xbase *b)
 {
 	long i;
     if (!b->d_db) return;
-	for (i = 0; i < b->num_tables; i++)
+    xbase_set_dirty(b);
+    for (i = 0; i < b->num_tables; i++)
 		db_query(b->d_db, NULL, "DROP TABLE IF EXISTS %s", b->table[i].name->s_name);
 	b->num_tables = 0;
+    xbase_set_dirty(b);
 }
 
 
@@ -1221,6 +1266,8 @@ void xbase_table_create_do(t_xbase *b, t_symbol *tablename, t_llll *specs, long 
 		return;
 	}
 	
+    xbase_set_dirty(b);
+
 	b->table[b->num_tables].num_columns = 0;
 	b->table[b->num_tables].name = tablename ? tablename : _sym_table;
 	
@@ -1292,13 +1339,15 @@ void base_distancetable_create(t_base *x, t_symbol *msg, long ac, t_atom *av)
 
 void xbase_clear_table(t_xbase *b, t_symbol *tablename)
 {
-	db_query(b->d_db, NULL, "DELETE FROM %s", tablename->s_name);
+    xbase_set_dirty(b);
+    db_query(b->d_db, NULL, "DELETE FROM %s", tablename->s_name);
 }
 
 void xbase_clear_all_tables(t_xbase *b)
 {
 	long i;
-	for (i = 0; i < b->num_tables; i++)
+    xbase_set_dirty(b);
+    for (i = 0; i < b->num_tables; i++)
 		xbase_clear_table(b, b->table[i].name);
 }
 
@@ -1313,9 +1362,13 @@ void base_bang(t_base *x)
 
 void base_dump(t_base *x)
 {
-    t_llll *ll = db_to_llll(x->xbase, x->output_fieldnames);
-    llllobj_outlet_llll((t_object *)x, LLLL_OBJ_VANILLA, 0, ll);
-    llll_free(ll);
+    if (x->xbase) {
+        x->xbase->d_nodirty = true;
+        t_llll *ll = db_to_llll(x->xbase, x->output_fieldnames);
+        llllobj_outlet_llll((t_object *)x, LLLL_OBJ_VANILLA, 0, ll);
+        llll_free(ll);
+        x->xbase->d_nodirty = false;
+    }
 }
 
 t_llll *getcols(t_xbase *b)
@@ -1377,6 +1430,7 @@ t_max_err llll_to_db(t_xbase *b, t_llll *ll, char escape_single_quotes, char con
 	t_llllelem *elem, *item;
 	t_max_err err = MAX_ERR_NONE;
 	
+    xbase_set_dirty(b);
 	xbase_destroy_all_tables(b);
 	
 	// setting columns
@@ -1480,7 +1534,9 @@ t_llll *xbase_db_query(t_xbase *b, char *buf, char output_fieldnames)
 {
 	t_max_err	err = MAX_ERR_NONE;
 	t_db_result	*result = NULL;
-	
+    
+    xbase_set_dirty(b);
+
 //    err = db_query(b->d_db, &result, "%s", buf);
     // it's extremely important that we don't do this:
     // err = db_query(b->d_db, &result, buf);
@@ -1692,8 +1748,8 @@ void xbase_set_header_from_llll(t_xbase *b, t_llll *ll)
     }
     
     b->num_tables = 0;
-    
-    
+    xbase_set_dirty(b);
+
     // setting columns
     for (t_llllelem *elem = ll->l_head; elem; elem = elem->l_next) {
         if (hatom_gettype(&elem->l_hatom) == H_LLLL) {
@@ -1717,7 +1773,7 @@ void xbase_set_header_from_llll(t_xbase *b, t_llll *ll)
 long file_exists(char *fname) {
     char temp[MAX_PATH_CHARS];
     path_nameconform(fname, temp, PATH_STYLE_MAX, PATH_TYPE_BOOT);
-    if( access(temp, F_OK ) != -1 ) {
+    if (access(temp, 0) != -1 ) {
         // file exists
         return 1;
     } else {
@@ -1844,6 +1900,8 @@ t_xbase *xbase_new(t_symbol *name)
         b->d_db = NULL;
         b->d_name = name;
         b->magic = DADA_XBASE_MAGIC_GOOD;
+        b->d_dirty = false;
+        b->d_nodirty = true;
         b->table = (t_db_table *)bach_newptr(DADA_XBASE_MAX_TABLES * sizeof(t_db_table));
         for (i = 0; i < DADA_XBASE_MAX_TABLES; i++)
             b->table[i].lllls = llll_get();
@@ -1896,6 +1954,8 @@ t_max_err base_attr_name_set(t_base *x, void *attr, long argc, t_atom *argv)
         rebuild_database(x->xbase);
     }
     x->xbase->ref_count++;
+    
+    x->xbase->d_nodirty = false;
     
     return MAX_ERR_NONE;
 }

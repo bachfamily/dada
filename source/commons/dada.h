@@ -10,19 +10,23 @@
 #define _DADA_H_
 
 
-#include "bach.h"
+#include "foundation/bach.h"
 #include "ext.h"							// standard Max include, always required
 #include "ext_obex.h"						// required for new style Max object
 #include "ext_atomic.h"						// atomic operations
 #include "jpatcher_api.h"
 #include "jgraphics.h"
-#include "bach_graphics.h"
-#include "llll_modifiers.h"
-#include "llll_commons.h"
-#include "llllobj.h"
-#include "bach_math_utilities.h"
-#include "llll_commons_ext.h"
+#include "graphics/bach_graphics.h"
+#include "graphics/llll_modifiers.h"
+#include "foundation/llll_commons.h"
+#include "foundation/llllobj.h"
+#include "math/bach_math_utilities.h"
+#include "foundation/llll_commons_ext.h"
+#include "graphics/bach_jit.h"
 
+#ifdef WIN_VERSION
+#define DADA_VERSION "0.2.0"
+#endif
 
 // DEBUG FLAGS
 // #define DADA_DEBUG_UNDO

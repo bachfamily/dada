@@ -153,10 +153,10 @@
 				Add an entry to a table
 			</digest>
 			<description>
-				Example: <b>addentry towns (name NewYork) (population 8406000)</b>   <i>→ add an entry in the table "towns".</i><br />
+				Example: <b>addentry towns [name NewYork] [population 8406000]</b>   <i>→ add an entry in the table "towns".</i><br />
 				<br />
 				An <m>addentry</m> message followed by a table name and some entry specification
-				will add an entry to the table (if existing). Entry specification be in the form <b>(<m>columnname1</m> <m>content1</m>) (<m>columnname2</m> <m>content2</m>)... </b>.
+				will add an entry to the table (if existing). Entry specification be in the form <b>[<m>columnname1</m> <m>content1</m>] [<m>columnname2</m> <m>content2</m>]... </b>.
 			</description>
 		</method>
 		<method name="addtable">
@@ -166,11 +166,11 @@
 				Add a table to the database
 			</digest>
 			<description>
-				Example: <b>addtable towns (name s) (population i)</b>   <i>→ add a table named "towns" with two columns: name (symbol) and popuplation (integer)</i><br />
+				Example: <b>addtable towns [name s] [population i]</b>   <i>→ add a table named "towns" with two columns: name (symbol) and popuplation (integer)</i><br />
 				<br />
 				An <m>addtable</m> message followed by a table name and some columns specifications
 				will add a table to the database having the given number and types of columns.
-				Column specification must be in the form <b>(<m>name1</m> <m>type1</m>) (<m>name2</m> <m>type2</m>)... </b>
+				Column specification must be in the form <b>[<m>name1</m> <m>type1</m>] [<m>name2</m> <m>type2</m>]... </b>
 				where each <m>name</m> is a symbol and each type is one of the symbols: "f" (float), "i" (integer), "s" (symbol), "r" (rational), "l" (llll).
 			</description>
 		</method>
@@ -185,8 +185,8 @@
 				Appends the content of a given text file (second argument) to a table (first argument).
 				The file should contain a properly formatted <m>llll</m> in the form
 				<b><m>ENTRY1</m> <m>ENTRY2</m>...</b>, where each <b><m>ENTRY</m></b> is in the form
-				<b>((<m>column_name</m> <m>value(s)</m>) (<m>column_name</m> <m>value(s)</m>)...)</b>. <br />
-				If a third specification of the kind <b>(cols <m>colname1</m> <m>colname2</m>...)</b> is set,
+				<b>[[<m>column_name</m> <m>value[s]</m>] [<m>column_name</m> <m>value[s]</m>]...]</b>. <br />
+				If a third specification of the kind <b>[cols <m>colname1</m> <m>colname2</m>...]</b> is set,
 				only the specified columns will be imported into the database. <br />
 				If you have a massive amount of symbol entries in your table, this should be the preferred method of loading
 				them into a <o>dada.base</o> object, since it bypasses the Max symbol table, inserting strings directly into the SQLite database.
@@ -219,11 +219,11 @@
 			<description>
 				Outputs the entire database in llll form (also outputs the column names depending on the
 				<m>outputcolnames</m> attribute).
-				Syntax is: <b><m>TABLE1</m> <m>TABLE2</m>...</b>, where each table is <b>(<m>TABLE_HEADER</m> <m>TABLE_CONTENT</m>)</b>,
+				Syntax is: <b><m>TABLE1</m> <m>TABLE2</m>...</b>, where each table is <b>[<m>TABLE_HEADER</m> <m>TABLE_CONTENT</m>]</b>,
 				where <m>TABLE_HEADER</m> is
-				<b>(<m>table_name</m> (<m>column_name1</m> <m>column_type1</m>) (<m>column_name2</m> <m>column_type2</m>)...)</b>
+				<b>[<m>table_name</m> [<m>column_name1</m> <m>column_type1</m>] [<m>column_name2</m> <m>column_type2</m>]...]</b>
 				and <m>TABLE_CONTENT</m> is
-				<b>((<m>table_id_name</m> <m>id</m>) (<m>field1_name</m> <m>content1</m>) (<m>field2_name</m> <m>content2</m>)...)</b>
+				<b>[[<m>table_id_name</m> <m>id</m>] [<m>field1_name</m> <m>content1</m>] [<m>field2_name</m> <m>content2</m>]...]</b>
 				and the <m>table_id_name</m> name is the singularized version of the table name, with the "_id" suffix (e.g.
 				for a table named "waves" this will be "wave_id").
 			</description>
@@ -245,7 +245,7 @@
 			<description>
 				Outputs the table header for each table in the database, i.e. the column names and types.
 				Syntax is: <b><m>TABLE1</m> <m>TABLE2</m>...</b>, where each table is
-				<b>(<m>table_name</m> (<m>column_name1</m> <m>column_type1</m>) (<m>column_name2</m> <m>column_type2</m>)...)</b>
+				<b>[<m>table_name</m> [<m>column_name1</m> <m>column_type1</m>] [<m>column_name2</m> <m>column_type2</m>]...]</b>
 			</description>
 		</method>
 		<method name="query">
@@ -342,23 +342,6 @@
 				Outlet Types
 			</digest>
 			<description>
-				The <m>out</m> attribute is a sequence of characters identifying the outlet types (one character for each llll outlet). Characters can be one of the following: <br />
-				<m>n</m> (default): 'native' output: faster and more precise between bach objects, but unreadable by standard Max objects (an "bach.llll" message appears instead). <br />
-				<m>t</m>: 'text' output: slower and limited in size, but readable by standard Max objects. A plain llll in text format is a generic Max message.
-				To keep the representation invertible (i.e., to allow a bach object receiving a text-format llll to interpret it exactly as if it was native format,
-				except for the size limitation), some specific kinds of symbols are preceded by a backtick: namely, symbols containing parens, or containing textual
-				representations of numbers or pitches, or beginning with a backtick, plus the symbols "null" and "nil" (distinct from the reserved words
-				"null" and "nil" representing the empty list and the empty sublist) are preceded by a backtick. Moreover, the symbols "int", "float" or "list"
-				are preceded by a backtick only if they are the first element of an llll, to distinguish them from the corresponding reserved messages of Max. <br />
-				<m>m</m>: 'max' output: mostly equivalent to the "t" specifier, but no symbol is backticket except "int", "float" and "list" at the beginning of an llll.
-				It is important to notice that, differently from text-format lllls proper, Max-format lllls might not be invertible even if they do not reach the size
-				limit for Max message. This means that a bach object receiving a Max-format llll output from another bach object might interpret it differently
-				from the original, or in some cases might even reject it. <br />
-				<m>x</m>: disabled output (nothing is output) <br />
-				<m>p</m>: 'portal' output: only used by bach.portal to intercept the @out attribute specified while creating the abstraction (see bach.portal). <br />
-				The native output is recommended, unless communication with standard Max messages is needed.
-				Disabling unused outputs can be useful if extreme optimization of the patch is needed.
-				<br /> <br />
 			</description>
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
@@ -382,13 +365,27 @@
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
 		</attribute>
+		<attribute name="readonly" get="1" set="1" type="int" size="1">
+			<digest>
+				Read-Only Dataset File
+			</digest>
+			<description>
+				Toggles the ability to only allow reading for a file-attached database.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Settings" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Read-Only Dataset File" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
+			</attributelist>
+		</attribute>
 	</attributelist>
 
 	<!--SEEALSO-->
 	<seealsolist>
 		<seealso name="bach.shelf" />
 		<seealso name="dada.segment" />
-		<seealso name="dada.catart" />
+		<seealso name="dada.cartesian" />
 		<seealso name="dada.distances" />
 	</seealsolist>
 

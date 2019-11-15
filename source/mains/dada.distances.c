@@ -32,7 +32,7 @@
 	distances, corpus, database, map, scaling, graph, exploration
 	
 	@seealso
-	dada.base, dada.segment, dada.catart
+	dada.base, dada.segment, dada.cartesian
 	
 	@owner
 	Daniele Ghisi
@@ -222,6 +222,9 @@ typedef struct _distances
     
     char            relative_turtling;
     char            relative_knn;
+    
+    char            db_ok;
+    char            is_creating_new_obj;
 } t_distances;
 
 
@@ -232,8 +235,11 @@ void distances_free(t_distances *x);
 void distances_assist(t_distances *x, void *b, long m, long a, char *s);
 
 void distances_paint(t_distances *x, t_object *view);
+void distances_paint_ext(t_distances *x, t_object *view, t_dada_force_graphics *force_graphics);
+
 void distances_get_boundaries(t_distances *x, double *min_x, double *max_x, double *min_y, double *max_y);
 void rebuild_grains(t_distances *x, char preserve_turtle);
+void rebuild_grains_defer_low(t_distances *x, char preserve_turtle);
 
 void distances_int(t_distances *x, t_atom_long num);
 void distances_float(t_distances *x, double num);
@@ -263,6 +269,8 @@ void distances_initdataview(t_distances *x);
 t_max_err distances_set_query(t_distances *x, void *attr, long argc, t_atom *argv);
 t_max_err distances_set_database(t_distances *x, void *attr, long argc, t_atom *argv);
 t_max_err distances_set_where(t_distances *x, void *attr, long argc, t_atom *argv);
+t_max_err distances_set_uniform(t_distances *x, void *attr, long argc, t_atom *argv);
+t_max_err distances_set_uniformpar(t_distances *x, void *attr, long argc, t_atom *argv);
 
 t_llll *get_grain_contentfield(t_distances *x, t_distances_grain *gr);
 void output_grain_contentfield(t_distances *x, t_distances_grain *gr, t_symbol *router, char beat_sync);
@@ -328,7 +336,7 @@ void process_change(t_distances *x)
 
 
 
-int C74_EXPORT main(void)
+void C74_EXPORT ext_main(void *moduleRef)
 {	
 	t_class *c;
 	
@@ -336,9 +344,9 @@ int C74_EXPORT main(void)
 	llllobj_common_symbols_init();
 	
 
-	if (llllobj_check_version(bach_get_current_llll_version()) || llllobj_test()) {
+	if (dada_check_bach_version() || llllobj_test()) {
 		dada_error_bachcheck();
-		return 1;
+		return;
 	}
 
 	srand(time(NULL)); // needed for the random function
@@ -444,7 +452,7 @@ int C74_EXPORT main(void)
     
     
     // @method setturtle @digest Set the turtle
-    // @description The <m>setturtle</m> message, followed by a <m>llll</m> of the kind <b>(<m>x</m>, <m>y</m>)</b>
+    // @description The <m>setturtle</m> message, followed by a <m>llll</m> of the kind <b>[<m>x</m>, <m>y</m>]</b>
     // sets the turtle on the nearest grain to the given (<m>x</m>, <m>y</m>) location, without causing any output. <br />
     // If <m>relativeturtle</m> is on, the coordinates are expected to be between 0 and 1, relative to the current domain and range
     // (caveat: more precisely, to the domain and range of the latest painted view of the object). <br />
@@ -453,13 +461,13 @@ int C74_EXPORT main(void)
     // In this case, the turtle is positioned on the (first found) grain (if any) having <m>value</m> as value for the field <m>colname</m>.
     // @marg 0 @name position_or_columnname @optional 0 @type llll/sym
     // @marg 1 @name column_value @optional 1 @type anything
-    // @example setturtle (0 10) @caption Set the turtle on the nearest grain to x=0, y=10
+    // @example setturtle [0 10] @caption Set the turtle on the nearest grain to x=0, y=10
     // @example setturtle name Warsaw @caption Set the turtle on the grain having "Warsaw" as content for the column "name"
     class_addmethod(c, (method)distances_anything,		"setturtle",		A_GIMME,	0);
 	
 
     // @method turtle @digest Set the turtle and output grain content
-	// @description The <m>turtle</m> message, followed by a <m>llll</m> of the kind <b>(<m>x</m>, <m>y</m>)</b>
+	// @description The <m>turtle</m> message, followed by a <m>llll</m> of the kind <b>[<m>x</m>, <m>y</m>]</b>
 	// sets the turtle on the nearest grain to the given (<m>x</m>, <m>y</m>) location, and outputs the grain content field(s)
 	// from the second outlet, preceded by the "turtle" symbol. <br />
     // If <m>relativeturtle</m> is on, the coordinates are expected to be between 0 and 1, relative to the current domain and range
@@ -469,7 +477,7 @@ int C74_EXPORT main(void)
     // In this case, the turtle is positioned on the (first found) grain (if any) having <m>value</m> as value for the field <m>colname</m>.
     // @marg 0 @name position_or_columnname @optional 0 @type llll/sym
     // @marg 1 @name column_value @optional 1 @type anything
-    // @example turtle (0 10) @caption Set the turtle on the nearest grain to x=0, y=10, and output content
+    // @example turtle [0 10] @caption Set the turtle on the nearest grain to x=0, y=10, and output content
     // @example turtle name Warsaw @caption Set the turtle on the grain having "Warsaw" as content for the column "name", and output content
 	class_addmethod(c, (method)distances_anything,		"turtle",		A_GIMME,	0);
 
@@ -493,7 +501,7 @@ int C74_EXPORT main(void)
     
 	
 	// @method turtledelta @digest Move the turtle and output grain content
-	// @description The <m>turtledelta</m> message, followed by a <m>llll</m> of the kind <b>(<m>delta_x</m>, <m>delta_y</m>)</b>
+	// @description The <m>turtledelta</m> message, followed by a <m>llll</m> of the kind <b>[<m>delta_x</m>, <m>delta_y</m>]</b>
 	// moves the turtle of a (<m>delta_x</m>, <m>delta_y</m>) vector and sets it to the nearest grain to the new position (ignoring
 	// the grain which previously had the turtle). The content field(s) of such grain are then output from the second outlet preceded by the
 	// "turtle" symbol. <br />
@@ -510,7 +518,7 @@ int C74_EXPORT main(void)
     
     
 	// @method knn @digest Find nearest neighbors
-	// @description The <m>knn</m> message, followed by an integer <m>K</m> and an <m>llll</m> of the kind <b>(<m>x</m>, <m>y</m>)</b>,
+	// @description The <m>knn</m> message, followed by an integer <m>K</m> and an <m>llll</m> of the kind <b>[<m>x</m>, <m>y</m>]</b>,
 	// finds the <m>K</m> points which are nearest to the location (<m>x</m>, <m>y</m>), and outputs their content field(s) from the third outlet. <br />
     // If <m>relativeknn</m> is on, the coordinates are expected to be between 0 and 1, relative to the current domain and range
     // (caveat: more precisely, to the domain and range of the latest painted view of the object).
@@ -543,12 +551,12 @@ int C74_EXPORT main(void)
 	class_addmethod(c, (method)distances_anything,	"anything",			A_GIMME,	0);
 
     
-    
+    DADAOBJ_JBOX_DECLARE_IMAGE_METHODS(c);
     
 	llllobj_class_add_out_attr(c, LLLL_OBJ_UI);
 	
-	dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_GRID | DADAOBJ_AXES | DADAOBJ_LABELS |  DADAOBJ_MOUSEHOVER | DADAOBJ_GRID_SHOWDEFAULT | DADAOBJ_LABELS_SHOWDEFAULT);
-	CLASS_ATTR_FILTER_CLIP(c, "zoom", 0.0001, 10000);
+	dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_GRID | DADAOBJ_AXES | DADAOBJ_LABELS |  DADAOBJ_MOUSEHOVER | DADAOBJ_GRID_SHOWDEFAULT | DADAOBJ_LABELS_SHOWDEFAULT | DADAOBJ_EXPORTTOJITTER);
+	CLASS_ATTR_FILTER_CLIP(c, "zoom", 0.0001, 100000);
 
 	
 	CLASS_ATTR_DEFAULT(c, "patching_rect", 0, "0 0 300 300");
@@ -814,13 +822,15 @@ int C74_EXPORT main(void)
 
 
     CLASS_ATTR_CHAR(c, "uniform", 0, t_distances, also_compute_uniform_grid);
-    CLASS_ATTR_STYLE_LABEL(c, "uniform", 0, "text", "Also Compute Uniform Grid");
+    CLASS_ATTR_ACCESSORS(c, "uniform", NULL, distances_set_uniform);
+    CLASS_ATTR_STYLE_LABEL(c, "uniform", 0, "onoff", "Also Compute Uniform Grid");
     CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"uniform",0,"0.");
     CLASS_ATTR_FILTER_CLIP(c, "uniform", 0., 1.);
     // @description Toggles the computation of the uniform grid. By default, to avoid wasting useless CPU-time, this is off.
     // You need to turn this on before touching to the other uniform grid attributes <m>uniformpar</m> and <m>uniformsize</m>.
 
     CLASS_ATTR_DOUBLE(c, "uniformpar", 0, t_distances, align_to_uniform_grid);
+    CLASS_ATTR_ACCESSORS(c, "uniformpar", NULL, distances_set_uniformpar);
     CLASS_ATTR_STYLE_LABEL(c, "uniformpar", 0, "text", "Align To Uniform Grid");
     CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"uniformpar",0,"0.");
     CLASS_ATTR_FILTER_CLIP(c, "uniformpar", 0., 1.);
@@ -864,18 +874,41 @@ int C74_EXPORT main(void)
 	
 	class_register(CLASS_BOX, c); /* CLASS_NOBOX */
 	distances_class = c;
+    dadaobj_class_add_fileusage_method(c);
 
 	ps_dbview_update = gensym("dbview_update");
 	ps_dbview_query_changed = gensym("dbview_query_changed");
 
 	dev_post("dada.distances compiled %s %s", __DATE__, __TIME__);
-	return 0;
+	return;
 }
 
 void view_create_deferred(t_distances *x, t_symbol *msg, long ac, t_atom *av)
 {
     db_view_create(x->d_db, x->d_query->s_name, &x->d_view);
     object_attach_byptr_register(x, x->d_view, _sym_nobox);
+}
+
+t_max_err distances_set_uniform(t_distances *x, void *attr, long argc, t_atom *argv)
+{
+    if (argc && argv) {
+        x->also_compute_uniform_grid = atom_getlong(argv);
+        x->need_rebuild_grains = true;
+        rebuild_grains(x, true); // straight away
+        distances_iar(x);
+    }
+    return MAX_ERR_NONE;
+}
+
+t_max_err distances_set_uniformpar(t_distances *x, void *attr, long argc, t_atom *argv)
+{
+    if (argc && argv) {
+        x->align_to_uniform_grid = atom_getfloat(argv);
+        x->need_rebuild_grains = true;
+        rebuild_grains(x, true); // straight away
+        distances_iar(x);
+    }
+    return MAX_ERR_NONE;
 }
 
 t_max_err distances_set_query(t_distances *x, void *attr, long argc, t_atom *argv)
@@ -916,6 +949,7 @@ t_max_err distances_set_database(t_distances *x, void *attr, long argc, t_atom *
 		x->d_database = atom_getsym(argv);
 		err = db_open(x->d_database, NULL, &x->d_db);
 		if (!err && x->d_db && x->d_query) {
+            x->db_ok = true;
 //			db_view_create(x->d_db, x->d_query->s_name, &x->d_view);
 //			object_attach_byptr_register(x, x->d_view, _sym_nobox);
             defer_low(x, (method)view_create_deferred, NULL, 0, NULL);
@@ -963,6 +997,8 @@ t_max_err distances_notify(t_distances *x, t_symbol *s, t_symbol *msg, void *sen
             object_attr_setdisabled((t_object *)x, gensym("uniformls"), x->also_compute_uniform_grid == 0);
             if (x->also_compute_uniform_grid == 0) {
                 x->need_rebuild_grains = true;
+                if (!x->is_creating_new_obj)
+                    rebuild_grains(x, true); // straight away
                 distances_iar(x);
             }
         }
@@ -970,6 +1006,8 @@ t_max_err distances_notify(t_distances *x, t_symbol *s, t_symbol *msg, void *sen
 			attr_name == gensym("distancetable") ||  attr_name == gensym("table") || attr_name == gensym("lengthfield") ||
             attr_name == gensym("where") || attr_name == gensym("database") || attr_name == gensym("labelfield") || attr_name == gensym("maxdistedge") || attr_name == gensym("uniformlr") || attr_name == gensym("uniformsize") || attr_name == gensym("alpha") || attr_name == gensym("maxr") || attr_name == gensym("minr") || attr_name == gensym("seed") || attr_name == gensym("numiter"))  {
 			x->need_rebuild_grains = true;
+            if (!x->is_creating_new_obj)
+                rebuild_grains(x, true); // straight away
             distances_iar(x);
         } else if (attr_name == gensym("center") || attr_name == gensym("zoom") || attr_name == gensym("vzoom") || attr_name == gensym("grid") || attr_name == gensym("uniform") || attr_name == gensym("showedges") || attr_name == gensym("showgrains") || attr_name == gensym("edgecolor") || attr_name == gensym("graincolor")) {
             distances_iar(x);
@@ -1122,13 +1160,14 @@ void *distances_new(t_symbol *s, long argc, t_atom *argv)
 	
 	if ((x = (t_distances *)object_alloc_debug(distances_class))) {
 		
+        x->is_creating_new_obj = true;
 		x->grains = llll_get();
         x->grains_grid = llll_get();
         x->scheduled_times = llll_get();
 		x->curr_beat_ms = 1000;
         x->loop_clock = clock_new(x, (method)distances_loop_tick);
         x->turtled_grain_history = llll_get();
-        
+
         graph_new(&x->graph, DADA_GRAPH_FLAG_SYMMETRIC, DADA_GRAPH_METADATA_OBJ, DADA_GRAPH_METADATA_DOUBLE, DADA_LINE_STRAIGHT);
  		
 		boxflags = 0 
@@ -1151,7 +1190,7 @@ void *distances_new(t_symbol *s, long argc, t_atom *argv)
 		x->b_ob.r_ob.l_box.b_firstin = (t_object *)x;
 //		object_obex_store((void *)x, _sym_dumpout, (t_object*)outlet_new(x, NULL));
 
-		dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET, build_pt(5, 5), 3, 4, 2, (invalidate_and_redraw_fn)distances_iar, "vn", 2, "b444");
+		dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET, build_pt(5, 5), 3, 4, 2, (dada_paint_ext_fn)distances_paint_ext, (invalidate_and_redraw_fn)distances_iar, "vn", 2, "b444");
 		dadaobj_addfunctions(dadaobj_cast(x), (dada_mousemove_fn)distances_mousemove, (method)distances_task, NULL, NULL, NULL, NULL, NULL, NULL);
 
 		x->d_columns = hashtab_new(13);
@@ -1168,12 +1207,17 @@ void *distances_new(t_symbol *s, long argc, t_atom *argv)
 		x->b_ob.d_ob.m_zoom.max_zoom_perc = build_pt(10000, 10000);
 		x->b_ob.d_ob.m_zoom.min_zoom_perc = build_pt(0.01, 0.01);
 		
-        x->need_rebuild_grains = true;
-        
 		jbox_ready((t_jbox *)x);
 
         dadaobj_set_current_version_number(dadaobj_cast(x));
-    
+
+        x->is_creating_new_obj = false;
+        
+        x->need_rebuild_grains = true;
+        if (x->need_rebuild_grains) {
+            x->need_rebuild_grains = false;
+            rebuild_grains_defer_low(x, false); // straight away
+        }
     }
 	return x;
 }
@@ -1323,12 +1367,6 @@ void distances_clear(t_distances *x, char also_outside_current_world)
 {	
 	jbox_redraw((t_jbox *)x);
 }
-
-void distances_dump(t_distances *x, char get_world, char get_notes)
-{	
-	;
-}
-
 
 long sort_by_pt_distance_fn(void *data, t_llllelem *a, t_llllelem *b)
 {
@@ -1654,19 +1692,20 @@ void get_uniform_num_rows_cols(t_distances *x, long num_grains, long *num_rows, 
 void build_grains(t_distances *x)
 {
     if (!x->d_database || strlen(x->d_database->s_name) <= 0) {
-        object_error((t_object *)x, "Define a valid database name.");
+//        object_error((t_object *)x, "Define a valid database name.");
+        x->db_ok = false;
         return; // nothing to build
 
     }
     
     if (!x->tablename || strlen(x->tablename->s_name) <= 0) {
-        object_error((t_object *)x, "Define a valid table name.");
+//        object_error((t_object *)x, "Define a valid table name.");
         return; // nothing to build
     }
 
     
     if (!x->disttablename || strlen(x->disttablename->s_name) <= 0) {
-        object_error((t_object *)x, "Define a valid distance table name.");
+//        object_error((t_object *)x, "Define a valid distance table name.");
         return; // nothing to build
     }
 
@@ -2032,7 +2071,7 @@ void build_grains(t_distances *x)
                 
                 distances_get_boundaries(x, &xmin, &xmax, &ymin, &ymax);
                 
-                if (std::isnan(xmin) || std::isnan(xmax) || std::isnan(ymin) || std::isnan(ymax)) {
+                if (isnan(xmin) || isnan(xmax) || isnan(ymin) || isnan(ymax)) {
                     distances_get_boundaries(x, &xmin, &xmax, &ymin, &ymax);
                     xmin = xmax = ymin = ymax = 0;
                     num_cols = num_rows = 1;
@@ -2251,11 +2290,14 @@ char *distances_atom_to_string(t_atom *a, long max_decimals)
         res[len] = 0;
 		return res;
 	} else {        
-		char *res = double_to_string(atom_getfloat(a), max_decimals);
-		if (res[strlen(res)-1] == ' ')
-			res[strlen(res)-1] = 0;
-		if (res[strlen(res)-1] == '.')
-			res[strlen(res)-1] = 0;
+        char *res = double_to_string(atom_getfloat(a), max_decimals);
+        long len = strlen(res);
+        if (len > 0) {
+            if (res[len-1] == ' ')
+                res[len-1] = 0;
+            if (res[len-1] == '.')
+                res[len-1] = 0;
+        }
 		return res;
 	}
 }
@@ -2278,40 +2320,50 @@ void rebuild_grains(t_distances *x, char preserve_turtle)
     llllobj_outlet_symbol_as_llll((t_object *)x, LLLL_OBJ_UI, 2, _sym_done);
 }
 
-void distances_paint(t_distances *x, t_object *view)
+
+void rebuild_grains_defer_low_do(t_distances *x, t_symbol *msg, long ac, t_atom *av)
 {
-	
-	t_jgraphics *g;
-	t_rect rect;
-	t_pt center;
+    rebuild_grains(x, ac ? atom_getlong(av) : 0);
+}
+
+void rebuild_grains_defer_low(t_distances *x, char preserve_turtle)
+{
+    t_atom av;
+    atom_setlong(&av, preserve_turtle);
+    defer_low(x, (method)rebuild_grains_defer_low_do, NULL, 1, &av);
+}
+
+
+
+void distances_paint_ext(t_distances *x, t_object *view, t_dada_force_graphics *force_graphics)
+{
+	t_jgraphics *g = force_graphics->graphic_context;
+	t_rect rect = force_graphics->rect;
+	t_pt center = force_graphics->center_pix;
 	t_jfont *jf = jfont_create_debug("Arial", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL, x->legend_text_size);
     t_jfont *jf_labels = jfont_create_debug("Arial", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL, x->labels_text_size);
 
-	if (x->need_rebuild_grains) {
-        rebuild_grains(x, true);
-	}
-    
-    if (dadaobj_cast(x)->m_zoom.must_autozoom) {
-        distances_autozoom_do(x, view);
-        dadaobj_cast(x)->m_zoom.must_autozoom = false;
+    if (!x->db_ok) {
+        dadaobj_paint_background(dadaobj_cast(x), g, &rect);
+        write_text(g, jf, DADA_GREY_50, "(must set 'database', 'table' & 'distancetable' attributes)", 0, 0, rect.width, rect.height, JGRAPHICS_TEXT_JUSTIFICATION_CENTERED, true, true);
+        return;
+    }  else if (!x->tablename || strlen(x->tablename->s_name) == 0 || !x->disttablename || strlen(x->disttablename->s_name) == 0) {
+        dadaobj_paint_background(dadaobj_cast(x), g, &rect);
+        write_text(g, jf, DADA_GREY_50, "(must set both 'table' and 'distancetable' attributes)", 0, 0, rect.width, rect.height, JGRAPHICS_TEXT_JUSTIFICATION_CENTERED, true, true);
+        return;
     }
 
-	// getting rectangle dimensions
-	g = (t_jgraphics*) patcherview_get_jgraphics(view); 
-	jbox_get_rect_for_view((t_object *)x, view, &rect);
-	center = get_center_pix(dadaobj_cast(x), view, &rect);
-    
-    dadaobj_getdomain(dadaobj_cast(x), view, &x->domain_min, &x->domain_max);
-    dadaobj_getrange(dadaobj_cast(x), view, &x->range_min, &x->range_max);
+    dadaobj_getdomain(dadaobj_cast(x), view, &x->domain_min, &x->domain_max, force_graphics);
+    dadaobj_getrange(dadaobj_cast(x), view, &x->range_min, &x->range_max, force_graphics);
 
     dadaobj_paint_background(dadaobj_cast(x), g, &rect);
 
     dadaobj_mutex_lock(dadaobj_cast(x));
 
-    dadaobj_paint_grid(dadaobj_cast(x), view, rect, center); // axis are inside here
+    dadaobj_paint_grid(dadaobj_cast(x), view, force_graphics); // axis are inside here
 
 	// grains
-	distances_paint_grains(x, NULL, view, rect, center, jf_labels);
+    distances_paint_grains(x, view ? NULL : force_graphics->graphic_context, view, rect, center, jf_labels);
 	
     // painting turtle, if any
     if (x->show_turtle && x->turtled_grain) {
@@ -2358,7 +2410,19 @@ void distances_paint(t_distances *x, t_object *view)
     jfont_destroy(jf_labels);
 }
 
-
+void distances_paint(t_distances *x, t_object *view)
+{
+    if (x->need_rebuild_grains) {
+        rebuild_grains(x, true);
+    }
+    
+    if (view && dadaobj_cast(x)->m_zoom.must_autozoom) {
+        distances_autozoom_do(x, view);
+        dadaobj_cast(x)->m_zoom.must_autozoom = false;
+    }
+    
+    dadaobj_paint(dadaobj_cast(x), view);
+}
 
 void distances_get_boundaries(t_distances *x, double *min_x, double *max_x, double *min_y, double *max_y)
 {
@@ -2372,13 +2436,13 @@ void distances_get_boundaries(t_distances *x, double *min_x, double *max_x, doub
 
     for (elem = x->grains->l_head->l_next; elem; elem = elem->l_next) {
         t_distances_grain *gr = (t_distances_grain *)hatom_getobj(&elem->l_hatom);
-        if (!std::isnan(gr->coord.x) && gr->coord.x > *max_x)
+        if (!isnan(gr->coord.x) && gr->coord.x > *max_x)
             *max_x = gr->coord.x;
-        if (!std::isnan(gr->coord.y) && gr->coord.y > *max_y)
+        if (!isnan(gr->coord.y) && gr->coord.y > *max_y)
             *max_y = gr->coord.y;
-        if (!std::isnan(gr->coord.x) && gr->coord.x < *min_x)
+        if (!isnan(gr->coord.x) && gr->coord.x < *min_x)
             *min_x = gr->coord.x;
-        if (!std::isnan(gr->coord.y) && gr->coord.y < *min_y)
+        if (!isnan(gr->coord.y) && gr->coord.y < *min_y)
             *min_y = gr->coord.y;
     }
 }
@@ -2493,6 +2557,9 @@ t_llll *get_grain_contentfield(t_distances *x, t_distances_grain *gr)
 	char query[256];
     long f;
     t_llll *out = llll_get();
+    
+    if (!gr)
+        return out;
     
     for (f = 0; f < x->field_content_size; f++) {
         t_db_result	*result = NULL;

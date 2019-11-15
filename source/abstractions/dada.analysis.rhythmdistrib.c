@@ -35,7 +35,7 @@
 	analysis, onset, rhythm, distribution, normalize, region, energy, velocity
 
 	@seealso
-	dada.segment, dada.catart
+	dada.segment, dada.cartesian
 	
 	@owner
 	Daniele Ghisi

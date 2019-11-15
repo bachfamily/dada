@@ -264,8 +264,10 @@ void shape_offset(t_shape *shape, double how_much)
         {
             t_polygon *p = NULL;
             dadapolygon_to_polygon(&shape->shape.polygon, &p);
-            polygon_offset_smart_inplace(&p, how_much, 0, NULL, 0, NULL, false, 0, NULL, NULL);
-            polygon_to_dadapolygon(p, &shape->shape.polygon);
+            //            polygon_offset_smart_inplace(&p, how_much, 0, NULL, 0, NULL, false, 0, NULL, NULL);
+            t_polygon *p_offset = polygon_offset_simple(p, how_much);
+            polygon_free(p);
+            polygon_to_dadapolygon(p_offset, &shape->shape.polygon);
             polygon_free(p);
         }
             break;
@@ -805,7 +807,9 @@ void find_convex_hull(long num_points, t_pt *points, t_dadapolygon *poly)
 	}
 	
     // Initialize Result
-    int next[n], done[n];
+    // TO DO: this allocation is slow, one may check that if n < THRESHOLD, static allocation may be used instead
+    int *next = (int *)bach_newptr(n* sizeof(int));
+    int *done = (int *)bach_newptr(n* sizeof(int));
     for (int i = 0; i < n; i++) {
         next[i] = -1;
         done[i] = 0;
@@ -844,6 +848,8 @@ void find_convex_hull(long num_points, t_pt *points, t_dadapolygon *poly)
 		poly->vertex[poly->num_vertices++] = points[next[i]];
 		i = next[i];
 	}
+    bach_freeptr(next);
+    bach_freeptr(done);
 }
 
 

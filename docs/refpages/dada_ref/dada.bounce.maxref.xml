@@ -144,7 +144,7 @@
 				Adds a new ball in the room. The correct syntax is:
 				<b>addball <m>BALL_SYNTAX</m></b>, where the ball syntax is the one
 				documented in the <m>dump</m> message. The ball syntax should NOT be wrapped in parenthesis.
-				For instance, a valid message is: <b>addball (coord -90. 20.) (speed 100. 30.) (color 0.4 0. 0. 1.)</b>
+				For instance, a valid message is: <b>addball [coord -90. 20.] [speed 100. 30.] [color 0.4 0. 0. 1.]</b>
 				After the ball has been added, a notification is sent through the second outlet in the form
 				<b>addball <m>ball_index</m></b>.
 			</description>
@@ -208,22 +208,41 @@
 			</digest>
 			<description>
 				Outputs the current state of the object. The syntax is
-				<b>bounce (room <m>GRAPH</m>) (balls <m>BALL1</m> <m>BALL2</m>...)</b>.
+				<b>bounce [room <m>GRAPH</m>] [balls <m>BALL1</m> <m>BALL2</m>...]</b>.
 				each ball is in the syntax
 				<b>(coord <m>x</m> <m>y</m>) (speed <m>x</m> <m>y</m>) (color <m>r</m> <m>g</m> <m>b</m> <m>a</m>)
 				(channel <m>MIDIchannel</m>) (flags <m>flags</m>)</b>. <br />
 				A first argument limits the elements to be dumped.
 				The <m>dump room</m> message only dumps the room state; the <m>dump balls</m> message only dumps the balls state. <br />
-				Graph syntax in dada is the following one <b>(<m>VERTEX1</m> <m>VERTEX2</m>...) (<m>EDGE1</m> <m>EDGE2</m>...)</b>.
-				Each vertex is an llll shaped as <b>((coord <m>x</m> <m>y</m>) <m>METADATA1</m> <m>METADATA2</m>...)</b>.
-				Each edge is an llll shaped as <b>(<m>edge_start_vertex_index</m> <m>edge_end_vertex_index</m> <m>METADATA1</m> <m>METADATA2</m>...)</b>,
+				Graph syntax in dada is the following one <b>[<m>VERTEX1</m> <m>VERTEX2</m>...] [<m>EDGE1</m> <m>EDGE2</m>...]</b>.
+				Each vertex is an llll shaped as <b>[[coord <m>x</m> <m>y</m>] <m>METADATA1</m> <m>METADATA2</m>...]</b>.
+				Each edge is an llll shaped as <b>[<m>edge_start_vertex_index</m> <m>edge_end_vertex_index</m> <m>METADATA1</m> <m>METADATA2</m>...]</b>,
 				where the indices of the vertices are 1-based, and correspond to the position on the vertices in the corresponding vertices llll.
 				The <m>METADATA</m> llll may depend on the graph metadata type. For instance, if the edges or vertices contain information about pitch
-				and velocity, they might be something like <b>(pitch <m>midicents_value</m>)</b> and/or <b>(velocity <m>velocity_value</m>)</b>.
+				and velocity, they might be something like <b>[pitch <m>midicents_value</m>]</b> and/or <b>[velocity <m>velocity_value</m>]</b>.
 				<br /> <br />
-				Item flags syntax in dada is the following one <b>(flags <m>flag1</m> <m>flag2</m>...)</b>, where each flag is one of the following symbols:
+				Item flags syntax in dada is the following one <b>[flags <m>flag1</m> <m>flag2</m>...]</b>, where each flag is one of the following symbols:
 				<b>lock</b>, <b>mute</b>, <b>solo</b>, <b>inactive</b>.
 				<br /> <br />
+			</description>
+		</method>
+		<method name="exportimage">
+			<arg name="filename" optional="1" type="symbol" />
+			<digest>
+				Save as PNG image
+			</digest>
+			<description>
+				Message attributes:<br />
+				<m>@filename</m> (symbol, default: none): filename<br />
+				<m>@dpi</m> (int, default: 72): Dots Per Inch<br />
+				<m>@width</m> (double, default: none): Width In Coordinates<br />
+				<m>@height</m> (double, default: none): Height In Coordinates<br />
+				<m>@pixelwidth</m> (double, default: none): Width In Pixels<br />
+				<m>@pixelheight</m> (double, default: none): Height In Pixels<br />
+				<m>@center</m> (llll, default: none): Center Coordinates<br />
+				<m>@zoom</m> (llll, default: none): Zoom Percentage<br />
+				<br />
+				Saves the object as a PNG image. Optional argument provides the filename (otherwise a dialog box will pop up).
 			</description>
 		</method>
 		<method name="flush">
@@ -284,17 +303,17 @@
 			</digest>
 			<description>
 				Examples:<br />
-				• <b>meta edge 5 (pitch 6300) (vel 80)</b>   <i>→ Assign a pitch of 6300 cents and a velocity of 80 as metadata for 5th edge</i><br />
-				• <b>meta vertex 4 (pitch 6300) (vel 80)</b>   <i>→ The same, for 4th vertex</i><br />
-				• <b>meta edge 1 (score roll ((200 (7200. 405. 100)) (700 (6300. 405. 100))))</b>   <i>→ Assign a bach.roll syntax as score metadata for edge 1</i><br />
-				• <b>meta edge 1 (score score (((( 4 4 ) (( 1/4 120 ))) ( 1 ( 4700. 100 0 )))))</b>   <i>→ Assign a bach.score syntax as score metadata for edge 1</i><br />
+				• <b>meta edge 5 [pitch 6300] [vel 80]</b>   <i>→ Assign a pitch of 6300 cents and a velocity of 80 as metadata for 5th edge</i><br />
+				• <b>meta vertex 4 [pitch 6300] [vel 80]</b>   <i>→ The same, for 4th vertex</i><br />
+				• <b>meta edge 1 [score roll [[200 [7200. 405. 100]] [700 [6300. 405. 100]]]]</b>   <i>→ Assign a bach.roll syntax as score metadata for edge 1</i><br />
+				• <b>meta edge 1 [score score [[[[ 4 4 ] [[ 1/4 120 ]]] [ 1 [ 4700. 100 0 ]]]]]</b>   <i>→ Assign a bach.score syntax as score metadata for edge 1</i><br />
 				<br />
 				The word <m>meta</m>, followed by the <m>edge</m> symbol or the <m>vertex</m> symbol,
 				and the edge or vertex index, assigns metadata to a vertex or an edge.
 				The metadata should be contained in the llll specified as
 				further argument.
-				If the metadata <m>type</m> is set to "Pitch and velocity", such llll should contain a specification such as <b>(pitch <m>mc</m>)</b> and/or
-				<b>(velocity <m>vel</m>)</b>.
+				If the metadata <m>type</m> is set to "Pitch and velocity", such llll should contain a specification such as <b>[pitch <m>mc</m>]</b> and/or
+				<b>[velocity <m>vel</m>]</b>.
 				If the metadata <m>type</m> is set to "Scores", such llll should be the score itself.
 			</description>
 		</method>
@@ -307,14 +326,14 @@
 			</digest>
 			<description>
 				Examples:<br />
-				• <b>move component 1 (10 10)</b>   <i>→ Move the 1st connected component by (10, 10)</i><br />
-				• <b>move vertex 5 (-4 0)</b>   <i>→ Move the 5th vertex by (-4, 0)</i><br />
-				• <b>move edge 3 (0 10)</b>   <i>→ Shift 2nd edge up by 10</i><br />
-				• <b>move ball 1 (0 10)</b>   <i>→ Shift 1st ball up by 10</i><br />
+				• <b>move component 1 [10 10]</b>   <i>→ Move the 1st connected component by (10, 10)</i><br />
+				• <b>move vertex 5 [-4 0]</b>   <i>→ Move the 5th vertex by (-4, 0)</i><br />
+				• <b>move edge 3 [0 10]</b>   <i>→ Shift 2nd edge up by 10</i><br />
+				• <b>move ball 1 [0 10]</b>   <i>→ Shift 1st ball up by 10</i><br />
 				<br />
 				The word <m>move</m> followed by an element type (either <m>vertex</m> or
 				<m>edge</m> or <m>component</m> or <m>ball</m>), followed by the index of a shape or ball and a
-				vector in wrapped <b>(<m>x</m> <m>y</m>)</b> syntax,
+				vector in wrapped <b>[<m>x</m> <m>y</m>]</b> syntax,
 				translates the element by the given vector.
 			</description>
 		</method>
@@ -325,7 +344,7 @@
 			</digest>
 			<description>
 				When <m>type</m> is set to "Pitch and Velocity", the <m>notes</m> message assigns
-				a pitch and velocity to each of the edges. An llll of type <b>(<m>pitch</m> <m>vel</m>) (<m>pitch</m> <m>vel</m>)...</b>
+				a pitch and velocity to each of the edges. An llll of type <b>[<m>pitch</m> <m>vel</m>] [<m>pitch</m> <m>vel</m>]...</b>
 				is expected as argument.
 			</description>
 		</method>
@@ -370,12 +389,12 @@
 			<description>
 				Examples:<br />
 				• <b>rotate component 1 2</b>   <i>→ Rotate the 1st connected component by 2 radians</i><br />
-				• <b>rotate ball 1 (30 deg)</b>   <i>→ Rotate the 1st ball by 30 degrees</i><br />
+				• <b>rotate ball 1 [30 deg]</b>   <i>→ Rotate the 1st ball by 30 degrees</i><br />
 				<br />
 				The word <m>rotate</m> followed by an element type (either <m>component</m> or <m>ball</m>),
 				followed by the index of a shape and an angle in radians
 				rotates the element by the given angle. If the angle is terminates with the degrees ° symbol after the number (without any spaces)
-				or if it is given as an llll of the form <b>(<m>angle</m> deg)</b>,
+				or if it is given as an llll of the form <b>[<m>angle</m> deg]</b>,
 				then the angle is assumed to be in degrees.
 			</description>
 		</method>
@@ -403,7 +422,7 @@
 			</digest>
 			<description>
 				When <m>type</m> is set to "Scores", the <m>scores</m> message assigns
-				a score to each of the edges. An llll of type <b>(<m>SCORE1</m>) (<m>SCORE2</m>)...</b>
+				a score to each of the edges. An llll of type <b>[<m>SCORE1</m>] [<m>SCORE2</m>]...</b>
 				is expected as argument, where each <m>SCORE</m> is usually a <o>bach.roll</o> or <o>bach.score</o> gathered syntax,
 				but can also be any other llll.
 			</description>
@@ -416,11 +435,11 @@
 				Split edges
 			</digest>
 			<description>
-				Example: <b>split edge 3 (-40 0)</b>   <i>→ Split 3rd edge by adding a point at (-40, 0)</i><br />
+				Example: <b>split edge 3 [-40 0]</b>   <i>→ Split 3rd edge by adding a point at (-40, 0)</i><br />
 				<br />
 				The word <m>split</m> followed by the <m>edge</m> symbol,
 				by the index of the edge to be split, and by the wrapped llll with the
-				splitting <b>(<m>x</m> <m>y</m>)</b> coordinates, splits the given edge
+				splitting <b>[<m>x</m> <m>y</m>]</b> coordinates, splits the given edge
 				at the specified point, and outputs a notification through the second outlet
 				containing the <m>edge split</m> symbols, plus the sequence of newly created edges.
 			</description>
@@ -538,7 +557,6 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Continuously Output bang if Changed " />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
@@ -573,6 +591,19 @@
 				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
+			</attributelist>
+		</attribute>
+		<attribute name="jitmatrix" get="1" set="1" type="" size="1">
+			<digest>
+				
+			</digest>
+			<description>
+				Sets the name of a jitter matrix to which the output should be mirrored.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
 			</attributelist>
 		</attribute>
 		<attribute name="messagebang" get="1" set="1" type="" size="1">
@@ -643,28 +674,27 @@
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="enumindex" />
 			</attributelist>
 		</attribute>
+		<attribute name="notifypaint" get="1" set="1" type="" size="1">
+			<digest>
+				Notify Display Refresh
+			</digest>
+			<description>
+				Toggles the ability to notify every new redraw of the box via a "painted" symbol.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Notify Display Refresh" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
+			</attributelist>
+		</attribute>
 		<attribute name="out" get="1" set="1" type="symbol" size="1">
 			<digest>
 				Outlet Types
 			</digest>
 			<description>
-				The <m>out</m> attribute is a sequence of characters identifying the outlet types (one character for each llll outlet). Characters can be one of the following: <br />
-				<m>n</m> (default): 'native' output: faster and more precise between bach objects, but unreadable by standard Max objects (an "bach.llll" message appears instead). <br />
-				<m>t</m>: 'text' output: slower and limited in size, but readable by standard Max objects. A plain llll in text format is a generic Max message.
-				To keep the representation invertible (i.e., to allow a bach object receiving a text-format llll to interpret it exactly as if it was native format,
-				except for the size limitation), some specific kinds of symbols are preceded by a backtick: namely, symbols containing parens, or containing textual
-				representations of numbers or pitches, or beginning with a backtick, plus the symbols "null" and "nil" (distinct from the reserved words
-				"null" and "nil" representing the empty list and the empty sublist) are preceded by a backtick. Moreover, the symbols "int", "float" or "list"
-				are preceded by a backtick only if they are the first element of an llll, to distinguish them from the corresponding reserved messages of Max. <br />
-				<m>m</m>: 'max' output: mostly equivalent to the "t" specifier, but no symbol is backticket except "int", "float" and "list" at the beginning of an llll.
-				It is important to notice that, differently from text-format lllls proper, Max-format lllls might not be invertible even if they do not reach the size
-				limit for Max message. This means that a bach object receiving a Max-format llll output from another bach object might interpret it differently
-				from the original, or in some cases might even reject it. <br />
-				<m>x</m>: disabled output (nothing is output) <br />
-				<m>p</m>: 'portal' output: only used by bach.portal to intercept the @out attribute specified while creating the abstraction (see bach.portal). <br />
-				The native output is recommended, unless communication with standard Max messages is needed.
-				Disabling unused outputs can be useful if extreme optimization of the patch is needed.
-				<br /> <br />
 			</description>
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
@@ -775,13 +805,6 @@
 				Microtonal Division
 			</digest>
 			<description>
-				In the bach environment, the tone division defines the microtonal accuracy of the symbolic representation,
-				by representing the number of steps in which each tone is divided.
-				For the standard semitonal representation (where just sharps and flats suffice), one can stick with
-				<m>tonedivision</m> being 2, meaning: the tone is divided into two semitones.
-				By increasing this value, the microtonal grid gets more dense: for instance, 4 is the quartertonal grid
-				(where each tone is divided in 4 quartertones); 8 is the eight-tonal grid, and so on.
-				<br /> <br />
 			</description>
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Settings" />

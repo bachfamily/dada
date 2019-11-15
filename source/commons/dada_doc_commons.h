@@ -7,16 +7,16 @@
 
 	
 #define DADA_DOC_SYNTAX_GRAPH
-	//	Graph syntax in dada is the following one <b>(<m>VERTEX1</m> <m>VERTEX2</m>...) (<m>EDGE1</m> <m>EDGE2</m>...)</b>.
-    //  Each vertex is an llll shaped as <b>((coord <m>x</m> <m>y</m>) <m>METADATA1</m> <m>METADATA2</m>...)</b>.
-    //  Each edge is an llll shaped as <b>(<m>edge_start_vertex_index</m> <m>edge_end_vertex_index</m> <m>METADATA1</m> <m>METADATA2</m>...)</b>,
+	//	Graph syntax in dada is the following one <b>[<m>VERTEX1</m> <m>VERTEX2</m>...] [<m>EDGE1</m> <m>EDGE2</m>...]</b>.
+    //  Each vertex is an llll shaped as <b>[[coord <m>x</m> <m>y</m>] <m>METADATA1</m> <m>METADATA2</m>...]</b>.
+    //  Each edge is an llll shaped as <b>[<m>edge_start_vertex_index</m> <m>edge_end_vertex_index</m> <m>METADATA1</m> <m>METADATA2</m>...]</b>,
     //  where the indices of the vertices are 1-based, and correspond to the position on the vertices in the corresponding vertices llll.
     //  The <m>METADATA</m> llll may depend on the graph metadata type. For instance, if the edges or vertices contain information about pitch
-    //  and velocity, they might be something like <b>(pitch <m>midicents_value</m>)</b> and/or <b>(velocity <m>velocity_value</m>)</b>.
+    //  and velocity, they might be something like <b>[pitch <m>midicents_value</m>]</b> and/or <b>[velocity <m>velocity_value</m>]</b>.
 	//  <br /> <br />
 
 #define DADA_DOC_SYNTAX_FLAGS
-    //	Item flags syntax in dada is the following one <b>(flags <m>flag1</m> <m>flag2</m>...)</b>, where each flag is one of the following symbols:
+    //	Item flags syntax in dada is the following one <b>[flags <m>flag1</m> <m>flag2</m>...]</b>, where each flag is one of the following symbols:
     // <b>lock</b>, <b>mute</b>, <b>solo</b>, <b>inactive</b>.
     //  <br /> <br />
 

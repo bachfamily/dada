@@ -42,7 +42,7 @@
 #include "dada.interface.h"
 #include "dada.geometry.h"
 #include "dada.paint.h"
-#include "notation.h"
+#include "notation/notation.h"
 //#include "dada.cursors.data.c"
 #include "dada.math.h"
 #include "dada.graphs.h"
@@ -188,6 +188,7 @@ void machines_free(t_machines *x);
 void machines_assist(t_machines *x, void *b, long m, long a, char *s);
 
 void machines_paint(t_machines *x, t_object *view);
+void machines_paint_ext(t_machines *x, t_object *view, t_dada_force_graphics *force_graphics);
 
 
 void machines_int(t_machines *x, t_atom_long num);
@@ -862,7 +863,7 @@ void machines_autozoom(t_machines *x)
 //////////////////////// global class pointer variable
 t_class *machines_class;
 
-int C74_EXPORT main(void)
+void C74_EXPORT ext_main(void *moduleRef)
 {	
 	t_class *c;
 	
@@ -871,9 +872,9 @@ int C74_EXPORT main(void)
 	
 	srand(time(NULL)); // needed for the shake function
 
-	if (llllobj_check_version(bach_get_current_llll_version()) || llllobj_test()) {
+	if (dada_check_bach_version() || llllobj_test()) {
 		dada_error_bachcheck();
-		return 1;
+		return;
 	}
 
 
@@ -957,13 +958,13 @@ int C74_EXPORT main(void)
     
     // @method dump @digest Output state
     // @description Outputs the current state of the object. The syntax is
-    // <b>machines (prototypes <m>PROTOTYPE1</m> <m>PROTOTYPE2</m>...) (network (vertices <m>VERTEX1</m> <m>VERTEX2</m>...) (edges <m>EDGE1</m> <m>EDGE2</m>...))</b>.
+    // <b>machines [prototypes <m>PROTOTYPE1</m> <m>PROTOTYPE2</m>...] [network [vertices <m>VERTEX1</m> <m>VERTEX2</m>...] [edges <m>EDGE1</m> <m>EDGE2</m>...]]</b>.
     // Each prototype is in the syntax
-    // <b>((name <m>name</m>) (fullname <m>fullname</m>) (char <m>displaychars</m>) (numins <m>ins</m>) (numouts <m>outs</m>))</b>.
+    // <b>[[name <m>name</m>] [fullname <m>fullname</m>] [char <m>displaychars</m>] [numins <m>ins</m>] [numouts <m>outs</m>]]</b>.
     // Each vertex is in the syntax
-    // <b>((coord <m>x</m> <m>y</m>) (type <m>machinetype</m>) (numins <m>ins</m>) (numouts <m>outs</m>)</b>.
+    // <b>[[coord <m>x</m> <m>y</m>] [type <m>machinetype</m>] [numins <m>ins</m>] [numouts <m>outs</m>]</b>.
     // Each connection is in the syntax
-    // <b>(<m>vertex1</m> <m>vertex2</m> (numin <m>in</m>) (numout <m>out</m>))</b>,
+    // <b>[<m>vertex1</m> <m>vertex2</m> [numin <m>in</m>] [numout <m>out</m>]]</b>,
     // representing a connection from the outlet <m>out</m> of vertex of index <m>vertex1</m> (in the vertex list), to the inlet
     // <m>in</m> of the vertex of index <m>vertex2</m>. <br />
     // The <m>dump prototypes</m> message only dumps the prototypes; the <m>dump network</m> message only dumps the network. <br />
@@ -1009,10 +1010,11 @@ int C74_EXPORT main(void)
 
   
     DADAOBJ_JBOX_DECLARE_READWRITE_METHODS(c);
+    DADAOBJ_JBOX_DECLARE_IMAGE_METHODS(c);
     DADAOBJ_JBOX_DECLARE_ACCEPTSDRAG_METHODS(c);
 
 	llllobj_class_add_out_attr(c, LLLL_OBJ_UI);
-	dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_EMBED | DADAOBJ_MOUSEHOVER | DADAOBJ_GRID | DADAOBJ_LABELS | DADAOBJ_SNAPTOGRID | DADAOBJ_AXES | DADAOBJ_UNDO | DADAOBJ_SELECTION | DADAOBJ_NOTIFICATIONS | DADAOBJ_BORDER | DADAOBJ_BORDER_SHOWDEFAULT);
+	dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_EMBED | DADAOBJ_MOUSEHOVER | DADAOBJ_GRID | DADAOBJ_LABELS | DADAOBJ_SNAPTOGRID | DADAOBJ_AXES | DADAOBJ_UNDO | DADAOBJ_SELECTION | DADAOBJ_NOTIFICATIONS | DADAOBJ_BORDER | DADAOBJ_BORDER_SHOWDEFAULT | DADAOBJ_EXPORTTOJITTER);
 
 	
 	CLASS_ATTR_DEFAULT(c, "patching_rect", 0, "0 0 300 300");
@@ -1097,9 +1099,10 @@ int C74_EXPORT main(void)
 		
 	class_register(CLASS_BOX, c); /* CLASS_NOBOX */
 	machines_class = c;
+    dadaobj_class_add_fileusage_method(c);
 
 	dev_post("dada.machines compiled %s %s", __DATE__, __TIME__);
-	return 0;
+	return;
 }
 
 t_max_err machines_setattr_linestyle(t_machines *x, t_object *attr, long ac, t_atom *av)
@@ -1333,7 +1336,7 @@ void *machines_new(t_symbol *s, long argc, t_atom *argv)
 
         load_default_machines(x);
         
-		dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_UNDO | DADAOBJ_CHANGEDBANG | DADAOBJ_SELECTION | DADAOBJ_NOTIFICATIONS, build_pt(1., 1.), 1, 3, 1, (invalidate_and_redraw_fn)machines_iar, "la", 2, "b444");
+		dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_UNDO | DADAOBJ_CHANGEDBANG | DADAOBJ_SELECTION | DADAOBJ_NOTIFICATIONS, build_pt(1., 1.), 1, 3, 1, (dada_paint_ext_fn)machines_paint_ext, (invalidate_and_redraw_fn)machines_iar, "la", 2, "b444");
 		dadaobj_addfunctions(dadaobj_cast(x), (dada_mousemove_fn)machines_mousemove, NULL, (method)machines_postprocess_undo, (get_state_fn)machines_get_state, (set_state_fn)machines_set_state, NULL, NULL, NULL);
 
         x->b_ob.d_ob.m_interface.selection_tolerance = DADA_MACHINES_VERTEX_SELECTION_PAD;
@@ -1835,10 +1838,16 @@ t_pt get_inlet_outlet_pix(t_machines *x, t_pt center, long idx, long num, char i
 }
 
 
-void machines_paint_graph(t_machines *x, t_object *view, t_rect rect, t_pt center, char paint_edges, char paint_machines)
+void machines_paint_graph(t_machines *x, t_object *view, t_rect rect, t_pt center, char paint_edges, char paint_machines, t_dada_force_graphics *force_graphics)
 {
 	
-	t_jgraphics *g = jbox_start_layer((t_object *)x, view, gensym("network"), rect.width, rect.height);
+    t_jgraphics *g = view ? jbox_start_layer((t_object *)x, view, gensym("network"), rect.width, rect.height) : force_graphics->graphic_context;
+    
+    if (!view) {
+        rect = force_graphics->rect;
+        center = force_graphics->center_pix;
+    }
+    
 	t_rect rect_00 = build_rect(0, 0, rect.width, rect.height);
 	if (g) {
 		long i;
@@ -1919,30 +1928,32 @@ void machines_paint_graph(t_machines *x, t_object *view, t_rect rect, t_pt cente
 		}
 		
 		jfont_destroy_debug(jf);
-		jbox_end_layer((t_object *)x, view, gensym("network"));
+        if (view)
+            jbox_end_layer((t_object *)x, view, gensym("network"));
 	}
 	
-	jbox_paint_layer((t_object *)x, view, gensym("network"), 0., 0.);	// position of the layer
+    if (view)
+        jbox_paint_layer((t_object *)x, view, gensym("network"), 0., 0.);	// position of the layer
 }
 
 
-void machines_paint(t_machines *x, t_object *view)
+void machines_paint_ext(t_machines *x, t_object *view, t_dada_force_graphics *force_graphics)
 {
-	t_rect rect;
-	t_pt center = get_center_pix(dadaobj_cast(x), view, &rect);
-	t_jgraphics *g = (t_jgraphics*) patcherview_get_jgraphics(view); 
+	t_rect rect = force_graphics->rect;
+	t_pt center = force_graphics->center_pix;
+	t_jgraphics *g = force_graphics->graphic_context;
 	
 	jgraphics_set_source_rgba(g, 0, 0, 0, 1); // alpha = 1;
 	
     dadaobj_paint_background(dadaobj_cast(x), g, &rect);
     
-    dadaobj_paint_grid(dadaobj_cast(x), view, rect, center);
+    dadaobj_paint_grid(dadaobj_cast(x), view, force_graphics);
 		
 	if (x->b_ob.d_ob.m_interface.allow_mouse_hover && x->b_ob.d_ob.m_tools.curr_tool != DADA_TOOL_ZOOM && x->b_ob.d_ob.m_tools.curr_tool != DADA_TOOL_MOVE_CENTER)
 		paint_hovered_elements1(x, g, view, rect, center);
 
 	jgraphics_set_source_rgba(g, 0, 0, 0, 1); // alpha = 1;
-    machines_paint_graph(x, view, rect, center, x->show_network, x->show_machines);
+    machines_paint_graph(x, view, rect, center, x->show_network, x->show_machines, force_graphics);
 
 	if (x->b_ob.d_ob.m_interface.allow_mouse_hover && x->b_ob.d_ob.m_tools.curr_tool != DADA_TOOL_ZOOM && x->b_ob.d_ob.m_tools.curr_tool != DADA_TOOL_MOVE_CENTER)
 		paint_hovered_elements2(x, g, view, rect, center);
@@ -1956,7 +1967,10 @@ void machines_paint(t_machines *x, t_object *view)
     dadaobj_paint_border(dadaobj_cast(x), g, &rect);
 }
 
-
+void machines_paint(t_machines *x, t_object *view)
+{
+    dadaobj_paint(dadaobj_cast(x), view);
+}
 
 
 
@@ -2210,7 +2224,8 @@ void machines_mousedown(t_machines *x, t_object *patcherview, t_pt pt, long modi
 
 char machines_snap_selection_to_grid_fn(t_dadaobj *r_ob, t_dadaitem *item, void *data)
 {
-    dadaitem_move(r_ob, item, build_pt(round(item->coord.x/r_ob->m_grid.grid_size.x) * r_ob->m_grid.grid_size.x, round(item->coord.y/r_ob->m_grid.grid_size.y) * r_ob->m_grid.grid_size.y), DIA_INTERFACE);
+    t_pt grid_size = dadaobj_get_grid_size(r_ob);
+    dadaitem_move(r_ob, item, build_pt(round(item->coord.x/grid_size.x) * grid_size.x, round(item->coord.y/grid_size.y) * grid_size.y), DIA_INTERFACE);
     return 0;
 }
 
@@ -2405,9 +2420,10 @@ long machines_key(t_machines *x, t_object *patcherview, long keycode, long modif
         case JKEY_LEFTARROW:
         case JKEY_RIGHTARROW:
         {
+            t_pt grid_size = dadaobj_get_grid_size(dadaobj_cast(x));
             machines_undo_step_push_network(x, gensym("Move Machines"));
-            double amountx = x->b_ob.d_ob.m_grid.snap_to_grid ? x->b_ob.d_ob.m_grid.grid_size.x : 10;
-            double amounty = x->b_ob.d_ob.m_grid.snap_to_grid ? x->b_ob.d_ob.m_grid.grid_size.y : 10;
+            double amountx = x->b_ob.d_ob.m_grid.snap_to_grid ? grid_size.x : 10;
+            double amounty = x->b_ob.d_ob.m_grid.snap_to_grid ? grid_size.y : 10;
             t_pt delta_coord = (keycode == JKEY_UPARROW ? build_pt(0, amounty) : (keycode == JKEY_DOWNARROW ? build_pt(0, -amounty) : (keycode == JKEY_LEFTARROW ? build_pt(-amountx, 0) : (keycode == JKEY_RIGHTARROW ? build_pt(amountx, 0) : build_pt(0, 0)))));
             if (modifiers & eShiftKey) delta_coord = pt_number_prod(delta_coord, 4);
             dadaobj_selection_iterate(dadaobj_cast(x), (dadaitem_iterfn)machine_move_vertices_delta_fn, &delta_coord);

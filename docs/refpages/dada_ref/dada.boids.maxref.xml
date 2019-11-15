@@ -176,29 +176,48 @@
 			</digest>
 			<description>
 				Outputs the current state of the object. The syntax is
-				<b>boids (rules <m>CUSTOMRULE1</m> <m>CUSTOMRULE2</m>...) (swarms <m>SWARM1</m> <m>2</m>...) </b>.
+				<b>boids [rules <m>CUSTOMRULE1</m> <m>CUSTOMRULE2</m>...] [swarms <m>SWARM1</m> <m>2</m>...] </b>.
 				Each <m>CUSTOMRULE</m> element represents a custom rule and is in the form
-				<b>((name <m>rule_name</m>) (code <m>function_code</m>) (defaultgain <m>gain</m>) (abscoord <m>ac</m>) (absintensity <m>ai</m>) (params <m>PARAM1</m> <m>PARAM2</m> <m>PARAM3</m>...)</b>,
+				<b>[[name <m>rule_name</m>] [code <m>function_code</m>] [defaultgain <m>gain</m>] [abscoord <m>ac</m>] [absintensity <m>ai</m>] [params <m>PARAM1</m> <m>PARAM2</m> <m>PARAM3</m>...]</b>,
 				where the <m>function_code</m> must be a single symbol, and <m>ai</m> and <m>ac</m> are 1/0 values telling respectively if the function will return absolute
 				coordinates or absolute intensity instead of a coordinate difference, and intensity difference (speed). These two last values both default to 0:
 				functions return by default a vector which will be added to the current speed to modify it. <br />
 				Each parameter is in the form
-				<b>(<m>name</m> <m>type</m> <m>value</m>)</b>, where <m>type</m> is a symbol among: "int", "float", "pt", and value is the corresponding value (or couple of
+				<b>[<m>name</m> <m>type</m> <m>value</m>]</b>, where <m>type</m> is a symbol among: "int", "float", "pt", and value is the corresponding value (or couple of
 				x and y values, without parentheses, in the case of "pt" type). <br />
 				Each <m>SWARM</m> element represents a swarm is in the form
 				<b>((name <m>name</m>) (size <m>num_boids</m>) (coord <m>COORD_BOID1</m> <m>COORD_BOID2</m>...) (speed <m>SPEED_BOID1</m> <m>SPEED_BOID2</m>...)
 				(intensity <m>intensity_boid1</m> <m>intensity_boid2</m>...) (intensityspeed <m>intensityspeed_boid1</m> <m>intensityspeed_boid2</m>...)
 				(maxspeed <m>maximum_swarm_speed</m>) (maxintensity <m>maximum_swarm_intensity</m>) (color <m>red</m> <m>green</m> <m>blue</m> <m>alpha</m>)
 				(applyrule <m>RULE1</m> <m>RULE2</m> <m>RULE3</m>...))</b>,
-				where each <m>COORD_BOID</m> and <m>SPEED_BOID</m> is in the form <b>(<m>x</m> <m>y</m>)</b>, where each <m>intensityspeed_boid</m> is
+				where each <m>COORD_BOID</m> and <m>SPEED_BOID</m> is in the form <b>[<m>x</m> <m>y</m>]</b>, where each <m>intensityspeed_boid</m> is
 				the difference between successive intensities (derivative), and where each <m>RULE</m> represents a rule to be applied to the swarm, and is in the form
-				<b>(<m>rule_name</m> (gain <m>gain_value</m>) (<m>param_name</m> <m>param_value</m>) (<m>param_name</m> <m>param_value</m>) ...)</b>, <br />
+				<b>[<m>rule_name</m> [gain <m>gain_value</m>] [<m>param_name</m> <m>param_value</m>] [<m>param_name</m> <m>param_value</m>] ...]</b>, <br />
 				where, in turn, each <m>param_name</m> is one of the parameters defined for the given rule "int", "float" or "pt", i.e. float couple (see the "rules" llll, above).
 				<br />
 				A first argument limits the elements to be dumped: the <m>dump rules</m> message only dumps the rules; the <m>dump swarms</m> message only dumps the swarms. <br />
-				Item flags syntax in dada is the following one <b>(flags <m>flag1</m> <m>flag2</m>...)</b>, where each flag is one of the following symbols:
+				Item flags syntax in dada is the following one <b>[flags <m>flag1</m> <m>flag2</m>...]</b>, where each flag is one of the following symbols:
 				<b>lock</b>, <b>mute</b>, <b>solo</b>, <b>inactive</b>.
 				<br /> <br />
+			</description>
+		</method>
+		<method name="exportimage">
+			<arg name="filename" optional="1" type="symbol" />
+			<digest>
+				Save as PNG image
+			</digest>
+			<description>
+				Message attributes:<br />
+				<m>@filename</m> (symbol, default: none): filename<br />
+				<m>@dpi</m> (int, default: 72): Dots Per Inch<br />
+				<m>@width</m> (double, default: none): Width In Coordinates<br />
+				<m>@height</m> (double, default: none): Height In Coordinates<br />
+				<m>@pixelwidth</m> (double, default: none): Width In Pixels<br />
+				<m>@pixelheight</m> (double, default: none): Height In Pixels<br />
+				<m>@center</m> (llll, default: none): Center Coordinates<br />
+				<m>@zoom</m> (llll, default: none): Zoom Percentage<br />
+				<br />
+				Saves the object as a PNG image. Optional argument provides the filename (otherwise a dialog box will pop up).
 			</description>
 		</method>
 		<method name="getdomain">
@@ -247,7 +266,7 @@
 				Translate swarms
 			</digest>
 			<description>
-				The word <m>move</m> followed the index of a swarm and a vector in wrapped <b>(<m>x</m> <m>y</m>)</b> syntax,
+				The word <m>move</m> followed the index of a swarm and a vector in wrapped <b>[<m>x</m> <m>y</m>]</b> syntax,
 				translates the swarm by the given vector. If the index of the swarm is <m>0</m> or the <m>all</m> symbol, all swarms will be translated.
 			</description>
 		</method>
@@ -292,11 +311,11 @@
 			<description>
 				The word <m>rotate</m> followed the index of a swarm, and an angle (in radians), rotates
 				the swarm. The angle can be set in degrees by appending the degrees ° symbol after the number (without any spaces) or by
-				replacing the number with an llll in the form <b>(<m>amount_in_degrees</m> deg)</b>.
+				replacing the number with an llll in the form <b>[<m>amount_in_degrees</m> deg]</b>.
 				If the index of the shape is <m>0</m> or the <m>all</m> symbol, all shapes will be rotated.
-				If a third argument is added, in the form <b>(<m>x</m> <m>y</m>)</b>, it sets the coordinates of the origin for the rotation.
+				If a third argument is added, in the form <b>[<m>x</m> <m>y</m>]</b>, it sets the coordinates of the origin for the rotation.
 				If no third argument is added, the default center of rotation is the shape barycenter (if a single swarm is being rotated)
-				or the origin <b>(0 0)</b> if all swarms are being rotated.
+				or the origin <b>[0 0]</b> if all swarms are being rotated.
 				The center of rotation llll can be replaced by the <m>barycenter</m> symbol, to specify that rotation must happen around individuals barycenters.
 				Alternatively you can add the "barycenter" symbol as third element in order to specify that coordinates are barycentric coordinates.
 			</description>
@@ -312,10 +331,10 @@
 				The word <m>scale</m> followed the index of a swarm and a number, scales the given swarm of the factor
 				specified by the number.
 				If the index of the swarm is <m>0</m> or the <m>all</m> symbol, all swarms will be scaled.
-				If, instead of a single factor, a list in the form <b>(<m>x_scale</m> <m>y_scale</m>)</b> is given,
+				If, instead of a single factor, a list in the form <b>[<m>x_scale</m> <m>y_scale</m>]</b> is given,
 				two different scale factors are applied for the X and Y axis.
-				You can provide as third argument the scaling center, in <b>(<m>x</m> <m>y</m>)</b> form. If no center is provided,
-				by default the barycenter is used for single swarms scaling, while the origin <b>(0, 0)</b> is used when all swarms are to be scaled
+				You can provide as third argument the scaling center, in <b>[<m>x</m> <m>y</m>]</b> form. If no center is provided,
+				by default the barycenter is used for single swarms scaling, while the origin <b>[0, 0]</b> is used when all swarms are to be scaled
 				The scaling center llll can be replaced by the <m>barycenter</m> symbol, to specify that scaling must happen with respect to individuals baricenters.
 				Alternatively you can add the "barycenter" symbol as third element in order to specify that coordinates are barycentric coordinates.
 			</description>
@@ -369,7 +388,6 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Continuously Output bang if Changed " />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
@@ -407,6 +425,19 @@
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
 		</attribute>
+		<attribute name="jitmatrix" get="1" set="1" type="" size="1">
+			<digest>
+				
+			</digest>
+			<description>
+				Sets the name of a jitter matrix to which the output should be mirrored.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
+			</attributelist>
+		</attribute>
 		<attribute name="maxundosteps" get="1" set="1" type="" size="1">
 			<digest>
 				Maximum Number Of Undo Steps
@@ -418,6 +449,7 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="50" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Maximum Number Of Undo Steps" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
 			</attributelist>
@@ -456,28 +488,27 @@
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="enumindex" />
 			</attributelist>
 		</attribute>
+		<attribute name="notifypaint" get="1" set="1" type="" size="1">
+			<digest>
+				Notify Display Refresh
+			</digest>
+			<description>
+				Toggles the ability to notify every new redraw of the box via a "painted" symbol.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Notify Display Refresh" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
+			</attributelist>
+		</attribute>
 		<attribute name="out" get="1" set="1" type="symbol" size="1">
 			<digest>
 				Outlet Types
 			</digest>
 			<description>
-				The <m>out</m> attribute is a sequence of characters identifying the outlet types (one character for each llll outlet). Characters can be one of the following: <br />
-				<m>n</m> (default): 'native' output: faster and more precise between bach objects, but unreadable by standard Max objects (an "bach.llll" message appears instead). <br />
-				<m>t</m>: 'text' output: slower and limited in size, but readable by standard Max objects. A plain llll in text format is a generic Max message.
-				To keep the representation invertible (i.e., to allow a bach object receiving a text-format llll to interpret it exactly as if it was native format,
-				except for the size limitation), some specific kinds of symbols are preceded by a backtick: namely, symbols containing parens, or containing textual
-				representations of numbers or pitches, or beginning with a backtick, plus the symbols "null" and "nil" (distinct from the reserved words
-				"null" and "nil" representing the empty list and the empty sublist) are preceded by a backtick. Moreover, the symbols "int", "float" or "list"
-				are preceded by a backtick only if they are the first element of an llll, to distinguish them from the corresponding reserved messages of Max. <br />
-				<m>m</m>: 'max' output: mostly equivalent to the "t" specifier, but no symbol is backticket except "int", "float" and "list" at the beginning of an llll.
-				It is important to notice that, differently from text-format lllls proper, Max-format lllls might not be invertible even if they do not reach the size
-				limit for Max message. This means that a bach object receiving a Max-format llll output from another bach object might interpret it differently
-				from the original, or in some cases might even reject it. <br />
-				<m>x</m>: disabled output (nothing is output) <br />
-				<m>p</m>: 'portal' output: only used by bach.portal to intercept the @out attribute specified while creating the abstraction (see bach.portal). <br />
-				The native output is recommended, unless communication with standard Max messages is needed.
-				Disabling unused outputs can be useful if extreme optimization of the patch is needed.
-				<br /> <br />
 			</description>
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
@@ -647,7 +678,6 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Axes And Grid" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Snap To Grid" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>

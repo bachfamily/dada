@@ -11,7 +11,7 @@
 
 #include "dada.commons.h"
 #include "dada.windows.h"
-#include "notation.h"
+#include "notation/notation.h"
 
 
 

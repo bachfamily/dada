@@ -131,7 +131,7 @@
 				Adds a new node. The correct syntax is:
 				<b>addnode <m>NODE_SYNTAX</m></b>, where the node syntax is the one
 				documented in the <m>dump</m> message. The node syntax should NOT be wrapped in parenthesis.
-				For instance, a valid message is: <b>addnode (coord -90. 20.) (pitch 6000) (vel 127)</b>
+				For instance, a valid message is: <b>addnode [coord -90. 20.] [pitch 6000] [vel 127]</b>
 				After the node has been added, a notification is sent through the third outlet in the form
 				<b>addnode <m>node_index</m></b>.
 			</description>
@@ -173,12 +173,31 @@
 			</digest>
 			<description>
 				Outputs the current state of the object. The syntax is
-				<b>nodes (nodes <m>NODE1</m> <m>NODE2</m>...) (testers <m>TESTER1</m> <m>TESTER2</m>...)</b>.
+				<b>nodes [nodes <m>NODE1</m> <m>NODE2</m>...] [testers <m>TESTER1</m> <m>TESTER2</m>...]</b>.
 				Currently a single tester is supported. <br />
 				Each node is in the syntax
-				<b>(coord <m>x</m> <m>y</m>) (pitch <m>pitch_cents</m>) (velocity <m>vel</m>)</b>.<br />
+				<b>[coord <m>x</m> <m>y</m>] [pitch <m>pitch_cents</m>] [velocity <m>vel</m>]</b>.<br />
 				Each tester is in the syntax
-				<b>(coord <m>x</m> <m>y</m>) (channel <m>MIDIchannel</m></b>.
+				<b>[coord <m>x</m> <m>y</m>] [channel <m>MIDIchannel</m></b>.
+			</description>
+		</method>
+		<method name="exportimage">
+			<arg name="filename" optional="1" type="symbol" />
+			<digest>
+				Save as PNG image
+			</digest>
+			<description>
+				Message attributes:<br />
+				<m>@filename</m> (symbol, default: none): filename<br />
+				<m>@dpi</m> (int, default: 72): Dots Per Inch<br />
+				<m>@width</m> (double, default: none): Width In Coordinates<br />
+				<m>@height</m> (double, default: none): Height In Coordinates<br />
+				<m>@pixelwidth</m> (double, default: none): Width In Pixels<br />
+				<m>@pixelheight</m> (double, default: none): Height In Pixels<br />
+				<m>@center</m> (llll, default: none): Center Coordinates<br />
+				<m>@zoom</m> (llll, default: none): Zoom Percentage<br />
+				<br />
+				Saves the object as a PNG image. Optional argument provides the filename (otherwise a dialog box will pop up).
 			</description>
 		</method>
 		<method name="getdomain">
@@ -381,25 +400,8 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Continuously Output bang if Changed " />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
-			</attributelist>
-		</attribute>
-		<attribute name="grid" get="1" set="1" type="" size="1">
-			<digest>
-				Grid Size
-			</digest>
-			<description>
-				Sets the grid size, in coordinates.
-			</description>
-			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Axes And Grid" />
-				<attribute name="default" get="1" set="1" type="" size="1" value="10 10" />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Grid Size" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
 			</attributelist>
 		</attribute>
 		<attribute name="gridcolor" get="1" set="1" type="" size="1">
@@ -445,6 +447,38 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Axes And Grid" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="8." />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Grid Labels Font Size" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
+			</attributelist>
+		</attribute>
+		<attribute name="gridmode" get="1" set="1" type="" size="1">
+			<digest>
+				Grid Mode
+			</digest>
+			<description>
+				Sets the grid mode, either Fixed (0) or Automatic (1 = default). In Automatic mode the space between grid lines
+				is automatically adapted according to the level of zoom.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Axes And Grid" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Grid Mode" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="enumindex" />
+			</attributelist>
+		</attribute>
+		<attribute name="gridstep" get="1" set="1" type="" size="1">
+			<digest>
+				Grid Size
+			</digest>
+			<description>
+				Sets the grid size, in coordinates (only useful if <m>gridmode</m> is set to 0 = Fixed)
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Axes And Grid" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="10 10" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Grid Size" />
 				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
@@ -546,28 +580,27 @@
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
 			</attributelist>
 		</attribute>
+		<attribute name="notifypaint" get="1" set="1" type="" size="1">
+			<digest>
+				Notify Display Refresh
+			</digest>
+			<description>
+				Toggles the ability to notify every new redraw of the box via a "painted" symbol.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Notify Display Refresh" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
+			</attributelist>
+		</attribute>
 		<attribute name="out" get="1" set="1" type="symbol" size="1">
 			<digest>
 				Outlet Types
 			</digest>
 			<description>
-				The <m>out</m> attribute is a sequence of characters identifying the outlet types (one character for each llll outlet). Characters can be one of the following: <br />
-				<m>n</m> (default): 'native' output: faster and more precise between bach objects, but unreadable by standard Max objects (an "bach.llll" message appears instead). <br />
-				<m>t</m>: 'text' output: slower and limited in size, but readable by standard Max objects. A plain llll in text format is a generic Max message.
-				To keep the representation invertible (i.e., to allow a bach object receiving a text-format llll to interpret it exactly as if it was native format,
-				except for the size limitation), some specific kinds of symbols are preceded by a backtick: namely, symbols containing parens, or containing textual
-				representations of numbers or pitches, or beginning with a backtick, plus the symbols "null" and "nil" (distinct from the reserved words
-				"null" and "nil" representing the empty list and the empty sublist) are preceded by a backtick. Moreover, the symbols "int", "float" or "list"
-				are preceded by a backtick only if they are the first element of an llll, to distinguish them from the corresponding reserved messages of Max. <br />
-				<m>m</m>: 'max' output: mostly equivalent to the "t" specifier, but no symbol is backticket except "int", "float" and "list" at the beginning of an llll.
-				It is important to notice that, differently from text-format lllls proper, Max-format lllls might not be invertible even if they do not reach the size
-				limit for Max message. This means that a bach object receiving a Max-format llll output from another bach object might interpret it differently
-				from the original, or in some cases might even reject it. <br />
-				<m>x</m>: disabled output (nothing is output) <br />
-				<m>p</m>: 'portal' output: only used by bach.portal to intercept the @out attribute specified while creating the abstraction (see bach.portal). <br />
-				The native output is recommended, unless communication with standard Max messages is needed.
-				Disabling unused outputs can be useful if extreme optimization of the patch is needed.
-				<br /> <br />
 			</description>
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
@@ -759,7 +792,6 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Axes And Grid" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Snap To Grid" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
@@ -769,13 +801,6 @@
 				Microtonal Division
 			</digest>
 			<description>
-				In the bach environment, the tone division defines the microtonal accuracy of the symbolic representation,
-				by representing the number of steps in which each tone is divided.
-				For the standard semitonal representation (where just sharps and flats suffice), one can stick with
-				<m>tonedivision</m> being 2, meaning: the tone is divided into two semitones.
-				By increasing this value, the microtonal grid gets more dense: for instance, 4 is the quartertonal grid
-				(where each tone is divided in 4 quartertones); 8 is the eight-tonal grid, and so on.
-				<br /> <br />
 			</description>
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Settings" />

@@ -34,7 +34,7 @@
 	centroid, analysis, pitch, average
 
 	@seealso
-	dada.segment, dada.catart, dada.analysis.spread
+	dada.segment, dada.cartesian, dada.analysis.spread
 	
 	@owner
 	Daniele Ghisi

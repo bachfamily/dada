@@ -3,13 +3,13 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 7,
-			"minor" : 2,
-			"revision" : 2,
+			"minor" : 3,
+			"revision" : 4,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 114.0, 183.0, 809.0, 633.0 ],
+		"rect" : [ 100.0, 100.0, 809.0, 633.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -42,6 +42,91 @@
 				"box" : 				{
 					"fontname" : "Arial",
 					"fontsize" : 12.0,
+					"id" : "obj-15",
+					"maxclass" : "newobj",
+					"numinlets" : 0,
+					"numoutlets" : 0,
+					"patcher" : 					{
+						"fileversion" : 1,
+						"appversion" : 						{
+							"major" : 7,
+							"minor" : 3,
+							"revision" : 4,
+							"architecture" : "x64",
+							"modernui" : 1
+						}
+,
+						"rect" : [ 0.0, 26.0, 809.0, 607.0 ],
+						"bglocked" : 0,
+						"openinpresentation" : 0,
+						"default_fontsize" : 13.0,
+						"default_fontface" : 0,
+						"default_fontname" : "Arial",
+						"gridonopen" : 1,
+						"gridsize" : [ 5.0, 5.0 ],
+						"gridsnaponopen" : 1,
+						"objectsnaponopen" : 1,
+						"statusbarvisible" : 2,
+						"toolbarvisible" : 1,
+						"lefttoolbarpinned" : 0,
+						"toptoolbarpinned" : 0,
+						"righttoolbarpinned" : 0,
+						"bottomtoolbarpinned" : 0,
+						"toolbars_unpinned_last_save" : 0,
+						"tallnewobj" : 0,
+						"boxanimatetime" : 200,
+						"enablehscroll" : 1,
+						"enablevscroll" : 1,
+						"devicewidth" : 0.0,
+						"description" : "",
+						"digest" : "",
+						"tags" : "",
+						"style" : "",
+						"subpatcher_template" : "",
+						"showontab" : 1,
+						"boxes" : [ 							{
+								"box" : 								{
+									"bgmode" : 0,
+									"border" : 0,
+									"clickthrough" : 0,
+									"enablehscroll" : 0,
+									"enablevscroll" : 0,
+									"id" : "obj-7",
+									"lockeddragscroll" : 0,
+									"maxclass" : "bpatcher",
+									"name" : "dada.commons.maxpat",
+									"numinlets" : 0,
+									"numoutlets" : 0,
+									"offset" : [ 0.0, 0.0 ],
+									"patching_rect" : [ 2.0, 4.0, 673.0, 516.0 ],
+									"viewvisibility" : 1
+								}
+
+							}
+ ],
+						"lines" : [  ]
+					}
+,
+					"patching_rect" : [ 72.0, 224.0, 73.0, 22.0 ],
+					"saved_object_attributes" : 					{
+						"description" : "",
+						"digest" : "",
+						"fontsize" : 13.0,
+						"globalpatchername" : "",
+						"style" : "",
+						"tags" : ""
+					}
+,
+					"style" : "",
+					"text" : "p commons",
+					"varname" : "basic_tab[8]"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"fontname" : "Arial",
+					"fontsize" : 12.0,
 					"id" : "obj-3",
 					"maxclass" : "newobj",
 					"numinlets" : 0,
@@ -50,13 +135,13 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 7,
-							"minor" : 2,
-							"revision" : 2,
+							"minor" : 3,
+							"revision" : 4,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 114.0, 209.0, 809.0, 607.0 ],
+						"rect" : [ 0.0, 26.0, 809.0, 607.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -91,6 +176,10 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 271.0, 504.0, 94.0, 23.0 ],
+									"saved_object_attributes" : 									{
+										"versionnumber" : 80001
+									}
+,
 									"style" : "",
 									"text" : "bach.print Res"
 								}
@@ -183,8 +272,9 @@
 									"presentation_rect" : [ 271.0, 77.0, 613.0, 335.0 ],
 									"showgrid" : 1,
 									"slope" : 0.5,
-									"stage_data_0000000000" : [ "(", "cards", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3225419776, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1079853056, ")", "(", "name", "2Fl", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Fl.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1077215232, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1079869440, ")", "(", "name", "2Ob", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Ob.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3225485312, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080459264, ")", "(", "name", "2ClBb", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Cl.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1077018624, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080451072, ")", "(", "name", "2Bn", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Bn.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3227402240, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080926208, ")", "(", "name", "2Hn", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Hn.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3223977984, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080934400, ")", "(", "name", "2TpC", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Tp.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3227787264, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3223453696, ")", "(", "name", "2Vn", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Vn.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3221225472, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078460416, ")", "(", "name", "1Va", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Va.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080049664, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1077805056, ")", "(", "name", "1Vc", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Vc.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080492032, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3223977984, ")", "(", "name", "1Cb", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Cb.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", ")" ],
-									"stage_data_count" : [ 1 ]
+									"stage_data_0000000000" : [ "stage", "(", "cards", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3225419776, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1079853056, ")", "(", "name", "2Fl", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Fl.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1077215232, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1079869440, ")", "(", "name", "2Ob", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Ob.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3225485312, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080459264, ")", "(", "name", "2ClBb", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Cl.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1077018624, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080451072, ")", "(", "name", "2Bn", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Bn.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3227402240, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080926208, ")", "(", "name", "2Hn", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Hn.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3223977984, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080934400, ")", "(", "name", "2TpC", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Tp.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3227787264, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3223453696, ")", "(", "name", "2Vn", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Vn.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3221225472, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078460416, ")", "(", "name", "1Va", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Va.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080049664, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1077805056, ")", "(", "name", "1Vc", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Vc.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080492032, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3223977984, ")", "(", "name", "1Cb", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Cb.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", ")" ],
+									"stage_data_count" : [ 1 ],
+									"versionnumber" : 10000
 								}
 
 							}
@@ -208,8 +298,6 @@
 						"lines" : [ 							{
 								"patchline" : 								{
 									"destination" : [ "obj-3", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-1", 1 ]
 								}
 
@@ -217,8 +305,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-11", 0 ]
 								}
 
@@ -226,8 +312,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-14", 0 ]
 								}
 
@@ -235,8 +319,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-15", 0 ]
 								}
 
@@ -244,8 +326,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-9", 0 ]
 								}
 
@@ -259,12 +339,12 @@
 , 							{
 								"name" : "RedTextButtons",
 								"default" : 								{
-									"color" : [ 1.0, 1.0, 1.0, 1.0 ],
 									"fontname" : [ "Helvetica" ],
+									"selectioncolor" : [ 0.1, 0.1, 0.1, 1.0 ],
+									"color" : [ 1.0, 1.0, 1.0, 1.0 ],
 									"bgcolor" : [ 0.827321, 0.874747, 0.7195, 1.0 ],
 									"accentcolor" : [ 0.25, 0.25, 0.25, 1.0 ],
-									"elementcolor" : [ 0.55, 0.55, 0.55, 1.0 ],
-									"selectioncolor" : [ 0.1, 0.1, 0.1, 1.0 ]
+									"elementcolor" : [ 0.55, 0.55, 0.55, 1.0 ]
 								}
 ,
 								"parentstyle" : "",
@@ -273,8 +353,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 10.0, 116.0, 106.0, 22.0 ],
-					"presentation_rect" : [ 11.0, 116.0, 0.0, 0.0 ],
+					"patching_rect" : [ 15.0, 119.0, 106.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -302,8 +381,8 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 7,
-							"minor" : 2,
-							"revision" : 2,
+							"minor" : 3,
+							"revision" : 4,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -560,6 +639,10 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 108.0, 571.0, 104.0, 23.0 ],
+									"saved_object_attributes" : 									{
+										"versionnumber" : 80001
+									}
+,
 									"style" : "",
 									"text" : "bach.print hover"
 								}
@@ -641,7 +724,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 36.0, 108.0, 550.0, 38.0 ],
 									"style" : "",
-									"text" : "addcards ((coord -100 40) (name Bar) (icon hexacube.png) (value 0.1) (height 60) (width -1)) ((coord 100 -40) (name Foobar) (icon hexacube.png) (value 0.9) (height 60) (width -1))"
+									"text" : "addcards [[coord -100 40] [name Bar] [icon hexacube.png] [value 0.1] [height 60] [width -1]] [[coord 100 -40] [name Foobar] [icon hexacube.png] [value 0.9] [height 60] [width -1]]"
 								}
 
 							}
@@ -682,7 +765,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 14.0, 75.0, 492.0, 23.0 ],
 									"style" : "",
-									"text" : "addcards ((coord 0 0) (name Foo) (icon cube.png) (value 0.5) (height 60) (width -1))"
+									"text" : "addcards [[coord 0 0] [name Foo] [icon cube.png] [value 0.5] [height 60] [width -1]]"
 								}
 
 							}
@@ -697,8 +780,9 @@
 									"patching_rect" : [ 14.0, 326.75, 381.0, 222.0 ],
 									"presentation" : 1,
 									"presentation_rect" : [ 271.0, 77.0, 300.0, 300.0 ],
-									"stage_data_0000000000" : [ "(", "cards", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "name", "Foo", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1071644672, ")", "(", "icon", "cube.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078853632, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3227090944, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078099968, ")", "(", "name", "Bar", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 39322, 1069128089, ")", "(", "icon", "hexacube.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078853632, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1079574528, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3225681920, ")", "(", "name", "Foobar", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 52429, 1072483532, ")", "(", "icon", "hexacube.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078853632, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", ")" ],
-									"stage_data_count" : [ 1 ]
+									"stage_data_0000000000" : [ "stage", "(", "cards", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "name", "Foo", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1071644672, ")", "(", "icon", "cube.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078853632, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3227090944, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078099968, ")", "(", "name", "Bar", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 39322, 1069128089, ")", "(", "icon", "hexacube.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078853632, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1079574528, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3225681920, ")", "(", "name", "Foobar", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 52429, 1072483532, ")", "(", "icon", "hexacube.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078853632, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", ")" ],
+									"stage_data_count" : [ 1 ],
+									"versionnumber" : 10000
 								}
 
 							}
@@ -722,8 +806,6 @@
 						"lines" : [ 							{
 								"patchline" : 								{
 									"destination" : [ "obj-20", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-1", 1 ]
 								}
 
@@ -731,8 +813,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-33", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-1", 2 ]
 								}
 
@@ -740,8 +820,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-10", 0 ]
 								}
 
@@ -749,8 +827,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-12", 0 ]
 								}
 
@@ -758,8 +834,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-15", 0 ]
 								}
 
@@ -767,8 +841,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-18", 0 ]
 								}
 
@@ -776,8 +848,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-22", 0 ]
 								}
 
@@ -785,8 +855,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-24", 0 ]
 								}
 
@@ -794,8 +862,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-27", 0 ]
 								}
 
@@ -803,8 +869,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-30", 0 ]
 								}
 
@@ -812,8 +876,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-4", 0 ]
 								}
 
@@ -821,8 +883,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-5", 0 ]
 								}
 
@@ -830,8 +890,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-7", 0 ]
 								}
 
@@ -845,12 +903,12 @@
 , 							{
 								"name" : "RedTextButtons",
 								"default" : 								{
-									"color" : [ 1.0, 1.0, 1.0, 1.0 ],
 									"fontname" : [ "Helvetica" ],
+									"selectioncolor" : [ 0.1, 0.1, 0.1, 1.0 ],
+									"color" : [ 1.0, 1.0, 1.0, 1.0 ],
 									"bgcolor" : [ 0.827321, 0.874747, 0.7195, 1.0 ],
 									"accentcolor" : [ 0.25, 0.25, 0.25, 1.0 ],
-									"elementcolor" : [ 0.55, 0.55, 0.55, 1.0 ],
-									"selectioncolor" : [ 0.1, 0.1, 0.1, 1.0 ]
+									"elementcolor" : [ 0.55, 0.55, 0.55, 1.0 ]
 								}
 ,
 								"parentstyle" : "",
@@ -859,7 +917,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 10.0, 144.0, 48.0, 22.0 ],
+					"patching_rect" : [ 31.0, 160.0, 48.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -907,13 +965,13 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 7,
-							"minor" : 2,
-							"revision" : 2,
+							"minor" : 3,
+							"revision" : 4,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 0.0, 26.0, 809.0, 607.0 ],
+						"rect" : [ 100.0, 126.0, 809.0, 607.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -1006,6 +1064,10 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 16.0, 538.0, 112.0, 23.0 ],
+									"saved_object_attributes" : 									{
+										"versionnumber" : 80001
+									}
+,
 									"style" : "",
 									"text" : "bach.print AllData"
 								}
@@ -1219,8 +1281,9 @@
 									"presentation_rect" : [ 271.0, 77.0, 613.0, 335.0 ],
 									"showgrid" : 1,
 									"slope" : 0.5,
-									"stage_data_0000000000" : [ "(", "cards", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3225419776, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1079853056, ")", "(", "name", "2Fl", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Fl.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1077215232, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1079869440, ")", "(", "name", "2Ob", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Ob.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3225485312, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080459264, ")", "(", "name", "2ClBb", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Cl.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1077018624, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080451072, ")", "(", "name", "2Bn", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Bn.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3227402240, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080926208, ")", "(", "name", "2Hn", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Hn.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3223977984, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080934400, ")", "(", "name", "2TpC", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Tp.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3227787264, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3223453696, ")", "(", "name", "2Vn", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Vn.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3221225472, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078460416, ")", "(", "name", "1Va", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Va.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080049664, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1077805056, ")", "(", "name", "1Vc", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Vc.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080492032, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3223977984, ")", "(", "name", "1Cb", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Cb.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", ")" ],
-									"stage_data_count" : [ 1 ]
+									"stage_data_0000000000" : [ "stage", "(", "cards", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3225419776, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1079853056, ")", "(", "name", "2Fl", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Fl.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1077215232, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1079869440, ")", "(", "name", "2Ob", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Ob.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3225485312, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080459264, ")", "(", "name", "2ClBb", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Cl.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1077018624, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080451072, ")", "(", "name", "2Bn", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Bn.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3227402240, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080926208, ")", "(", "name", "2Hn", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Hn.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3223977984, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080934400, ")", "(", "name", "2TpC", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Tp.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3227787264, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3223453696, ")", "(", "name", "2Vn", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Vn.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3221225472, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078460416, ")", "(", "name", "1Va", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Va.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080049664, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1077805056, ")", "(", "name", "1Vc", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Vc.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", "(", "(", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080492032, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3223977984, ")", "(", "name", "1Cb", ")", "(", "value", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, ")", "(", "icon", "Cb.png", ")", "(", "height", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078689792, ")", "(", "width", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220176896, ")", ")", ")" ],
+									"stage_data_count" : [ 1 ],
+									"versionnumber" : 10000
 								}
 
 							}
@@ -1244,8 +1307,6 @@
 						"lines" : [ 							{
 								"patchline" : 								{
 									"destination" : [ "obj-32", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-1", 0 ]
 								}
 
@@ -1253,8 +1314,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-14", 0 ]
 								}
 
@@ -1262,8 +1321,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-16", 0 ]
 								}
 
@@ -1271,8 +1328,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-20", 0 ]
 								}
 
@@ -1280,8 +1335,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-22", 0 ]
 								}
 
@@ -1289,8 +1342,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-24", 0 ]
 								}
 
@@ -1298,8 +1349,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-26", 0 ]
 								}
 
@@ -1307,8 +1356,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-31", 0 ]
 								}
 
@@ -1316,8 +1363,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-5", 0 ]
 								}
 
@@ -1325,8 +1370,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-9", 0 ]
 								}
 
@@ -1340,12 +1383,12 @@
 , 							{
 								"name" : "RedTextButtons",
 								"default" : 								{
-									"color" : [ 1.0, 1.0, 1.0, 1.0 ],
 									"fontname" : [ "Helvetica" ],
+									"selectioncolor" : [ 0.1, 0.1, 0.1, 1.0 ],
+									"color" : [ 1.0, 1.0, 1.0, 1.0 ],
 									"bgcolor" : [ 0.827321, 0.874747, 0.7195, 1.0 ],
 									"accentcolor" : [ 0.25, 0.25, 0.25, 1.0 ],
-									"elementcolor" : [ 0.55, 0.55, 0.55, 1.0 ],
-									"selectioncolor" : [ 0.1, 0.1, 0.1, 1.0 ]
+									"elementcolor" : [ 0.55, 0.55, 0.55, 1.0 ]
 								}
 ,
 								"parentstyle" : "",
@@ -1398,8 +1441,8 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 7,
-							"minor" : 2,
-							"revision" : 2,
+							"minor" : 3,
+							"revision" : 4,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -1468,7 +1511,8 @@
 			}
 , 			{
 				"name" : "musicstand.png",
-				"bootpath" : "~/Orchids-master/InterfacesForMax7/Commons/images/orchestra",
+				"bootpath" : "~/Documents/Max 7/Packages/dada/media/orchestra",
+				"patcherrelativepath" : "../media/orchestra",
 				"type" : "PNG ",
 				"implicit" : 1
 			}
@@ -1479,11 +1523,49 @@
 				"implicit" : 1
 			}
 , 			{
+				"name" : "dada.commons.maxpat",
+				"bootpath" : "~/Documents/Max 7/Packages/dada/help",
+				"patcherrelativepath" : ".",
+				"type" : "JSON",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "mydadastuff.png",
+				"bootpath" : "/private/tmp",
+				"patcherrelativepath" : "../../../../../../../private/tmp",
+				"type" : "PNG ",
+				"implicit" : 1
+			}
+, 			{
 				"name" : "dada.stage.mxo",
 				"type" : "iLaX"
 			}
 , 			{
 				"name" : "bach.print.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "dada.bodies.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "dada.bounce.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "dada.catart.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "dada.base.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.keys.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "mira.multitouch.mxo",
 				"type" : "iLaX"
 			}
  ],

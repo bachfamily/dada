@@ -32,7 +32,7 @@
 	score, segment, chunk, grain, split 
 	
 	@seealso
-	dada.match, dada.catart, dada.base, dada.analysis.centroid, dada.analysis.loudness, dada.analysis.count, dada.analysis.spread
+	dada.match, dada.cartesian, dada.base, dada.analysis.centroid, dada.analysis.energy, dada.analysis.count, dada.analysis.spread
 	
 	@owner
 	Daniele Ghisi
@@ -128,14 +128,14 @@ static t_symbol	*ps_event = NULL;
 /**********************************************************************/
 // Class Definition and Life Cycle
 
-int C74_EXPORT main(void)
+void C74_EXPORT ext_main(void *moduleRef)
 {
 	common_symbols_init();
 	llllobj_common_symbols_init();
 
-	if (llllobj_check_version(bach_get_current_llll_version()) || llllobj_test()) {
+	if (dada_check_bach_version() || llllobj_test()) {
 		dada_error_bachcheck();
-		return 1;
+		return;
 	}
 	
 	t_class *c; 
@@ -226,7 +226,7 @@ int C74_EXPORT main(void)
     // @descriptions Toggles the ability to prepend the feature name in the grain llll output from the lambda outlet, so that each feature can be handled
     // by a separate module. An answer (without any router) is expected in the lambda inlet features by routers in the lambda loop.
     // This attribute on by default. If it is turned off, then the grain llll is only output through the right outlet preceded by a generic "features"
-    // symbol, and a single llll of the kind <b>(<m>featurename</m> <m>featurevalue</m>) (<m>featurename</m> <m>featurevalue</m>)...</b> is expected
+    // symbol, and a single llll of the kind <b>[<m>featurename</m> <m>featurevalue</m>] [<m>featurename</m> <m>featurevalue</m>]...</b> is expected
     // in return. This is very convenient for optimization purposes.
     
     
@@ -302,7 +302,9 @@ int C74_EXPORT main(void)
 	class_register(CLASS_BOX, c);
 	s_segment_class = c;
 	ps_event = gensym("event");
-	return 0;
+    dadaobj_class_add_fileusage_method(c);
+
+	return;
 }
 
 
@@ -1361,7 +1363,7 @@ t_llll *segment_score(t_segment *x, t_llll *score, t_llll **meta)
                 }
             }
         }
-        llll_print(header);
+//        llll_print(header);
         
         long i = 1;
         for (; elem; elem = elem->l_next, i++)
@@ -1446,7 +1448,7 @@ t_max_err segment_setattr_segmentsize(t_segment *x, t_object *attr, long ac, t_a
 		long size;
 		
 		t_llll *parsed = llllobj_parse_llll((t_object *) x, LLLL_OBJ_VANILLA, NULL, ac, av, LLLL_PARSE_CLONE);
-		atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE);
+		atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE | LLLL_D_PARENS);
 		
 		x->segmentsize_as_sym = gensym(text);
 		
@@ -1473,7 +1475,7 @@ t_max_err segment_setattr_hopsize(t_segment *x, t_object *attr, long ac, t_atom 
         long size;
         
         t_llll *parsed = llllobj_parse_llll((t_object *) x, LLLL_OBJ_VANILLA, NULL, ac, av, LLLL_PARSE_CLONE);
-        atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE);
+        atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE | LLLL_D_PARENS);
         
         x->hopsize_as_sym = gensym(text);
         

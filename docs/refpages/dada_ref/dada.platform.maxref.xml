@@ -210,9 +210,9 @@
 			<description>
 				Examples:<br />
 				• <b>count coins</b>   <i>→ count all coins</i><br />
-				• <b>count coins where (pointsgiven 10)</b>   <i>→ only count coins giving 10 points</i><br />
-				• <b>count items where (name Juan)</b>   <i>→ count all items named "Juan"</i><br />
-				• <b>count gamechars where (vp 1)</b>   <i>→ count all gamechars with 1 VP</i><br />
+				• <b>count coins where [pointsgiven 10]</b>   <i>→ only count coins giving 10 points</i><br />
+				• <b>count items where [name Juan]</b>   <i>→ count all items named "Juan"</i><br />
+				• <b>count gamechars where [vp 1]</b>   <i>→ count all gamechars with 1 VP</i><br />
 				<br />
 				The <m>count</m> message, followed by one of the symbols: "gamechars",
 				"blocks", "portals", "coins", "items", will return the number of corresponding items.
@@ -257,9 +257,9 @@
 				<b>(title <m>title</m>) (hero <m>hero_name</m>) (bgsprite <m>background_sprite_name</m>) (gravity <m>gravity_coefficient</m>) (maxtime <m>maximum_time_ms_or_none</m>)
 				(height <m>level_height</m>) (width <m>total_level_width</m>) (groundfriction <m>ground_friction_coefficient</m>) (airfriction <m>air_friction_coefficient</m>) (textcolor <m>r</m> <m>g</m> <m>b</m> <m>a</m>) (intro <m>0/1:has_intro_screen?</m>)</b>. <br />
 				Each <m>SPRITE</m> has the syntax:
-				<b>((name <m>name</m>) (pics <m>pic1_filename</m> <m>pic2_filename</m>...) (rect <m>x</m> <m>y</m> <m>width</m> <m>height</m>) (stretch <m>0/1:can_stretch?</m>) (slidetime <m>slide_time_in_ms</m>))</b><br />
+				<b>[[name <m>name</m>] [pics <m>pic1_filename</m> <m>pic2_filename</m>...] [rect <m>x</m> <m>y</m> <m>width</m> <m>height</m>] [stretch <m>0/1:can_stretch?</m>] [slidetime <m>slide_time_in_ms</m>]]</b><br />
 				Each <m>PROTOTYPE</m> has the syntax:
-				<b>(<m>prototype_name</m> <m>prototype_type</m> (<m>spec1</m> <m>spec1_value</m>) (<m>spec2</m> <m>spec2_value</m>)...)</b><br />
+				<b>[<m>prototype_name</m> <m>prototype_type</m> [<m>spec1</m> <m>spec1_value</m>] [<m>spec2</m> <m>spec2_value</m>]...]</b><br />
 				where <m>prototype_type</m> is one of the following symbols: "block", "coin", "gamechar", "portal" and each <m>spec</m> is a specification belonging
 				to the corresponding category (see below). <br />
 				Each <m>GAMECHAR</m> has the syntax:
@@ -286,6 +286,25 @@
 				where <m>entering_ways</m> and <m>exiting_ways</m> can be a list containing a combination of: "left", "right", "top", "bottom". <br />
 				For all the scripting commands, refer to the <m>script</m> message, keeping in mind that you can use "hero" to refer to the hero and "me"
 				to refer to the subject of the action (e.g. "give me 10 vp").
+			</description>
+		</method>
+		<method name="exportimage">
+			<arg name="filename" optional="1" type="symbol" />
+			<digest>
+				Save as PNG image
+			</digest>
+			<description>
+				Message attributes:<br />
+				<m>@filename</m> (symbol, default: none): filename<br />
+				<m>@dpi</m> (int, default: 72): Dots Per Inch<br />
+				<m>@width</m> (double, default: none): Width In Coordinates<br />
+				<m>@height</m> (double, default: none): Height In Coordinates<br />
+				<m>@pixelwidth</m> (double, default: none): Width In Pixels<br />
+				<m>@pixelheight</m> (double, default: none): Height In Pixels<br />
+				<m>@center</m> (llll, default: none): Center Coordinates<br />
+				<m>@zoom</m> (llll, default: none): Zoom Percentage<br />
+				<br />
+				Saves the object as a PNG image. Optional argument provides the filename (otherwise a dialog box will pop up).
 			</description>
 		</method>
 		<method name="fix">
@@ -394,7 +413,7 @@
 			<description>
 				The <m>script</m> message will execute a sequence of actions,
 				contained in the argument llll. Scripts can be also set inside some specification fields (e.g. "dieseq") and automatically triggered
-				during playtime. Scripts must be a sequence of actions in the form <b>(<m>ACTION1</m>) (<m>ACTION2</m>)...</b>.
+				during playtime. Scripts must be a sequence of actions in the form <b>[<m>ACTION1</m>] [<m>ACTION2</m>]...</b>.
 				In all actions two keywords can be used: "me", referring to the subject of the action (if automatically triggered at playtime by
 				fields such as "breakseq" or "dieseq"), and "hero", referring to the current gamechar hero.
 				Actions can be the ones below (curly brackets refer to variables, while square brackets mean that the arguments are optional). <br />
@@ -612,7 +631,6 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Continuously Output bang if Changed " />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
@@ -723,6 +741,19 @@
 				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
+			</attributelist>
+		</attribute>
+		<attribute name="jitmatrix" get="1" set="1" type="" size="1">
+			<digest>
+				
+			</digest>
+			<description>
+				Sets the name of a jitter matrix to which the output should be mirrored.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
 			</attributelist>
 		</attribute>
 		<attribute name="legendfontsize" get="1" set="1" type="float" size="1">
@@ -854,6 +885,22 @@
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
 		</attribute>
+		<attribute name="notifypaint" get="1" set="1" type="" size="1">
+			<digest>
+				Notify Display Refresh
+			</digest>
+			<description>
+				Toggles the ability to notify every new redraw of the box via a "painted" symbol.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Notify Display Refresh" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
+			</attributelist>
+		</attribute>
 		<attribute name="notifyportals" get="1" set="1" type="int" size="1">
 			<digest>
 				Notify Portals
@@ -891,23 +938,6 @@
 				Outlet Types
 			</digest>
 			<description>
-				The <m>out</m> attribute is a sequence of characters identifying the outlet types (one character for each llll outlet). Characters can be one of the following: <br />
-				<m>n</m> (default): 'native' output: faster and more precise between bach objects, but unreadable by standard Max objects (an "bach.llll" message appears instead). <br />
-				<m>t</m>: 'text' output: slower and limited in size, but readable by standard Max objects. A plain llll in text format is a generic Max message.
-				To keep the representation invertible (i.e., to allow a bach object receiving a text-format llll to interpret it exactly as if it was native format,
-				except for the size limitation), some specific kinds of symbols are preceded by a backtick: namely, symbols containing parens, or containing textual
-				representations of numbers or pitches, or beginning with a backtick, plus the symbols "null" and "nil" (distinct from the reserved words
-				"null" and "nil" representing the empty list and the empty sublist) are preceded by a backtick. Moreover, the symbols "int", "float" or "list"
-				are preceded by a backtick only if they are the first element of an llll, to distinguish them from the corresponding reserved messages of Max. <br />
-				<m>m</m>: 'max' output: mostly equivalent to the "t" specifier, but no symbol is backticket except "int", "float" and "list" at the beginning of an llll.
-				It is important to notice that, differently from text-format lllls proper, Max-format lllls might not be invertible even if they do not reach the size
-				limit for Max message. This means that a bach object receiving a Max-format llll output from another bach object might interpret it differently
-				from the original, or in some cases might even reject it. <br />
-				<m>x</m>: disabled output (nothing is output) <br />
-				<m>p</m>: 'portal' output: only used by bach.portal to intercept the @out attribute specified while creating the abstraction (see bach.portal). <br />
-				The native output is recommended, unless communication with standard Max messages is needed.
-				Disabling unused outputs can be useful if extreme optimization of the patch is needed.
-				<br /> <br />
 			</description>
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />

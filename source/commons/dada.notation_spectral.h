@@ -8,7 +8,7 @@
 #ifndef _NOTATION_SPECTRAL_H_
 #define _NOTATION_SPECTRAL_H_
 
-#include "spectral.h" // header with all the structures for the notation objects
+#include "math/spectral.h" // header with all the structures for the notation objects
 
 
 #define	CONST_PTRACK_MIN_POINT_RADIUS	2

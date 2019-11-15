@@ -2,14 +2,15 @@
 	"patcher" : 	{
 		"fileversion" : 1,
 		"appversion" : 		{
-			"major" : 7,
-			"minor" : 3,
-			"revision" : 1,
+			"major" : 8,
+			"minor" : 0,
+			"revision" : 4,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 100.0, 100.0, 825.0, 610.0 ],
+		"classnamespace" : "box",
+		"rect" : [ 503.0, 79.0, 825.0, 610.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -49,13 +50,14 @@
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
-							"major" : 7,
-							"minor" : 3,
-							"revision" : 1,
+							"major" : 8,
+							"minor" : 0,
+							"revision" : 4,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
+						"classnamespace" : "box",
 						"rect" : [ 0.0, 26.0, 825.0, 584.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
@@ -92,7 +94,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 402.0, 442.0, 81.0, 23.0 ],
-									"style" : "",
 									"text" : "bach.lookup"
 								}
 
@@ -107,7 +108,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 244.0, 324.0, 194.0, 25.0 ],
-									"style" : "",
 									"text" : "Delete all distances in \"dists\""
 								}
 
@@ -120,7 +120,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 166.0, 324.0, 69.0, 23.0 ],
-									"style" : "",
 									"text" : "clear dists"
 								}
 
@@ -136,7 +135,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 572.5, 360.5, 157.0, 40.0 ],
-									"style" : "",
 									"text" : "Add all distances from a matrix, via iteration"
 								}
 
@@ -152,7 +150,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 389.5, 260.5, 279.0, 54.0 ],
-									"style" : "",
 									"text" : "Add a distance information in the \"dists\" table between \"objs\" \"A\" and \"C\" (identified by their name), and set it to 24"
 								}
 
@@ -166,7 +163,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 133.0, 280.5, 245.0, 23.0 ],
-									"style" : "",
 									"text" : "adddistanceentry dists objs name A C 24"
 								}
 
@@ -180,8 +176,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 175.5, 176.613647, 168.0, 25.0 ],
-									"style" : "",
+									"patching_rect" : [ 175.5, 176.613646999999986, 168.0, 25.0 ],
 									"text" : "Add a bunch of objects"
 								}
 
@@ -196,7 +191,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 216.0, 142.0, 358.0, 25.0 ],
-									"style" : "",
 									"text" : "Add a table designed to contain distances between \"objs\""
 								}
 
@@ -211,7 +205,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 166.0, 104.0, 136.0, 25.0 ],
-									"style" : "",
 									"text" : "Add a tables \"objs\""
 								}
 
@@ -224,7 +217,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 43.0, 142.0, 167.0, 23.0 ],
-									"style" : "",
 									"text" : "adddistancetable dists objs"
 								}
 
@@ -237,7 +229,10 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "" ],
 									"patching_rect" : [ 250.0, 442.0, 136.0, 23.0 ],
-									"style" : "",
+									"saved_object_attributes" : 									{
+										"versionnumber" : 80001
+									}
+,
 									"text" : "bach.mapelem @out t"
 								}
 
@@ -250,7 +245,6 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "" ],
 									"patching_rect" : [ 209.0, 475.0, 60.0, 23.0 ],
-									"style" : "",
 									"text" : "zl join"
 								}
 
@@ -263,7 +257,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 209.0, 510.0, 257.0, 23.0 ],
-									"style" : "",
 									"text" : "adddistanceentry dists objs name $2 $3 $1"
 								}
 
@@ -276,7 +269,10 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "" ],
 									"patching_rect" : [ 209.0, 408.0, 101.0, 23.0 ],
-									"style" : "",
+									"saved_object_attributes" : 									{
+										"versionnumber" : 80001
+									}
+,
 									"text" : "bach.iter @out t"
 								}
 
@@ -289,8 +285,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 89.5, 245.0, 157.0, 23.0 ],
-									"style" : "",
-									"text" : "addentry objs ( name $1 )"
+									"text" : "addentry objs [ name $1 ]"
 								}
 
 							}
@@ -302,7 +297,10 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "" ],
 									"patching_rect" : [ 89.5, 210.0, 101.0, 23.0 ],
-									"style" : "",
+									"saved_object_attributes" : 									{
+										"versionnumber" : 80001
+									}
+,
 									"text" : "bach.iter @out t"
 								}
 
@@ -315,8 +313,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 10.0, 104.0, 143.0, 23.0 ],
-									"style" : "",
-									"text" : "addtable objs (name s)"
+									"text" : "addtable objs [name s]"
 								}
 
 							}
@@ -328,8 +325,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 89.5, 176.613647, 81.0, 23.0 ],
-									"style" : "",
+									"patching_rect" : [ 89.5, 176.613646999999986, 81.0, 23.0 ],
 									"text" : "A B C D E F"
 								}
 
@@ -343,9 +339,8 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 209.0, 360.5, 353.0, 38.0 ],
-									"style" : "",
-									"text" : "( 0 39 22 59 54 33 ) ( 39 0 20 20 81 8 ) ( 22 20 0 39 74 18 ) ( 59 20 39 0 93 27 ) ( 54 81 74 93 0 73 ) ( 33 8 18 27 73 0 )"
+									"patching_rect" : [ 209.0, 360.5, 355.0, 38.0 ],
+									"text" : "[ 0 39 22 59 54 33 ] [ 39 0 20 20 81 8 ] [ 22 20 0 39 74 18 ] [ 59 20 39 0 93 27 ] [ 54 81 74 93 0 73 ] [ 33 8 18 27 73 0 ]"
 								}
 
 							}
@@ -357,7 +352,6 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"patching_rect" : [ 27.0, 549.0, 126.0, 23.0 ],
-									"style" : "",
 									"text" : "dada.base mydistdb"
 								}
 
@@ -372,7 +366,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 10.0, 65.0, 750.0, 36.0 ],
-									"style" : "",
 									"text" : "Distance tables are tables containing information about distances between entry in a given reference table.\nThey are actually ordinary tables, but you have a couple of interface messages designed to have you enter data more easily:",
 									"textcolor" : [ 0.5, 0.5, 0.5, 1.0 ]
 								}
@@ -390,7 +383,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 10.0, 10.0, 214.682663, 57.567627 ]
+									"patching_rect" : [ 10.0, 10.0, 214.66400146484375, 57.599853515625 ]
 								}
 
 							}
@@ -410,7 +403,6 @@
 									"parameter_enable" : 0,
 									"patching_rect" : [ 735.0, 370.5, 20.0, 20.0 ],
 									"rounded" : 60.0,
-									"style" : "",
 									"text" : "6",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
 								}
@@ -432,7 +424,6 @@
 									"parameter_enable" : 0,
 									"patching_rect" : [ 446.0, 326.5, 20.0, 20.0 ],
 									"rounded" : 60.0,
-									"style" : "",
 									"text" : "5",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
 								}
@@ -454,7 +445,6 @@
 									"parameter_enable" : 0,
 									"patching_rect" : [ 679.5, 280.5, 20.0, 20.0 ],
 									"rounded" : 60.0,
-									"style" : "",
 									"text" : "4",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
 								}
@@ -474,9 +464,8 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 352.5, 179.113647, 20.0, 20.0 ],
+									"patching_rect" : [ 352.5, 179.113646999999986, 20.0, 20.0 ],
 									"rounded" : 60.0,
-									"style" : "",
 									"text" : "3",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
 								}
@@ -498,7 +487,6 @@
 									"parameter_enable" : 0,
 									"patching_rect" : [ 312.0, 104.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
-									"style" : "",
 									"text" : "1",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
 								}
@@ -520,7 +508,6 @@
 									"parameter_enable" : 0,
 									"patching_rect" : [ 582.5, 144.5, 20.0, 20.0 ],
 									"rounded" : 60.0,
-									"style" : "",
 									"text" : "2",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
 								}
@@ -530,9 +517,8 @@
 						"lines" : [ 							{
 								"patchline" : 								{
 									"destination" : [ "obj-3", 1 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"midpoints" : [ 99.0, 203.0, 473.5, 203.0 ],
+									"order" : 0,
 									"source" : [ "obj-1", 0 ]
 								}
 
@@ -540,8 +526,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-8", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
+									"order" : 1,
 									"source" : [ "obj-1", 0 ]
 								}
 
@@ -549,8 +534,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-16", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-10", 0 ]
 								}
 
@@ -558,8 +541,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-14", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-11", 0 ]
 								}
 
@@ -567,8 +548,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-15", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-11", 1 ]
 								}
 
@@ -576,8 +555,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-16", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-13", 0 ]
 								}
 
@@ -585,8 +562,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-13", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-14", 0 ]
 								}
 
@@ -594,8 +569,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-14", 1 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-15", 0 ]
 								}
 
@@ -603,8 +576,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-3", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-15", 1 ]
 								}
 
@@ -612,8 +583,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-16", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-19", 0 ]
 								}
 
@@ -621,8 +590,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-16", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-25", 0 ]
 								}
 
@@ -630,8 +597,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-15", 1 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-3", 0 ]
 								}
 
@@ -639,8 +604,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-16", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-38", 0 ]
 								}
 
@@ -648,8 +611,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-11", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-4", 0 ]
 								}
 
@@ -657,8 +618,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-16", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-7", 0 ]
 								}
 
@@ -666,8 +625,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-10", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-8", 0 ]
 								}
 
@@ -681,11 +638,9 @@
 						"digest" : "",
 						"fontsize" : 13.0,
 						"globalpatchername" : "",
-						"style" : "",
 						"tags" : ""
 					}
 ,
-					"style" : "",
 					"text" : "p \"distance tables\"",
 					"varname" : "basic_tab[5]"
 				}
@@ -702,13 +657,14 @@
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
-							"major" : 7,
-							"minor" : 3,
-							"revision" : 1,
+							"major" : 8,
+							"minor" : 0,
+							"revision" : 4,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
+						"classnamespace" : "box",
 						"rect" : [ 0.0, 26.0, 825.0, 584.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
@@ -746,7 +702,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 10.0, 78.0, 371.0, 21.0 ],
-									"style" : "",
 									"text" : "Use the \"UPDATE\" query to modify values in the database.",
 									"textcolor" : [ 0.5, 0.5, 0.5, 1.0 ]
 								}
@@ -762,7 +717,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 151.0, 428.0, 366.0, 23.0 ],
-									"style" : "",
 									"text" : "query SELECT title FROM myscores WHERE myscore_id = 1"
 								}
 
@@ -777,7 +731,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 154.0, 332.0, 366.0, 23.0 ],
-									"style" : "",
 									"text" : "query SELECT title FROM myscores WHERE myscore_id = 1"
 								}
 
@@ -789,8 +742,8 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 45.0, 134.0, 24.0, 24.0 ],
-									"style" : ""
+									"parameter_enable" : 0,
+									"patching_rect" : [ 45.0, 134.0, 24.0, 24.0 ]
 								}
 
 							}
@@ -803,7 +756,10 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 40.0, 524.0, 68.0, 23.0 ],
-									"style" : "",
+									"saved_object_attributes" : 									{
+										"versionnumber" : 80001
+									}
+,
 									"text" : "bach.print"
 								}
 
@@ -818,9 +774,8 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 23.0, 271.0, 349.0, 38.0 ],
-									"style" : "",
-									"text" : "addentry myscores (content (roll ( ( 0. ( 7900. 405. 100 0 ) 0 ) 0 ))) (title Sol) (page 5) (bpm 60.5)"
+									"patching_rect" : [ 23.0, 271.0, 352.0, 38.0 ],
+									"text" : "addentry myscores [content [roll [ [ 0. [ 7900. 405. 100 0 ] 0 ] 0 ]]] [title Sol] [page 5] [bpm 60.5]"
 								}
 
 							}
@@ -834,9 +789,8 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 55.0, 209.0, 401.0, 52.0 ],
-									"style" : "",
-									"text" : "addentry myscores (content (roll ( ( 0. ( 6000. 405. 100 0 ) 0 ) ( 400. ( 7200. 405. 100 0 ) ( 7600. 405. 100 0 ) 0 ) ( 800. ( 7200. 405. 100 0 ) ( 7600. 405. 100 0 ) 0 ) 0 ) )) (title UmPa) (page 5) (bpm 72.)"
+									"patching_rect" : [ 55.0, 209.0, 402.0, 52.0 ],
+									"text" : "addentry myscores [content [roll [ [ 0. [ 6000. 405. 100 0 ] 0 ] [ 400. [ 7200. 405. 100 0 ] [ 7600. 405. 100 0 ] 0 ] [ 800. [ 7200. 405. 100 0 ] [ 7600. 405. 100 0 ] 0 ] 0 ] ]] [title UmPa] [page 5] [bpm 72.]"
 								}
 
 							}
@@ -850,8 +804,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 118.0, 182.0, 316.0, 23.0 ],
-									"style" : "",
-									"text" : "addtable myscores (content l) (title s) (page i) (bpm f)"
+									"text" : "addtable myscores [content l] [title s] [page i] [bpm f]"
 								}
 
 							}
@@ -865,7 +818,6 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"patching_rect" : [ 40.0, 481.0, 97.0, 23.0 ],
-									"style" : "",
 									"text" : "dada.base tutu"
 								}
 
@@ -878,7 +830,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 151.0, 385.0, 404.0, 23.0 ],
-									"style" : "",
 									"text" : "query UPDATE myscores SET title = 'FuFu' WHERE myscore_id = 1"
 								}
 
@@ -895,7 +846,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 10.0, 10.0, 214.682663, 57.567627 ]
+									"patching_rect" : [ 10.0, 10.0, 214.66400146484375, 57.599853515625 ]
 								}
 
 							}
@@ -915,7 +866,6 @@
 									"parameter_enable" : 0,
 									"patching_rect" : [ 530.0, 428.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
-									"style" : "",
 									"text" : "4",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ],
 									"varname" : "u654001018[3]"
@@ -938,7 +888,6 @@
 									"parameter_enable" : 0,
 									"patching_rect" : [ 561.0, 385.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
-									"style" : "",
 									"text" : "3",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ],
 									"varname" : "u654001018[2]"
@@ -961,7 +910,6 @@
 									"parameter_enable" : 0,
 									"patching_rect" : [ 530.0, 332.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
-									"style" : "",
 									"text" : "2",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ],
 									"varname" : "u654001018[1]"
@@ -984,7 +932,6 @@
 									"parameter_enable" : 0,
 									"patching_rect" : [ 82.0, 134.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
-									"style" : "",
 									"text" : "1",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ],
 									"varname" : "u654001018"
@@ -995,8 +942,6 @@
 						"lines" : [ 							{
 								"patchline" : 								{
 									"destination" : [ "obj-4", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-10", 0 ]
 								}
 
@@ -1004,8 +949,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-4", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-15", 0 ]
 								}
 
@@ -1013,8 +956,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-4", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-21", 0 ]
 								}
 
@@ -1022,8 +963,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-4", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-30", 0 ]
 								}
 
@@ -1031,8 +970,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-3", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-4", 0 ]
 								}
 
@@ -1040,8 +977,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-10", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
+									"order" : 2,
 									"source" : [ "obj-6", 0 ]
 								}
 
@@ -1049,8 +985,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-30", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
+									"order" : 0,
 									"source" : [ "obj-6", 0 ]
 								}
 
@@ -1058,8 +993,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-7", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
+									"order" : 1,
 									"source" : [ "obj-6", 0 ]
 								}
 
@@ -1067,8 +1001,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-4", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-7", 0 ]
 								}
 
@@ -1076,8 +1008,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-4", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-9", 0 ]
 								}
 
@@ -1091,11 +1021,9 @@
 						"digest" : "",
 						"fontsize" : 13.0,
 						"globalpatchername" : "",
-						"style" : "",
 						"tags" : ""
 					}
 ,
-					"style" : "",
 					"text" : "p \"change field values\"",
 					"varname" : "basic_tab[4]"
 				}
@@ -1112,13 +1040,14 @@
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
-							"major" : 7,
-							"minor" : 3,
-							"revision" : 1,
+							"major" : 8,
+							"minor" : 0,
+							"revision" : 4,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
+						"classnamespace" : "box",
 						"rect" : [ 0.0, 26.0, 825.0, 584.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
@@ -1157,7 +1086,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 363.0, 324.0, 172.0, 25.0 ],
-									"style" : "",
 									"text" : "Works with native lllls too"
 								}
 
@@ -1170,7 +1098,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 142.0, 325.0, 216.0, 23.0 ],
-									"style" : "",
 									"text" : "appendfromfile waves newwaves.llll"
 								}
 
@@ -1186,7 +1113,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 474.0, 383.5, 169.0, 40.0 ],
-									"style" : "",
 									"text" : "Only import a given column or list of columns"
 								}
 
@@ -1199,8 +1125,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 142.0, 392.0, 323.0, 23.0 ],
-									"style" : "",
-									"text" : "appendfromfile waves newwaves.txt (cols wavelength)"
+									"text" : "appendfromfile waves newwaves.txt [cols wavelength]"
 								}
 
 							}
@@ -1214,7 +1139,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 216.0, 244.0, 376.0, 65.0 ],
-									"style" : "",
 									"text" : "If you have a lot of symbols in your data, this should be the preferred method for loading them into the database, since it bypasses the Max symbol table (and hence avoids slowing down the system by filling it).",
 									"textcolor" : [ 0.5, 0.5, 0.5, 1.0 ]
 								}
@@ -1230,7 +1154,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 216.0, 177.0, 371.0, 65.0 ],
-									"style" : "",
 									"text" : "This file must have the syntax\n<ITEM1> <ITEM2> <ITEM3> ...\nwhere each ITEM is in the form\n((<column_name> <content>) (<column_name> <content>) ...)",
 									"textcolor" : [ 0.5, 0.5, 0.5, 1.0 ]
 								}
@@ -1247,7 +1170,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 368.0, 117.5, 219.0, 54.0 ],
-									"style" : "",
 									"text" : "Append new items in llll form to the waves table. Items are taken from the \"newwaves.txt\" file"
 								}
 
@@ -1260,7 +1182,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 142.0, 133.0, 219.0, 23.0 ],
-									"style" : "",
 									"text" : "appendfromfile waves newwaves.txt"
 								}
 
@@ -1274,7 +1195,10 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 26.0, 494.0, 227.0, 23.0 ],
-									"style" : "",
+									"saved_object_attributes" : 									{
+										"versionnumber" : 80001
+									}
+,
 									"text" : "bach.post QueryResult @maxdepth 1"
 								}
 
@@ -1289,7 +1213,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 26.0, 79.0, 188.0, 23.0 ],
-									"style" : "",
 									"text" : "query SELECT * FROM waves"
 								}
 
@@ -1304,7 +1227,6 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"patching_rect" : [ 26.0, 445.0, 205.0, 23.0 ],
-									"style" : "",
 									"text" : "dada.base newtest dadatestdb.txt"
 								}
 
@@ -1321,7 +1243,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 10.0, 10.0, 214.682663, 57.567627 ]
+									"patching_rect" : [ 10.0, 10.0, 214.66400146484375, 57.599853515625 ]
 								}
 
 							}
@@ -1329,8 +1251,6 @@
 						"lines" : [ 							{
 								"patchline" : 								{
 									"destination" : [ "obj-22", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-1", 0 ]
 								}
 
@@ -1338,8 +1258,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-15", 0 ]
 								}
 
@@ -1347,8 +1265,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-21", 0 ]
 								}
 
@@ -1356,8 +1272,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-3", 0 ]
 								}
 
@@ -1365,8 +1279,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-4", 0 ]
 								}
 
@@ -1380,11 +1292,9 @@
 						"digest" : "",
 						"fontsize" : 13.0,
 						"globalpatchername" : "",
-						"style" : "",
 						"tags" : ""
 					}
 ,
-					"style" : "",
 					"text" : "p \"append from file\"",
 					"varname" : "basic_tab[3]"
 				}
@@ -1401,14 +1311,15 @@
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
-							"major" : 7,
-							"minor" : 3,
-							"revision" : 1,
+							"major" : 8,
+							"minor" : 0,
+							"revision" : 4,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 100.0, 126.0, 825.0, 584.0 ],
+						"classnamespace" : "box",
+						"rect" : [ 0.0, 26.0, 825.0, 584.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -1441,14 +1352,41 @@
 									"bubble" : 1,
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
+									"id" : "obj-28",
+									"linecount" : 3,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 653.0, 389.5, 154.0, 54.0 ],
+									"text" : "LIKE queries also work, but you need to use %% instead of %"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 13.0,
+									"id" : "obj-27",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 238.81732199999999, 405.0, 407.0, 23.0 ],
+									"text" : "query SELECT * FROM scores WHERE filename LIKE '%%er04%%'"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"bubble" : 1,
+									"fontname" : "Arial",
+									"fontsize" : 13.0,
 									"id" : "obj-25",
 									"linecount" : 4,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 653.0, 95.0, 147.0, 69.0 ],
-									"presentation_rect" : [ 661.0, 125.0, 0.0, 0.0 ],
-									"style" : "",
 									"text" : "Standard PRAGMA tools work as well. This one makes 'LIKE' case sensitive"
 								}
 
@@ -1460,8 +1398,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 381.317322, 118.0, 268.0, 23.0 ],
-									"style" : "",
+									"patching_rect" : [ 381.31732199999999, 118.0, 268.0, 23.0 ],
 									"text" : "query PRAGMA case_sensitive_like = TRUE"
 								}
 
@@ -1476,8 +1413,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 471.0, 432.0, 277.0, 54.0 ],
-									"style" : "",
+									"patching_rect" : [ 471.0, 466.0, 277.0, 54.0 ],
 									"text" : "Convert empty lllls to default values (for int and float columns; for llll columns null are mapped on empty lllls)"
 								}
 
@@ -1490,8 +1426,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 260.5, 443.0, 199.0, 23.0 ],
-									"style" : "",
+									"patching_rect" : [ 260.5, 477.0, 199.0, 23.0 ],
 									"text_width" : 139.5
 								}
 
@@ -1506,7 +1441,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 376.0, 198.0, 189.0, 25.0 ],
-									"style" : "",
 									"text" : "Count items in the database"
 								}
 
@@ -1520,8 +1454,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 81.841339, 198.0, 288.0, 23.0 ],
-									"style" : "",
+									"patching_rect" : [ 81.841339000000005, 198.0, 286.0, 23.0 ],
 									"text" : "query SELECT COUNT(score_id) FROM scores"
 								}
 
@@ -1535,8 +1468,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 536.317322, 359.0, 113.0, 25.0 ],
-									"style" : "",
+									"patching_rect" : [ 536.31732199999999, 359.0, 113.0, 25.0 ],
 									"text" : "Output next 20"
 								}
 
@@ -1551,8 +1483,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 225.658661, 352.5, 302.0, 38.0 ],
-									"style" : "",
+									"patching_rect" : [ 225.658660999999995, 352.5, 302.0, 38.0 ],
 									"text" : "query \"SELECT centroid, content FROM scores ORDER BY centroid DESC LIMIT 20 OFFSET 20\""
 								}
 
@@ -1567,8 +1498,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 487.317322, 305.0, 211.0, 40.0 ],
-									"style" : "",
+									"patching_rect" : [ 487.31732199999999, 305.0, 211.0, 40.0 ],
 									"text" : "Output only the 20 scores with highest centroid"
 								}
 
@@ -1583,7 +1513,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 210.0, 86.0, 130.0, 25.0 ],
-									"style" : "",
 									"text" : "Output everything"
 								}
 
@@ -1598,8 +1527,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 206.158661, 305.0, 269.658691, 38.0 ],
-									"style" : "",
+									"patching_rect" : [ 206.158660999999995, 305.0, 269.658690999999976, 38.0 ],
 									"text" : "query \"SELECT centroid, content FROM scores ORDER BY centroid DESC LIMIT 20\""
 								}
 
@@ -1612,8 +1540,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 118.817329, 258.0, 60.0, 21.0 ],
-									"style" : "",
+									"patching_rect" : [ 118.817329000000001, 258.0, 60.0, 21.0 ],
 									"text" : "same as",
 									"textcolor" : [ 0.5, 0.5, 0.5, 1.0 ]
 								}
@@ -1629,8 +1556,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 183.817322, 258.0, 430.0, 38.0 ],
-									"style" : "",
+									"patching_rect" : [ 183.81732199999999, 258.0, 418.0, 38.0 ],
 									"text" : "query \"SELECT * FROM scores WHERE score_id IN (SELECT score_id FROM scores WHERE CENTROID >= 6900)\""
 								}
 
@@ -1641,8 +1567,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 325.5, 548.0, 60.0, 21.0 ],
-									"style" : "",
+									"patching_rect" : [ 325.5, 552.0, 60.0, 21.0 ],
 									"text" : "matches"
 								}
 
@@ -1655,8 +1580,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 274.158661, 548.0, 50.0, 23.0 ],
-									"style" : ""
+									"patching_rect" : [ 274.158660999999995, 552.0, 50.0, 23.0 ]
 								}
 
 							}
@@ -1667,8 +1591,11 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "int" ],
-									"patching_rect" : [ 274.158661, 515.0, 78.0, 23.0 ],
-									"style" : "",
+									"patching_rect" : [ 274.158660999999995, 519.0, 78.0, 23.0 ],
+									"saved_object_attributes" : 									{
+										"versionnumber" : 80001
+									}
+,
 									"text" : "bach.length"
 								}
 
@@ -1682,8 +1609,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 98.158661, 227.0, 402.0, 23.0 ],
-									"style" : "",
+									"patching_rect" : [ 98.158660999999995, 227.0, 402.0, 23.0 ],
 									"text" : "query SELECT content FROM scores WHERE CENTROID >= 6900"
 								}
 
@@ -1697,7 +1623,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 10.0, 64.0, 715.0, 21.0 ],
-									"style" : "",
 									"text" : "Send any SQLite query to the database:",
 									"textcolor" : [ 0.5, 0.5, 0.5, 1.0 ]
 								}
@@ -1712,8 +1637,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 471.0, 405.0, 233.0, 25.0 ],
-									"style" : "",
+									"patching_rect" : [ 471.0, 439.0, 233.0, 25.0 ],
 									"text" : "Output column names upon queries"
 								}
 
@@ -1726,8 +1650,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 260.5, 405.0, 199.0, 23.0 ],
-									"style" : "",
+									"patching_rect" : [ 260.5, 439.0, 199.0, 23.0 ],
 									"text_width" : 139.5
 								}
 
@@ -1741,8 +1664,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 66.841331, 168.0, 357.0, 23.0 ],
-									"style" : "",
+									"patching_rect" : [ 66.841330999999997, 168.0, 355.0, 23.0 ],
 									"text" : "query SELECT COUNT(DISTINCT(filename)) FROM scores"
 								}
 
@@ -1757,7 +1679,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 30.5, 118.0, 233.0, 23.0 ],
-									"style" : "",
 									"text" : "query SELECT filename FROM scores"
 								}
 
@@ -1771,8 +1692,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 48.999992, 143.0, 297.0, 23.0 ],
-									"style" : "",
+									"patching_rect" : [ 48.999991999999999, 143.0, 297.0, 23.0 ],
 									"text" : "query SELECT DISTINCT filename FROM scores"
 								}
 
@@ -1785,8 +1705,11 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 22.841331, 522.0, 227.0, 23.0 ],
-									"style" : "",
+									"patching_rect" : [ 22.841331, 556.0, 227.0, 23.0 ],
+									"saved_object_attributes" : 									{
+										"versionnumber" : 80001
+									}
+,
 									"text" : "bach.post QueryResult @maxdepth 1"
 								}
 
@@ -1801,7 +1724,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 13.841331, 86.0, 189.0, 23.0 ],
-									"style" : "",
 									"text" : "query SELECT * FROM scores"
 								}
 
@@ -1815,8 +1737,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
-									"patching_rect" : [ 22.841331, 479.0, 180.0, 23.0 ],
-									"style" : "",
+									"patching_rect" : [ 22.841331, 513.0, 180.0, 23.0 ],
 									"text" : "dada.base winter winterdb.txt"
 								}
 
@@ -1833,7 +1754,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 10.0, 10.0, 214.682663, 57.567627 ]
+									"patching_rect" : [ 10.0, 10.0, 214.66400146484375, 57.599853515625 ]
 								}
 
 							}
@@ -1841,8 +1762,7 @@
 						"lines" : [ 							{
 								"patchline" : 								{
 									"destination" : [ "obj-22", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
+									"order" : 1,
 									"source" : [ "obj-1", 0 ]
 								}
 
@@ -1850,8 +1770,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-3", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
+									"order" : 0,
 									"source" : [ "obj-1", 0 ]
 								}
 
@@ -1859,8 +1778,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-11", 0 ]
 								}
 
@@ -1868,8 +1785,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-13", 0 ]
 								}
 
@@ -1877,8 +1792,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-16", 0 ]
 								}
 
@@ -1886,8 +1799,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-17", 0 ]
 								}
 
@@ -1895,8 +1806,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-18", 0 ]
 								}
 
@@ -1904,8 +1813,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-21", 0 ]
 								}
 
@@ -1913,8 +1820,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-23", 0 ]
 								}
 
@@ -1922,17 +1827,20 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-26", 0 ]
 								}
 
 							}
 , 							{
 								"patchline" : 								{
+									"destination" : [ "obj-1", 0 ],
+									"source" : [ "obj-27", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
 									"destination" : [ "obj-7", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-3", 0 ]
 								}
 
@@ -1940,8 +1848,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-38", 0 ]
 								}
 
@@ -1949,8 +1855,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-4", 0 ]
 								}
 
@@ -1958,8 +1862,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-6", 0 ]
 								}
 
@@ -1967,8 +1869,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-8", 0 ]
 								}
 
@@ -1982,11 +1882,9 @@
 						"digest" : "",
 						"fontsize" : 13.0,
 						"globalpatchername" : "",
-						"style" : "",
 						"tags" : ""
 					}
 ,
-					"style" : "",
 					"text" : "p queries",
 					"varname" : "basic_tab[2]"
 				}
@@ -2003,13 +1901,14 @@
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
-							"major" : 7,
-							"minor" : 3,
-							"revision" : 1,
+							"major" : 8,
+							"minor" : 0,
+							"revision" : 4,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
+						"classnamespace" : "box",
 						"rect" : [ 0.0, 26.0, 825.0, 584.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
@@ -2046,7 +1945,6 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"patching_rect" : [ 502.0, 171.5, 96.0, 23.0 ],
-									"style" : "",
 									"text" : "dada.base test"
 								}
 
@@ -2062,7 +1960,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 603.0, 156.0, 175.0, 54.0 ],
-									"style" : "",
 									"text" : "Objects having the same name share the same database"
 								}
 
@@ -2080,7 +1977,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 623.0, 324.0, 135.0, 69.0 ],
-									"style" : "",
 									"text" : "Modify the \"name\" attribute to change reference"
 								}
 
@@ -2094,7 +1990,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 540.0, 278.5, 174.0, 38.0 ],
-									"style" : "",
 									"text" : "name test, query SELECT * FROM scores"
 								}
 
@@ -2107,7 +2002,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 502.0, 242.0, 189.0, 23.0 ],
-									"style" : "",
 									"text" : "query SELECT * FROM scores"
 								}
 
@@ -2121,7 +2015,10 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 502.0, 404.0, 227.0, 23.0 ],
-									"style" : "",
+									"saved_object_attributes" : 									{
+										"versionnumber" : 80001
+									}
+,
 									"text" : "bach.post QueryResult @maxdepth 1"
 								}
 
@@ -2134,7 +2031,6 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"patching_rect" : [ 502.0, 350.5, 97.0, 23.0 ],
-									"style" : "",
 									"text" : "dada.base tutu"
 								}
 
@@ -2147,7 +2043,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 66.0, 278.5, 39.0, 23.0 ],
-									"style" : "",
 									"text" : "clear"
 								}
 
@@ -2162,7 +2057,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 66.0, 179.0, 380.0, 36.0 ],
-									"style" : "",
 									"text" : "If could be however rather wise to save (or load) copies of the database explicitly. This can be done in the following way:",
 									"textcolor" : [ 0.5, 0.5, 0.5, 1.0 ]
 								}
@@ -2178,7 +2072,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 191.5, 232.0, 38.0, 23.0 ],
-									"style" : "",
 									"text" : "write"
 								}
 
@@ -2193,7 +2086,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 10.0, 73.0, 715.0, 36.0 ],
-									"style" : "",
 									"text" : "Set a filename as a second argument in order to automatically load and save the database in a given file, whenever the patch is loaded/saved.",
 									"textcolor" : [ 0.5, 0.5, 0.5, 1.0 ]
 								}
@@ -2210,7 +2102,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 236.0, 221.5, 163.0, 40.0 ],
-									"style" : "",
 									"text" : "Write database to disk, native format"
 								}
 
@@ -2225,7 +2116,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 300.0, 534.0, 262.0, 25.0 ],
-									"style" : "",
 									"text" : "Bang when database is loaded from disk"
 								}
 
@@ -2237,8 +2127,8 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 273.5, 534.0, 24.0, 24.0 ],
-									"style" : ""
+									"parameter_enable" : 0,
+									"patching_rect" : [ 273.5, 534.0, 24.0, 24.0 ]
 								}
 
 							}
@@ -2252,7 +2142,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 236.0, 317.0, 170.0, 25.0 ],
-									"style" : "",
 									"text" : "Load database from disk"
 								}
 
@@ -2268,7 +2157,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 251.0, 268.0, 163.0, 40.0 ],
-									"style" : "",
 									"text" : "Write database to disk, text format"
 								}
 
@@ -2283,7 +2171,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 191.5, 278.5, 52.0, 23.0 ],
-									"style" : "",
 									"text" : "writetxt"
 								}
 
@@ -2298,7 +2185,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 191.5, 319.0, 37.0, 23.0 ],
-									"style" : "",
 									"text" : "read"
 								}
 
@@ -2315,8 +2201,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 300.0, 404.0, 187.935883, 54.0 ],
-									"presentation_rect" : [ 300.0, 404.0, 187.935883, 54.0 ]
+									"patching_rect" : [ 300.0, 404.0, 187.921981811523438, 54.0 ]
 								}
 
 							}
@@ -2329,7 +2214,10 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 26.0, 453.0, 227.0, 23.0 ],
-									"style" : "",
+									"saved_object_attributes" : 									{
+										"versionnumber" : 80001
+									}
+,
 									"text" : "bach.post QueryResult @maxdepth 1"
 								}
 
@@ -2344,7 +2232,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 26.0, 134.0, 189.0, 23.0 ],
-									"style" : "",
 									"text" : "query SELECT * FROM scores"
 								}
 
@@ -2359,7 +2246,6 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"patching_rect" : [ 26.0, 404.0, 266.5, 23.0 ],
-									"style" : "",
 									"text" : "dada.base test dadatestdb.txt"
 								}
 
@@ -2376,7 +2262,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 10.0, 10.0, 214.682663, 57.567627 ]
+									"patching_rect" : [ 10.0, 10.0, 214.66400146484375, 57.599853515625 ]
 								}
 
 							}
@@ -2384,8 +2270,6 @@
 						"lines" : [ 							{
 								"patchline" : 								{
 									"destination" : [ "obj-22", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-1", 0 ]
 								}
 
@@ -2393,8 +2277,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-33", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-1", 1 ]
 								}
 
@@ -2402,8 +2284,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-11", 0 ]
 								}
 
@@ -2411,8 +2291,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-8", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-12", 0 ]
 								}
 
@@ -2420,8 +2298,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-8", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-17", 0 ]
 								}
 
@@ -2429,8 +2305,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-21", 0 ]
 								}
 
@@ -2438,8 +2312,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-24", 0 ]
 								}
 
@@ -2447,8 +2319,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-4", 0 ]
 								}
 
@@ -2456,8 +2326,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-6", 0 ]
 								}
 
@@ -2465,8 +2333,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-9", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-8", 0 ]
 								}
 
@@ -2480,11 +2346,9 @@
 						"digest" : "",
 						"fontsize" : 13.0,
 						"globalpatchername" : "",
-						"style" : "",
 						"tags" : ""
 					}
 ,
-					"style" : "",
 					"text" : "p \"save, load, files, names\"",
 					"varname" : "basic_tab[1]"
 				}
@@ -2505,7 +2369,6 @@
 						"parameter_enable" : 0
 					}
 ,
-					"style" : "",
 					"text" : "js helpstarter.js dada.base"
 				}
 
@@ -2521,14 +2384,15 @@
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
-							"major" : 7,
-							"minor" : 3,
-							"revision" : 1,
+							"major" : 8,
+							"minor" : 0,
+							"revision" : 4,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 0.0, 26.0, 825.0, 584.0 ],
+						"classnamespace" : "box",
+						"rect" : [ 503.0, 105.0, 825.0, 584.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -2566,7 +2430,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 319.5, 532.5, 199.0, 36.0 ],
-									"style" : "",
 									"text" : "Beware: for large database this might take time!",
 									"textcolor" : [ 0.5, 0.5, 0.5, 1.0 ]
 								}
@@ -2582,7 +2445,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 379.5, 467.0, 306.0, 25.0 ],
-									"style" : "",
 									"text" : "Output column names and types (for each table)"
 								}
 
@@ -2597,7 +2459,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 325.5, 467.0, 52.0, 23.0 ],
-									"style" : "",
 									"text" : "getcols"
 								}
 
@@ -2612,7 +2473,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 336.5, 438.0, 220.0, 25.0 ],
-									"style" : "",
 									"text" : "Output whole database in llll form"
 								}
 
@@ -2627,7 +2487,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 286.5, 438.0, 43.0, 23.0 ],
-									"style" : "",
 									"text" : "dump"
 								}
 
@@ -2642,7 +2501,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 303.0, 508.0, 181.0, 25.0 ],
-									"style" : "",
 									"text" : "Double click to open editor"
 								}
 
@@ -2657,7 +2515,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 374.0, 278.0, 110.0, 25.0 ],
-									"style" : "",
 									"text" : "Perform query"
 								}
 
@@ -2672,7 +2529,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 574.0, 183.0, 199.0, 50.0 ],
-									"style" : "",
 									"text" : "lllls must be wrapped in an external level of parenthesis, as for llll slots",
 									"textcolor" : [ 0.5, 0.5, 0.5, 1.0 ]
 								}
@@ -2688,7 +2544,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 314.0, 410.0, 120.0, 25.0 ],
-									"style" : "",
 									"text" : "Drop all tables"
 								}
 
@@ -2703,7 +2558,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 263.5, 410.0, 43.0, 23.0 ],
-									"style" : "",
 									"text" : "erase"
 								}
 
@@ -2718,7 +2572,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 281.5, 349.0, 237.0, 25.0 ],
-									"style" : "",
 									"text" : "Remove all elements, from all tables"
 								}
 
@@ -2733,7 +2586,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 242.5, 349.0, 39.0, 23.0 ],
-									"style" : "",
 									"text" : "clear"
 								}
 
@@ -2748,7 +2600,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 582.0, 119.0, 195.0, 50.0 ],
-									"style" : "",
 									"text" : "Each column has its own type: \ni = int, f = float, s = symbol, \nr = rational, l = llll",
 									"textcolor" : [ 0.5, 0.5, 0.5, 1.0 ]
 								}
@@ -2763,7 +2614,10 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 26.0, 546.0, 227.0, 23.0 ],
-									"style" : "",
+									"saved_object_attributes" : 									{
+										"versionnumber" : 80001
+									}
+,
 									"text" : "bach.post QueryResult @maxdepth 1"
 								}
 
@@ -2778,7 +2632,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 155.0, 278.0, 207.0, 23.0 ],
-									"style" : "",
 									"text" : "query SELECT * FROM myscores"
 								}
 
@@ -2793,7 +2646,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 393.5, 379.0, 227.0, 25.0 ],
-									"style" : "",
 									"text" : "Drop a table from the database"
 								}
 
@@ -2808,7 +2660,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 331.5, 320.0, 221.0, 25.0 ],
-									"style" : "",
 									"text" : "Remove all elements from a table"
 								}
 
@@ -2823,7 +2674,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 254.5, 379.0, 133.0, 23.0 ],
-									"style" : "",
 									"text" : "deletetable myscores"
 								}
 
@@ -2838,7 +2688,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 231.5, 323.0, 98.0, 23.0 ],
-									"style" : "",
 									"text" : "clear myscores"
 								}
 
@@ -2853,7 +2702,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 461.0, 240.5, 150.0, 25.0 ],
-									"style" : "",
 									"text" : "Add another one"
 								}
 
@@ -2868,9 +2716,8 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 101.0, 234.0, 349.0, 38.0 ],
-									"style" : "",
-									"text" : "addentry myscores (content (roll ( ( 0. ( 7900. 405. 100 0 ) 0 ) 0 ))) (title Sol) (page 5) (bpm 60.5)"
+									"patching_rect" : [ 101.0, 234.0, 352.0, 38.0 ],
+									"text" : "addentry myscores [content [roll [ [ 0. [ 7900. 405. 100 0 ] 0 ] 0 ]]] [title Sol] [page 5] [bpm 60.5]"
 								}
 
 							}
@@ -2884,9 +2731,8 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 62.0, 177.0, 401.0, 52.0 ],
-									"style" : "",
-									"text" : "addentry myscores (content (roll ( ( 0. ( 6000. 405. 100 0 ) 0 ) ( 400. ( 7200. 405. 100 0 ) ( 7600. 405. 100 0 ) 0 ) ( 800. ( 7200. 405. 100 0 ) ( 7600. 405. 100 0 ) 0 ) 0 ) )) (title UmPa) (page 5) (bpm 72.)"
+									"patching_rect" : [ 62.0, 177.0, 402.0, 52.0 ],
+									"text" : "addentry myscores [content [roll [ [ 0. [ 6000. 405. 100 0 ] 0 ] [ 400. [ 7200. 405. 100 0 ] [ 7600. 405. 100 0 ] 0 ] [ 800. [ 7200. 405. 100 0 ] [ 7600. 405. 100 0 ] 0 ] 0 ] ]] [title UmPa] [page 5] [bpm 72.]"
 								}
 
 							}
@@ -2901,7 +2747,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 461.0, 183.0, 108.0, 40.0 ],
-									"style" : "",
 									"text" : "Add an entry to the table"
 								}
 
@@ -2917,7 +2762,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 354.5, 119.0, 219.5, 40.0 ],
-									"style" : "",
 									"text" : "Add a table in the database, and define its features (columns)."
 								}
 
@@ -2932,8 +2776,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 26.0, 130.5, 316.0, 23.0 ],
-									"style" : "",
-									"text" : "addtable myscores (content l) (title s) (page i) (bpm f)"
+									"text" : "addtable myscores [content l] [title s] [page i] [bpm f]"
 								}
 
 							}
@@ -2947,7 +2790,6 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"patching_rect" : [ 26.0, 508.0, 266.5, 23.0 ],
-									"style" : "",
 									"text" : "dada.base toto"
 								}
 
@@ -2972,8 +2814,6 @@
 						"lines" : [ 							{
 								"patchline" : 								{
 									"destination" : [ "obj-22", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-1", 0 ]
 								}
 
@@ -2981,8 +2821,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-10", 0 ]
 								}
 
@@ -2990,8 +2828,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-12", 0 ]
 								}
 
@@ -2999,8 +2835,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-13", 0 ]
 								}
 
@@ -3008,8 +2842,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-17", 0 ]
 								}
 
@@ -3017,8 +2849,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-18", 0 ]
 								}
 
@@ -3026,8 +2856,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-21", 0 ]
 								}
 
@@ -3035,8 +2863,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-23", 0 ]
 								}
 
@@ -3044,8 +2870,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-3", 0 ]
 								}
 
@@ -3053,8 +2877,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-30", 0 ]
 								}
 
@@ -3062,8 +2884,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-7", 0 ]
 								}
 
@@ -3077,11 +2897,9 @@
 						"digest" : "",
 						"fontsize" : 13.0,
 						"globalpatchername" : "",
-						"style" : "",
 						"tags" : ""
 					}
 ,
-					"style" : "",
 					"text" : "p basic",
 					"varname" : "basic_tab"
 				}
@@ -3099,7 +2917,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 10.0, 10.0, 214.682663, 57.567627 ]
+					"patching_rect" : [ 10.0, 10.0, 214.682662999999991, 57.567627000000002 ]
 				}
 
 			}
@@ -3114,13 +2932,14 @@
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
-							"major" : 7,
-							"minor" : 3,
-							"revision" : 1,
+							"major" : 8,
+							"minor" : 0,
+							"revision" : 4,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
+						"classnamespace" : "box",
 						"rect" : [ 0.0, 26.0, 825.0, 584.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
@@ -3159,11 +2978,9 @@
 						"digest" : "",
 						"fontsize" : 13.0,
 						"globalpatchername" : "",
-						"style" : "",
 						"tags" : ""
 					}
 ,
-					"style" : "",
 					"text" : "p ?",
 					"varname" : "q_tab"
 				}
@@ -3198,6 +3015,7 @@
 , 			{
 				"name" : "bach.lookup.maxpat",
 				"bootpath" : "~/Documents/Max 7/Packages/bach/patchers",
+				"patcherrelativepath" : "../../bach/patchers",
 				"type" : "JSON",
 				"implicit" : 1
 			}

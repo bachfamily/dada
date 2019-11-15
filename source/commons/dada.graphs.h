@@ -209,11 +209,11 @@ t_llll *graph_to_llll(t_dada_graph *graph);
 void graph_from_llll(t_llll *ll, t_dada_graph *graph, double node_width = 0, double node_height = 0);
 void graph_free(t_dada_graph *graph);
 void graph_assign_all_default_metadata(t_dada_graph *graph);
-void graph_paint_edge(t_dadaobj *r_ob, t_jgraphics *g, t_object *view, t_rect rect, t_pt center, t_dada_graph *graph,
+void graph_paint_edge(t_dadaobj *r_ob, t_jgraphics *g, t_rect rect, t_pt center, t_dada_graph *graph,
 					  t_jrgba graph_color, long edge_index,
 					  double fixed_vertex_width, double fixed_vertex_height, vertex_to_properties_fn vertex_to_properties,
 					  double edge_width, char edge_retouch_mode, edge_to_properties_fn edge_to_properties, char paint_hover, t_jfont *jf_label, char show_arrows);
-void graph_paint(t_dadaobj *r_ob, t_jgraphics *g, t_object *view, t_rect rect, t_pt center, t_dada_graph *graph,
+void graph_paint(t_dadaobj *r_ob, t_jgraphics *g, t_rect rect, t_pt center, t_dada_graph *graph,
 				 t_jrgba graph_color, char paint_vertices, char paint_edges, 
 				 double fixed_vertex_width, double fixed_vertex_height, vertex_to_properties_fn vertex_to_properties,
 				 double edge_width, char edge_retouch_mode, edge_to_properties_fn edge_to_properties, char paint_hover, t_jfont *jf_label, char show_arrows);

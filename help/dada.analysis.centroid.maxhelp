@@ -160,7 +160,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 429.0, 495.0, 41.0, 23.0 ],
 									"style" : "",
-									"text" : "( $1 )"
+									"text" : "[ $1 ]"
 								}
 
 							}

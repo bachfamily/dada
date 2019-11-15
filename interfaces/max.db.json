@@ -1,0 +1,5 @@
+{
+	"maxdb" : {
+		"exclusions" : ["dada.loudness", "dada.catart"]
+	}
+}

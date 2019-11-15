@@ -43,7 +43,7 @@
 #include "dada.interface.h"
 #include "dada.geometry.h"
 #include "dada.paint.h"
-#include "notation.h"
+#include "notation/notation.h"
 //#include "dada.cursors.data.c"
 #include "dada.math.h"
 #include "dada.graphs.h"
@@ -208,7 +208,7 @@ void boids_free(t_boids *x);
 void boids_assist(t_boids *x, void *b, long m, long a, char *s);
 
 void boids_paint(t_boids *x, t_object *view);
-
+void boids_paint_ext(t_boids *x, t_object *view, t_dada_force_graphics *forced_graphics);
 
 void boids_int(t_boids *x, t_atom_long num);
 void boids_float(t_boids *x, double num);
@@ -620,7 +620,7 @@ boids_rule_fn get_rule_prototype_from_code(t_boids *x, t_symbol *fun_name, t_sym
     string = (t_object *)object_new(CLASS_NOBOX, gensym("string"), buf);
     atom_setobj(&str, string);
     
-    t_symbol *ps_addsymbol = gensym("addsymbol");
+/*    t_symbol *ps_addsymbol = gensym("addsymbol");
     object_method(clang, ps_addsymbol, gensym("acosh"), &acosh);
     object_method(clang, ps_addsymbol, gensym("asinh"), &asinh);
     object_method(clang, ps_addsymbol, gensym("atanh"), &atanh);
@@ -628,6 +628,7 @@ boids_rule_fn get_rule_prototype_from_code(t_boids *x, t_symbol *fun_name, t_sym
     object_method(clang, ps_addsymbol, gensym("hypot"), &hypot);
     object_method(clang, ps_addsymbol, gensym("trunc"), &trunc);
     object_method(clang, ps_addsymbol, gensym("round"), &round);
+    */
     
     // compile the string
     object_method_typed(clang, gensym("compile"), 1, &str, &ret);
@@ -722,16 +723,16 @@ void boids_delete_rule_prototype(t_boids *x, t_symbol *name)
 //////////////////////// global class pointer variable
 t_class *boids_class;
 
-int C74_EXPORT main(void)
+void C74_EXPORT ext_main(void *moduleRef)
 {	
 	t_class *c;
 	
 	common_symbols_init();
 	llllobj_common_symbols_init();
 	
-	if (llllobj_check_version(bach_get_current_llll_version()) || llllobj_test()) {
+	if (dada_check_bach_version() || llllobj_test()) {
 		dada_error_bachcheck();
-		return 1;
+		return;
 	}
 	
 	
@@ -794,23 +795,23 @@ int C74_EXPORT main(void)
 
     // @method dump @digest Output state
     // @description Outputs the current state of the object. The syntax is
-    // <b>boids (rules <m>CUSTOMRULE1</m> <m>CUSTOMRULE2</m>...) (swarms <m>SWARM1</m> <m>2</m>...) </b>.
+    // <b>boids [rules <m>CUSTOMRULE1</m> <m>CUSTOMRULE2</m>...] [swarms <m>SWARM1</m> <m>2</m>...] </b>.
     // Each <m>CUSTOMRULE</m> element represents a custom rule and is in the form
-    // <b>((name <m>rule_name</m>) (code <m>function_code</m>) (defaultgain <m>gain</m>) (abscoord <m>ac</m>) (absintensity <m>ai</m>) (params <m>PARAM1</m> <m>PARAM2</m> <m>PARAM3</m>...)</b>,
+    // <b>[[name <m>rule_name</m>] [code <m>function_code</m>] [defaultgain <m>gain</m>] [abscoord <m>ac</m>] [absintensity <m>ai</m>] [params <m>PARAM1</m> <m>PARAM2</m> <m>PARAM3</m>...]</b>,
     // where the <m>function_code</m> must be a single symbol, and <m>ai</m> and <m>ac</m> are 1/0 values telling respectively if the function will return absolute
     // coordinates or absolute intensity instead of a coordinate difference, and intensity difference (speed). These two last values both default to 0:
     // functions return by default a vector which will be added to the current speed to modify it. <br />
     // Each parameter is in the form
-    // <b>(<m>name</m> <m>type</m> <m>value</m>)</b>, where <m>type</m> is a symbol among: "int", "float", "pt", and value is the corresponding value (or couple of
+    // <b>[<m>name</m> <m>type</m> <m>value</m>]</b>, where <m>type</m> is a symbol among: "int", "float", "pt", and value is the corresponding value (or couple of
     // x and y values, without parentheses, in the case of "pt" type). <br />
     // Each <m>SWARM</m> element represents a swarm is in the form
     // <b>((name <m>name</m>) (size <m>num_boids</m>) (coord <m>COORD_BOID1</m> <m>COORD_BOID2</m>...) (speed <m>SPEED_BOID1</m> <m>SPEED_BOID2</m>...)
     // (intensity <m>intensity_boid1</m> <m>intensity_boid2</m>...) (intensityspeed <m>intensityspeed_boid1</m> <m>intensityspeed_boid2</m>...)
     // (maxspeed <m>maximum_swarm_speed</m>) (maxintensity <m>maximum_swarm_intensity</m>) (color <m>red</m> <m>green</m> <m>blue</m> <m>alpha</m>)
     // (applyrule <m>RULE1</m> <m>RULE2</m> <m>RULE3</m>...))</b>,
-    // where each <m>COORD_BOID</m> and <m>SPEED_BOID</m> is in the form <b>(<m>x</m> <m>y</m>)</b>, where each <m>intensityspeed_boid</m> is
+    // where each <m>COORD_BOID</m> and <m>SPEED_BOID</m> is in the form <b>[<m>x</m> <m>y</m>]</b>, where each <m>intensityspeed_boid</m> is
     // the difference between successive intensities (derivative), and where each <m>RULE</m> represents a rule to be applied to the swarm, and is in the form
-    // <b>(<m>rule_name</m> (gain <m>gain_value</m>) (<m>param_name</m> <m>param_value</m>) (<m>param_name</m> <m>param_value</m>) ...)</b>, <br />
+    // <b>[<m>rule_name</m> [gain <m>gain_value</m>] [<m>param_name</m> <m>param_value</m>] [<m>param_name</m> <m>param_value</m>] ...]</b>, <br />
     // where, in turn, each <m>param_name</m> is one of the parameters defined for the given rule "int", "float" or "pt", i.e. float couple (see the "rules" llll, above).
     // <br />
     // A first argument limits the elements to be dumped: the <m>dump rules</m> message only dumps the rules; the <m>dump swarms</m> message only dumps the swarms. <br />
@@ -827,11 +828,11 @@ int C74_EXPORT main(void)
     // @method rotate @digest Rotate swarms
     // @description The word <m>rotate</m> followed the index of a swarm, and an angle (in radians), rotates
     // the swarm. The angle can be set in degrees by appending the degrees ° symbol after the number (without any spaces) or by
-    // replacing the number with an llll in the form <b>(<m>amount_in_degrees</m> deg)</b>.
+    // replacing the number with an llll in the form <b>[<m>amount_in_degrees</m> deg]</b>.
     // If the index of the shape is <m>0</m> or the <m>all</m> symbol, all shapes will be rotated.
-    // If a third argument is added, in the form <b>(<m>x</m> <m>y</m>)</b>, it sets the coordinates of the origin for the rotation.
+    // If a third argument is added, in the form <b>[<m>x</m> <m>y</m>]</b>, it sets the coordinates of the origin for the rotation.
     // If no third argument is added, the default center of rotation is the shape barycenter (if a single swarm is being rotated)
-    // or the origin <b>(0 0)</b> if all swarms are being rotated.
+    // or the origin <b>[0 0]</b> if all swarms are being rotated.
     // The center of rotation llll can be replaced by the <m>barycenter</m> symbol, to specify that rotation must happen around individuals barycenters.
     // Alternatively you can add the "barycenter" symbol as third element in order to specify that coordinates are barycentric coordinates.
     // @marg 0 @name swarm_index @optional 0 @type int/all
@@ -840,7 +841,7 @@ int C74_EXPORT main(void)
     class_addmethod(c, (method)boids_anything,	"rotate",		A_GIMME,	0);
     
     // @method move @digest Translate swarms
-    // @description The word <m>move</m> followed the index of a swarm and a vector in wrapped <b>(<m>x</m> <m>y</m>)</b> syntax,
+    // @description The word <m>move</m> followed the index of a swarm and a vector in wrapped <b>[<m>x</m> <m>y</m>]</b> syntax,
     // translates the swarm by the given vector. If the index of the swarm is <m>0</m> or the <m>all</m> symbol, all swarms will be translated.
     // @marg 0 @name swarm_index @optional 0 @type int/all
     // @marg 1 @name amount @optional 0 @type llll
@@ -850,10 +851,10 @@ int C74_EXPORT main(void)
     // @description The word <m>scale</m> followed the index of a swarm and a number, scales the given swarm of the factor
     // specified by the number.
     // If the index of the swarm is <m>0</m> or the <m>all</m> symbol, all swarms will be scaled.
-    // If, instead of a single factor, a list in the form <b>(<m>x_scale</m> <m>y_scale</m>)</b> is given,
+    // If, instead of a single factor, a list in the form <b>[<m>x_scale</m> <m>y_scale</m>]</b> is given,
     // two different scale factors are applied for the X and Y axis.
-    // You can provide as third argument the scaling center, in <b>(<m>x</m> <m>y</m>)</b> form. If no center is provided,
-    // by default the barycenter is used for single swarms scaling, while the origin <b>(0, 0)</b> is used when all swarms are to be scaled
+    // You can provide as third argument the scaling center, in <b>[<m>x</m> <m>y</m>]</b> form. If no center is provided,
+    // by default the barycenter is used for single swarms scaling, while the origin <b>[0, 0]</b> is used when all swarms are to be scaled
     // The scaling center llll can be replaced by the <m>barycenter</m> symbol, to specify that scaling must happen with respect to individuals baricenters.
     // Alternatively you can add the "barycenter" symbol as third element in order to specify that coordinates are barycentric coordinates.
     // @marg 0 @name swarm_index @optional 0 @type int/all
@@ -928,6 +929,7 @@ int C74_EXPORT main(void)
 
 
     DADAOBJ_JBOX_DECLARE_READWRITE_METHODS(c);
+    DADAOBJ_JBOX_DECLARE_IMAGE_METHODS(c);
     DADAOBJ_JBOX_DECLARE_ACCEPTSDRAG_METHODS(c);
 
     llllobj_class_add_out_attr(c, LLLL_OBJ_UI);
@@ -1017,9 +1019,10 @@ int C74_EXPORT main(void)
 	
 	class_register(CLASS_BOX, c); /* CLASS_NOBOX */
 	boids_class = c;
-	
+    dadaobj_class_add_fileusage_method(c);
+
 	dev_post("dada.boids compiled %s %s", __DATE__, __TIME__);
-	return 0;
+	return;
 }
 
 t_max_err boids_notify(t_boids *x, t_symbol *s, t_symbol *msg, void *sender, void *data)
@@ -1741,7 +1744,7 @@ void *boids_new(t_symbol *s, long argc, t_atom *argv)
         
         x->clang_ll = llll_get();
 		
-        dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_UNDO | DADAOBJ_CHANGEDBANG | DADAOBJ_NOTIFICATIONS, build_pt(1., 1.), -1, 3, 1, (invalidate_and_redraw_fn)boids_iar, "qsr", 2, "bl44");
+        dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_UNDO | DADAOBJ_CHANGEDBANG | DADAOBJ_NOTIFICATIONS, build_pt(1., 1.), -1, 3, 1, (dada_paint_ext_fn)boids_paint_ext, (invalidate_and_redraw_fn)boids_iar, "qsr", 2, "bl44");
 		dadaobj_addfunctions(dadaobj_cast(x), (dada_mousemove_fn)boids_mousemove, (method)boids_task, (method)boids_postprocess_undo, (get_state_fn)boids_get_state, (set_state_fn)boids_set_state, NULL, NULL, NULL);
 
 		dadaobj_dadaitem_class_alloc(dadaobj_cast(x), DADAITEM_TYPE_SWARM, gensym("swarm"), gensym("Swarm"), DADA_ITEM_ALLOC_ARRAY, 0, false, sizeof(t_boids_swarm), calcoffset(t_boids, swarm), DADA_BOIDS_MAX_SWARMS, NULL, DADA_FUNC_v_oX, (method)boids_set_swarms, NULL, DADA_FUNC_X_o, (method)boids_get_swarms, NULL, (method)postprocess_boids, NULL, (method)swarm_free, false, false);
@@ -2107,22 +2110,20 @@ void get_ruleparam_text(t_boids *x, t_boids_swarm *sw, long i, long j, long k, c
     }
 }
 
-void boids_paint(t_boids *x, t_object *view)
+void boids_paint_ext(t_boids *x, t_object *view, t_dada_force_graphics *forced_graphics)
 {
-	t_rect rect;
     t_dadaobj *r_ob = dadaobj_cast(x);
-	t_pt center = get_center_pix(r_ob, view, &rect);
+    t_rect rect = forced_graphics->rect;
+    t_pt center = forced_graphics->center_pix;
+    t_jgraphics *g = forced_graphics->graphic_context;
+    double zoom = forced_graphics->zoom.x;
 	long i, j;
     
     
-    if (dadaobj_cast(x)->m_zoom.must_autozoom) {
+    if (view && dadaobj_cast(x)->m_zoom.must_autozoom) {
         boids_autozoom(x, view, &rect);
         dadaobj_cast(x)->m_zoom.must_autozoom = false;
     }
-    
-	t_jgraphics *g = (t_jgraphics*) patcherview_get_jgraphics(view);
-    double zoom = r_ob->m_zoom.zoom.x;
-	
     
 	t_jfont *jf = jfont_create_debug(jbox_get_fontname((t_object *)x)->s_name, (t_jgraphics_font_slant)jbox_get_font_slant((t_object *)x), (t_jgraphics_font_weight)jbox_get_font_weight((t_object *)x), jbox_get_fontsize((t_object *)x));
 
@@ -2132,7 +2133,7 @@ void boids_paint(t_boids *x, t_object *view)
     
     dadaobj_mutex_lock(dadaobj_cast(x));
 
-    dadaobj_paint_grid(dadaobj_cast(x), view, rect, center);
+    dadaobj_paint_grid(dadaobj_cast(x), view, forced_graphics);
 
     // paint swarms
     const double PAD = 20;
@@ -2323,7 +2324,10 @@ void boids_paint(t_boids *x, t_object *view)
 }
 
 
-
+void boids_paint(t_boids *x, t_object *view)
+{
+    dadaobj_paint(dadaobj_cast(x), view);
+}
 
 
 
@@ -3159,8 +3163,8 @@ void boids_follow(t_boids *x)
         
         if (count > 1) {
             t_pt screen_min, screen_max;
-            dadaobj_getdomain(dadaobj_cast(x), view, &screen_min.x, &screen_max.x);
-            dadaobj_getrange(dadaobj_cast(x), view, &screen_min.x, &screen_max.x);
+            dadaobj_getdomain(dadaobj_cast(x), view, &screen_min.x, &screen_max.x, NULL);
+            dadaobj_getrange(dadaobj_cast(x), view, &screen_min.x, &screen_max.x, NULL);
             
             
             if (max.x == min.x) {

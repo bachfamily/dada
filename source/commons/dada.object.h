@@ -10,7 +10,7 @@
 #define _DADA_OBJECT_H_
 
 #include "dada.h"
-#include "notation.h"
+#include "notation/notation.h"
 
 
 #define	DADA_DEFAULT_MAX_DECIMALS 6
@@ -31,52 +31,8 @@
 // Utility to cast a pointer to a class to the dadaobj (which is the second element, after the root object
 #define dadaobj_cast(x) (&x->b_ob.d_ob)
 
-// Utility to calculate the offset between the dadaobj class and a given structure
-#define dadaobj_jbox_calcoffset(x,y) (calcoffset(x,y)-sizeof(t_llllobj_jbox))
 
 
-// ATTRIBUTES MACROS WITH SUBSTRUCTURES
-#define headersize(type) (type == LLLL_OBJ_UI ? sizeof(t_llllobj_jbox) : (type == LLLL_OBJ_UIMSP ? sizeof(t_llllobj_pxjbox) : (type == LLLL_OBJ_MSP ? sizeof(t_llllobj_pxobject) : (type == LLLL_OBJ_VANILLA ? sizeof(t_llllobj_object) : 0)))) 
-
-#define DADAOBJ_CLASS_ATTR_DOUBLE(c,type,attrname,flags,structname,structmember) \
-class_addattr((c),attr_offset_new(attrname,USESYM(float64),(flags),(method)0L,(method)0L,calcoffset(structname,structmember)+headersize(type)))
-
-#define DADAOBJ_CLASS_ATTR_CHAR(c,type,attrname,flags,structname,structmember) \
-class_addattr((c),attr_offset_new(attrname,USESYM(char),(flags),(method)0L,(method)0L,calcoffset(structname,structmember)+headersize(type)))
-
-#define DADAOBJ_CLASS_ATTR_LONG(c,type,attrname,flags,structname,structmember) \
-class_addattr((c),attr_offset_new(attrname,USESYM(long),(flags),(method)0L,(method)0L,calcoffset(structname,structmember)+headersize(type)))
-
-#define DADAOBJ_CLASS_ATTR_DOUBLE_ARRAY(c,type,attrname,flags,structname,structmember,size) \
-class_addattr((c),attr_offset_array_new(attrname,USESYM(float64),(size),(flags),(method)0L,(method)0L,0/*fix*/,calcoffset(structname,structmember)+headersize(type)))
-
-
-#define DADAOBJ_CLASS_ATTR_CHAR_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember) \
-	class_addattr((c),attr_offset_new(attrname,USESYM(char),(flags),(method)0L,(method)0L,calcoffset(structname,structmember)+calcoffset(substructname,substructmember)+headersize(type)))
-
-#define DADAOBJ_CLASS_ATTR_LONG_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember) \
-	{		\
-		C74_STATIC_ASSERT(structmembersize(substructname,substructmember)==sizeof(long), "structmember must be long type"); \
-		class_addattr((c),attr_offset_new(attrname,USESYM(long),(flags),(method)0L,(method)0L,calcoffset(structname,structmember)+calcoffset(substructname,substructmember)+headersize(type))); \
-	}
-
-#define DADAOBJ_CLASS_ATTR_DOUBLE_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember) \
-	class_addattr((c),attr_offset_new(attrname,USESYM(float64),(flags),(method)0L,(method)0L,calcoffset(structname,structmember) + calcoffset(substructname,substructmember)+headersize(type)))
-
-#define DADAOBJ_CLASS_ATTR_DOUBLE_ARRAY_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember,size) \
-	class_addattr((c),attr_offset_array_new(attrname,USESYM(float64),(size),(flags),(method)0L,(method)0L,0/*fix*/,calcoffset(structname,structmember)+calcoffset(substructname,substructmember)+headersize(type)))
-
-#define DADAOBJ_CLASS_ATTR_SYM_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember) \
-class_addattr((c),attr_offset_new(attrname,USESYM(symbol),(flags),(method)0L,(method)0L,calcoffset(structname,structmember)+calcoffset(substructname,substructmember)+headersize(type)))
-
-#define DADAOBJ_CLASS_ATTR_ATOM_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember) \
-class_addattr((c),attr_offset_new(attrname,USESYM(atom),(flags),(method)0L,(method)0L,calcoffset(structname,structmember)+calcoffset(substructname,substructmember)+headersize(type)))
-
-
-#define DADAOBJ_CLASS_ATTR_RGBA_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember) \
-	{	DADAOBJ_CLASS_ATTR_DOUBLE_ARRAY_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember,4); \
-		CLASS_ATTR_ACCESSORS(c,attrname,NULL,jgraphics_attr_setrgba); \
-		CLASS_ATTR_PAINT(c,attrname,0); }
 
 
 #define DADAOBJ_JBOX_DECLARE_READWRITE_METHODS(c) \
@@ -89,6 +45,10 @@ class_addmethod(c, (method) dadaobj_jbox_readsinglesymbol, "readsinglesymbol", A
 class_addmethod(c, (method) dadaobj_jbox_acceptsdrag,	"acceptsdrag_unlocked", A_CANT, 0); \
 class_addmethod(c, (method) dadaobj_jbox_acceptsdrag,	"acceptsdrag_locked", A_CANT, 0);
 
+#define DADAOBJ_JBOX_DECLARE_IMAGE_METHODS(c) \
+class_addmethod(c, (method) dadaobj_jbox_exportimage, "exportimage", A_GIMME, 0); \
+class_addmethod(c, (method) dadaobj_jbox_paintjit, "paintjit", A_SYM, 0); \
+class_addmethod(c, (method) dadaobj_jbox_mt, "mt", A_GIMME, 0);
 
 
 
@@ -133,6 +93,8 @@ typedef enum _dadaobj_flags
     DADAOBJ_LABELS            = 0x200000,	///< Can show labels
     DADAOBJ_LABELS_SHOWDEFAULT= 0x400000,	///< Show labels is the default
     DADAOBJ_BORDER_SHOWDEFAULT= 0x800000,	///< Show border by default
+    DADAOBJ_EXPORTTOJITTER    = 0x1000000,    ///< Supports export to Jitter
+    DADAOBJ_GRID_FIXEDDEFAULT  = 0x2000000,    ///< Use fixed grid by default
 } e_dadaobj_flags;
 
 
@@ -165,6 +127,19 @@ typedef enum _dadaobj_tools
 } e_dadaobj_tools;
 
 
+
+typedef struct dada_force_graphics
+{
+    t_jgraphics             *graphic_context;
+    t_rect                  rect;
+    
+    t_pt                    zoom;
+    t_pt                    center_offset;
+    t_pt                    center_pix;
+} t_dada_force_graphics;
+
+
+
 typedef void (*invalidate_and_redraw_fn)(t_object *r_ob);
 typedef long (*dada_mousemove_fn)(t_object *r_ob, t_object *patcherview, t_pt pt, long modifiers);
 typedef t_llll *(*get_state_fn)(t_object *r_ob);
@@ -172,6 +147,7 @@ typedef void (*set_state_fn)(t_object *r_ob, t_llll *ll);
 typedef void *(*pixel_to_dadaitem_fn)(void *dadaobj, t_pt pt, t_object *view, long modifiers, t_pt *coordinates, double selection_pad, void *dadaitem_identifier);
 typedef void *(*preselect_items_in_rectangle_fn)(void *dadaobj, t_object *view, t_rect coord);
 typedef void (*update_solos_fn)(t_object *r_ob);
+typedef void (*dada_paint_ext_fn)(t_object *x, t_object *view, t_dada_force_graphics *force_graphics);
 
 //// DADA ITEMS
 
@@ -386,9 +362,6 @@ typedef struct _interface_manager
 	t_dadaitem				*mousemove_item;
 	struct _dadaitem_identifier	mousemove_item_identifier;
 
-	pixel_to_dadaitem_fn				pixel_to_dadaitem;
-	preselect_items_in_rectangle_fn		preselect_items_in_rectangle;
-	
 	t_llll			*preselection;
 	t_llll			*selection;
     
@@ -399,6 +372,10 @@ typedef struct _interface_manager
 	char			continuously_send_changebang; // upon drag
 	char			send_bang_from_messages;
 	char			send_bang_upon_undo;
+
+    pixel_to_dadaitem_fn                pixel_to_dadaitem;
+    preselect_items_in_rectangle_fn        preselect_items_in_rectangle;
+    
 } t_interface_manager;
 
 
@@ -453,8 +430,9 @@ typedef struct _dadaitem_class
     long                    *num_items_field;   //< If this is not null, this has the precedence on the num_items statically assigned
 	long					num_items;
 	
-	method				postprocess_fn; // process after modification
-	
+    char                selectable;
+    char                include_in_background;
+
 	// Whole class set/get
 	e_dada_func_types	data_set_type;
 	method				data_set_fn;
@@ -473,12 +451,10 @@ typedef struct _dadaitem_class
 	method				data_single_get_fn;
 	t_llll				*data_single_get_args;
 
-	char				selectable;
-    char                include_in_background;
-		
 	method				free_fn;		// Function to free the single dada item, if needed (or NULL)
 	method				identifier_to_dadaitem_fn;
-	
+    method              postprocess_fn; // process after modification
+
 	char				dirty; // utility flag for undo
 } t_dadaitem_class;
 
@@ -493,8 +469,12 @@ typedef struct _item_class_manager
 typedef struct _grid_manager
 {
 	char			snap_to_grid;
-	t_pt			grid_size;
 
+    char            grid_mode; // 0 = fixed, 1 = auto;
+	t_pt			grid_size_fixed; // only meaningful if grid_mode == 0
+    t_pt            grid_size_curr;  // current grid size, used if grid_mode == 1
+    char            must_update_grid_size;
+    
     char			show_grid;
 	t_jrgba			j_gridcolor;
 
@@ -516,6 +496,9 @@ typedef struct _grid_manager
 
 typedef struct _geometry_manager
 {
+    double                  last_used_view_width_pix;
+    double                  last_used_view_height_pix;
+    
 	e_dada_lattice_types	lattice;
 } t_geometry_manager;
 
@@ -551,11 +534,32 @@ typedef struct _bg_manager
 } t_bg_manager;
 
 
+typedef struct _paint_manager
+{
+    t_symbol                    *jit_destination_matrix;
+    char                        dont_repaint;            ///< When this flag is 1, the object is not repainted from dada API
+    char                        notify_when_painted;
+
+    invalidate_and_redraw_fn    invalidate_and_redraw;
+    dada_paint_ext_fn           paint_ext;              ///< Actual generalized paint function
+} t_paint_manager;
+
+typedef struct _mt_manager
+{
+    // mira/miraweb: stuff designed to work with mira.multitouch
+    char finger_state[10];                   ///< State of each finger
+    t_pt finger_pos[10];                     ///< Positions of each finger (in pixels)
+    char pinching;                           ///< Flag telling whether there's pinching going on
+    t_pt zoom_at_pinch_start;                ///< Zoom at the moment the pinch started (X and Y)
+} t_mt_manager;
+
+
 /** The structure for a generic UI object in the dada library */
 typedef struct dadaobj
 {
 	t_object				*orig_obj;		///< Pointer to the original object
-	
+    e_llllobj_obj_types     llllobj_type;  ///< Type of llll object
+    
 	long					flags;			///< A combination of the #e_dadaobj_flags
     
     t_atom_long                 m_version_number;
@@ -572,32 +576,42 @@ typedef struct dadaobj
 	t_geometry_manager			m_geometry;
 	t_zoom_manager				m_zoom;
     t_bg_manager                m_bg;
+    t_paint_manager             m_paint;
+    t_mt_manager                m_mt;
 	
-	
+    t_dada_atomic_lock        l_lock;
+    t_systhread_mutex        l_mutex;        ///< Generic mutex for the object
+    
+    t_shashtable    *IDtable;                ///< A simple hash table containing item hash
+    
 	// Behavior
 	char			save_data_with_patcher;
-
-    invalidate_and_redraw_fn	invalidate_and_redraw;
-    char                        dont_repaint;            ///< When this flag is 1, the object is not repainted from dada API
-    
-    update_solos_fn             update_solos;
+    char            curr_change_is_from_message;
 
 	// Preset fields 
+    t_atom           *preset_av;
+    long            preset_ac;
 	get_state_fn	get_state;
 	set_state_fn	set_state;
-	t_atom			*preset_av;		
-	long			preset_ac;		
 	
 	// Notifications
-	dadanotify_fn	dadanotify;
-	char			curr_change_is_from_message;
+	dadanotify_fn	    dadanotify;
+    update_solos_fn     update_solos;
 
-	t_dada_atomic_lock		l_lock;
-	t_systhread_mutex		l_mutex;		///< Generic mutex for the object
-
-	t_shashtable	*IDtable;				///< A simple hash table containing item hash
-	
 } t_dadaobj;
+
+
+typedef struct dadaobj_object
+{
+    t_llllobj_object         r_ob;
+    t_dadaobj                d_ob;
+} t_dadaobj_object;
+
+typedef struct dadaobj_pxobject
+{
+    t_llllobj_pxobject       r_ob;
+    t_dadaobj                d_ob;
+} t_dadaobj_pxobject;
 
 typedef struct dadaobj_jbox
 {
@@ -613,24 +627,34 @@ typedef struct dadaobj_pxjbox
 
 
 
-long dada_get_current_version_number();
 
 
+
+
+
+/// handling version numbers
+long dada_check_bach_version();
 void dada_error_bachcheck();
-void dada_atomic_lock(t_dadaobj *r_ob);
-void dada_atomic_unlock(t_dadaobj *r_ob);
 
+long dada_get_current_version_number();
 void dadaobj_set_version_number(t_dadaobj *d_ob, long version_number);
 void dadaobj_set_current_version_number(t_dadaobj *d_ob);
 
+// handling package inclusion
+void dadaobj_class_add_fileusage_method(t_class *c);
+
+/// atomic locks
+void dada_atomic_lock(t_dadaobj *r_ob);
+void dada_atomic_unlock(t_dadaobj *r_ob);
+
+
 void dadaobj_setup(t_object *ob, t_dadaobj *r_ob, long flags, t_pt zoom_static_additional,
-				   long playout_outlet, long changebang_outlet, long notification_outlet, invalidate_and_redraw_fn invalidate_and_redraw,
-				   const char *tools, long stores, const char *outlets, ...);
+				   long playout_outlet, long changebang_outlet, long notification_outlet, dada_paint_ext_fn paint_ext, invalidate_and_redraw_fn invalidate_and_redraw, const char *tools);
 void dadaobj_pxjbox_setup(t_dadaobj_pxjbox *b_ob, long flags, t_pt zoom_static_additional,
-						  long playout_outlet, long changebang_outlet, long notification_outlet, invalidate_and_redraw_fn invalidate_and_redraw,
+						  long playout_outlet, long changebang_outlet, long notification_outlet, dada_paint_ext_fn paint_ext, invalidate_and_redraw_fn invalidate_and_redraw,
 						  const char *tools, long stores, const char *outlets, ...);
 void dadaobj_jbox_setup(t_dadaobj_jbox *b_ob, long flags, t_pt zoom_static_additional,
-						long playout_outlet, long changed_bang_outlet, long notification_outlet, invalidate_and_redraw_fn invalidate_and_redraw,
+						long playout_outlet, long changed_bang_outlet, long notification_outlet, dada_paint_ext_fn paint_ext, invalidate_and_redraw_fn invalidate_and_redraw,
 						const char *tools, long stores, const char *outlets, ...);
 void dadaobj_addfunctions(t_dadaobj *d_ob, dada_mousemove_fn mousemove_fn, method clock_task, method undo_postprocess, 
 						  get_state_fn get_state, set_state_fn set_state, pixel_to_dadaitem_fn pixel_to_dadaitem, 
@@ -638,9 +662,10 @@ void dadaobj_addfunctions(t_dadaobj *d_ob, dada_mousemove_fn mousemove_fn, metho
 void dadaobj_free(t_dadaobj *r_ob);
 void dadaobj_jbox_free(t_dadaobj_jbox *b_ob);
 void dadaobj_pxjbox_free(t_dadaobj_pxjbox *r_ob);
-void dadaobj_send_changedbang(t_dadaobj *r_ob, e_llllobj_obj_types type = LLLL_OBJ_UI);
-void dadaobj_send_notification_sym(t_dadaobj *r_ob, t_symbol *sym, e_llllobj_obj_types type = LLLL_OBJ_UI);
-void dadaobj_send_notification_llll(t_dadaobj *r_ob, t_llll *ll, e_llllobj_obj_types type = LLLL_OBJ_UI);
+void dadaobj_send_changedbang(t_dadaobj *r_ob);
+void dadaobj_send_notification_sym(t_dadaobj *r_ob, t_symbol *sym);
+void dadaobj_send_notification_llll(t_dadaobj *r_ob, t_llll *ll);
+void dadaobj_send_painted_notification(t_dadaobj *r_ob);
 
 void dadaobj_invalidate_and_redraw(t_dadaobj *d_ob);
 t_max_err dadaobj_setattr_zoom(t_dadaobj *d_ob, t_object *attr, long ac, t_atom *av);
@@ -653,9 +678,12 @@ long dadaitem_identifier_eq(t_dadaitem_identifier id1, t_dadaitem_identifier id2
 
 
 /// PAINT STUFF
+t_dada_force_graphics dadaobj_get_forced_graphics_from_view(t_dadaobj *r_ob, t_object *view);
+void dadaobj_paint(t_dadaobj *r_ob, t_object *view); // High level wrapper for all the _paint_ext( functions
+
 void dadaobj_paint_background(t_dadaobj *r_ob, t_jgraphics *g, t_rect *rect);
 void dadaobj_paint_border(t_dadaobj *r_ob, t_jgraphics *g, t_rect *rect);
-void dadaobj_paint_grid(t_dadaobj *r_ob, t_object *view, t_rect rect, t_pt center);
+void dadaobj_paint_grid(t_dadaobj *r_ob, t_object *view, t_dada_force_graphics *force_graphics);
 
 
 // ATTRIBUTES
@@ -688,6 +716,10 @@ t_object *dadaobj_get_patcher(t_dadaobj *r_ob);
 t_object *dadaobj_get_firstview(t_dadaobj *r_ob);
 
 
+void dadaobj_jbox_exportimage(t_dadaobj_jbox *x, t_symbol *s, long argc, t_atom *argv);
+void dadaobj_jbox_paintjit(t_dadaobj_jbox *x, t_symbol *matrix_name);
+
+
 // MUTEXES
 void dadaobj_mutex_lock(t_dadaobj *r_ob);
 void dadaobj_mutex_unlock(t_dadaobj *r_ob);
@@ -695,4 +727,56 @@ void dadaobj_mutex_unlock(t_dadaobj *r_ob);
 long dadaobj_anything_handle_domain_or_range(t_dadaobj *r_ob, t_symbol *router, t_llll *args, long outletnum = -1); // -1 means: use notification outlet
 
 long dadaobj_parse_export_png_syntax(t_dadaobj *r_ob, t_object *view, t_llll *ll, t_symbol **filename, long *dpi, double *width, double *height, t_pt *exportcenter);
+
+
+
+
+
+
+// ATTRIBUTES MACROS WITH SUBSTRUCTURES
+//#define headersize(type) (type == LLLL_OBJ_UI ? sizeof(t_llllobj_jbox) : (type == LLLL_OBJ_UIMSP ? sizeof(t_llllobj_pxjbox) : (type == LLLL_OBJ_MSP ? sizeof(t_llllobj_pxobject) : (type == LLLL_OBJ_VANILLA ? sizeof(t_llllobj_object) : 0))))
+
+#define headersize(type) (type == LLLL_OBJ_UI ? calcoffset(t_dadaobj_jbox, d_ob) : (type == LLLL_OBJ_UIMSP ? calcoffset(t_dadaobj_pxjbox, d_ob) : (type == LLLL_OBJ_MSP ? calcoffset(t_dadaobj_pxobject, d_ob) : (type == LLLL_OBJ_VANILLA ? calcoffset(t_dadaobj_object, d_ob) : 0))))
+
+#define DADAOBJ_CLASS_ATTR_DOUBLE(c,type,attrname,flags,structname,structmember) \
+class_addattr((c),attr_offset_new(attrname,USESYM(float64),(flags),(method)0L,(method)0L,calcoffset(structname,structmember)+headersize(type)))
+
+#define DADAOBJ_CLASS_ATTR_CHAR(c,type,attrname,flags,structname,structmember) \
+class_addattr((c),attr_offset_new(attrname,USESYM(char),(flags),(method)0L,(method)0L,calcoffset(structname,structmember)+headersize(type)))
+
+#define DADAOBJ_CLASS_ATTR_LONG(c,type,attrname,flags,structname,structmember) \
+class_addattr((c),attr_offset_new(attrname,USESYM(long),(flags),(method)0L,(method)0L,calcoffset(structname,structmember)+headersize(type)))
+
+#define DADAOBJ_CLASS_ATTR_DOUBLE_ARRAY(c,type,attrname,flags,structname,structmember,size) \
+class_addattr((c),attr_offset_array_new(attrname,USESYM(float64),(size),(flags),(method)0L,(method)0L,0/*fix*/,calcoffset(structname,structmember)+headersize(type)))
+
+
+#define DADAOBJ_CLASS_ATTR_CHAR_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember) \
+class_addattr((c),attr_offset_new(attrname,USESYM(char),(flags),(method)0L,(method)0L,calcoffset(structname,structmember)+calcoffset(substructname,substructmember)+headersize(type)))
+
+#define DADAOBJ_CLASS_ATTR_LONG_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember) \
+{        \
+C74_STATIC_ASSERT(structmembersize(substructname,substructmember)==sizeof(long), "structmember must be long type"); \
+class_addattr((c),attr_offset_new(attrname,USESYM(long),(flags),(method)0L,(method)0L,calcoffset(structname,structmember)+calcoffset(substructname,substructmember)+headersize(type))); \
+}
+
+#define DADAOBJ_CLASS_ATTR_DOUBLE_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember) \
+class_addattr((c),attr_offset_new(attrname,USESYM(float64),(flags),(method)0L,(method)0L,calcoffset(structname,structmember) + calcoffset(substructname,substructmember)+headersize(type)))
+
+#define DADAOBJ_CLASS_ATTR_DOUBLE_ARRAY_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember,size) \
+class_addattr((c),attr_offset_array_new(attrname,USESYM(float64),(size),(flags),(method)0L,(method)0L,0/*fix*/,calcoffset(structname,structmember)+calcoffset(substructname,substructmember)+headersize(type)))
+
+#define DADAOBJ_CLASS_ATTR_SYM_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember) \
+class_addattr((c),attr_offset_new(attrname,USESYM(symbol),(flags),(method)0L,(method)0L,calcoffset(structname,structmember)+calcoffset(substructname,substructmember)+headersize(type)))
+
+#define DADAOBJ_CLASS_ATTR_ATOM_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember) \
+class_addattr((c),attr_offset_new(attrname,USESYM(atom),(flags),(method)0L,(method)0L,calcoffset(structname,structmember)+calcoffset(substructname,substructmember)+headersize(type)))
+
+
+#define DADAOBJ_CLASS_ATTR_RGBA_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember) \
+{    DADAOBJ_CLASS_ATTR_DOUBLE_ARRAY_SUBSTRUCTURE(c,type,attrname,flags,structname,structmember,substructname,substructmember,4); \
+CLASS_ATTR_ACCESSORS(c,attrname,NULL,jgraphics_attr_setrgba); \
+CLASS_ATTR_PAINT(c,attrname,0); }
+
+
 #endif // _DADA_OBJECT_H_

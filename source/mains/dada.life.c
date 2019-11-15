@@ -206,6 +206,7 @@ void life_free(t_life *x);
 void life_assist(t_life *x, void *b, long m, long a, char *s);
 
 void life_paint(t_life *x, t_object *view);
+void life_paint_ext(t_life *x, t_object *view, t_dada_force_graphics *force_graphics);
 
 
 void life_int(t_life *x, t_atom_long num);
@@ -570,6 +571,7 @@ void life_set_custom_rule(t_life *x, t_symbol *rule)
 	string = (t_object *)object_new(CLASS_NOBOX, gensym("string"), buf);
 	atom_setobj(&str, string);
 	
+    /*
     t_symbol *ps_addsymbol = gensym("addsymbol");
     object_method(x->clang, ps_addsymbol, gensym("acosh"), &acosh);
     object_method(x->clang, ps_addsymbol, gensym("asinh"), &asinh);
@@ -578,6 +580,7 @@ void life_set_custom_rule(t_life *x, t_symbol *rule)
     object_method(x->clang, ps_addsymbol, gensym("hypot"), &hypot);
     object_method(x->clang, ps_addsymbol, gensym("trunc"), &trunc);
     object_method(x->clang, ps_addsymbol, gensym("round"), &round);
+    */
     
 	// compile the string
 	object_method_typed(x->clang, gensym("compile"), 1, &str, &ret);
@@ -612,7 +615,7 @@ void life_set_custom_rule(t_life *x, t_symbol *rule)
 //////////////////////// global class pointer variable
 t_class *life_class;
 
-int C74_EXPORT main(void)
+void C74_EXPORT ext_main(void *moduleRef)
 {	
 	t_class *c;
 	
@@ -620,9 +623,9 @@ int C74_EXPORT main(void)
 	llllobj_common_symbols_init();
 	
 
-	if (llllobj_check_version(bach_get_current_llll_version()) || llllobj_test()) {
+	if (dada_check_bach_version() || llllobj_test()) {
 		dada_error_bachcheck();
-		return 1;
+		return;
 	}
 
 	srand(time(NULL)); // needed for the random function
@@ -716,7 +719,7 @@ int C74_EXPORT main(void)
     
     // @method dump @digest Dump current state
     // @description The word <m>dump</m> dumps the state of all the cells in the form
-    // <b>life (world <m>CELLS</m>)</b>, where <m>CELLS</m> is an llll containing <m>N</m> sub-lllls, each containing <m>N</m> integers
+    // <b>life [world <m>CELLS</m>]</b>, where <m>CELLS</m> is an llll containing <m>N</m> sub-lllls, each containing <m>N</m> integers
     // (i.e. it is a <m>N</m>-by-<m>N</m> matrix). Each integer represents the state of a cell, and <m>N</m> equals exactly the world <m>size</m>
     // (see <m>size</m> attribute). The state of the cell must be an integer from 0 to 255.
 	class_addmethod(c, (method)life_anything,		"dump",		A_GIMME,	0);
@@ -736,7 +739,7 @@ int C74_EXPORT main(void)
     // @method random @digest Create random active cells
     // @description The word <m>random</m> sets the state of some random cells to 1, by default setting all other cells to 0.
     // The word can be further followed by a list formatted as:
-    // <b>(<m>specification</m> <m>value</m>) (<m>specification</m> <m>value</m>)...</b>. <br />
+    // <b>[<m>specification</m> <m>value</m>] [<m>specification</m> <m>value</m>]...</b>. <br />
     // Each specification can be one of the followings: <br />
     // • "distribution": the value is expected to be either "gaussian" or "uniform"; <br />
     // • "density": the floating point density of cells for the distribution; <br />
@@ -755,7 +758,7 @@ int C74_EXPORT main(void)
     // @method exportpng @digest Export PNG image
     // @description The word <m>exportpng</m>, followed by an file path, exports the current canvas as a PNG image.
     // This can be further followed by a list formatted as:
-    // <b>(<m>specification</m> <m>value</m>) (<m>specification</m> <m>value</m>)...</b>. <br />
+    // <b>[<m>specification</m> <m>value</m>] [<m>specification</m> <m>value</m>]...</b>. <br />
     // Each specification can be one of the followings: <br />
     // • "dpi": the value is expected to be the dpi resolution of the exported image; <br />
     // • "width": the value is expected to be the width of the exported image in pixels; <br />
@@ -789,10 +792,11 @@ int C74_EXPORT main(void)
 
     
     DADAOBJ_JBOX_DECLARE_READWRITE_METHODS(c);
+    DADAOBJ_JBOX_DECLARE_IMAGE_METHODS(c);
     DADAOBJ_JBOX_DECLARE_ACCEPTSDRAG_METHODS(c);
 
 	llllobj_class_add_out_attr(c, LLLL_OBJ_UI);
-	dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BBG | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_EMBED | DADAOBJ_MOUSEHOVER | DADAOBJ_NOTIFICATIONS);
+	dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BBG | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_EMBED | DADAOBJ_MOUSEHOVER | DADAOBJ_NOTIFICATIONS | DADAOBJ_EXPORTTOJITTER);
 	CLASS_ATTR_FILTER_CLIP(c, "zoom", 10, 1000);
 
 	
@@ -1066,9 +1070,10 @@ int C74_EXPORT main(void)
 	
 	class_register(CLASS_BOX, c); /* CLASS_NOBOX */
 	life_class = c;
+    dadaobj_class_add_fileusage_method(c);
 
 	dev_post("dada.life compiled %s %s", __DATE__, __TIME__);
-	return 0;
+	return;
 }
 
 
@@ -1252,7 +1257,7 @@ t_max_err life_setattr_cellsize(t_life *x, t_object *attr, long ac, t_atom *av)
 		long size;
 		
 		t_llll *parsed = llllobj_parse_llll((t_object *) x, LLLL_OBJ_UI, NULL, ac, av, LLLL_PARSE_CLONE);
-		atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE);
+		atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE | LLLL_D_PARENS);
 		
 		if (text && *text) {
 			// Equation introduced
@@ -1291,7 +1296,7 @@ t_max_err life_setattr_cellalpha(t_life *x, t_object *attr, long ac, t_atom *av)
 		long size;
 		
 		t_llll *parsed = llllobj_parse_llll((t_object *) x, LLLL_OBJ_UI, NULL, ac, av, LLLL_PARSE_CLONE);
-		atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE);
+		atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE | LLLL_D_PARENS);
 		
 		if (text && *text) {
 			// Equation introduced
@@ -1330,7 +1335,7 @@ t_max_err life_setattr_cellred(t_life *x, t_object *attr, long ac, t_atom *av)
 		long size;
 		
 		t_llll *parsed = llllobj_parse_llll((t_object *) x, LLLL_OBJ_UI, NULL, ac, av, LLLL_PARSE_CLONE);
-		atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE);
+		atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE | LLLL_D_PARENS);
 		
 		if (text && *text) {
 			// Equation introduced
@@ -1370,7 +1375,7 @@ t_max_err life_setattr_cellgreen(t_life *x, t_object *attr, long ac, t_atom *av)
 		long size;
 		
 		t_llll *parsed = llllobj_parse_llll((t_object *) x, LLLL_OBJ_UI, NULL, ac, av, LLLL_PARSE_CLONE);
-		atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE);
+		atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE | LLLL_D_PARENS);
 		
 		if (text && *text) {
 			// Equation introduced
@@ -1409,7 +1414,7 @@ t_max_err life_setattr_cellblue(t_life *x, t_object *attr, long ac, t_atom *av)
 		long size;
 		
 		t_llll *parsed = llllobj_parse_llll((t_object *) x, LLLL_OBJ_UI, NULL, ac, av, LLLL_PARSE_CLONE);
-		atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE);
+		atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE | LLLL_D_PARENS);
 		
 		if (text && *text) {
 			// Equation introduced
@@ -1450,7 +1455,7 @@ t_max_err life_setattr_cents(t_life *x, t_object *attr, long ac, t_atom *av)
 		long size;
 		
 		t_llll *parsed = llllobj_parse_llll((t_object *) x, LLLL_OBJ_UI, NULL, ac, av, LLLL_PARSE_CLONE);
-		atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE);
+		atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE | LLLL_D_PARENS);
 
 		if (parsed->l_head && hatom_gettype(&parsed->l_head->l_hatom) == H_SYM && hatom_getsym(&parsed->l_head->l_hatom) == gensym("custom")) {
 			// nothing to do
@@ -1508,7 +1513,7 @@ t_max_err life_setattr_velocity(t_life *x, t_object *attr, long ac, t_atom *av)
 		long size;
 		
 		t_llll *parsed = llllobj_parse_llll((t_object *) x, LLLL_OBJ_UI, NULL, ac, av, LLLL_PARSE_CLONE);
-		atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE);
+		atom_gettext(ac, av, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE | LLLL_D_PARENS);
 		
 		if (parsed->l_head && hatom_gettype(&parsed->l_head->l_hatom) == H_SYM && hatom_getsym(&parsed->l_head->l_hatom) == gensym("custom")) {
 			// nothing to do
@@ -1842,7 +1847,7 @@ void *life_new(t_symbol *s, long argc, t_atom *argv)
 		x->b_ob.r_ob.l_box.b_firstin = (t_object *)x;
 		x->n_proxy1 = proxy_new((t_object *) x, 1, &x->n_in);
 
-		dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BBG | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_CHANGEDBANG | DADAOBJ_NOTIFICATIONS, build_pt(10., 10.), 2, 3, 2, (invalidate_and_redraw_fn)life_iar, "vn", 2, "b444");
+		dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BBG | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_CHANGEDBANG | DADAOBJ_NOTIFICATIONS, build_pt(10., 10.), 2, 3, 2, (dada_paint_ext_fn)life_paint_ext, (invalidate_and_redraw_fn)life_iar, "vn", 2, "b444");
 		dadaobj_addfunctions(dadaobj_cast(x), (dada_mousemove_fn)life_mousemove, NULL, NULL, (get_state_fn)life_get_state, (set_state_fn)life_set_state, NULL, NULL, NULL);
 
 
@@ -2124,16 +2129,20 @@ void life_anything(t_life *x, t_symbol *msg, long ac, t_atom *av)
             t_llll *ll = symbol_and_long_to_llll(gensym("cellsum"), life_getcellsum(x));
             llllobj_outlet_llll((t_object *)x, LLLL_OBJ_UI, 1, ll);
 
-        } else if (router == gensym("exportpng")) {
+/*        } else if (router == gensym("exportpng")) {
             long dpi;
             t_symbol *filename;
             double width, height;
             t_pt exportcenter;
             if (!dadaobj_parse_export_png_syntax(dadaobj_cast(x), NULL, parsed, &filename, &dpi, &width, &height, &exportcenter))
-                life_exportpng(x, filename, dpi, width, height, exportcenter);
+                life_exportpng(x, filename, dpi, width, height, exportcenter); */
 		} else if (router == gensym("rule")) {
-			if (parsed->l_head && hatom_gettype(&parsed->l_head->l_hatom) == H_SYM)
-				life_set_custom_rule(x, hatom_getsym(&parsed->l_head->l_hatom));
+            char *buf = NULL;
+            llll_to_text_buf(parsed, &buf);
+            life_set_custom_rule(x, gensym(buf));
+//			if (parsed->l_head && hatom_gettype(&parsed->l_head->l_hatom) == H_SYM)
+//				life_set_custom_rule(x, hatom_getsym(&parsed->l_head->l_hatom));
+            bach_freeptr(buf);
 		}
 		
 	} else if (parsed) {
@@ -2208,11 +2217,11 @@ void life_paint_notes(t_life *x, t_jgraphics *g, t_object *view, t_rect rect, t_
 			}
 		}
 		
-		if (use_layers)
+		if (use_layers && view)
 			jbox_end_layer((t_object *)x, view, gensym("notes"));
 	}
 
-	if (use_layers)
+	if (use_layers && view)
 		jbox_paint_layer((t_object *)x, view, gensym("notes"), 0., 0.);	// position of the layer
 }
 
@@ -2391,25 +2400,20 @@ void life_paint_world(t_life *x, t_jgraphics *g, t_object *view, t_rect rect, t_
 
 
 
-void life_paint(t_life *x, t_object *view)
+void life_paint_ext(t_life *x, t_object *view, t_dada_force_graphics *force_graphics)
 {
 	
-	t_jgraphics *g;
-	t_rect rect;
-	t_pt center;
-
-	// getting rectangle dimensions
-	g = (t_jgraphics*) patcherview_get_jgraphics(view); 
-	jbox_get_rect_for_view((t_object *)x, view, &rect);
-	center = get_center_pix(dadaobj_cast(x), view, &rect);
+	t_jgraphics *g = force_graphics->graphic_context;
+	t_rect rect = force_graphics->rect;
+	t_pt center = force_graphics->center_pix;
 
     dadaobj_paint_background(dadaobj_cast(x), g, &rect);
     
 	jgraphics_set_source_rgba(g, 0, 0, 0, 0.3);
-	life_paint_notes(x, NULL, view, rect, center, false); // paint notes, but with 0.3 alpha channel
+    life_paint_notes(x, view ? NULL : force_graphics->graphic_context, view, rect, center, false); // paint notes, but with 0.3 alpha channel
 	jgraphics_set_source_rgba(g, 0, 0, 0, 1.);
 	
-	life_paint_world(x, NULL, view, rect, center);
+	life_paint_world(x, view ? NULL : force_graphics->graphic_context, view, rect, center);
 	
 	if (!x->b_ob.d_ob.m_interface.mouse_is_down && x->hovered_idx >= 0) {
 		char buf[100];
@@ -2423,6 +2427,11 @@ void life_paint(t_life *x, t_object *view)
 	}
     
     dadaobj_paint_border(dadaobj_cast(x), g, &rect);
+}
+
+void life_paint(t_life *x, t_object *view)
+{
+    dadaobj_paint(dadaobj_cast(x), view);
 }
 
 void life_exportpng(t_life *x, t_symbol *file, long dpi, double width, double height, t_pt exportcenteroffset)

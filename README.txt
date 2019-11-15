@@ -21,6 +21,7 @@ Acknowledgments
 * `Sorbonne Universités <http://www.sorbonne-university.com/>`_ (Paris, France)
 * `CNRS <http://www.cnrs.fr/>`_ (France)
 
+The windows porting of **dada** has been carried out by Andrea Agostini.
 
 
 Install
@@ -30,14 +31,14 @@ If you only need to use **dada**, you can download it from www.bachproject.net/d
 
 You can start by having a look at the dada.overview patcher inside the Extras menu in Max ("dada library" submenu). Every module has help files and reference sheets that document its behavior.
 
-If you want to improve *dada* or add other modules, you'll need some libraries:
+If you want to compile *dada*:
+* you'll need the `bach library <http://www.bachproject.net>`_, with its sources, installed as a Max package (at the same location where the *dada* folder is) and its dependencies (including the `Max SDK <https://cycling74.com/downloads/sdk>`_)
+* If you want to compile dada.music~, you need to have the GNU `GMP <https://gmplib.org/>`_ and `MPFR <https://www.mpfr.org/>`_ libraries installed. On OSX, they are expected to be at /usr/local/opt/gmp and /usr/local/opt/mpfr respectively (modify the Xcode parameters if you have them elsewhere); if you install them with Homebrew, they should be in those places. On Windows, we use MPIR (https://www.mpir.org) instead of GMP, and Brian Gladman's Windows port of MPFR (https://github.com/BrianGladman/mpfr.git), which are expected to be installed in C:\Program Files\mpir and C:\Program Files\mpfr respectively. For linking with dada, we retargeted the MPIR and MPFR Visual Studio Projects to the Windows SDK 8.1, but we are not sure that this is necessary. Feel free to experiment!
+they should be installed respectively at C:\Program Files\boost
+* If you want to compile dada.graph, you need to have the `Boost <https://www.boost.org/>`_ library (version 1.71 works properly). On OSX, it must be installed at /usr/local/opt/boost (modify the Xcode parameters if you have it elsewhere); if you install it with Homebrew, it should be in that place. On Windows, it must be installed at C:\Program Files\boost\boost_1_71_0. There is no need to build the Boost binaries.
+* The dada.distances target uses the a modified version of the `SimpleMatrix <https://github.com/wq2012/SimpleMatrix>`_ library, included by permission of its creator Quan Wang.
 
-* The `bach library <http://www.bachproject.net>`_ 
-* The `bach 0.8 SDK <http://www.bachproject.net/download-2/>`_
-* `Simple Matrix <https://sites.google.com/site/simpmatrix/>`_ library (v4.1), used for multidimensional scaling in the dada.distances module
-* The `Boost <http://www.boost.org>`_ library, used for graph placement algorithms in the dada.graph module
-
-The Max documentation for all modules is compiled from the sources by running `Doctor Max <https://github.com/danieleghisi/DoctorMax>`_ with the preferences stored in the file "docs/dada_DoctorMax_settings.txt"
+The Max documentation for all modules is compiled from the sources by running `Doctor Max <https://github.com/danieleghisi/DoctorMax>`_ with the preferences stored in the file "docs/dada_DoctorMax_settings.txt", which needs to be modified for your own machine.
 
 
 Related projects
@@ -52,20 +53,4 @@ Related projects
 Copyrights
 ==========
 
-* Copyright (c) 2017 Daniele Ghisi
-
-
-License
-=======
-
-dada is free software: you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-dada is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Lesser General Public License for more details.
-
-Read the LICENSE.txt file for more details.
+* Copyright (c) 2017-2019 Daniele Ghisi

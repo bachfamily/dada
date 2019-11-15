@@ -4,9 +4,9 @@
 	by Daniele Ghisi
 */
 
-#include "bach.h"
+#include "foundation/bach.h"
 #include "dada.notation_spectral.h" // notation.h is inside here
-#include "llll_settheory.h"
+#include "math/llll_settheory.h"
 
 /// ******************************
 /// SPECTROGRAM FUNCTIONS

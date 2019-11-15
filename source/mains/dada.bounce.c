@@ -43,7 +43,7 @@
 #include "dada.interface.h"
 #include "dada.geometry.h"
 #include "dada.paint.h"
-#include "notation.h"
+#include "notation/notation.h"
 //#include "dada.cursors.data.c"
 #include "dada.math.h"
 #include "dada.graphs.h"
@@ -107,7 +107,7 @@ typedef struct _bounce
 {
 	t_dadaobj_jbox		b_ob; // root object
 
-    char                metadata_type;
+    long                metadata_type;
     
 	// balls
 	t_dada_ball			*balls;
@@ -159,6 +159,7 @@ void bounce_free(t_bounce *x);
 void bounce_assist(t_bounce *x, void *b, long m, long a, char *s);
 
 void bounce_paint(t_bounce *x, t_object *view);
+void bounce_paint_ext(t_bounce *x, t_object *view, t_dada_force_graphics *force_graphics);
 
 
 void bounce_int(t_bounce *x, t_atom_long num);
@@ -582,7 +583,7 @@ void move_connected_component_delta(t_bounce *x, long idx, t_pt delta_coord, cha
 //////////////////////// global class pointer variable
 t_class *bounce_class;
 
-int C74_EXPORT main(void)
+void C74_EXPORT ext_main(void *moduleRef)
 {	
 	t_class *c;
 	
@@ -591,9 +592,9 @@ int C74_EXPORT main(void)
 	
 	srand(time(NULL)); // needed for the shake function
 
-	if (llllobj_check_version(bach_get_current_llll_version()) || llllobj_test()) {
+	if (dada_check_bach_version() || llllobj_test()) {
 		dada_error_bachcheck();
-		return 1;
+		return;
 	}
 
 
@@ -664,28 +665,28 @@ int C74_EXPORT main(void)
 	// @method move @digest Translate elements
 	// @description The word <m>move</m> followed by an element type (either <m>vertex</m> or
     // <m>edge</m> or <m>component</m> or <m>ball</m>), followed by the index of a shape or ball and a
-    // vector in wrapped <b>(<m>x</m> <m>y</m>)</b> syntax,
+    // vector in wrapped <b>[<m>x</m> <m>y</m>]</b> syntax,
 	// translates the element by the given vector.
     // @marg 0 @name element_type @optional 0 @type symbol
     // @marg 1 @name element_index @optional 0 @type long
     // @marg 2 @name delta_coord @optional 0 @type llll
-    // @example move component 1 (10 10) @caption Move the 1st connected component by (10, 10)
-    // @example move vertex 5 (-4 0) @caption Move the 5th vertex by (-4, 0)
-    // @example move edge 3 (0 10) @caption Shift 2nd edge up by 10
-    // @example move ball 1 (0 10) @caption Shift 1st ball up by 10
+    // @example move component 1 [10 10] @caption Move the 1st connected component by (10, 10)
+    // @example move vertex 5 [-4 0] @caption Move the 5th vertex by (-4, 0)
+    // @example move edge 3 [0 10] @caption Shift 2nd edge up by 10
+    // @example move ball 1 [0 10] @caption Shift 1st ball up by 10
     class_addmethod(c, (method)bounce_anything,	"move",		A_GIMME,	0);
 
     // @method rotate @digest Rotate elements
     // @description The word <m>rotate</m> followed by an element type (either <m>component</m> or <m>ball</m>),
     // followed by the index of a shape and an angle in radians
     // rotates the element by the given angle. If the angle is terminates with the degrees ° symbol after the number (without any spaces)
-    // or if it is given as an llll of the form <b>(<m>angle</m> deg)</b>,
+    // or if it is given as an llll of the form <b>[<m>angle</m> deg]</b>,
     // then the angle is assumed to be in degrees.
     // @marg 0 @name element_type @optional 0 @type symbol
     // @marg 1 @name element_index @optional 0 @type long
     // @marg 2 @name angle @optional 0 @type number/llll
     // @example rotate component 1 2 @caption Rotate the 1st connected component by 2 radians
-    // @example rotate ball 1 (30 deg) @caption Rotate the 1st ball by 30 degrees
+    // @example rotate ball 1 [30 deg] @caption Rotate the 1st ball by 30 degrees
     class_addmethod(c, (method)bounce_anything,	"rotate",		A_GIMME,	0);
     
     // @method scale @digest Scale elements
@@ -704,7 +705,7 @@ int C74_EXPORT main(void)
     // @description Adds a new ball in the room. The correct syntax is:
     // <b>addball <m>BALL_SYNTAX</m></b>, where the ball syntax is the one
     // documented in the <m>dump</m> message. The ball syntax should NOT be wrapped in parenthesis.
-    // For instance, a valid message is: <b>addball (coord -90. 20.) (speed 100. 30.) (color 0.4 0. 0. 1.)</b>
+    // For instance, a valid message is: <b>addball [coord -90. 20.] [speed 100. 30.] [color 0.4 0. 0. 1.]</b>
     // After the ball has been added, a notification is sent through the second outlet in the form
     // <b>addball <m>ball_index</m></b>.
     // @marg 0 @name ball_syntax @optional 0 @type llll
@@ -720,13 +721,13 @@ int C74_EXPORT main(void)
     // @method split @digest Split edges
     // @description The word <m>split</m> followed by the <m>edge</m> symbol,
     // by the index of the edge to be split, and by the wrapped llll with the
-    // splitting <b>(<m>x</m> <m>y</m>)</b> coordinates, splits the given edge
+    // splitting <b>[<m>x</m> <m>y</m>]</b> coordinates, splits the given edge
     // at the specified point, and outputs a notification through the second outlet
     // containing the <m>edge split</m> symbols, plus the sequence of newly created edges.
     // @marg 0 @name edge @optional 0 @type symbol
     // @marg 1 @name edge_index @optional 0 @type long
     // @marg 2 @name split_point @optional 0 @type llll
-    // @example split edge 3 (-40 0) @caption Split 3rd edge by adding a point at (-40, 0)
+    // @example split edge 3 [-40 0] @caption Split 3rd edge by adding a point at (-40, 0)
     class_addmethod(c, (method)bounce_anything,	"split",		A_GIMME,	0);
 
     
@@ -735,16 +736,16 @@ int C74_EXPORT main(void)
     // and the edge or vertex index, assigns metadata to a vertex or an edge.
     // The metadata should be contained in the llll specified as
     // further argument.
-    // If the metadata <m>type</m> is set to "Pitch and velocity", such llll should contain a specification such as <b>(pitch <m>mc</m>)</b> and/or
-    // <b>(velocity <m>vel</m>)</b>.
+    // If the metadata <m>type</m> is set to "Pitch and velocity", such llll should contain a specification such as <b>[pitch <m>mc</m>]</b> and/or
+    // <b>[velocity <m>vel</m>]</b>.
     // If the metadata <m>type</m> is set to "Scores", such llll should be the score itself.
     // @marg 0 @name element_type @optional 0 @type symbol
     // @marg 1 @name element_index @optional 0 @type long
     // @marg 2 @name metadata @optional 0 @type llll
-    // @example meta edge 5 (pitch 6300) (vel 80) @caption Assign a pitch of 6300 cents and a velocity of 80 as metadata for 5th edge
-    // @example meta vertex 4 (pitch 6300) (vel 80) @caption The same, for 4th vertex
-    // @example meta edge 1 (score roll ((200 (7200. 405. 100)) (700 (6300. 405. 100)))) @caption Assign a bach.roll syntax as score metadata for edge 1
-    // @example meta edge 1 (score score (((( 4 4 ) (( 1/4 120 ))) ( 1 ( 4700. 100 0 ))))) @caption Assign a bach.score syntax as score metadata for edge 1
+    // @example meta edge 5 [pitch 6300] [vel 80] @caption Assign a pitch of 6300 cents and a velocity of 80 as metadata for 5th edge
+    // @example meta vertex 4 [pitch 6300] [vel 80] @caption The same, for 4th vertex
+    // @example meta edge 1 [score roll [[200 [7200. 405. 100]] [700 [6300. 405. 100]]]] @caption Assign a bach.roll syntax as score metadata for edge 1
+    // @example meta edge 1 [score score [[[[ 4 4 ] [[ 1/4 120 ]]] [ 1 [ 4700. 100 0 ]]]]] @caption Assign a bach.score syntax as score metadata for edge 1
     class_addmethod(c, (method)bounce_anything,	"meta",		A_GIMME,	0);
     
     
@@ -776,7 +777,7 @@ int C74_EXPORT main(void)
 
     // @method dump @digest Output state
     // @description Outputs the current state of the object. The syntax is
-    // <b>bounce (room <m>GRAPH</m>) (balls <m>BALL1</m> <m>BALL2</m>...)</b>.
+    // <b>bounce [room <m>GRAPH</m>] [balls <m>BALL1</m> <m>BALL2</m>...]</b>.
     // each ball is in the syntax
     // <b>(coord <m>x</m> <m>y</m>) (speed <m>x</m> <m>y</m>) (color <m>r</m> <m>g</m> <m>b</m> <m>a</m>)
     // (channel <m>MIDIchannel</m>) (flags <m>flags</m>)</b>. <br />
@@ -796,14 +797,14 @@ int C74_EXPORT main(void)
 
     // @method notes @digest Assign pitches and velocities
     // @description When <m>type</m> is set to "Pitch and Velocity", the <m>notes</m> message assigns
-    // a pitch and velocity to each of the edges. An llll of type <b>(<m>pitch</m> <m>vel</m>) (<m>pitch</m> <m>vel</m>)...</b>
+    // a pitch and velocity to each of the edges. An llll of type <b>[<m>pitch</m> <m>vel</m>] [<m>pitch</m> <m>vel</m>]...</b>
     // is expected as argument.
     // @marg 0 @name pitch_and_vels @optional 0 @type llll
     class_addmethod(c, (method)bounce_anything,	"notes",			A_GIMME,	0);
 
     // @method scores @digest Assign scores
     // @description When <m>type</m> is set to "Scores", the <m>scores</m> message assigns
-    // a score to each of the edges. An llll of type <b>(<m>SCORE1</m>) (<m>SCORE2</m>)...</b>
+    // a score to each of the edges. An llll of type <b>[<m>SCORE1</m>] [<m>SCORE2</m>]...</b>
     // is expected as argument, where each <m>SCORE</m> is usually a <o>bach.roll</o> or <o>bach.score</o> gathered syntax,
     // but can also be any other llll.
     // @marg 0 @name scores @optional 0 @type llll
@@ -862,10 +863,11 @@ int C74_EXPORT main(void)
   
 
     DADAOBJ_JBOX_DECLARE_READWRITE_METHODS(c);
+    DADAOBJ_JBOX_DECLARE_IMAGE_METHODS(c);
     DADAOBJ_JBOX_DECLARE_ACCEPTSDRAG_METHODS(c);
 
 	llllobj_class_add_out_attr(c, LLLL_OBJ_UI);
-	dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_EMBED | DADAOBJ_MOUSEHOVER | DADAOBJ_GRID | DADAOBJ_LABELS | DADAOBJ_SNAPTOGRID | DADAOBJ_AXES | DADAOBJ_UNDO | DADAOBJ_PLAY | DADAOBJ_NOTIFICATIONS | DADAOBJ_BORDER | DADAOBJ_BORDER_SHOWDEFAULT);
+	dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_EMBED | DADAOBJ_MOUSEHOVER | DADAOBJ_GRID | DADAOBJ_LABELS | DADAOBJ_SNAPTOGRID | DADAOBJ_AXES | DADAOBJ_UNDO | DADAOBJ_PLAY | DADAOBJ_NOTIFICATIONS | DADAOBJ_BORDER | DADAOBJ_BORDER_SHOWDEFAULT | DADAOBJ_EXPORTTOJITTER);
 
 	
 	CLASS_ATTR_DEFAULT(c, "patching_rect", 0, "0 0 300 300");
@@ -991,9 +993,10 @@ int C74_EXPORT main(void)
 		
 	class_register(CLASS_BOX, c); /* CLASS_NOBOX */
 	bounce_class = c;
+    dadaobj_class_add_fileusage_method(c);
 
 	dev_post("dada.bounce compiled %s %s", __DATE__, __TIME__);
-	return 0;
+	return;
 }
 
 t_max_err bounce_notify(t_bounce *x, t_symbol *s, t_symbol *msg, void *sender, void *data)
@@ -1307,7 +1310,7 @@ void *bounce_new(t_symbol *s, long argc, t_atom *argv)
 	t_dictionary *d = NULL;
 	long boxflags;
 	t_llll *llll_for_rebuild = NULL;
-	
+
 	if (!(d = object_dictionaryarg(argc,argv)))
 		return NULL;    
 	
@@ -1338,7 +1341,7 @@ void *bounce_new(t_symbol *s, long argc, t_atom *argv)
 		x->b_ob.r_ob.l_box.b_firstin = (t_object *)x;
 		x->n_proxy1 = proxy_new((t_object *) x, 1, &x->n_in);
 
-		dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_UNDO | DADAOBJ_CHANGEDBANG | DADAOBJ_NOTIFICATIONS, build_pt(1., 1.), 2, 4, 1, (invalidate_and_redraw_fn)bounce_iar, "qnvsrl", 2, "b4444");
+		dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_UNDO | DADAOBJ_CHANGEDBANG | DADAOBJ_NOTIFICATIONS, build_pt(1., 1.), 2, 4, 1, (dada_paint_ext_fn)bounce_paint_ext, (invalidate_and_redraw_fn)bounce_iar, "qnvsrl", 2, "b4444");
 
         dadaobj_addfunctions(dadaobj_cast(x), (dada_mousemove_fn)bounce_mousemove, (method)bounce_task, (method)bounce_postprocess_undo, (get_state_fn)bounce_get_state, (set_state_fn)bounce_set_state, NULL, NULL, NULL);
 
@@ -1653,13 +1656,13 @@ void paint_edge_note(t_bounce *x, t_jgraphics *g, t_object *view, long edge_idx,
 	t_jrgba bordercolor = build_jrgba(0.2, 0.2, 0.2, 1);
 	
 	
-	ezpaint_note_with_staff((t_object *)x, g, view, node->pitch_mc, k_ACC_AUTO, x->tonedivision, build_pt(noterect.x + 3 * zoom, noterect.y + 25 * zoom), 
+	ezpaint_note_with_staff((t_object *)x, g, node->pitch_mc, k_ACC_AUTO, x->tonedivision, build_pt(noterect.x + 3 * zoom, noterect.y + 25 * zoom),
 							noterect.width - 6 * zoom, 24 * zoom, noterect.x + 31 * zoom, false, &staffcolor, &staffcolor, &staffcolor);
 
 	jgraphics_set_source_rgba(g, 0, 0, 0, 1);*/
 }
 
-void paint_connected_component(t_bounce *x, t_jgraphics *g, t_object *view, t_rect rect, t_pt center, long idx, t_jrgba *color)
+void paint_connected_component(t_bounce *x, t_jgraphics *g, t_rect rect, t_pt center, long idx, t_jrgba *color)
 {
 	if (idx >= 0 && idx < x->room_graph.num_connected_components) {
 		t_dadapolygon *poly = &x->room_graph.connected_components[idx].poly;
@@ -1683,10 +1686,10 @@ void paint_connected_component(t_bounce *x, t_jgraphics *g, t_object *view, t_re
 	}
 }
 
-void repaint_played_elements(t_bounce *x, t_jgraphics *g, t_object *view, t_rect rect, t_pt center)
+void repaint_played_elements(t_bounce *x, t_jgraphics *g, t_rect rect, t_pt center)
 {
     if (x->hit_edge >= 0) {
-        graph_paint_edge(dadaobj_cast(x), g, view, rect, center, &x->room_graph, change_alpha(x->b_ob.d_ob.m_play.play_color, x->b_ob.d_ob.m_play.play_color.alpha * 0.9), x->hit_edge, 0, 0, NULL, 4, false, NULL, false, NULL, false);
+        graph_paint_edge(dadaobj_cast(x), g, rect, center, &x->room_graph, change_alpha(x->b_ob.d_ob.m_play.play_color, x->b_ob.d_ob.m_play.play_color.alpha * 0.9), x->hit_edge, 0, 0, NULL, 4, false, NULL, false, NULL, false);
     }
 }
 
@@ -1700,7 +1703,7 @@ void paint_score_label(t_bounce *x, t_jgraphics *g, t_pt pt, t_symbol *symbol)
     jfont_destroy(jf);
 }
 
-void repaint_hovered_elements(t_bounce *x, t_jgraphics *g, t_object *view, t_rect rect, t_pt center)
+void repaint_hovered_elements(t_bounce *x, t_jgraphics *g, t_rect rect, t_pt center)
 {
 	// re-paint selected and hovered elements
 	t_jrgba staffcolor = build_jrgba(0.2, 0.2, 0.2, 1);
@@ -1727,7 +1730,7 @@ void repaint_hovered_elements(t_bounce *x, t_jgraphics *g, t_object *view, t_rec
                 if (x->metadata_type == DADA_BOUNCE_METADATA_PITCHNVEL) {
                     t_rect noterect = build_rect(pt.x - 25, pt.y - 35, 50, 70);
                     paint_rectangle_rounded(g, bordercolor, bgcolor, noterect.x, noterect.y, noterect.width, noterect.height, 1, DADA_DEFAULT_RECT_ROUNDNESS, DADA_DEFAULT_RECT_ROUNDNESS);
-                    ezpaint_note_with_staff((t_object *)x, g, view, x->room_graph.vertices[x->b_ob.d_ob.m_interface.mousemove_item_identifier.idx].data.m_pitchnvel.pitch_mc, k_ACC_AUTO,
+                    ezpaint_note_with_staff((t_object *)x, g, x->room_graph.vertices[x->b_ob.d_ob.m_interface.mousemove_item_identifier.idx].data.m_pitchnvel.pitch_mc, k_ACC_AUTO,
                                             x->tonedivision, build_pt(noterect.x + 3, noterect.y + 25),
                                             noterect.width - 6, 24, noterect.x + 31, false, &staffcolor, &staffcolor, &staffcolor);
                 } else {
@@ -1754,7 +1757,7 @@ void repaint_hovered_elements(t_bounce *x, t_jgraphics *g, t_object *view, t_rec
                     paint_dashed_line(g, x->j_roomcolor, avg.x, avg.y, corner.x, corner.y, 3, 3);
                     
                     paint_rectangle_rounded(g, bordercolor, bgcolor, noterect.x, noterect.y, noterect.width, noterect.height, 1, DADA_DEFAULT_RECT_ROUNDNESS, DADA_DEFAULT_RECT_ROUNDNESS);
-                    ezpaint_note_with_staff((t_object *)x, g, view, x->room_graph.edges[x->b_ob.d_ob.m_interface.mousemove_item_identifier.idx].data.m_pitchnvel.pitch_mc, k_ACC_AUTO,
+                    ezpaint_note_with_staff((t_object *)x, g, x->room_graph.edges[x->b_ob.d_ob.m_interface.mousemove_item_identifier.idx].data.m_pitchnvel.pitch_mc, k_ACC_AUTO,
                                             x->tonedivision, build_pt(noterect.x + 3, noterect.y + 25),
                                             noterect.width - 6, 24, noterect.x + 31, false, &staffcolor, &staffcolor, &staffcolor);
                 } else {
@@ -1766,7 +1769,7 @@ void repaint_hovered_elements(t_bounce *x, t_jgraphics *g, t_object *view, t_rec
 		case DADAITEM_TYPE_CONNECTED_COMPONENT:
 		{
 			t_jrgba color = change_alpha(x->j_roomcolor, 0.3);
-			paint_connected_component(x, g, view, rect, center, x->b_ob.d_ob.m_interface.mousemove_item_identifier.idx, &color);
+			paint_connected_component(x, g, rect, center, x->b_ob.d_ob.m_interface.mousemove_item_identifier.idx, &color);
 			
             if (x->metadata_type == DADA_BOUNCE_METADATA_PITCHNVEL) {
                 if (x->b_ob.d_ob.m_tools.curr_tool == DADA_TOOL_CHANGE_PITCH || x->b_ob.d_ob.m_tools.curr_tool == DADA_TOOL_CHANGE_VELOCITY) {
@@ -1780,7 +1783,7 @@ void repaint_hovered_elements(t_bounce *x, t_jgraphics *g, t_object *view, t_rec
                                     t_pt avg = pt_number_prod(pt_pt_sum(pt1, pt2), 0.5);
                                     t_rect noterect = build_rect(avg.x - 25, avg.y - 35, 50, 70);
                                     paint_rectangle_rounded(g, bordercolor, bgcolor, noterect.x, noterect.y, noterect.width, noterect.height, 1, DADA_DEFAULT_RECT_ROUNDNESS, DADA_DEFAULT_RECT_ROUNDNESS);
-                                    ezpaint_note_with_staff((t_object *)x, g, view, x->room_graph.edges[i].data.m_pitchnvel.pitch_mc, k_ACC_AUTO,
+                                    ezpaint_note_with_staff((t_object *)x, g, x->room_graph.edges[i].data.m_pitchnvel.pitch_mc, k_ACC_AUTO,
                                                             x->tonedivision, build_pt(noterect.x + 3, noterect.y + 25),
                                                             noterect.width - 6, 24, noterect.x + 31, false, &staffcolor, &staffcolor, &staffcolor);
                                 }
@@ -1791,7 +1794,7 @@ void repaint_hovered_elements(t_bounce *x, t_jgraphics *g, t_object *view, t_rec
                                     t_pt pt = coord_to_pix(dadaobj_cast(x), center, x->room_graph.vertices[i].r_it.coord);
                                     t_rect noterect = build_rect(pt.x - 25, pt.y - 35, 50, 70);
                                     paint_rectangle_rounded(g, bordercolor, bgcolor, noterect.x, noterect.y, noterect.width, noterect.height, 1, DADA_DEFAULT_RECT_ROUNDNESS, DADA_DEFAULT_RECT_ROUNDNESS);
-                                    ezpaint_note_with_staff((t_object *)x, g, view, x->room_graph.vertices[i].data.m_pitchnvel.pitch_mc, k_ACC_AUTO, 
+                                    ezpaint_note_with_staff((t_object *)x, g, x->room_graph.vertices[i].data.m_pitchnvel.pitch_mc, k_ACC_AUTO, 
                                                             x->tonedivision, build_pt(noterect.x + 3, noterect.y + 25), 
                                                             noterect.width - 6, 24, noterect.x + 31, false, &staffcolor, &staffcolor, &staffcolor);
                                 }
@@ -1808,37 +1811,41 @@ void repaint_hovered_elements(t_bounce *x, t_jgraphics *g, t_object *view, t_rec
 	}
 }
 
-void bounce_paint_graph(t_bounce *x, t_object *view, t_rect rect, t_pt center){
+void bounce_paint_graph(t_bounce *x, t_object *view, t_rect rect, t_pt center, t_dada_force_graphics *forced_graphics)
+{
 	
-	t_jgraphics *g = jbox_start_layer((t_object *)x, view, gensym("room"), rect.width, rect.height);
+    t_jgraphics *g = view ? jbox_start_layer((t_object *)x, view, gensym("room"), rect.width, rect.height) : forced_graphics->graphic_context;
 	
 	if (g) {
 //        t_jfont *jf_label = jfont_create("Arial", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL, 11);
-		graph_paint(dadaobj_cast(x), g, view, rect, center, &x->room_graph, x->j_roomcolor, true, true,
+		graph_paint(dadaobj_cast(x), g, rect, center, &x->room_graph, x->j_roomcolor, true, true,
 					x->room_vertex_size, x->room_vertex_size, NULL, x->room_edge_linewidth, 0, NULL, false, NULL, false);
-		jbox_end_layer((t_object *)x, view, gensym("room"));
+        
+        if (view)
+            jbox_end_layer((t_object *)x, view, gensym("room"));
 //        jfont_destroy(jf_label);
 	}
 	
-	jbox_paint_layer((t_object *)x, view, gensym("room"), 0., 0.);	// position of the layer
+    if (view)
+        jbox_paint_layer((t_object *)x, view, gensym("room"), 0., 0.);	// position of the layer
 }
 
 
-void bounce_paint(t_bounce *x, t_object *view)
+void bounce_paint_ext(t_bounce *x, t_object *view, t_dada_force_graphics *force_graphics)
 {
-	t_rect rect;
-	t_pt center = get_center_pix(dadaobj_cast(x), view, &rect);
-	long i;
-	t_jgraphics *g = (t_jgraphics*) patcherview_get_jgraphics(view); 
+    long i;
+	t_rect rect = force_graphics->rect;
+    t_pt center = force_graphics->center_pix;;
+    t_jgraphics *g = force_graphics->graphic_context;
 	
 	jgraphics_set_source_rgba(g, 0, 0, 0, 1); // alpha = 1;
 	
     dadaobj_paint_background(dadaobj_cast(x), g, &rect);
 
-    dadaobj_paint_grid(dadaobj_cast(x), view, rect, center);
+    dadaobj_paint_grid(dadaobj_cast(x), view, force_graphics);
 		
 	if (x->show_room)
-		bounce_paint_graph(x, view, rect, center);
+		bounce_paint_graph(x, view, rect, center, force_graphics);
 	
 	if (x->show_balls || x->show_speed) {
 		long num_balls = dadaitem_class_get_num_items(&x->b_ob.d_ob.m_classes, DADAITEM_TYPE_BALL);
@@ -1873,15 +1880,18 @@ void bounce_paint(t_bounce *x, t_object *view)
 	}
 	
 	if (x->b_ob.d_ob.m_tools.curr_tool != DADA_TOOL_ZOOM && x->b_ob.d_ob.m_tools.curr_tool != DADA_TOOL_MOVE_CENTER)
-		repaint_hovered_elements(x, g, view, rect, center);
+		repaint_hovered_elements(x, g, rect, center);
 
-    repaint_played_elements(x, g, view, rect, center);
+    repaint_played_elements(x, g, rect, center);
     
     dadaobj_paint_border(dadaobj_cast(x), g, &rect);
 }
 
 
-
+void bounce_paint(t_bounce *x, t_object *view)
+{
+    dadaobj_paint(dadaobj_cast(x), view);
+}
 
 
 

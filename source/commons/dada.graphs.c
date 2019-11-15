@@ -469,7 +469,7 @@ void graph_free(t_dada_graph *graph)
 }
 
 
-void graph_paint_edge(t_dadaobj *r_ob, t_jgraphics *g, t_object *view, t_rect rect, t_pt center, t_dada_graph *graph,
+void graph_paint_edge(t_dadaobj *r_ob, t_jgraphics *g, t_rect rect, t_pt center, t_dada_graph *graph,
 					  t_jrgba graph_color, long edge_index,
 					  double fixed_vertex_width, double fixed_vertex_height, vertex_to_properties_fn vertex_to_properties,
 					  double edge_width, char edge_retouch_mode, edge_to_properties_fn edge_to_properties, char paint_hover,
@@ -558,7 +558,7 @@ void graph_paint_edge(t_dadaobj *r_ob, t_jgraphics *g, t_object *view, t_rect re
 }
 
 
-void graph_paint(t_dadaobj *r_ob, t_jgraphics *g, t_object *view, t_rect rect, t_pt center, t_dada_graph *graph,
+void graph_paint(t_dadaobj *r_ob, t_jgraphics *g, t_rect rect, t_pt center, t_dada_graph *graph,
 				 t_jrgba graph_color, char paint_vertices, char paint_edges, 
 				 double fixed_vertex_width, double fixed_vertex_height, vertex_to_properties_fn vertex_to_properties,
 				 double edge_width, char edge_retouch_mode, edge_to_properties_fn edge_to_properties, char paint_hover, t_jfont *jf_label, char show_arrows)
@@ -568,7 +568,7 @@ void graph_paint(t_dadaobj *r_ob, t_jgraphics *g, t_object *view, t_rect rect, t
 	// painting sides
 	if (paint_edges) {
 		for (i = 0; i < graph->num_edges; i++) 
-			graph_paint_edge(r_ob, g, view, rect, center, graph, graph_color, i, fixed_vertex_width, fixed_vertex_height, vertex_to_properties, 
+			graph_paint_edge(r_ob, g, rect, center, graph, graph_color, i, fixed_vertex_width, fixed_vertex_height, vertex_to_properties,
 							 edge_width, edge_retouch_mode, edge_to_properties, paint_hover, jf_label, show_arrows);
 	}
 	

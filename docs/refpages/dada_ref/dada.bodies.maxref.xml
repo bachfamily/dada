@@ -235,16 +235,35 @@
 			</digest>
 			<description>
 				Outputs the current state of the object. The syntax is
-				<b>bodies (stars <m>STAR1</m> <m>STAR2</m>...) (planets <m>PLANET1</m> <m>PLANET2</m>...)</b>.
+				<b>bodies [stars <m>STAR1</m> <m>STAR2</m>...] [planets <m>PLANET1</m> <m>PLANET2</m>...]</b>.
 				Each star is in the syntax
 				<b>(coord <m>x</m> <m>y</m>) (density <m>d</m>) (radius <m>r</m>) (notes <m>NOTE1</m> <m>NOTE2</m>...) (color <m>r</m> <m>g</m> <m>b</m> <m>a</m>)
-				(channel <m>MIDIchannel</m>) (flags <m>flags</m>)</b>, where each <m>NOTE</m> is in the syntax <b>(<m>angle</m> <m>MIDIcents</m>)</b>.<br />
+				(channel <m>MIDIchannel</m>) (flags <m>flags</m>)</b>, where each <m>NOTE</m> is in the syntax <b>[<m>angle</m> <m>MIDIcents</m>]</b>.<br />
 				Each particle is in the syntax
 				<b>(coord <m>x</m> <m>y</m>) (speed <m>x</m> <m>y</m>) (acc <m>x</m> <m>y</m>) (color <m>r</m> <m>g</m> <m>b</m> <m>a</m>)
 				(channel <m>MIDIchannel</m>) (flags <m>flags</m>)</b>. <br /> <br />
-				Item flags syntax in dada is the following one <b>(flags <m>flag1</m> <m>flag2</m>...)</b>, where each flag is one of the following symbols:
+				Item flags syntax in dada is the following one <b>[flags <m>flag1</m> <m>flag2</m>...]</b>, where each flag is one of the following symbols:
 				<b>lock</b>, <b>mute</b>, <b>solo</b>, <b>inactive</b>.
 				<br /> <br />
+			</description>
+		</method>
+		<method name="exportimage">
+			<arg name="filename" optional="1" type="symbol" />
+			<digest>
+				Save as PNG image
+			</digest>
+			<description>
+				Message attributes:<br />
+				<m>@filename</m> (symbol, default: none): filename<br />
+				<m>@dpi</m> (int, default: 72): Dots Per Inch<br />
+				<m>@width</m> (double, default: none): Width In Coordinates<br />
+				<m>@height</m> (double, default: none): Height In Coordinates<br />
+				<m>@pixelwidth</m> (double, default: none): Width In Pixels<br />
+				<m>@pixelheight</m> (double, default: none): Height In Pixels<br />
+				<m>@center</m> (llll, default: none): Center Coordinates<br />
+				<m>@zoom</m> (llll, default: none): Zoom Percentage<br />
+				<br />
+				Saves the object as a PNG image. Optional argument provides the filename (otherwise a dialog box will pop up).
 			</description>
 		</method>
 		<method name="follow">
@@ -261,20 +280,6 @@
 			</description>
 		</method>
 		<method name="forceperiod">
-			<arg name="zero_position" optional="1" type="symbol" />
-			<digest>
-				Force a planet to have circular motion
-			</digest>
-			<description>
-				The symbol <m>forcecircular</m> followed by an integer <m>N</m>
-				forces the <m>N</m>-th planet to have circular motion with respect to its nearest star.
-				Notice that this only applies to the ideal situation where that single star exists; if other starsst come into play,
-				the motion will in generall not be circular, but rather will be affected by the other stars' presence.
-				If an additional "zero" symbol is set as second argument, the position and velocity of the planet are "zeroed" by
-				putting the planet right above the star, with a rightward pointing horizontal velocity.
-			</description>
-		</method>
-		<method name="forceperiod">
 			<arg name="planet_index" optional="0" type="int" />
 			<arg name="period_ms" optional="0" type="float" />
 			<digest>
@@ -287,6 +292,20 @@
 				the motion will in generall not be circular, but rather will be affected by the other stars' presence.
 				Also, differently from <m>forcecircular</m> this message only works properly when the gravitational law is the default standard one,
 				and it doesn't work for a custom <m>law</m>.
+			</description>
+		</method>
+		<method name="forceperiod">
+			<arg name="zero_position" optional="1" type="symbol" />
+			<digest>
+				Force a planet to have circular motion
+			</digest>
+			<description>
+				The symbol <m>forcecircular</m> followed by an integer <m>N</m>
+				forces the <m>N</m>-th planet to have circular motion with respect to its nearest star.
+				Notice that this only applies to the ideal situation where that single star exists; if other starsst come into play,
+				the motion will in generall not be circular, but rather will be affected by the other stars' presence.
+				If an additional "zero" symbol is set as second argument, the position and velocity of the planet are "zeroed" by
+				putting the planet right above the star, with a rightward pointing horizontal velocity.
 			</description>
 		</method>
 		<method name="getdomain">
@@ -460,7 +479,6 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Continuously Output bang if Changed " />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
@@ -547,6 +565,19 @@
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
 		</attribute>
+		<attribute name="jitmatrix" get="1" set="1" type="" size="1">
+			<digest>
+				
+			</digest>
+			<description>
+				Sets the name of a jitter matrix to which the output should be mirrored.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
+			</attributelist>
+		</attribute>
 		<attribute name="law" get="1" set="1" type="atom_array" size="10">
 			<digest>
 				Gravitational Law
@@ -598,28 +629,27 @@
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="enumindex" />
 			</attributelist>
 		</attribute>
+		<attribute name="notifypaint" get="1" set="1" type="" size="1">
+			<digest>
+				Notify Display Refresh
+			</digest>
+			<description>
+				Toggles the ability to notify every new redraw of the box via a "painted" symbol.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Notify Display Refresh" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
+			</attributelist>
+		</attribute>
 		<attribute name="out" get="1" set="1" type="symbol" size="1">
 			<digest>
 				Outlet Types
 			</digest>
 			<description>
-				The <m>out</m> attribute is a sequence of characters identifying the outlet types (one character for each llll outlet). Characters can be one of the following: <br />
-				<m>n</m> (default): 'native' output: faster and more precise between bach objects, but unreadable by standard Max objects (an "bach.llll" message appears instead). <br />
-				<m>t</m>: 'text' output: slower and limited in size, but readable by standard Max objects. A plain llll in text format is a generic Max message.
-				To keep the representation invertible (i.e., to allow a bach object receiving a text-format llll to interpret it exactly as if it was native format,
-				except for the size limitation), some specific kinds of symbols are preceded by a backtick: namely, symbols containing parens, or containing textual
-				representations of numbers or pitches, or beginning with a backtick, plus the symbols "null" and "nil" (distinct from the reserved words
-				"null" and "nil" representing the empty list and the empty sublist) are preceded by a backtick. Moreover, the symbols "int", "float" or "list"
-				are preceded by a backtick only if they are the first element of an llll, to distinguish them from the corresponding reserved messages of Max. <br />
-				<m>m</m>: 'max' output: mostly equivalent to the "t" specifier, but no symbol is backticket except "int", "float" and "list" at the beginning of an llll.
-				It is important to notice that, differently from text-format lllls proper, Max-format lllls might not be invertible even if they do not reach the size
-				limit for Max message. This means that a bach object receiving a Max-format llll output from another bach object might interpret it differently
-				from the original, or in some cases might even reject it. <br />
-				<m>x</m>: disabled output (nothing is output) <br />
-				<m>p</m>: 'portal' output: only used by bach.portal to intercept the @out attribute specified while creating the abstraction (see bach.portal). <br />
-				The native output is recommended, unless communication with standard Max messages is needed.
-				Disabling unused outputs can be useful if extreme optimization of the patch is needed.
-				<br /> <br />
 			</description>
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
@@ -776,13 +806,6 @@
 				Microtonal Division
 			</digest>
 			<description>
-				In the bach environment, the tone division defines the microtonal accuracy of the symbolic representation,
-				by representing the number of steps in which each tone is divided.
-				For the standard semitonal representation (where just sharps and flats suffice), one can stick with
-				<m>tonedivision</m> being 2, meaning: the tone is divided into two semitones.
-				By increasing this value, the microtonal grid gets more dense: for instance, 4 is the quartertonal grid
-				(where each tone is divided in 4 quartertones); 8 is the eight-tonal grid, and so on.
-				<br /> <br />
 			</description>
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Settings" />

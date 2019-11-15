@@ -1,0 +1,9 @@
+*.pbxproj binary merge=union
+*.aif binary
+*.aiff binary
+*.wav binary
+*.mid binary
+*.svg binary
+*.mp3 binary
+*.llll binary
+*.sdif binary

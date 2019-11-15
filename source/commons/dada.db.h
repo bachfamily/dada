@@ -13,7 +13,7 @@
 #include "dada.items.h"
 #include "ext_database.h"
 
-#define DADA_XBASE_MAX_TABLES 16
+#define DADA_XBASE_MAX_TABLES 256
 #define DADA_XBASE_MAX_COLUMNS 1024
 #define DADA_XBASE_MAGIC_GOOD 12481632
 #define DADA_XBASE_MAGIC_BAD 666
@@ -46,6 +46,9 @@ typedef struct _xbase {
     long        ref_count;
     
     t_symbol    *d_filename;
+    
+    char        d_dirty;
+    char        d_nodirty; // if toggled, won't set d_dirty flag
 } t_xbase;
 
 

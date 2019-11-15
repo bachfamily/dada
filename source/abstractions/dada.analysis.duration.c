@@ -32,7 +32,7 @@
 	analysis, duration, milliseconds, total, time
 
 	@seealso
-	dada.segment, dada.catart, dada.analysis.count
+	dada.segment, dada.cartesian, dada.analysis.count
 	
 	@owner
 	Daniele Ghisi

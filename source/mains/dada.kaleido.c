@@ -42,7 +42,7 @@
 #include "dada.interface.h"
 #include "dada.geometry.h"
 #include "dada.paint.h"
-#include "notation.h"
+#include "notation/notation.h"
 #include "dada.popupmenu.h"
 //#include "dada.cursors.data.c"
 #include "dada.undo.h"
@@ -190,6 +190,7 @@ void kaleido_free(t_kaleido *x);
 void kaleido_assist(t_kaleido *x, void *b, long m, long a, char *s);
 
 void kaleido_paint(t_kaleido *x, t_object *view);
+void kaleido_paint_ext(t_kaleido *x, t_object *view, t_dada_force_graphics *force_graphics);
 
 
 void kaleido_int(t_kaleido *x, t_atom_long num);
@@ -919,7 +920,7 @@ long duplicate_sampling_point(t_kaleido *x, long idx, t_pt new_coord, char trans
 //////////////////////// global class pointer variable
 t_class *kaleido_class;
 
-int C74_EXPORT main(void)
+void C74_EXPORT ext_main(void *moduleRef)
 {	
 	t_class *c;
 	
@@ -928,9 +929,9 @@ int C74_EXPORT main(void)
 	
 	srand(time(NULL)); // needed for the shake function
 
-	if (llllobj_check_version(bach_get_current_llll_version()) || llllobj_test()) {
+	if (dada_check_bach_version() || llllobj_test()) {
 		dada_error_bachcheck();
-		return 1;
+		return;
 	}
 
 
@@ -999,7 +1000,7 @@ int C74_EXPORT main(void)
 	
 	// @method sample @digest Set sampling points and output sampling information
 	// @description The symbol <m>sample</m> followed by a list in the form
-	// <b>(<m>x1</m> <m>y1</m>) (<m>x2</m> <m>y2</m>) ...</b> sets the coordinates of points on the
+	// <b>[<m>x1</m> <m>y1</m>] [<m>x2</m> <m>y2</m>] ...</b> sets the coordinates of points on the
 	// canvas to be sampled, and then outputs the sampled information (see <m>bang</m>). This is equivalent
 	// as using the <m>setsample</m> message followed by a <m>bang</m>.
     // @marg 0 @name coordinates @optional 0 @type llll
@@ -1007,12 +1008,12 @@ int C74_EXPORT main(void)
 
 	// @method setsample @digest Set sampling points
 	// @description The symbol <m>sample</m> followed by a list in the form
-	// <b>((<m>x1</m> <m>y1</m>) <m>pitch_mc1</m> <m>velocity1</m>) ((<m>x2</m> <m>y2</m>) <m>pitch_mc2</m> <m>velocity2</m>) ...</b>
+	// <b>[[<m>x1</m> <m>y1</m>] <m>pitch_mc1</m> <m>velocity1</m>] [[<m>x2</m> <m>y2</m>] <m>pitch_mc2</m> <m>velocity2</m>] ...</b>
 	// sets the coordinates of points on the canvas to be sampled, as well as their associated pitches (in midicents) and
 	// velocities (1 to 127), which will be used at playtime. Pitches and velocities are optional, and can be dropped (in which 
 	// case a default pitch of 6000 and a default velocity of 100 will be used).
     // If the <m>type</m> attribute is set to "Scores", then the syntax
-    // <b>((<m>x1</m> <m>y1</m>) <m>label1</m> <m>score1</m>)) ((<m>x2</m> <m>y2</m>) <m>label2</m> <m>score2</m>) ...</b>
+    // <b>[[<m>x1</m> <m>y1</m>] <m>label1</m> <m>score1</m>]] [[<m>x2</m> <m>y2</m>] <m>label2</m> <m>score2</m>] ...</b>
     // is expected
     // @marg 0 @name sampling_points @optional 0 @type llll
 	class_addmethod(c, (method)kaleido_anything,	"setsample",		A_GIMME,	0);
@@ -1037,11 +1038,11 @@ int C74_EXPORT main(void)
 	// @method rotate @digest Rotate elements
 	// @description The word <m>rotate</m> followed the index of a shape, and an angle (in radians), rotates
 	// the shape. The angle can be set in degrees by appending the degrees ° symbol after the number (without any spaces) or
-    // by replacing the number with an llll in the form <b>(<m>amount_in_degrees</m> deg)</b>.
+    // by replacing the number with an llll in the form <b>[<m>amount_in_degrees</m> deg]</b>.
     // If the index of the shape is <m>0</m> or the <m>all</m> symbol, all shapes will be rotated.
-	// If a third argument is added, in the form <b>(<m>x</m> <m>y</m>)</b>, it sets the coordinates of the origin for the rotation.
+	// If a third argument is added, in the form <b>[<m>x</m> <m>y</m>]</b>, it sets the coordinates of the origin for the rotation.
 	// If no third argument is added, the default center of rotation is the shape barycenter (if a single shape is being rotated)
-	// or the origin <b>(0 0)</b> if all shapes are being rotated.
+	// or the origin <b>[0 0]</b> if all shapes are being rotated.
 	// The center of rotation llll can be replaced by the <m>barycenter</m> symbol, to specify that rotation must happen around individuals barycenters. 
 	// Alternatively you can add the "barycenter" symbol as third element in order to specify that coordinates are barycentric coordinates. 
     // @marg 0 @name shape_index @optional 0 @type int/all
@@ -1050,7 +1051,7 @@ int C74_EXPORT main(void)
 	class_addmethod(c, (method)kaleido_anything,	"rotate",		A_GIMME,	0);
 
 	// @method move @digest Translate elements
-	// @description The word <m>move</m> followed the index of a shape and a vector in wrapped <b>(<m>x</m> <m>y</m>)</b> syntax,
+	// @description The word <m>move</m> followed the index of a shape and a vector in wrapped <b>[<m>x</m> <m>y</m>]</b> syntax,
 	// translates the shape of the given vector. If the index of the shape is <m>0</m> or the <m>all</m> symbol, all shapes will be translated.
     // @marg 0 @name shape_index @optional 0 @type int/all
     // @marg 1 @name amount @optional 0 @type llll
@@ -1060,10 +1061,10 @@ int C74_EXPORT main(void)
 	// @description The word <m>scale</m> followed the index of a shape and a number, scales the given shape of the factor
 	// specified by the number.
 	// If the index of the shape is <m>0</m> or the <m>all</m> symbol, all shapes will be scaled.
-	// If, instead of a single factor, a list in the form <b>(<m>x_scale</m> <m>y_scale</m>)</b> is given,
+	// If, instead of a single factor, a list in the form <b>[<m>x_scale</m> <m>y_scale</m>]</b> is given,
 	// two different scale factors are applied for the X and Y axis.
-	// You can provide as third argument the scaling center, in <b>(<m>x</m> <m>y</m>)</b> form. If no center is provided, 
-	// by default the barycenter is used for single shape scaling, while the origin <b>(0, 0)</b> is used when all shapes are to be scaled
+	// You can provide as third argument the scaling center, in <b>[<m>x</m> <m>y</m>]</b> form. If no center is provided, 
+	// by default the barycenter is used for single shape scaling, while the origin <b>[0, 0]</b> is used when all shapes are to be scaled
 	// The scaling center llll can be replaced by the <m>barycenter</m> symbol, to specify that scaling must happen with respect to individuals baricenters.
 	// Alternatively you can add the "barycenter" symbol as third element in order to specify that coordinates are barycentric coordinates. 
     // @marg 0 @name shape_index @optional 0 @type int/all
@@ -1076,13 +1077,13 @@ int C74_EXPORT main(void)
 	// orientation. 
 	// If the index of the shape is <m>0</m> or the <m>all</m> symbol, all shapes will be shaken.
 	// You can specify via two optional elements the intensity of such shaking, in the form 
-	// <b>(<m>min_shift</m> <m>max_shift</m>) (<m>min_rotation</m> <m>max_rotation</m>)</b>.
+	// <b>[<m>min_shift</m> <m>max_shift</m>] [<m>min_rotation</m> <m>max_rotation</m>]</b>.
 	// Where the each value is intended as absolute value (of the shift or of the rotation). The direction of the shift and the rotation
 	// are chosen randomly. The rotation always happens around the shape's barycenter.
 	// The default minimum shift and minimum rotation is 0; the default maximum shift is one fifth of the mirror size; 
 	// the default maximum rotation is 10 degrees.
 	// A third optional element sets the shaking region, as a circle where each shape barycenter should fall, in the form
-	// <b>((<m>center_x</m> <m>center_y</m>) <m>radius</m>)</b>. By default the center is the barycenter of the main chamber, i.e.
+	// <b>[[<m>center_x</m> <m>center_y</m>] <m>radius</m>]</b>. By default the center is the barycenter of the main chamber, i.e.
 	// of the triangle formed by the three mirrors; the radius is by default the <m>mirrorsize</m>.
     // @marg 0 @name shape_index @optional 0 @type int/all
     // @marg 1 @name shift @optional 1 @type number/llll
@@ -1132,10 +1133,11 @@ int C74_EXPORT main(void)
     
     
     DADAOBJ_JBOX_DECLARE_READWRITE_METHODS(c);
+    DADAOBJ_JBOX_DECLARE_IMAGE_METHODS(c);
     DADAOBJ_JBOX_DECLARE_ACCEPTSDRAG_METHODS(c);
 
 	llllobj_class_add_out_attr(c, LLLL_OBJ_UI);
-	dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_UNDO | DADAOBJ_EMBED | DADAOBJ_MOUSEHOVER | DADAOBJ_CHANGEDBANG | DADAOBJ_NOTIFICATIONS);
+	dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_UNDO | DADAOBJ_EMBED | DADAOBJ_MOUSEHOVER | DADAOBJ_CHANGEDBANG | DADAOBJ_NOTIFICATIONS | DADAOBJ_EXPORTTOJITTER);
 
 	
 	CLASS_ATTR_DEFAULT(c, "patching_rect", 0, "0 0 300 300");
@@ -1268,9 +1270,10 @@ int C74_EXPORT main(void)
 	
 	class_register(CLASS_BOX, c); /* CLASS_NOBOX */
 	kaleido_class = c;
+    dadaobj_class_add_fileusage_method(c);
 
 	dev_post("dada.kaleido compiled %s %s", __DATE__, __TIME__);
-	return 0;
+	return ;
 }
 
 void rebuild_main_corolla_dadapolygon(t_kaleido *x)
@@ -1810,7 +1813,7 @@ void *kaleido_new(t_symbol *s, long argc, t_atom *argv)
 		x->b_ob.r_ob.l_box.b_firstin = (t_object *)x;
 		x->n_proxy1 = proxy_new((t_object *) x, 1, &x->n_in);
 
-		dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_UNDO | DADAOBJ_CHANGEDBANG | DADAOBJ_NOTIFICATIONS, build_pt(1., 1.), 3, 4, 2, (invalidate_and_redraw_fn)kaleido_iar, "qvnrs", 2, "b4444");
+		dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_UNDO | DADAOBJ_CHANGEDBANG | DADAOBJ_NOTIFICATIONS, build_pt(1., 1.), 3, 4, 2, (dada_paint_ext_fn)kaleido_paint_ext, (invalidate_and_redraw_fn)kaleido_iar, "qvnrs", 2, "b4444");
 		dadaobj_addfunctions(dadaobj_cast(x), (dada_mousemove_fn)kaleido_mousemove, NULL, (method)kaleido_undo_postprocess, (get_state_fn)kaleido_get_state, (set_state_fn)kaleido_set_state, NULL, NULL, NULL);
 
         x->b_ob.d_ob.update_solos = (update_solos_fn)kaleido_update_solos;
@@ -2984,9 +2987,10 @@ char kaleido_shape_should_be_played(t_kaleido *x, t_kaleido_shape *shape)
     return ((!(item->flags & D_MUTE) && (((item->flags & D_SOLO) > 0) || (!x->has_solo_shapes))) ? true : false);
 }
 
-void kaleido_paint_sampling_points(t_kaleido *x, t_object *view, t_rect rect, t_pt center, double zoom){
+void kaleido_paint_sampling_points(t_kaleido *x, t_object *view, t_rect rect, t_pt center, double zoom, t_dada_force_graphics *force_graphics)
+{
 	
-	t_jgraphics *g = jbox_start_layer((t_object *)x, view, gensym("sampling_points"), rect.width, rect.height);
+    t_jgraphics *g = view ? jbox_start_layer((t_object *)x, view, gensym("sampling_points"), rect.width, rect.height) : force_graphics->graphic_context;
 	
 	if (g){
         
@@ -3030,14 +3034,16 @@ void kaleido_paint_sampling_points(t_kaleido *x, t_object *view, t_rect rect, t_
 				paint_cross(g, &color, p, size * 1.4, 1.);
 		}
  
-		jbox_end_layer((t_object *)x, view, gensym("sampling_points"));
+        if (view)
+            jbox_end_layer((t_object *)x, view, gensym("sampling_points"));
 	}
 	
+    if (view)
 	jbox_paint_layer((t_object *)x, view, gensym("sampling_points"), 0., 0.);	// position of the layer
 }
 
 
-void paint_sampling_point_note(t_kaleido *x, t_jgraphics *g, t_object *view, t_kaleido_sampling_pt *spt, t_rect noterect)
+void paint_sampling_point_note(t_kaleido *x, t_jgraphics *g, t_kaleido_sampling_pt *spt, t_rect noterect)
 {
 	t_jrgba staffcolor = build_jrgba(0.2, 0.2, 0.2, 1);
 	t_jrgba bordercolor = build_jrgba(0.2, 0.2, 0.2, 1);
@@ -3045,7 +3051,7 @@ void paint_sampling_point_note(t_kaleido *x, t_jgraphics *g, t_object *view, t_k
 	
 	paint_rectangle_rounded(g, bordercolor, bgcolor, noterect.x, noterect.y, noterect.width, noterect.height, 1, DADA_DEFAULT_RECT_ROUNDNESS, DADA_DEFAULT_RECT_ROUNDNESS);
 	
-	ezpaint_note_with_staff((t_object *)x, g, view, spt->pitch_mc, k_ACC_AUTO, x->tonedivision, build_pt(noterect.x + 3, noterect.y + 25), 
+	ezpaint_note_with_staff((t_object *)x, g, spt->pitch_mc, k_ACC_AUTO, x->tonedivision, build_pt(noterect.x + 3, noterect.y + 25), 
 							noterect.width - 6, 24, noterect.x + 31, false, &staffcolor, &staffcolor, &staffcolor);
 
 	jgraphics_set_source_rgba(g, 0, 0, 0, 1);
@@ -3060,7 +3066,7 @@ void paint_score_label(t_kaleido *x, t_jgraphics *g, t_pt pt, t_symbol *symbol)
     jfont_destroy(jf);
 }
 
-void repaint_hovered_and_selected_items(t_kaleido *x, t_jgraphics *g, t_object *view, t_rect rect, t_pt center)
+void repaint_hovered_and_selected_items(t_kaleido *x, t_jgraphics *g, t_rect rect, t_pt center)
 {
 	// re-paint selected and hovered elements
 	switch (x->b_ob.d_ob.m_interface.mousemove_item_identifier.type) {
@@ -3084,7 +3090,7 @@ void repaint_hovered_and_selected_items(t_kaleido *x, t_jgraphics *g, t_object *
                 paint_dashed_line(g, bordercolor, spt_pixel.x, spt_pixel.y, pos.x > spt_pixel.x ? pos.x : pos.x + pos.width,
                                   pos.y < spt_pixel.y ? pos.y + pos.height : pos.y, 3, 3);
                 
-                paint_sampling_point_note(x, g, view, spt, pos);
+                paint_sampling_point_note(x, g, spt, pos);
             } else {
                 paint_score_label(x, g, build_pt(spt_pixel.x + 1, spt_pixel.y + 1), spt->label);
             }
@@ -3104,19 +3110,13 @@ void repaint_hovered_and_selected_items(t_kaleido *x, t_jgraphics *g, t_object *
 }
 
 
-void kaleido_paint(t_kaleido *x, t_object *view)
+void kaleido_paint_ext(t_kaleido *x, t_object *view, t_dada_force_graphics *force_graphics)
 {
-    t_jgraphics *g;
-	t_rect rect;
-	t_pt center;
-	double zoom = x->b_ob.d_ob.m_zoom.zoom.x;
+    t_jgraphics *g = force_graphics->graphic_context;
+    t_rect rect = force_graphics->rect;
+    t_pt center = force_graphics->center_pix;
+	double zoom = force_graphics->zoom.x;
 
-	// getting rectangle dimensions
-	g = (t_jgraphics*) patcherview_get_jgraphics(view); 
-	jbox_get_rect_for_view((t_object *)x, view, &rect);
-	center.x = rect.width/2.; 
-	center.y = rect.height/2.;
-	
 	jgraphics_set_source_rgba(g, 0, 0, 0, 1); // alpha = 1;
 	
     dadaobj_paint_background(dadaobj_cast(x), g, &rect);
@@ -3132,7 +3132,6 @@ void kaleido_paint(t_kaleido *x, t_object *view)
 		build_tile(x, rect, center);
 		x->need_build_tile = false;
 	}
- 
     
     
 /*	{
@@ -3154,7 +3153,7 @@ void kaleido_paint(t_kaleido *x, t_object *view)
 		// draw background
 		jgraphics_image_surface_draw_fast(g, x->s_studio);
 		
-		repaint_hovered_and_selected_items(x, g, view, rect, center);
+		repaint_hovered_and_selected_items(x, g, rect, center);
 		
 		// turn light off
 		t_jrgba black = build_jrgba(0, 0, 0, 0.3);
@@ -3232,9 +3231,9 @@ void kaleido_paint(t_kaleido *x, t_object *view)
 		}
 		
 		if (x->show_sampling_points)
-			kaleido_paint_sampling_points(x, view, rect, center, zoom);
+			kaleido_paint_sampling_points(x, view, rect, center, zoom, force_graphics);
 
-		repaint_hovered_and_selected_items(x, g, view, rect, center);
+		repaint_hovered_and_selected_items(x, g, rect, center);
 	}
 
 
@@ -3242,7 +3241,10 @@ void kaleido_paint(t_kaleido *x, t_object *view)
 }
 
 
-
+void kaleido_paint(t_kaleido *x, t_object *view)
+{
+    dadaobj_paint(dadaobj_cast(x), view);
+}
 
 ///////// POPUP MENU FUNCTIONS
 

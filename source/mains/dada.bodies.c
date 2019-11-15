@@ -42,7 +42,7 @@
 #include "dada.interface.h"
 #include "dada.geometry.h"
 #include "dada.paint.h"
-#include "notation.h"
+#include "notation/notation.h"
 //#include "dada.cursors.data.c"
 #include "dada.math.h"
 #include "dada.graphs.h"
@@ -164,7 +164,7 @@ typedef struct _bodies
     
     char        must_follow;
 	
-	long		last_played_note[DADA_BODIES_MAX_BODIES];
+	double		last_played_note[DADA_BODIES_MAX_BODIES];
     long		last_played_arrow[DADA_BODIES_MAX_BODIES];
 
 	char		use_particle_midichannels;
@@ -231,6 +231,7 @@ void bodies_float(t_bodies *x, double num);
 void bodies_free(t_bodies *x);
 
 void bodies_paint(t_bodies *x, t_object *view);
+void bodies_paint_ext(t_bodies *x, t_object *view, t_dada_force_graphics *force_graphics);
 
 void bodies_mousedrag(t_bodies *x, t_object *patcherview, t_pt pt, long modifiers);
 void bodies_mousedown(t_bodies *x, t_object *patcherview, t_pt pt, long modifiers);
@@ -261,7 +262,7 @@ void bodies_set_particle_state(t_bodies *x, long idx, t_llll *this_particle);
 void force_circular_motion_for_particle(t_bodies *x, long particle_idx, char also_put_to_zero_position);
 void send_noteoff(t_bodies *x, long idx);
 void bodies_autozoom(t_bodies *x, t_object *view, t_rect *rect);
-void bodies_follow(t_bodies *x, t_object *view, t_rect *rect);
+void bodies_follow(t_bodies *x, t_object *view, t_rect *rect, t_dada_force_graphics *force_graphics);
 
 
 void send_values(t_bodies *x);
@@ -356,25 +357,19 @@ void bodies_jsave(t_bodies *x, t_dictionary *d)
 	llll_free(whole_info);
 }
 
-int C74_EXPORT main(void)
+void C74_EXPORT ext_main(void *moduleRef)
 {
 	t_class *c;
 	
 	common_symbols_init();
 	llllobj_common_symbols_init();
 	
-	if (llllobj_check_version(bach_get_current_llll_version()) || llllobj_test()) {
+	if (dada_check_bach_version() || llllobj_test()) {
 		dada_error_bachcheck();
-		return 1;
+		return;
 	}
 	
-	c = class_new("dada.bodies", 
-							(method)bodies_new,
-							(method)bodies_free,
-							sizeof(t_bodies),
-							(method)NULL,
-							A_GIMME,
-							0L);
+    CLASS_NEW_CHECK_SIZE(c, "dada.bodies", (method)bodies_new, (method)bodies_free, (long)sizeof(t_bodies), 0L /* leave NULL!! */, A_GIMME, 0);
 	
 	c->c_flags |= CLASS_FLAG_NEWDICTIONARY;
 	
@@ -465,7 +460,7 @@ int C74_EXPORT main(void)
     // and it doesn't work for a custom <m>law</m>.
     // @marg 0 @name planet_index @optional 0 @type int
     // @marg 1 @name period_ms @optional 0 @type float
-    class_addmethod(c, (method) bodies_forceperiod, "forceperiod", A_GIMME);
+    class_addmethod(c, (method) bodies_forceperiod, "forceperiod", A_GIMME, 0);
 
     
     // @method forceperiod @digest Force a planet to have circular motion
@@ -477,7 +472,7 @@ int C74_EXPORT main(void)
     // putting the planet right above the star, with a rightward pointing horizontal velocity.
     // @marg 0 @name planet_index @optional 0 @type int
     // @marg 0 @name zero_position @optional 1 @type symbol
-    class_addmethod(c, (method) bodies_forcecircular, "forcecircular", A_GIMME);
+    class_addmethod(c, (method) bodies_forcecircular, "forcecircular", A_GIMME, 0);
 
 
     // @method llll @digest Set state
@@ -536,10 +531,10 @@ int C74_EXPORT main(void)
 
     // @method dump @digest Output state
     // @description Outputs the current state of the object. The syntax is
-    // <b>bodies (stars <m>STAR1</m> <m>STAR2</m>...) (planets <m>PLANET1</m> <m>PLANET2</m>...)</b>.
+    // <b>bodies [stars <m>STAR1</m> <m>STAR2</m>...] [planets <m>PLANET1</m> <m>PLANET2</m>...]</b>.
     // Each star is in the syntax
     // <b>(coord <m>x</m> <m>y</m>) (density <m>d</m>) (radius <m>r</m>) (notes <m>NOTE1</m> <m>NOTE2</m>...) (color <m>r</m> <m>g</m> <m>b</m> <m>a</m>)
-    // (channel <m>MIDIchannel</m>) (flags <m>flags</m>)</b>, where each <m>NOTE</m> is in the syntax <b>(<m>angle</m> <m>MIDIcents</m>)</b>.<br />
+    // (channel <m>MIDIchannel</m>) (flags <m>flags</m>)</b>, where each <m>NOTE</m> is in the syntax <b>[<m>angle</m> <m>MIDIcents</m>]</b>.<br />
     // Each particle is in the syntax
     // <b>(coord <m>x</m> <m>y</m>) (speed <m>x</m> <m>y</m>) (acc <m>x</m> <m>y</m>) (color <m>r</m> <m>g</m> <m>b</m> <m>a</m>)
     // (channel <m>MIDIchannel</m>) (flags <m>flags</m>)</b>. <br /> <br />
@@ -578,7 +573,7 @@ int C74_EXPORT main(void)
     // @method settime @digest Set time
     // @description Sets the current time to a given value, in milliseconds.
     // @marg 0 @name time_ms @optional 0 @type float
-    class_addmethod(c, (method) bodies_settime, "settime", A_FLOAT);
+    class_addmethod(c, (method) bodies_settime, "settime", A_FLOAT, 0);
 	
     
     // @method domain @digest Set the X domain
@@ -611,10 +606,11 @@ int C74_EXPORT main(void)
     
     
     DADAOBJ_JBOX_DECLARE_READWRITE_METHODS(c);
+    DADAOBJ_JBOX_DECLARE_IMAGE_METHODS(c);
     DADAOBJ_JBOX_DECLARE_ACCEPTSDRAG_METHODS(c);
 
 	llllobj_class_add_out_attr(c, LLLL_OBJ_UI);
-    dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_GRID | DADAOBJ_AXES | DADAOBJ_LABELS | DADAOBJ_GRID_SHOWDEFAULT | DADAOBJ_SNAPTOGRID | DADAOBJ_MOUSEHOVER | DADAOBJ_UNDO | DADAOBJ_PLAY | DADAOBJ_NOTIFICATIONS | DADAOBJ_BORDER | DADAOBJ_BORDER_SHOWDEFAULT);
+    dadaobj_class_init(c, LLLL_OBJ_UI, DADAOBJ_BBGIMAGE | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_GRID | DADAOBJ_AXES | DADAOBJ_LABELS | DADAOBJ_GRID_SHOWDEFAULT | DADAOBJ_SNAPTOGRID | DADAOBJ_MOUSEHOVER | DADAOBJ_UNDO | DADAOBJ_PLAY | DADAOBJ_NOTIFICATIONS | DADAOBJ_BORDER | DADAOBJ_BORDER_SHOWDEFAULT | DADAOBJ_EXPORTTOJITTER);
 
     // CHANGING defaults for some attributes
     CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"playstep",0,"10"); // we need it lower, since it's for sequencing purposes also!
@@ -767,9 +763,10 @@ int C74_EXPORT main(void)
 
 	s_bodies_class = c;
 	class_register(CLASS_BOX, s_bodies_class);
+    dadaobj_class_add_fileusage_method(c);
 
 	post("dada.bodies compiled %s %s", __DATE__, __TIME__);
-	return 0;
+	return;
 }
 
 t_max_err bodies_setattr_law(t_bodies *x, void *attr, long ac, t_atom *av)
@@ -890,7 +887,7 @@ t_llll *sort_arrownotes_as_llll(t_bodies *x, t_llll *arrownotes_as_llll, long *i
 //	llll_mergesort(cloned, &out, sort_by_first_fn, NULL);	// this is destructive on <cloned>
 
 	
-	t_llll **lists_to_order = (t_llll **) sysmem_newptr(2 * sizeof(t_llll *));
+	t_llll **lists_to_order = (t_llll **) bach_newptr(2 * sizeof(t_llll *));
 	lists_to_order[0] = cloned;
 	lists_to_order[1] = get_arithm_ser(0, arrownotes_as_llll->l_size - 1);
 	llll_multisort(lists_to_order, lists_to_order, 2, sort_by_first_fn);
@@ -901,7 +898,7 @@ t_llll *sort_arrownotes_as_llll(t_bodies *x, t_llll *arrownotes_as_llll, long *i
 	llll_free(lists_to_order[1]);
 	cloned = lists_to_order[0];
 	
-	sysmem_freeptr(lists_to_order);
+	bach_freeptr(lists_to_order);
 	
 	return cloned;
 }
@@ -1330,7 +1327,7 @@ void bodies_preset(t_bodies *x){
 		 
 	void *preset_buf;// Binbuf that stores the preset 
 	short atomCount = (short)(ac + 3); // number of atoms we’re storing 
-	t_atom atomArray[atomCount];// array of atoms to be stored 
+	t_atom* atomArray = (t_atom *) bach_newptr(atomCount * sizeof(t_atom)); // array of atoms to be stored 
 	// 1. prepare the preset "header" information 
 	atom_setobj(atomArray,x); 
 	atom_setsym(atomArray+1,ob_sym(x)); 
@@ -1346,6 +1343,7 @@ void bodies_preset(t_bodies *x){
 	
 	if (av) 
 		sysmem_freeptr(av);
+	bach_freeptr(atomArray);
 }
 
 /*
@@ -1439,7 +1437,7 @@ t_bodies* bodies_new(t_symbol *s, long argc, t_atom *argv)
 	jbox_new((t_jbox *)x, flags, argc, argv);
 	x->b_ob.r_ob.l_box.b_firstin = (t_object*) x;
 
-    dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BBGIMAGE | DADAOBJ_GRID | DADAOBJ_AXES | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_UNDO | DADAOBJ_CHANGEDBANG | DADAOBJ_NOTIFICATIONS, build_pt(1., 1.), 3, 4, 1, (invalidate_and_redraw_fn)bodies_iar, "qnsr", 2, "b4444");
+    dadaobj_jbox_setup((t_dadaobj_jbox *)x, DADAOBJ_BBGIMAGE | DADAOBJ_GRID | DADAOBJ_AXES | DADAOBJ_ZOOM | DADAOBJ_CENTEROFFSET | DADAOBJ_UNDO | DADAOBJ_CHANGEDBANG | DADAOBJ_NOTIFICATIONS, build_pt(1., 1.), 3, 4, 1, (dada_paint_ext_fn)bodies_paint_ext, (invalidate_and_redraw_fn)bodies_iar, "qnsr", 2, "b4444");
     dadaobj_addfunctions(dadaobj_cast(x), (dada_mousemove_fn)bodies_mousemove, (method)bodies_task,
                          (method)bodies_postprocess_undo, (get_state_fn)bodies_get_state, (set_state_fn)bodies_set_state,
                          NULL, NULL, NULL);
@@ -1684,12 +1682,19 @@ t_llll *three_longs_to_llll(long l1, long l2, long l3){
 	return out;
 }
 
+t_llll *double_long_long_to_llll(double d, long l1, long l2){
+    t_llll *out = llll_get();
+    llll_appenddouble(out, d);
+    llll_appendlong(out, l1);
+    llll_appendlong(out, l2);
+    return out;
+}
 
 void send_noteoff(t_bodies *x, long idx){
 	if (x->last_played_note[idx] > 0) {
         
 		if (x->playback) {
-            t_llll *outr = three_longs_to_llll(x->last_played_note[idx], 0, x->use_particle_midichannels == 0 ? (x->use_idx_as_channel ? idx + 1 : x->body[idx].midichannel) : (x->use_idx_as_channel ? idx + 1 : x->particle[idx].midichannel));
+            t_llll *outr = double_long_long_to_llll(x->last_played_note[idx], 0, x->use_particle_midichannels == 0 ? (x->use_idx_as_channel ? idx + 1 : x->body[idx].midichannel) : (x->use_idx_as_channel ? idx + 1 : x->particle[idx].midichannel));
 			llllobj_outlet_llll((t_object *)x, LLLL_OBJ_UI, 3, outr);
 			llll_free(outr);
 		}
@@ -1903,7 +1908,7 @@ void bodies_autozoom(t_bodies *x, t_object *view, t_rect *rect)
     dadaobj_setrange(dadaobj_cast(x), view, min.y, max.y);
 }
 
-void bodies_follow(t_bodies *x, t_object *view, t_rect *rect)
+void bodies_follow(t_bodies *x, t_object *view, t_rect *rect, t_dada_force_graphics *force_graphics)
 {
     if (x->num_particles == 0)
         return;
@@ -1935,8 +1940,8 @@ void bodies_follow(t_bodies *x, t_object *view, t_rect *rect)
         
         if (count > 1) {
             t_pt screen_min, screen_max;
-            dadaobj_getdomain(dadaobj_cast(x), view, &screen_min.x, &screen_max.x);
-            dadaobj_getrange(dadaobj_cast(x), view, &screen_min.x, &screen_max.x);
+            dadaobj_getdomain(dadaobj_cast(x), view, &screen_min.x, &screen_max.x, force_graphics);
+            dadaobj_getrange(dadaobj_cast(x), view, &screen_min.x, &screen_max.x, force_graphics);
             
             
             if (max.x == min.x) {
@@ -2233,9 +2238,10 @@ t_pt get_topleft_angle_for_writing_around_the_clock(t_pt center, double radius, 
 }
 
 
-void paint_static_stuff(t_bodies *x, t_object *view, t_rect rect){
+void paint_static_stuff(t_bodies *x, t_object *view, t_rect rect, t_dada_force_graphics *forced_graphics)
+{
 	
-	t_jgraphics *g = jbox_start_layer((t_object *)x, view, gensym("room"), rect.width, rect.height);
+    t_jgraphics *g = view ? jbox_start_layer((t_object *)x, view, gensym("room"), rect.width, rect.height) : forced_graphics->graphic_context;
 
 	if (g){
 		double zoom = x->b_ob.d_ob.m_zoom.zoom.x;
@@ -2244,7 +2250,7 @@ void paint_static_stuff(t_bodies *x, t_object *view, t_rect rect){
 		t_jfont *jf_densities = jfont_create("Arial", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL, 10 * zoom);
 		t_jfont *jf_notes = jfont_create("Arial", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL, 10 * zoom);
 
-        t_pt origin = get_center_pix(dadaobj_cast(x), view, NULL);
+        t_pt origin = view ? get_center_pix(dadaobj_cast(x), view, NULL) : forced_graphics->center_pix;
 
         if (false) {
             char zoomtxt[100];
@@ -2283,7 +2289,7 @@ void paint_static_stuff(t_bodies *x, t_object *view, t_rect rect){
                     
 //                    paint_rect(g, &noterect, &arrowcolor, NULL, 2, 0);
 
-                    ezpaint_note_with_staff((t_object *)x, g, view, bd->arrownote[j].midicents, k_ACC_AUTO, x->tone_division, build_pt(noterect.x, noterect.y), noterect.width, 12 * zoom, noterect.x + 15 * zoom, false, color, color, color);
+                    ezpaint_note_with_staff((t_object *)x, g, bd->arrownote[j].midicents, k_ACC_AUTO, x->tone_division, build_pt(noterect.x, noterect.y), noterect.width, 12 * zoom, noterect.x + 15 * zoom, false, color, color, color);
                 } else if (x->show_notes == 1){
                     paint_circle_filled(g, arrowcolor, x2, y2, DADA_BODIES_ARROWNOTE_END_PT_RADIUS * zoom);
 
@@ -2332,9 +2338,13 @@ void paint_static_stuff(t_bodies *x, t_object *view, t_rect rect){
 		jfont_destroy(jf_text);
 		jfont_destroy(jf_densities);
 		jfont_destroy(jf_notes);
-		jbox_end_layer((t_object*)x, view, gensym("room"));
+    
+        if (view)
+            jbox_end_layer((t_object*)x, view, gensym("room"));
 	}
-	jbox_paint_layer((t_object *)x, view, gensym("room"), 0., 0.);	// position of the layer
+    
+    if (view)
+        jbox_paint_layer((t_object *)x, view, gensym("room"), 0., 0.);	// position of the layer
 }
 
 void recompute_solo_flag(t_bodies *x){
@@ -2375,12 +2385,13 @@ t_max_err bodies_notify(t_bodies *x, t_symbol *s, t_symbol *msg, void *sender, v
 	return jbox_notify((t_jbox *)x, s, msg, sender, data);
 }
 
-void bodies_paint(t_bodies *x, t_object *view)
+void bodies_paint_ext(t_bodies *x, t_object *view, t_dada_force_graphics *forced_graphics)
 {
-	t_rect rect;
-	long i;
-    t_jgraphics *g = (t_jgraphics*) patcherview_get_jgraphics(view);
-    jbox_get_rect_for_view((t_object *)x, view, &rect);
+    long i;
+    t_jgraphics *g = forced_graphics->graphic_context;
+    t_rect rect = forced_graphics->rect;
+    t_pt center = forced_graphics->center_pix;
+    double zoom = forced_graphics->zoom.x;
 
     dadaobj_paint_background(dadaobj_cast(x), g, &rect);
 
@@ -2390,24 +2401,18 @@ void bodies_paint(t_bodies *x, t_object *view)
     }
 
     if (x->must_follow) {
-        bodies_follow(x, view, &rect);
+        bodies_follow(x, view, &rect, forced_graphics);
         x->must_follow = false;
     }
     
-    if (dadaobj_cast(x)->m_zoom.must_autozoom) {
+    if (view && dadaobj_cast(x)->m_zoom.must_autozoom) {
         bodies_autozoom(x, view, &rect);
         dadaobj_cast(x)->m_zoom.must_autozoom = false;
     }
 
-
+    dadaobj_paint_grid(dadaobj_cast(x), view, forced_graphics);
     
-    g = (t_jgraphics*) patcherview_get_jgraphics(view);
-    t_pt center = get_center_pix(dadaobj_cast(x), view, &rect);
-	double zoom = x->b_ob.d_ob.m_zoom.zoom.x;
-
-    dadaobj_paint_grid(dadaobj_cast(x), view, rect, center);
-    
-	paint_static_stuff(x, view, rect);
+	paint_static_stuff(x, view, rect, forced_graphics);
 
 	t_jfont *jf_vels = jfont_create("Arial", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL, 10);
 	for (i = 0; i < x->num_particles; i++){
@@ -2475,6 +2480,15 @@ void bodies_paint(t_bodies *x, t_object *view)
     dadaobj_paint_border(dadaobj_cast(x), g, &rect);
 }
 
+void bodies_paint(t_bodies *x, t_object *view)
+{
+    dadaobj_paint(dadaobj_cast(x),view);
+}
+
+
+
+
+
 
 void send_values(t_bodies *x){
 /*	t_atom av1[x->num_sliders];
@@ -2509,8 +2523,9 @@ void compute_label_for_all_arrownotes(t_bodies *x, long body_idx){
 
 
 void snap_coord_to_grid(t_bodies *x, t_pt *coord){
-	coord->x = round(coord->x/x->b_ob.d_ob.m_grid.grid_size.x) * x->b_ob.d_ob.m_grid.grid_size.x;
-	coord->y = round(coord->y/x->b_ob.d_ob.m_grid.grid_size.y) * x->b_ob.d_ob.m_grid.grid_size.y;
+    t_pt grid_size = dadaobj_get_grid_size(dadaobj_cast(x));
+	coord->x = round(coord->x/grid_size.x) * grid_size.x;
+	coord->y = round(coord->y/grid_size.y) * grid_size.y;
 }
 
 

@@ -11,15 +11,16 @@
 
 // Name & Version
 PRODUCT_NAME = $(PROJECT_NAME)
-PRODUCT_VERSION = 0.1
+PRODUCT_VERSION = 0.1.2
 
 // Paths
 C74SUPPORT = $(SRCROOT)/../../../max-sdk-7.3.3/source/c74support
-HEADER_SEARCH_PATHS = "$(C74SUPPORT)/max-includes" "$(C74SUPPORT)/msp-includes" "$(C74SUPPORT)/jit-includes"
+HEADER_SEARCH_PATHS = "$(C74SUPPORT)/max-includes" "$(C74SUPPORT)/msp-includes" "$(C74SUPPORT)/jit-includes" "../../../bach/source/commons"
 FRAMEWORK_SEARCH_PATHS = "$(C74SUPPORT)/max-includes" "$(C74SUPPORT)/msp-includes" "$(C74SUPPORT)/jit-includes"
 DSTROOT = $(SRCROOT)/../lib ///Developer/SDKs/MaxSDK-6.1.4/dada/lib
 // (This next path is relative to DSTROOT)
 INSTALL_PATH = /
+BACH_LIBRARY_SEARCH_PATH = $(SRCROOT)/../../../bach/source/lib/
 
 // Special Files
 GCC_PREFIX_HEADER = $(C74SUPPORT)/max-includes/macho-prefix.pch
@@ -40,6 +41,6 @@ GCC_PREPROCESSOR_DEFINITIONS = "CONFIGURATION_$(CONFIGURATION)" "BACH_MAX" "DADA
 
 // Static Configuration (don't change these)
 // WRAPPER_EXTENSION = mxo;
-WARNING_CFLAGS = -Wmost -Wno-four-char-constants -Wno-unknown-pragmas
+WARNING_CFLAGS = -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -Wno-c++17-extensions
 DEPLOYMENT_LOCATION = YES
 GENERATE_PKGINFO_FILE = YES

@@ -2,15 +2,15 @@
 	"patcher" : 	{
 		"fileversion" : 1,
 		"appversion" : 		{
-			"major" : 7,
-			"minor" : 3,
-			"revision" : 4,
+			"major" : 8,
+			"minor" : 0,
+			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
+		"classnamespace" : "box",
 		"rect" : [ 184.0, 79.0, 949.0, 583.0 ],
-		"bgcolor" : [ 0.941176, 0.941176, 0.941176, 1.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -48,7 +48,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "jit_matrix" ],
-					"patching_rect" : [ 15.0, 10.0, 232.0, 47.312039 ],
+					"patching_rect" : [ 15.0, 10.0, 232.0, 47.31203931203931 ],
 					"pic" : "/Users/danieleghisi/max-sdk-7.0.3/source/bach_additionalstuff/graphics/WebSite/images/dada_logo_web_h.png"
 				}
 
@@ -62,8 +62,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 243.0, 11.0, 120.0, 19.0 ],
-					"style" : "",
-					"text" : "v0.1.0.1 alpha",
+					"text" : "v0.2 alpha",
 					"textcolor" : [ 0.109804, 0.109804, 0.109804, 1.0 ],
 					"varname" : "autohelp_top_digest[3]"
 				}
@@ -79,7 +78,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 702.0, 23.0, 56.0, 22.0 ],
-					"style" : "",
 					"text" : "onecopy"
 				}
 
@@ -125,14 +123,13 @@
 					"fontsize" : 12.0,
 					"hidden" : 1,
 					"id" : "obj-10",
-					"linecount" : 3,
+					"linecount" : 4,
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 1027.0, 217.0, 181.0, 49.0 ],
-					"style" : "",
-					"text" : ";\rmax launchbrowser http://www.bachproject.net/cage"
+					"patching_rect" : [ 1027.0, 217.0, 173.0, 62.0 ],
+					"text" : ";\rmax launchbrowser http://www.bachproject.net/dada"
 				}
 
 			}
@@ -147,7 +144,6 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"patching_rect" : [ -244.0, 42.0, 72.0, 22.0 ],
-					"style" : "",
 					"text" : "loadmess 0"
 				}
 
@@ -155,7 +151,7 @@
 , 			{
 				"box" : 				{
 					"fontname" : "Arial",
-					"fontsize" : 11.595187,
+					"fontsize" : 11.595186999999999,
 					"hidden" : 1,
 					"id" : "obj-44",
 					"maxclass" : "newobj",
@@ -163,7 +159,6 @@
 					"numoutlets" : 8,
 					"outlettype" : [ "bang", "bang", "bang", "bang", "bang", "bang", "bang", "" ],
 					"patching_rect" : [ -480.0, 245.0, 449.0, 21.0 ],
-					"style" : "",
 					"text" : "sel 0 1 2 3 4 5 6"
 				}
 
@@ -171,15 +166,14 @@
 , 			{
 				"box" : 				{
 					"fontname" : "Arial",
-					"fontsize" : 11.595187,
+					"fontsize" : 11.595186999999999,
 					"hidden" : 1,
 					"id" : "obj-50",
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ -262.571442, 295.0, 81.0, 21.0 ],
-					"style" : "",
+					"patching_rect" : [ -262.57144199999999, 295.0, 81.0, 21.0 ],
 					"text" : "offset 0 -3272"
 				}
 
@@ -187,15 +181,14 @@
 , 			{
 				"box" : 				{
 					"fontname" : "Arial",
-					"fontsize" : 11.595187,
+					"fontsize" : 11.595186999999999,
 					"hidden" : 1,
 					"id" : "obj-51",
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ -337.571442, 295.0, 81.0, 21.0 ],
-					"style" : "",
+					"patching_rect" : [ -337.57144199999999, 295.0, 81.0, 21.0 ],
 					"text" : "offset 0 -2628"
 				}
 
@@ -203,7 +196,7 @@
 , 			{
 				"box" : 				{
 					"fontname" : "Arial",
-					"fontsize" : 11.595187,
+					"fontsize" : 11.595186999999999,
 					"hidden" : 1,
 					"id" : "obj-52",
 					"maxclass" : "message",
@@ -211,7 +204,6 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"patching_rect" : [ -480.0, 295.0, 81.0, 21.0 ],
-					"style" : "",
 					"text" : "offset 0 -4856"
 				}
 
@@ -234,7 +226,6 @@
 					"rounded" : 0.0,
 					"spacing_x" : 10.0,
 					"spacing_y" : 0.0,
-					"style" : "",
 					"tabcolor" : [ 0.086275, 0.309804, 0.52549, 0.058824 ],
 					"tabs" : [ "Explorer", "Feedback", "Acknowledgments and licence" ],
 					"textcolor" : [ 0.2, 0.2, 0.2, 1.0 ],
@@ -261,15 +252,15 @@
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
-							"major" : 7,
-							"minor" : 3,
-							"revision" : 4,
+							"major" : 8,
+							"minor" : 0,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
+						"classnamespace" : "box",
 						"rect" : [ 435.0, 294.0, 825.0, 490.0 ],
-						"bgcolor" : [ 0.94, 0.94, 0.94, 1.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -307,8 +298,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 253.0, 3643.0, 303.0, 35.0 ],
-									"style" : "",
+									"patching_rect" : [ 253.0, 3628.0, 303.0, 35.0 ],
 									"text" : ";\rmax launchbrowser https://github.com/bachfamily/dada"
 								}
 
@@ -321,8 +311,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 2,
 									"outlettype" : [ "bang", "" ],
-									"patching_rect" : [ 46.0, 3590.0, 145.0, 22.0 ],
-									"style" : "",
+									"patching_rect" : [ 46.0, 3575.0, 145.0, 22.0 ],
 									"text" : "sel .bachproject.net/dada"
 								}
 
@@ -338,7 +327,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "jit_matrix" ],
-									"patching_rect" : [ 12.0, 3485.800049, 489.610382, 75.399999 ],
+									"patching_rect" : [ 12.0, 3485.800048999999944, 489.610382000000016, 75.399998828000008 ],
 									"pic" : "/Users/danieleghisi/Dropbox/TESI_dottorato/Latex/img/logos.png"
 								}
 
@@ -357,8 +346,8 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 7.0, 3405.0, 362.0, 65.0 ],
-									"text" : "The official web page is http://www.bachproject.net/dada\nThe official repository is https://github.com/bachfamily/dada\n\n© 2017 • Daniele Ghisi",
+									"patching_rect" : [ 7.0, 3405.0, 437.0, 65.0 ],
+									"text" : "The official web page is http://www.bachproject.net/dada\nThe official repository for source files is https://github.com/bachfamily/dada\n\n© 2017 - 2019 • Daniele Ghisi",
 									"textcolor" : [ 0.25, 0.25, 0.25, 1.0 ]
 								}
 
@@ -374,8 +363,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 46.0, 3629.0, 181.0, 49.0 ],
-									"style" : "",
+									"patching_rect" : [ 46.0, 3614.0, 181.0, 49.0 ],
 									"text" : ";\rmax launchbrowser http://www.bachproject.net/cage"
 								}
 
@@ -385,13 +373,12 @@
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
 									"id" : "obj-4",
-									"linecount" : 5,
+									"linecount" : 4,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 7.0, 3309.0, 880.0, 79.0 ],
-									"style" : "",
-									"text" : "dada is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\ndada is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. Read the LICENSE.txt file for more details.",
+									"patching_rect" : [ 7.0, 3324.0, 880.0, 65.0 ],
+									"text" : "dada is distributed under the terms of the GNU General Public License version 3 (GPL-v3.0).\n\ndada is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. Read the LICENSE.txt file for more details.",
 									"textcolor" : [ 0.25, 0.25, 0.25, 1.0 ]
 								}
 
@@ -425,15 +412,14 @@
 									"numinlets" : 0,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 308.0, -126.375, 25.0, 25.0 ],
-									"style" : ""
+									"patching_rect" : [ 308.0, -126.375, 25.0, 25.0 ]
 								}
 
 							}
 , 							{
 								"box" : 								{
 									"fontname" : "Arial",
-									"fontsize" : 11.595187,
+									"fontsize" : 11.595186999999999,
 									"hidden" : 1,
 									"id" : "obj-8",
 									"maxclass" : "newobj",
@@ -442,7 +428,6 @@
 									"outlettype" : [ "", "" ],
 									"patching_rect" : [ 308.0, -97.375, 67.0, 21.0 ],
 									"save" : [ "#N", "thispatcher", ";", "#Q", "end", ";" ],
-									"style" : "",
 									"text" : "thispatcher"
 								}
 
@@ -458,7 +443,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 53.0, -30.375, 140.0, 23.0 ],
-									"style" : "",
 									"text" : "loadmess all @defer 1"
 								}
 
@@ -474,8 +458,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 525.727234, 2927.09082, 264.0, 35.0 ],
-									"style" : "",
+									"patching_rect" : [ 525.727233999999953, 2927.090819999999894, 264.0, 35.0 ],
 									"text" : ";\rmax launchbrowser http://forum.bachproject.net"
 								}
 
@@ -493,7 +476,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 465.090942, 2640.0, 136.0, 21.0 ],
+									"patching_rect" : [ 465.090941999999984, 2640.0, 136.0, 21.0 ],
 									"text" : "forum.bachproject.net"
 								}
 
@@ -527,8 +510,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 69.54541, 2964.272705, 273.0, 35.0 ],
-									"style" : "",
+									"patching_rect" : [ 69.545410000000004, 2964.27270499999986, 273.0, 35.0 ],
 									"text" : ";\rmax launchbrowser mailto:cage@bachproject.net"
 								}
 
@@ -538,12 +520,12 @@
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
 									"id" : "obj-48",
+									"linecount" : 2,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 7.0, 3282.0, 880.0, 21.0 ],
-									"style" : "",
-									"text" : "dada is part of Daniele Ghisi's PhD project, supported by UPMC, CNRS, IRCAM (STMS Lab) and Sorbonne University.",
+									"patching_rect" : [ 7.0, 3282.0, 880.0, 36.0 ],
+									"text" : "dada is part of Daniele Ghisi's PhD project, supported by UPMC, CNRS, IRCAM (STMS Lab) and Sorbonne University.\nThe windows porting of **dada** has been carried out by Andrea Agostini.",
 									"textcolor" : [ 0.25, 0.25, 0.25, 1.0 ]
 								}
 
@@ -558,7 +540,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 7.0, 2640.0, 882.0, 282.0 ],
-									"style" : "",
 									"text" : "If you use dada, you might find really useful to join the dedicated cage forum at                                  .  .\nIn this community you can discuss topics concerning the cage environment, as well as report bugs and submit features requests. This is the most appropriate context for all these things, since all users can benefit from everyone's experiences. Still, if you want to contact us privately, you can do it at\n                                    .\n\nThe ideal bug report should contain:\n- the sequence of operation after which the bug has happened - have you been able to reproduce the bug by repeating the same sequence?\n- the exact nature of the bug: what would have been the expected behaviour, and what you have obtained instead.\n- if there has been a crash, a copy of the contents of the crash report window - don't send it to Apple, it's our problem, not theirs.\n- if possible, a copy of the patch in which the bug has happened.\n- if possible, the exact input data that have caused the bug.\n\nIf you want to submit a feature request, please consider the fact that this doesn't necessarily mean that the feature will be implemented. Alternatively, dada being an open source project, you can implement the feature yourself, if you wish.\n\nGeneral commentaries about the work are also welcome - especially if positive ;) - we need your advice to know in which direction the development should be pushed.\n\nThank you for your feedback!",
 									"textcolor" : [ 0.25, 0.25, 0.25, 1.0 ]
 								}
@@ -574,10 +555,9 @@
 									"mode" : 0,
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 7.0, 3483.0, 509.0, 80.20005 ],
+									"patching_rect" : [ 7.0, 3483.0, 509.0, 80.200050000000005 ],
 									"proportion" : 0.39,
-									"rounded" : 0,
-									"style" : ""
+									"rounded" : 0
 								}
 
 							}
@@ -630,12 +610,13 @@
 								}
 
 							}
- ]
+ ],
+						"bgcolor" : [ 0.94, 0.94, 0.94, 1.0 ]
 					}
 ,
 					"patching_rect" : [ 7.0, 117.0, 929.0, 476.0 ],
 					"presentation" : 1,
-					"presentation_rect" : [ 113.274521, 128.0, 143.0, 93.0 ],
+					"presentation_rect" : [ 113.274520999999993, 128.0, 143.0, 93.0 ],
 					"viewvisibility" : 1
 				}
 
@@ -656,7 +637,6 @@
 					"patching_rect" : [ 6.0, 6.0, 930.0, 57.0 ],
 					"proportion" : 0.39,
 					"prototypename" : "bach",
-					"style" : "",
 					"varname" : "autohelp_top_panel"
 				}
 
@@ -736,13 +716,6 @@
 			}
  ],
 		"dependency_cache" : [ 			{
-				"name" : "cage.overviewswitch.maxpat",
-				"bootpath" : "~/Documents/Max 7/Packages/cage/help",
-				"patcherrelativepath" : "../../../cage/help",
-				"type" : "JSON",
-				"implicit" : 1
-			}
-, 			{
 				"name" : "dada.explorer.maxpat",
 				"bootpath" : "~/Documents/Max 7/Packages/dada/help",
 				"patcherrelativepath" : "../../help",
@@ -760,14 +733,14 @@
 				"name" : "logos.png",
 				"bootpath" : "~/Dropbox/TESI_dottorato/Latex/img",
 				"patcherrelativepath" : "../../../../../../Dropbox/TESI_dottorato/Latex/img",
-				"type" : "PNG ",
+				"type" : "PNG",
 				"implicit" : 1
 			}
 , 			{
 				"name" : "dada_logo_web_v.png",
 				"bootpath" : "~/max-sdk-7.0.3/source/bach_additionalstuff/graphics/logo_verticali",
 				"patcherrelativepath" : "../../../../../../max-sdk-7.0.3/source/bach_additionalstuff/graphics/logo_verticali",
-				"type" : "PNG ",
+				"type" : "PNG",
 				"implicit" : 1
 			}
 , 			{
@@ -850,7 +823,7 @@
 				"name" : "dada_logo_web_h.png",
 				"bootpath" : "~/max-sdk-7.0.3/source/bach_additionalstuff/graphics/WebSite/images",
 				"patcherrelativepath" : "../../../../../../max-sdk-7.0.3/source/bach_additionalstuff/graphics/WebSite/images",
-				"type" : "PNG ",
+				"type" : "PNG",
 				"implicit" : 1
 			}
 , 			{
@@ -990,7 +963,8 @@
 				"type" : "iLaX"
 			}
  ],
-		"autosave" : 0
+		"autosave" : 0,
+		"bgcolor" : [ 0.941176, 0.941176, 0.941176, 1.0 ]
 	}
 
 }

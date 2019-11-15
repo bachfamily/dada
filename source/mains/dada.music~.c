@@ -45,7 +45,7 @@
 #include "dada.interface.h"
 #include "dada.geometry.h"
 #include "dada.paint.h"
-#include "notation.h"
+#include "notation/notation.h"
 //#include "dada.cursors.data.c"
 #include "dada.math.h"
 #include "dada.graphs.h"
@@ -300,7 +300,7 @@ t_max_err music_notify(t_music *x, t_symbol *s, t_symbol *msg, void *sender, voi
     return jbox_notify((t_jbox *)x, s, msg, sender, data); */
 }
 
-int C74_EXPORT main(void)
+void C74_EXPORT ext_main(void *moduleRef)
 {
     common_symbols_init();
     
@@ -308,14 +308,14 @@ int C74_EXPORT main(void)
     
     srand(time(NULL));
     
-    if (llllobj_check_version(bach_get_current_llll_version()) || llllobj_test()) {
+    if (dada_check_bach_version() || llllobj_test()) {
         dada_error_bachcheck();
-        return 1;
+        return;
     }
 
     t_class *c;
 
-	c = class_new("dada.music~", (method)music_new, (method)music_free, sizeof(t_music), 0L, A_GIMME, 0);
+    CLASS_NEW_CHECK_SIZE(c, "dada.music~", (method)music_new, (method)music_free, (long)sizeof(t_music), 0L /* leave NULL!! */, A_GIMME, 0);
 
 	c->c_flags |= CLASS_FLAG_NEWDICTIONARY;
     jbox_initclass(c, JBOX_FONTATTR);	// include fonts
@@ -406,7 +406,7 @@ int C74_EXPORT main(void)
     class_addmethod(c, (method) music_keyup, "keyup", A_CANT, 0);
     
     
-    dadaobj_class_init(c, LLLL_OBJ_UIMSP, DADAOBJ_ZOOM | DADAOBJ_AXES | DADAOBJ_GRID | DADAOBJ_GRID_SHOWDEFAULT | DADAOBJ_BORDER | DADAOBJ_BORDER_SHOWDEFAULT | DADAOBJ_LABELS | DADAOBJ_LABELS_SHOWDEFAULT | DADAOBJ_BG | DADAOBJ_MOUSEHOVER | DADAOBJ_NOTIFICATIONS | DADAOBJ_PLAY);
+    dadaobj_class_init(c, LLLL_OBJ_UIMSP, DADAOBJ_ZOOM | DADAOBJ_AXES | DADAOBJ_GRID | DADAOBJ_GRID_SHOWDEFAULT | DADAOBJ_GRID_FIXEDDEFAULT | DADAOBJ_BORDER | DADAOBJ_BORDER_SHOWDEFAULT | DADAOBJ_LABELS | DADAOBJ_LABELS_SHOWDEFAULT | DADAOBJ_BG | DADAOBJ_MOUSEHOVER | DADAOBJ_NOTIFICATIONS | DADAOBJ_PLAY);
 
     
     CLASS_ATTR_INVISIBLE(c, "playstep", ATTR_GET_OPAQUE | ATTR_SET_OPAQUE);
@@ -470,6 +470,7 @@ int C74_EXPORT main(void)
     
 	class_register(CLASS_BOX, c);
 	s_music_class = c;
+    dadaobj_class_add_fileusage_method(c);
 }
 
 void change_precision(t_music *x, long new_precision)
@@ -516,7 +517,7 @@ void *music_new(t_symbol *s, long argc, t_atom *argv)
         x->b_ob.r_ob.l_ob.z_box.b_firstin = (t_object *)x;
         dsp_setupjbox((t_pxjbox *)x, 2);
         
-        dadaobj_pxjbox_setup((t_dadaobj_pxjbox *)x, DADAOBJ_ZOOM | DADAOBJ_AXES | DADAOBJ_GRID | DADAOBJ_BORDER | DADAOBJ_BORDER_SHOWDEFAULT |  DADAOBJ_BG | DADAOBJ_MOUSEHOVER | DADAOBJ_NOTIFICATIONS | DADAOBJ_PLAY, build_pt(1., 1.), -1, -1, 2, (invalidate_and_redraw_fn)music_iar, "", 0, "44s");
+        dadaobj_pxjbox_setup((t_dadaobj_pxjbox *)x, DADAOBJ_ZOOM | DADAOBJ_AXES | DADAOBJ_GRID | DADAOBJ_BORDER | DADAOBJ_BORDER_SHOWDEFAULT |  DADAOBJ_BG | DADAOBJ_MOUSEHOVER | DADAOBJ_NOTIFICATIONS | DADAOBJ_PLAY, build_pt(1., 1.), -1, -1, 2, NULL, (invalidate_and_redraw_fn)music_iar, "", 0, "44s");
         x->b_ob.d_ob.m_zoom.max_zoom_perc = build_pt(100000, 100000);
         //    dadaobj_addfunctions(dadaobj_cast(x), (dada_mousemove_fn)music_mousemove, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
         
@@ -1205,6 +1206,7 @@ void music_post_array_do(t_music *x, t_symbol *msg, long ac, t_atom *av)
 
 void music_post_array(t_music *x, long num_elems, double *elems)
 {
+#ifdef MAC_VERSION
 #ifdef DADA_MUSIC_DEBUG
     if (x->dsp_debug) {
         t_atom a[num_elems];
@@ -1213,6 +1215,7 @@ void music_post_array(t_music *x, long num_elems, double *elems)
             atom_setfloat(a+i, elems[i]);
         defer_low(x, (method)music_post_array_do, NULL, num_elems, a);
     }
+#endif
 #endif
 }
 
@@ -1850,7 +1853,7 @@ void music_send_next_notification(t_music *x)
     switch (dadaobj_cast(x)->m_interface.send_notifications) {
         case DADAOBJ_NOTIFY_BASIC:
         case DADAOBJ_NOTIFY_VERBOSE:
-            dadaobj_send_notification_sym(dadaobj_cast(x), gensym("next"), LLLL_OBJ_UIMSP);
+            dadaobj_send_notification_sym(dadaobj_cast(x), gensym("next"));
             break;
             
         default:
@@ -1985,7 +1988,7 @@ void music_send_mousedown_notification(t_music *x, t_symbol *sym, char forceverb
         n = DADAOBJ_NOTIFY_VERBOSE;
     switch (n) {
         case DADAOBJ_NOTIFY_BASIC:
-            dadaobj_send_notification_sym(dadaobj_cast(x), sym, LLLL_OBJ_UIMSP);
+            dadaobj_send_notification_sym(dadaobj_cast(x), sym);
             break;
             
         case DADAOBJ_NOTIFY_VERBOSE:
@@ -1997,7 +2000,7 @@ void music_send_mousedown_notification(t_music *x, t_symbol *sym, char forceverb
             llll_appendlong(sub_ll, x->mousedownnumsamps);
             llll_appenddouble(sub_ll, mpfr_get_d(x->mousedownphase_hp, DADA_MUSIC_MPFR_RND));
             llll_appendllll(ll, sub_ll);
-            dadaobj_send_notification_llll(dadaobj_cast(x), ll, LLLL_OBJ_UIMSP);
+            dadaobj_send_notification_llll(dadaobj_cast(x), ll);
         }
             break;
         

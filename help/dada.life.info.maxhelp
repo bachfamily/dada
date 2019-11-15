@@ -189,7 +189,7 @@
 									"parameter_enable" : 0,
 									"patching_rect" : [ 601.5, 218.5, 283.0, 120.5 ],
 									"style" : "",
-									"text" : "if (cell == 0 && nonzero_neighbors == 2)\nreturn 1;\n\nif (cell == 1 && nonzero_neighbors == 3)\nreturn 1;\n\nreturn 0;"
+									"text" : "if [cell == 0 && nonzero_neighbors == 2]\nreturn 1;\n\nif [cell == 1 && nonzero_neighbors == 3]\nreturn 1;\n\nreturn 0;"
 								}
 
 							}

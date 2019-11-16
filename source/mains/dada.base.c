@@ -1632,7 +1632,7 @@ t_llll *xbase_db_query(t_xbase *b, char *buf, char output_fieldnames)
                                 llll_release(ll);
                         } else {
                             t_llll *record_ll = llll_from_text_buf(record[j], false);
-                            llll_appendllll(output_fieldnames ? this_field : this_record, record_ll);
+                            llll_chain(output_fieldnames ? this_field : this_record, record_ll);
                             break;
                         }
                     }

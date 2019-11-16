@@ -92,8 +92,8 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 6.0, 65.0, 693.0, 21.0 ],
-					"text" : "The dada library contains non-standard graphic user interfaces for computer-aided composition and music generation (",
+					"patching_rect" : [ 6.0, 65.0, 761.0, 21.0 ],
+					"text" : "a set of user interfaces for databases and computer-aided composition, inspired by geometry, physical modelling and gamification (",
 					"textcolor" : [ 0.25, 0.25, 0.25, 1.0 ]
 				}
 
@@ -111,7 +111,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 689.5, 65.0, 170.0, 21.0 ],
+					"patching_rect" : [ 760.5, 65.0, 170.0, 21.0 ],
 					"text" : "www.bachproject.net/dada).",
 					"textcolor" : [ 0.25, 0.25, 0.25, 1.0 ]
 				}
@@ -525,7 +525,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 7.0, 3282.0, 880.0, 36.0 ],
-									"text" : "dada is part of Daniele Ghisi's PhD project, supported by UPMC, CNRS, IRCAM (STMS Lab) and Sorbonne University.\nThe windows porting of **dada** has been carried out by Andrea Agostini.",
+									"text" : "dada is part of Daniele Ghisi's PhD project, supported by UPMC, CNRS, IRCAM (STMS Lab) and Sorbonne University.\nThe windows porting of dada has been carried out by Andrea Agostini.",
 									"textcolor" : [ 0.25, 0.25, 0.25, 1.0 ]
 								}
 

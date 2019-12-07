@@ -224,6 +224,7 @@ void uigraph_network_process(t_uigraph *x, t_llll *ll);
 
 t_max_err uigraph_setattr_linestyle(t_uigraph *x, t_object *attr, long ac, t_atom *av);
 t_max_err uigraph_setattr_tonedivision(t_uigraph *x, t_object *attr, long ac, t_atom *av);
+t_max_err uigraph_setattr_edgewidth(t_uigraph *x, t_object *attr, long ac, t_atom *av);
 
 void uigraph_autozoom(t_uigraph *x);
 void uigraph_recompute_nodes_width_height(t_uigraph *x);
@@ -661,6 +662,7 @@ void C74_EXPORT ext_main(void *moduleRef)
     CLASS_ATTR_DOUBLE(c, "edgewidth", 0, t_uigraph, graph_arc_linewidth);
     CLASS_ATTR_STYLE_LABEL(c, "edgewidth", 0, "text", "Network Edge Line Width");
     CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"edgewidth",0,"1.5");
+    CLASS_ATTR_ACCESSORS(c, "edgewidth", (method)NULL, (method)uigraph_setattr_edgewidth);
     // @description Sets the line with for the edge lines.
     
     CLASS_ATTR_CHAR(c, "linestyle", 0, t_uigraph, line_style);
@@ -715,6 +717,16 @@ t_max_err uigraph_setattr_tonedivision(t_uigraph *x, t_object *attr, long ac, t_
     }
     return MAX_ERR_NONE;
 }
+
+t_max_err uigraph_setattr_edgewidth(t_uigraph *x, t_object *attr, long ac, t_atom *av)
+{
+    if (ac && av && is_atom_number(av)) {
+        x->graph_arc_linewidth = atom_getfloat(av);
+        uigraph_iar(x);
+    }
+    return MAX_ERR_NONE;
+}
+
 
 t_max_err uigraph_setattr_linestyle(t_uigraph *x, t_object *attr, long ac, t_atom *av)
 {

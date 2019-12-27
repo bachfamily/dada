@@ -66,7 +66,8 @@ typedef struct _base {
     
     t_object *m_editor;
     
-    char        read_only;
+    char        editor_dirty;
+    char        is_volatile;
     char        creating_new_obj;
 } t_base;
 
@@ -331,9 +332,11 @@ void C74_EXPORT ext_main(void *moduleRef)
 
 	CLASS_STICKY_ATTR(c,"category",0,"Settings");
 	
-    CLASS_ATTR_CHAR(c,"readonly",0, t_base, read_only);
-    CLASS_ATTR_STYLE_LABEL(c,"readonly",0,"onoff","Read-Only Dataset File");
-    // @description Toggles the ability to only allow reading for a file-attached database.
+    CLASS_ATTR_CHAR(c,"volatile",0, t_base, is_volatile);
+    CLASS_ATTR_STYLE_LABEL(c,"volatile",0,"onoff","Volatile Dataset File");
+    // @description Toggles the ability to not commit any changes for a file-attached database.
+    // The database can be modified locally, but nothing will be saved to disk
+    // (unless explicitly forced by a <m>write</m> or <m>writetxt</m> message.
 
     CLASS_ATTR_CHAR(c,"outputcolnames",0, t_base, output_fieldnames);
 	CLASS_ATTR_STYLE_LABEL(c,"outputcolnames",0,"onoff","Output Column Names");
@@ -464,12 +467,13 @@ void base_dblclick(t_base *x)
 void base_okclose(t_base *x, char *s, short *result)
 {
     *result = 3;
+    x->editor_dirty = true;
 }
 
 void base_edclose(t_base *x, char **ht, long size)
 {
     // do something with the text
-    if (!x->read_only && ht) {
+    if (x->editor_dirty && ht) {
         t_llll *ll = llll_from_text_buf(*ht, size > MAX_SYM_LENGTH);
         if (ll) {
             xbase_destroy_all_tables(x->xbase);
@@ -479,6 +483,7 @@ void base_edclose(t_base *x, char **ht, long size)
             object_error((t_object *)x, "Can't modify database: it is wrongly formatted");
     }
     x->m_editor = NULL;
+    x->editor_dirty = false;
 }
 
 
@@ -507,7 +512,7 @@ t_symbol *filename_to_metafilename(t_symbol *s)
 
 void base_appendtodictionary(t_base *x, t_dictionary *d)
 {
-    if (!x->read_only && x->xbase && x->xbase->d_dirty) {
+    if (!x->is_volatile && x->xbase && x->xbase->d_dirty) {
         
         if (xbase_attach_to_text_file(x->xbase)) {
             t_llll *ll = db_to_llll(x->xbase, true);

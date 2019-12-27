@@ -480,10 +480,13 @@ void C74_EXPORT ext_main(void *moduleRef)
 	// @method knn @digest Find nearest neighbors
 	// @description The <m>knn</m> message, followed by an integer <m>K</m> and an <m>llll</m> of the kind <b>[<m>x</m>, <m>y</m>]</b>,
 	// finds the <m>K</m> points which are nearest to the location (<m>x</m>, <m>y</m>), and outputs their content field(s) from the third outlet. <br />
+    // If an additional wrapped list of the kind <b>[<m>weight_x</m>, <m>weight_y</m>]</b> is given, then weights are applied to the knn (which
+    // is useful in the case of dimensions having quite different orders of magnitudes). <br />
     // If <m>relativeknn</m> is on, the coordinates are expected to be between 0 and 1, relative to the current domain and range
     // (caveat: more precisely, to the domain and range of the latest painted view of the object).
 	// @marg 0 @name number_of_neighbors @optional 0 @type int
 	// @marg 1 @name position @optional 0 @type llll
+    // @marg 2 @name weights @optional 1 @type llll
 	class_addmethod(c, (method)cartesian_anything,		"knn",		A_GIMME,	0);
 	
 
@@ -1183,9 +1186,13 @@ long sort_by_pt_distance_fn(void *data, t_llllelem *a, t_llllelem *b)
 {
 	t_cartesian_grain *a_gr = (t_cartesian_grain *)hatom_getobj(&a->l_hatom);
 	t_cartesian_grain *b_gr = (t_cartesian_grain *)hatom_getobj(&b->l_hatom);
-	t_pt coord = *((t_pt *)data);
-	
-	return (pt_pt_distance_squared(a_gr->coord, coord) <= pt_pt_distance_squared(b_gr->coord, coord));
+    t_pt coord = *((t_pt *)(((void **)data)[0]));
+    if (((void **)data)[1]) {
+        t_pt weights = *((t_pt *)(((void **)data)[1]));
+        return (pt_pt_distance_squared_weighted(a_gr->coord, coord, weights) <= pt_pt_distance_squared_weighted(b_gr->coord, coord, weights));
+    } else {
+        return (pt_pt_distance_squared(a_gr->coord, coord) <= pt_pt_distance_squared(b_gr->coord, coord));
+    }
 }
 
 long sort_by_pt_distance_relative_fn(void *data, t_llllelem *a, t_llllelem *b)
@@ -1193,33 +1200,43 @@ long sort_by_pt_distance_relative_fn(void *data, t_llllelem *a, t_llllelem *b)
     t_cartesian_grain *a_gr = (t_cartesian_grain *)hatom_getobj(&a->l_hatom);
     t_cartesian_grain *b_gr = (t_cartesian_grain *)hatom_getobj(&b->l_hatom);
     t_pt coord = *((t_pt *)(((void **)data)[0]));
-    t_rect relative_rect = *((t_rect *)(((void **)data)[1]));
+    t_pt weights = *((t_pt *)(((void **)data)[1]));
+    t_rect relative_rect = *((t_rect *)(((void **)data)[2]));
     
     t_pt a_pt = build_pt((a_gr->coord.x - relative_rect.x)/relative_rect.width, (a_gr->coord.y - relative_rect.y)/relative_rect.height);
     t_pt b_pt = build_pt((b_gr->coord.x - relative_rect.x)/relative_rect.width, (b_gr->coord.y - relative_rect.y)/relative_rect.height);
     
-    return (pt_pt_distance_squared(a_pt, coord) <= pt_pt_distance_squared(b_pt, coord));
+    if (((void **)data)[1]) {
+        t_pt weights = *((t_pt *)(((void **)data)[1]));
+        return (pt_pt_distance_squared_weighted(a_pt, coord, weights) <= pt_pt_distance_squared_weighted(b_pt, coord, weights));
+    } else {
+        return (pt_pt_distance_squared(a_pt, coord) <= pt_pt_distance_squared(b_pt, coord));
+    }
 }
 
 
 
-
-t_llll *cartesian_get_knn(t_cartesian *x, long num_neighbors, t_pt coord, t_cartesian_grain *but_not_this_grain, char coord_are_01)
+// This is not a true tree-based sublinear knn, just a linear search.
+// TO DO: improve it in the future, by making it a true O(logN) knn
+t_llll *cartesian_get_knn(t_cartesian *x, long num_neighbors, t_pt coord, t_pt *weights, t_cartesian_grain *but_not_this_grain, char coord_are_01)
 {
 	t_llllelem *elem;
 	long count;
 
 //	post("- coord: %ld, %ld", coord.x, coord.y);
 
+    void *data[3];
+    t_rect rect;
+    if (coord_are_01)
+        rect = build_rect(x->domain_min, x->range_min, x->domain_max - x->domain_min, x->range_max - x->range_min);
+    data[0] = &coord;
+    data[1] = weights;
+    data[2] = &rect;
+    
     if (coord_are_01) {
-        void *data[2];
-        t_rect rect = build_rect(x->domain_min, x->range_min, x->domain_max - x->domain_min, x->range_max - x->range_min);
-        data[0] = &coord;
-        data[1] = &rect;
-        
         llll_inplacesort(x->grains, (sort_fn) sort_by_pt_distance_relative_fn, data);
     } else
-        llll_inplacesort(x->grains, (sort_fn) sort_by_pt_distance_fn, &coord);
+        llll_inplacesort(x->grains, (sort_fn) sort_by_pt_distance_fn, data);
 	
 	t_llll *res = llll_get();
 	for (elem = x->grains->l_head, count = 0; elem && count < num_neighbors; elem = elem->l_next){
@@ -1232,11 +1249,11 @@ t_llll *cartesian_get_knn(t_cartesian *x, long num_neighbors, t_pt coord, t_cart
 	return res;
 }
 
-t_cartesian_grain *cartesian_get_1nn(t_cartesian *x, t_pt coord, t_cartesian_grain *but_not_this_grain, char coord_are_01)
+t_cartesian_grain *cartesian_get_1nn(t_cartesian *x, t_pt coord, t_pt *weights, t_cartesian_grain *but_not_this_grain, char coord_are_01)
 {
 	t_cartesian_grain *gr = NULL;
 	
-	t_llll *res = cartesian_get_knn(x, 1, coord, but_not_this_grain, coord_are_01);
+	t_llll *res = cartesian_get_knn(x, 1, coord, weights, but_not_this_grain, coord_are_01);
 	
 	if (res->l_head) 
 		gr = (t_cartesian_grain *)hatom_getobj(&res->l_head->l_hatom);
@@ -1296,8 +1313,14 @@ void cartesian_setturtle(t_cartesian *x, t_llll *args)
     dadaobj_mutex_lock(dadaobj_cast(x));
     if (hatom_gettype(&args->l_head->l_hatom) == H_LLLL) {
         // The grain can be the nearest grain to an (x y) value...
+        char has_weights = false;
+        t_pt weights;
+        if (args->l_head->l_next && hatom_gettype(&args->l_head->l_next->l_hatom) == H_LLLL) {
+            has_weights = true;
+            weights = llll_to_pt(hatom_getllll(&args->l_head->l_next->l_hatom));
+        }
         t_pt pt = llll_to_pt(hatom_getllll(&args->l_head->l_hatom));
-        x->turtled_grain = cartesian_get_1nn(x, pt, NULL, x->relative_turtling);
+        x->turtled_grain = cartesian_get_1nn(x, pt, has_weights ? &weights : NULL, NULL, x->relative_turtling);
     } else if (hatom_gettype(&args->l_head->l_hatom) == H_SYM) {
         // ... or the grain having a certain field set to a certain value
         char *  valuestr = NULL;
@@ -1323,7 +1346,15 @@ void cartesian_anything(t_cartesian *x, t_symbol *msg, long ac, t_atom *av)
         if (dadaobj_anything_handle_domain_or_range(dadaobj_cast(x), router, parsed, 2)) {
             // nothing to do!
         } else if (router == gensym("knn") && parsed->l_size >= 2 && hatom_gettype(&parsed->l_head->l_hatom) == H_LONG && hatom_gettype(&parsed->l_head->l_next->l_hatom) == H_LLLL) {
-            t_llll *grains_knn = cartesian_get_knn(x, hatom_getlong(&parsed->l_head->l_hatom), llll_to_pt(hatom_getllll(&parsed->l_head->l_next->l_hatom)), NULL, x->relative_knn);
+            long n = hatom_getlong(&parsed->l_head->l_hatom);
+            t_pt coord = llll_to_pt(hatom_getllll(&parsed->l_head->l_next->l_hatom));
+            char has_weights = false;
+            t_pt weights;
+            if (parsed->l_size >= 2 && hatom_gettype(&parsed->l_head->l_next->l_next->l_hatom) == H_LLLL) {
+                has_weights = true;
+                weights = llll_to_pt(hatom_getllll(&parsed->l_head->l_next->l_next->l_hatom));
+            }
+            t_llll *grains_knn = cartesian_get_knn(x, n, coord, has_weights ? &weights : NULL, NULL, x->relative_knn);
             t_llllelem *elem;
             t_llll *out = llll_get();
             for (elem = grains_knn->l_head; elem; elem = elem->l_next)  {
@@ -1362,7 +1393,13 @@ void cartesian_anything(t_cartesian *x, t_symbol *msg, long ac, t_atom *av)
             if (x->turtled_grain && x->relative_turtling) {
                 previous = build_pt((x->turtled_grain->coord.x - x->domain_min)/(x->domain_max - x->domain_min), (x->turtled_grain->coord.y - x->range_min)/(x->range_max - x->range_min));
             }
-            if ((x->turtled_grain = cartesian_get_1nn(x, pt_pt_sum(previous, delta), x->turtled_grain, x->relative_turtling)))
+            char has_weights = false;
+            t_pt weights;
+            if (parsed->l_head->l_next && hatom_gettype(&parsed->l_head->l_next->l_hatom) == H_LLLL) {
+                has_weights = true;
+                weights = llll_to_pt(hatom_getllll(&parsed->l_head->l_next->l_hatom));
+            }
+            if ((x->turtled_grain = cartesian_get_1nn(x, pt_pt_sum(previous, delta), has_weights ? &weights : NULL, x->turtled_grain, x->relative_turtling)))
                 output_grain_contentfield(x, x->turtled_grain, gensym("turtle"), x->beat_sync);
             jbox_redraw((t_jbox *)x);
         }
@@ -1930,7 +1967,7 @@ void cartesian_paint_ext(t_cartesian *x, t_object *view, t_dada_force_graphics *
         
         for (i = 0; i < n; i++) {
             paint_square(g, &polycolor, &polycolor, verts[i], 2, 0);
-            write_text_simple(g, jf, polycolor, x->field_convexcomb[i] ? x->field_convexcomb[i]->s_name : "none", verts[i].x + 4, verts[i].y - 4, 200, 200);
+            write_text_standard(g, jf, polycolor, x->field_convexcomb[i] ? x->field_convexcomb[i]->s_name : "none", verts[i].x + 4, verts[i].y - 4, 200, 200);
         }
     }
     

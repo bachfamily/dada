@@ -1812,7 +1812,7 @@ void uigraph_edge_to_properties(t_dada_graph_edge *e, char *label)
  if (DADA_UIGRAPH_DEBUG_IDS) { // debug IDs
  char buf2[100];
  snprintf_zero(buf2, 100, "{%ld}", ((long)e - (long)&x->network_graph.edges)/sizeof(t_dada_graph_edge));
- write_text_simple(g, jf_arc_values, x->j_arccolor, buf, 0.5*(pix1.x + pix2.x) + 2,
+ write_text_standard(g, jf_arc_values, x->j_arccolor, buf, 0.5*(pix1.x + pix2.x) + 2,
  0.5 * (pix1.y + pix2.y), 300, 300);
  }
  }
@@ -1986,7 +1986,7 @@ void uigraph_paint_nodes(t_uigraph *x, t_object *view, t_rect rect, t_pt center,
                 
                 if (DADA_UIGRAPH_DEBUG_IDS) { // debug IDs
                     snprintf_zero(buf, 100, "<%ld>", i);
-                    write_text_simple(g, jf, DADA_GREY_50, buf, upperleft_corner.x+width + 2,
+                    write_text_standard(g, jf, DADA_GREY_50, buf, upperleft_corner.x+width + 2,
                                       upperleft_corner.y, 300, 300);
                     
                 }

@@ -898,3 +898,12 @@ t_rect rect_boundingbox_to_baricentric(t_rect boundingbox)
 	baricentric.y = boundingbox.y + boundingbox.height/2.;
 	return baricentric;
 }
+
+
+double pt_pt_distance_squared_weighted(t_pt pt1, t_pt pt2, t_pt weight)
+{
+    t_pt diff;
+    diff.x = weight.x * (pt2.x - pt1.x);
+    diff.y = weight.y * (pt2.y - pt1.y);
+    return diff.x * diff.x  + diff.y * diff.y;
+}

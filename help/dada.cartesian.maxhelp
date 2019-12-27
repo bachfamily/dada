@@ -1955,7 +1955,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 767.0, 622.0 ],
+						"rect" : [ 100.0, 126.0, 767.0, 622.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -1984,6 +1984,33 @@
 						"subpatcher_template" : "",
 						"showontab" : 1,
 						"boxes" : [ 							{
+								"box" : 								{
+									"bubble" : 1,
+									"id" : "obj-18",
+									"linecount" : 5,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 508.0, 85.0, 204.0, 83.0 ],
+									"presentation_linecount" : 5,
+									"text" : "The same, assigning different weights to the knn algorithm (in this case, they compensate for the dimensions having different orders of magnitude)"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-1",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 357.0, 115.0, 149.0, 23.0 ],
+									"presentation_linecount" : 2,
+									"text" : "knn 4 [400 6000] [1. 0.1]"
+								}
+
+							}
+, 							{
 								"box" : 								{
 									"attr" : "ylabel",
 									"id" : "obj-12",
@@ -2091,7 +2118,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 489.0, 182.0, 204.0, 54.0 ],
+									"patching_rect" : [ 479.0, 29.0, 204.0, 54.0 ],
 									"text" : "Find the 4 nearest neighbors to the point (400, 6000) and output their content"
 								}
 
@@ -2103,7 +2130,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 375.0, 201.0, 109.0, 23.0 ],
+									"patching_rect" : [ 365.0, 48.0, 109.0, 23.0 ],
 									"text" : "knn 4 [400 6000]"
 								}
 
@@ -2112,11 +2139,10 @@
 								"box" : 								{
 									"bubble" : 1,
 									"id" : "obj-29",
-									"linecount" : 2,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 409.0, 100.0, 116.0, 40.0 ],
+									"patching_rect" : [ 112.0, 172.0, 177.0, 25.0 ],
 									"text" : "Dump content of all grains"
 								}
 
@@ -2158,7 +2184,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 358.0, 108.5, 43.0, 23.0 ],
+									"patching_rect" : [ 67.0, 172.0, 43.0, 23.0 ],
 									"text" : "dump"
 								}
 
@@ -2170,7 +2196,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 221.0, 159.0, 217.0, 25.0 ],
+									"patching_rect" : [ 206.0, 145.0, 217.0, 25.0 ],
 									"text" : "Get the current X or Y axis range"
 								}
 
@@ -2182,7 +2208,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 150.0, 159.0, 62.0, 23.0 ],
+									"patching_rect" : [ 135.0, 145.0, 62.0, 23.0 ],
 									"text" : "getrange"
 								}
 
@@ -2194,7 +2220,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 60.0, 159.0, 71.0, 23.0 ],
+									"patching_rect" : [ 45.0, 145.0, 71.0, 23.0 ],
 									"text" : "getdomain"
 								}
 
@@ -2223,7 +2249,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 149.0, 196.0, 145.0, 40.0 ],
+									"patching_rect" : [ 150.0, 199.5, 145.0, 40.0 ],
 									"text" : "Set domain and range automatically"
 								}
 
@@ -2278,7 +2304,7 @@
 							}
 , 							{
 								"box" : 								{
-									"center" : [ -768.240659634537337, -3598.635126288215815 ],
+									"center" : [ -712.745347807499911, -5345.375 ],
 									"colorfield" : "tonalcentroid5th",
 									"convexcombmax" : [ 1.0 ],
 									"convexcombmin" : [ 0.0 ],
@@ -2297,12 +2323,12 @@
 									"sizefield" : "loudness",
 									"table" : "scores",
 									"versionnumber" : 10200,
-									"vzoom" : 0.540409581389709,
+									"vzoom" : 1.201201201201201,
 									"xfield" : "spread",
 									"xlabel" : "spread",
 									"yfield" : "centroid",
 									"ylabel" : "centroid",
-									"zoom" : 5.030717373198907
+									"zoom" : 5.509214025381743
 								}
 
 							}
@@ -2336,6 +2362,13 @@
 							}
  ],
 						"lines" : [ 							{
+								"patchline" : 								{
+									"destination" : [ "obj-10", 0 ],
+									"source" : [ "obj-1", 0 ]
+								}
+
+							}
+, 							{
 								"patchline" : 								{
 									"destination" : [ "obj-27", 0 ],
 									"source" : [ "obj-10", 0 ]
@@ -4163,7 +4196,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 100.0, 126.0, 767.0, 622.0 ],
+						"rect" : [ 0.0, 26.0, 767.0, 622.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -4979,19 +5012,6 @@
 			}
  ],
 		"lines" : [  ],
-		"parameters" : 		{
-			"obj-15::obj-7::obj-8::obj-54" : [ "slider", "slider", 0 ],
-			"obj-15::obj-7::obj-8::obj-78" : [ "button[1]", "button[1]", 0 ],
-			"obj-15::obj-7::obj-8::obj-35" : [ "button", "button", 0 ],
-			"obj-15::obj-7::obj-8::obj-74" : [ "toggle", "toggle", 0 ],
-			"obj-15::obj-7::obj-8::obj-59" : [ "number", "number", 0 ],
-			"obj-15::obj-7::obj-8::obj-86" : [ "toggle[1]", "toggle[1]", 0 ],
-			"parameterbanks" : 			{
-
-			}
-
-		}
-,
 		"dependency_cache" : [ 			{
 				"name" : "helpname.js",
 				"bootpath" : "C74:/help/resources",
@@ -5165,10 +5185,10 @@
 				"implicit" : 1
 			}
 , 			{
-				"name" : "mydadastuff.png",
-				"bootpath" : "/private/tmp",
-				"patcherrelativepath" : "../../../../../../../private/tmp",
-				"type" : "PNG",
+				"name" : "dada.commons.graphic.maxpat",
+				"bootpath" : "~/Documents/Max 7/Packages/dada/help",
+				"patcherrelativepath" : ".",
+				"type" : "JSON",
 				"implicit" : 1
 			}
 , 			{
@@ -5309,22 +5329,6 @@
 			}
 , 			{
 				"name" : "dada.bounce.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "dada.multibrot.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "mira.multitouch.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "dada.platform.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "bach.transcribe.mxo",
 				"type" : "iLaX"
 			}
  ],

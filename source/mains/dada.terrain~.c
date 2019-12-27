@@ -1134,7 +1134,7 @@ void terrain_paint_buffers(t_terrain *x, t_object *view, t_rect *rect, t_dada_fo
                     jgraphics_rotate(gt, -rotation_angle);
                     
                     jfont_text_measure(jf, x->buffer_info[i].b_name ? x->buffer_info[i].b_name->s_name : "???", &text_width, &text_height);
-                    write_text_simple(gt, jf, color, x->buffer_info[i].b_name ? x->buffer_info[i].b_name->s_name : "???", ordinary ? pad : -text_width - pad, -text_height, width, height);
+                    write_text_standard(gt, jf, color, x->buffer_info[i].b_name ? x->buffer_info[i].b_name->s_name : "???", ordinary ? pad : -text_width - pad, -text_height, width, height);
 
                     jgraphics_rotate(gt, rotation_angle);
                     jgraphics_translate(gt, -center.x, -center.y);

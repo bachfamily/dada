@@ -1871,7 +1871,7 @@ void machines_paint_graph(t_machines *x, t_object *view, t_rect rect, t_pt cente
                     
                     if (DADA_MACHINES_DEBUG_IDS) { // debug IDs
                         snprintf_zero(buf, 100, "{%ld}", i);
-                        write_text_simple(g, jf, x->j_machinecolor, buf, 0.5*(pix1_ok.x + pix2_ok.x) + 2,
+                        write_text_standard(g, jf, x->j_machinecolor, buf, 0.5*(pix1_ok.x + pix2_ok.x) + 2,
                                           0.5 * (pix1_ok.y + pix2_ok.y), 300, 300);
                         
                     }
@@ -1904,7 +1904,7 @@ void machines_paint_graph(t_machines *x, t_object *view, t_rect rect, t_pt cente
                     
                     if (DADA_MACHINES_DEBUG_IDS) { // debug IDs
                         snprintf_zero(buf, 100, "<%ld>", i);
-                        write_text_simple(g, jf, x->j_machinecolor, buf, upperleft_corner.x+x->network_machine_size + 2,
+                        write_text_standard(g, jf, x->j_machinecolor, buf, upperleft_corner.x+x->network_machine_size + 2,
                                           upperleft_corner.y, 300, 300);
                         
                     }

@@ -544,7 +544,7 @@ void graph_paint_edge(t_dadaobj *r_ob, t_jgraphics *g, t_rect rect, t_pt center,
         char buf[20];
         t_pt middle = pt_pt_sum(start, pt_number_prod(pt_pt_diff(end, start), 0.5));
         snprintf(buf, 20, "%ld: %ld > %ld", i + 1, graph->edges[i].start + 1, graph->edges[i].end + 1);
-        write_text_simple(g, jf_label, DADA_RED, buf, middle.x-20, middle.y -20, 200, 200);
+        write_text_standard(g, jf_label, DADA_RED, buf, middle.x-20, middle.y -20, 200, 200);
     }
 */
     if (graph->edges[i].flag & DADA_GRAPH_EDGE_FLAG_PASSTHROUGH)

@@ -2261,7 +2261,7 @@ void distances_paint_grains(t_distances *x, t_jgraphics *g, t_object *view, t_re
                  paint_dashed_line(g, gr->color, pt.x, pt.y, uniform_grid_pt.x, uniform_grid_pt.y, 0.5, 3);
                  */
                 if (x->paint_labels && gr->label)
-                    write_text_simple(g, jf_labels, DADA_GREY_25, gr->label->s_name, pt.x + gr->radius_px, pt.y + gr->radius_px, 200, 200);
+                    write_text_standard(g, jf_labels, DADA_GREY_25, gr->label->s_name, pt.x + gr->radius_px, pt.y + gr->radius_px, 200, 200);
                 
             }
         }

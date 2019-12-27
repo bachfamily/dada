@@ -469,7 +469,7 @@ void base_okclose(t_base *x, char *s, short *result)
 void base_edclose(t_base *x, char **ht, long size)
 {
     // do something with the text
-    if (ht) {
+    if (!x->read_only && ht) {
         t_llll *ll = llll_from_text_buf(*ht, size > MAX_SYM_LENGTH);
         if (ll) {
             xbase_destroy_all_tables(x->xbase);

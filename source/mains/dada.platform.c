@@ -3003,7 +3003,7 @@ void platform_paint_floattext(t_platform *x, t_jgraphics *g, t_jfont *jf, t_jrgb
             double w, h;
             snprintf_zero(buf, 100, "%ld%s", hatom_getlong(&ll->l_head->l_hatom), is_vp ? "VP" : "");
             jfont_text_measure(jf, buf, &w, &h);
-			write_text_simple(g, jf, change_alpha(textcolor, alpha), buf, pt.x  - w/2, pt.y - h/2., 1000, 1000);
+			write_text_standard(g, jf, change_alpha(textcolor, alpha), buf, pt.x  - w/2, pt.y - h/2., 1000, 1000);
 		}
 	}
 }
@@ -3163,7 +3163,7 @@ void platform_paint_ext(t_platform *x, t_object *view, t_dada_force_graphics *fo
         char buf[1000];
         platform_get_legend(x, buf);
         if (buf[0]) {
-            write_text_simple(g, jf_legend, x->m_level.j_textcolor, buf, 10, 10, rect.width - 20, rect.height - 20);
+            write_text_standard(g, jf_legend, x->m_level.j_textcolor, buf, 10, 10, rect.width - 20, rect.height - 20);
         }
         
         // painting time

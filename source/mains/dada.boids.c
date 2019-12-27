@@ -2249,7 +2249,7 @@ void boids_paint_ext(t_boids *x, t_object *view, t_dada_force_graphics *forced_g
         if (x->show_names && sw->name && sw->name->s_name[0] && min_x <= max_x) {
             double text_width, text_height;
             jfont_text_measure(jf, sw->name->s_name, &text_width, &text_height);
-            write_text_simple(g, jf, sw->color, sw->name->s_name, (min_x + max_x)/2. - text_width/2., topmost.y - text_height - 2, rect.width, rect.height);
+            write_text_standard_singleline(g, jf, sw->color, sw->name->s_name, (min_x + max_x)/2. - text_width/2., topmost.y - text_height - 2, rect.width, rect.height);
         }
         
         // painting rule params, if any

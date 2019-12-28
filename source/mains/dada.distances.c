@@ -114,9 +114,10 @@ typedef struct _distances
 	t_object	*d_dataview;	///< The dataview object
 	t_hashtab	*d_columns;		///< The dataview columns:  column name -> column index
 	t_object	*d_view;		///< The dbview object that we need to display in a dataview
-	t_symbol	*d_query;		///< Attribute
-	t_symbol	*d_where;		///< Attribute
-	t_symbol	*d_database;	///< Attribute
+	t_symbol	*d_query;		
+    long        d_where_ac;
+    t_atom      *d_where_av;
+	t_symbol	*d_database;
     
 	t_object	*d_db;			///< the actual database object
 
@@ -599,11 +600,11 @@ void C74_EXPORT ext_main(void *moduleRef)
 	CLASS_ATTR_INVISIBLE(c, "query", ATTR_GET_OPAQUE | ATTR_SET_OPAQUE);
 	// @exclude dada.distances
 	
-	CLASS_ATTR_SYM(c, "where", ATTR_SET_DEFER, t_distances, d_where);
-    CLASS_ATTR_STYLE_LABEL(c, "where", 0, "text", "Where Clause For Display Query"); 
-	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"where",0,"");
-    CLASS_ATTR_ACCESSORS(c,		"where",			NULL, distances_set_where);
-	// @description Sets the SQLite 'WHERE' clause to sieve displayed data.
+    CLASS_ATTR_ATOM_VARSIZE(c,"where", ATTR_SET_DEFER, t_distances, d_where_av, d_where_ac, 32500); // list limit is somewhere below 2^15, this should be a safe limit
+    CLASS_ATTR_STYLE_LABEL(c, "where", 0, "text", "Where Clause For Display Query");
+    CLASS_ATTR_ACCESSORS(c,        "where",            NULL, distances_set_where);
+    CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"where",0,"");
+    // @description Sets the SQLite 'WHERE' clause to sieve displayed data.
 
 	CLASS_ATTR_SYM(c,			"database",			ATTR_SET_DEFER_LOW,	t_distances, d_database);
 	CLASS_ATTR_ACCESSORS(c,		"database",			NULL, distances_set_database);
@@ -927,10 +928,12 @@ t_max_err distances_set_query(t_distances *x, void *attr, long argc, t_atom *arg
 
 t_max_err distances_set_where(t_distances *x, void *attr, long argc, t_atom *argv)
 {
-    if (!argc)
-        x->d_where = _llllobj_sym_empty_symbol;
-    else if (argc && argv && atom_gettype(argv) == A_SYM && atom_getsym(argv)) {
-        x->d_where = atom_getsym(argv);
+    if (!argc) {
+        x->d_where_ac = 0;
+    } else {
+        x->d_where_ac = argc;
+        for (long i = 0; i < MIN(32500, argc); i++)
+            x->d_where_av[i] = argv[i];
     }
     return MAX_ERR_NONE;
 }
@@ -1107,6 +1110,7 @@ void distances_free(t_distances *x)
 	db_view_remove(x->d_db, &x->d_view);
 	db_close(&x->d_db);
     llll_free(x->scheduled_times);
+    sysmem_freeptr(x->d_where_av);
     llll_free(x->grains);
     llll_free(x->grains_grid);
     llll_free(x->turtled_grain_history);
@@ -1167,6 +1171,8 @@ void *distances_new(t_symbol *s, long argc, t_atom *argv)
 		x->curr_beat_ms = 1000;
         x->loop_clock = clock_new(x, (method)distances_loop_tick);
         x->turtled_grain_history = llll_get();
+        x->d_where_ac = 0;
+        x->d_where_av = (t_atom *)sysmem_newptr(32500 * sizeof(t_atom));
 
         graph_new(&x->graph, DADA_GRAPH_FLAG_SYMMETRIC, DADA_GRAPH_METADATA_OBJ, DADA_GRAPH_METADATA_DOUBLE, DADA_LINE_STRAIGHT);
  		
@@ -1888,12 +1894,14 @@ void build_grains(t_distances *x)
 	}
 	
     long colorfield_idx = 3;
-    char query[2048];
+    char query[DADA_QUERY_ALLOC_CHAR_SIZE];
+    long query_alloc = DADA_QUERY_ALLOC_CHAR_SIZE;
+
     
     
     /// OBTAINING MAXIMUM ID OF GRAINS
     long num_idxs = 0;
-    snprintf_zero(query, 2048, "SELECT MAX(%s) FROM %s", idname->s_name, tablename->s_name);
+    snprintf_zero(query, query_alloc, "SELECT MAX(%s) FROM %s", idname->s_name, tablename->s_name);
     if (db_query(x->d_db, &result, query) == MAX_ERR_NONE)
         num_idxs = db_result_double_local(result, 0, 0) + 1;
     object_free(result);
@@ -1901,9 +1909,14 @@ void build_grains(t_distances *x)
 
     /// OBTAINING IDs OF GRAINS TO BE DISPLAYED
     
-    snprintf_zero(query, 2048, "SELECT %s FROM %s", idname->s_name, tablename->s_name);
-    if (x->d_where && strlen(x->d_where->s_name) > 0)
-        snprintf_zero(query + strlen(query), 2048 - strlen(query), " WHERE %s", x->d_where->s_name);
+    snprintf_zero(query, query_alloc, "SELECT %s FROM %s", idname->s_name, tablename->s_name);
+    if (x->d_where_ac > 0) {
+        char *buf = NULL;
+        long size = 0;
+        atom_gettext(x->d_where_ac, x->d_where_av, &size, &buf, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE);
+        snprintf_zero(query + strlen(query), query_alloc - strlen(query), " WHERE %s", buf);
+        sysmem_freeptr(buf);
+    }
     
     err = db_query(x->d_db, &result, query);
     

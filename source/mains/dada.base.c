@@ -68,6 +68,7 @@ typedef struct _base {
     
     char        editor_dirty;
     char        is_volatile;
+    char        is_readonly; ///< This is unsupported for now, due to the fact that db_open_ext() does not seem to be exposed properly from Max API
     char        creating_new_obj;
 } t_base;
 
@@ -338,6 +339,12 @@ void C74_EXPORT ext_main(void *moduleRef)
     // The database can be modified locally, but nothing will be saved to disk
     // (unless explicitly forced by a <m>write</m> or <m>writetxt</m> message.
 
+//    CLASS_ATTR_CHAR(c,"readonly",0, t_base, is_readonly);
+//    CLASS_ATTR_STYLE_LABEL(c,"readonly",0,"onoff","Read-Only Dataset File");
+    // @exclude all //<<< UNSUPPORTED FOR NOW
+    // @description Toggles the ability to make the database read-only.
+
+    
     CLASS_ATTR_CHAR(c,"outputcolnames",0, t_base, output_fieldnames);
 	CLASS_ATTR_STYLE_LABEL(c,"outputcolnames",0,"onoff","Output Column Names");
 	// @description Toggles the ability to output the column names in query answers. Defaults to 1.
@@ -473,7 +480,7 @@ void base_okclose(t_base *x, char *s, short *result)
 void base_edclose(t_base *x, char **ht, long size)
 {
     // do something with the text
-    if (x->editor_dirty && ht) {
+    if (x->editor_dirty && !x->is_readonly && ht) {
         t_llll *ll = llll_from_text_buf(*ht, size > MAX_SYM_LENGTH);
         if (ll) {
             xbase_destroy_all_tables(x->xbase);
@@ -1787,7 +1794,7 @@ long file_exists(char *fname) {
     }
 }
 
-t_max_err rebuild_database(t_xbase *b)
+t_max_err rebuild_database(t_xbase *b, char readonly)
 {
 	long i, j;
 	t_max_err err = MAX_ERR_NONE;
@@ -1807,8 +1814,11 @@ t_max_err rebuild_database(t_xbase *b)
         short outpath = 0;
         t_symbol *filename_resolved = dada_ezresolve_file(filename, &outpath);
 
+// should be like this
+//        db_open_ext(b->d_name, filename_resolved->s_name, &b->d_db, readonly ? DB_OPEN_FLAGS_READONLY : DB_OPEN_FLAGS_NONE);
+// but the function db_open_ext() is not found in Max api, so read-only is unsupported by now
         db_open(b->d_name, filename_resolved->s_name, &b->d_db);
-        
+
         char metafile_found = false;
         t_symbol *metafile = filename_to_metafilename(filename_resolved);
         
@@ -1948,15 +1958,15 @@ t_max_err base_attr_name_set(t_base *x, void *attr, long argc, t_atom *argv)
             x->d_name = symbol_unique();
             x->xbase = xbase_new(x->d_name);
             x->xbase->d_filename = x->d_filename;
-            rebuild_database(x->xbase);
+            rebuild_database(x->xbase, x->is_readonly);
         } else if (!x->xbase->d_filename && x->d_filename) {
             x->xbase->d_filename = x->d_filename;
-            rebuild_database(x->xbase);
+            rebuild_database(x->xbase, x->is_readonly);
         }
     } else {
         x->xbase = xbase_new(newname);
         x->xbase->d_filename = x->d_filename;
-        rebuild_database(x->xbase);
+        rebuild_database(x->xbase, x->is_readonly);
     }
     x->xbase->ref_count++;
     

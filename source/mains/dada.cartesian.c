@@ -110,9 +110,10 @@ typedef struct _cartesian
 	t_object	*d_dataview;	///< The dataview object
 	t_hashtab	*d_columns;		///< The dataview columns:  column name -> column index
 	t_object	*d_view;		///< The dbview object that we need to display in a dataview
-	t_symbol	*d_query;		///< Attribute
-	t_symbol	*d_where;		///< Attribute
-	t_symbol	*d_database;	///< Attribute
+	t_symbol	*d_query;
+    long        d_where_ac;
+	t_atom  	*d_where_av;
+	t_symbol	*d_database;
     
 	t_object	*d_db;			///< the actual database object
 
@@ -546,10 +547,10 @@ void C74_EXPORT ext_main(void *moduleRef)
 	CLASS_ATTR_INVISIBLE(c, "query", ATTR_GET_OPAQUE | ATTR_SET_OPAQUE);
 	// @exclude dada.cartesian
 	
-	CLASS_ATTR_SYM(c, "where", ATTR_SET_DEFER, t_cartesian, d_where);
-    CLASS_ATTR_STYLE_LABEL(c, "where", 0, "text", "Where Clause For Display Query"); 
+    CLASS_ATTR_ATOM_VARSIZE(c,"where", ATTR_SET_DEFER, t_cartesian, d_where_av, d_where_ac, 32500); // list limit is somewhere below 2^15, this should be a safe limit
+    CLASS_ATTR_STYLE_LABEL(c, "where", 0, "text", "Where Clause For Display Query");
+    CLASS_ATTR_ACCESSORS(c,        "where",            NULL, cartesian_set_where);
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"where",0,"");
-    CLASS_ATTR_ACCESSORS(c,		"where",			NULL, cartesian_set_where);
 	// @description Sets the SQLite 'WHERE' clause to sieve displayed data.
 
 	CLASS_ATTR_SYM(c,			"database",			ATTR_SET_DEFER_LOW,	t_cartesian, d_database);
@@ -791,15 +792,19 @@ t_max_err cartesian_set_query(t_cartesian *x, void *attr, long argc, t_atom *arg
 	return MAX_ERR_NONE;
 }
 
+
 t_max_err cartesian_set_where(t_cartesian *x, void *attr, long argc, t_atom *argv)
 {
-    if (!argc)
-        x->d_where = _llllobj_sym_empty_symbol;
-    else if (argc && argv && atom_gettype(argv) == A_SYM && atom_getsym(argv)) {
-        x->d_where = atom_getsym(argv);
+    if (!argc) {
+        x->d_where_ac = 0;
+    } else {
+        x->d_where_ac = argc;
+        for (long i = 0; i < MIN(32500, argc); i++)
+            x->d_where_av[i] = argv[i];
     }
     return MAX_ERR_NONE;
 }
+
 
 
 
@@ -956,6 +961,7 @@ void cartesian_free(t_cartesian *x)
 	db_view_remove(x->d_db, &x->d_view);
 	db_close(&x->d_db);
     llll_free(x->scheduled_times);
+    sysmem_freeptr(x->d_where_av);
     llll_free(x->grains);
     object_free(x->loop_clock);
 	dadaobj_jbox_free((t_dadaobj_jbox *)x); // jbox_free and llllobj_free are inside here
@@ -1012,6 +1018,8 @@ void *cartesian_new(t_symbol *s, long argc, t_atom *argv)
 		x->curr_beat_ms = 1000;
         x->loop_clock = clock_new(x, (method)cartesian_loop_tick);
         x->is_creating_new_obj = true;
+        x->d_where_ac = 0;
+        x->d_where_av = (t_atom *)sysmem_newptr(32500 * sizeof(t_atom));
         
         for (long i = 0; i < DADA_CARTESIAN_MAX_CONVEXCOMB; i++)
             x->field_convexcomb_max[i] = 1.;
@@ -1685,8 +1693,13 @@ long build_grains(t_cartesian *x)
         colorfield_idx = x->field_convexcomb_size+1;
     }
     
-	if (x->d_where && strlen(x->d_where->s_name) > 0) 
-		snprintf_zero(query + strlen(query), query_alloc - strlen(query), " WHERE %s", x->d_where->s_name);
+    if (x->d_where_ac > 0) {
+        char *buf = NULL;
+        long size = 0;
+        atom_gettext(x->d_where_ac, x->d_where_av, &size, &buf, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE);
+		snprintf_zero(query + strlen(query), query_alloc - strlen(query), " WHERE %s", buf);
+        sysmem_freeptr(buf);
+    }
 
 	err = db_query(x->d_db, &result, query);
 	

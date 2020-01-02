@@ -1909,7 +1909,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 100.0, 105.0, 825.0, 584.0 ],
+						"rect" : [ 0.0, 26.0, 825.0, 584.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -1940,6 +1940,34 @@
 						"boxes" : [ 							{
 								"box" : 								{
 									"bubble" : 1,
+									"fontname" : "Arial",
+									"fontsize" : 13.0,
+									"id" : "obj-15",
+									"linecount" : 3,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 283.0, 347.5, 196.0, 54.0 ],
+									"presentation_linecount" : 4,
+									"text" : "open editor\n(also double click on the object for small databases)"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-14",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 234.0, 363.0, 47.0, 23.0 ],
+									"text" : "wopen"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"bubble" : 1,
 									"bubblepoint" : 0.31,
 									"bubbleside" : 0,
 									"fontname" : "Arial",
@@ -1950,7 +1978,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 515.0, 503.0, 267.0, 69.0 ],
-									"presentation_linecount" : 6,
 									"text" : "The \"volatile\" attribute allows for local modifications that will NOT be saved to your database file."
 								}
 
@@ -2148,7 +2175,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 300.0, 482.0, 146.0, 54.0 ],
+									"patching_rect" : [ 300.0, 503.0, 146.0, 54.0 ],
 									"text" : "Bang when database is loaded from disk"
 								}
 
@@ -2161,7 +2188,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 273.5, 482.0, 24.0, 24.0 ]
+									"patching_rect" : [ 273.5, 503.0, 24.0, 24.0 ]
 								}
 
 							}
@@ -2234,7 +2261,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 300.0, 404.0, 187.921981811523438, 54.0 ]
+									"patching_rect" : [ 300.0, 425.0, 187.921981811523438, 54.0 ]
 								}
 
 							}
@@ -2246,7 +2273,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 26.0, 453.0, 227.0, 23.0 ],
+									"patching_rect" : [ 26.0, 474.0, 227.0, 23.0 ],
 									"saved_object_attributes" : 									{
 										"versionnumber" : 80001
 									}
@@ -2278,7 +2305,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
-									"patching_rect" : [ 26.0, 404.0, 266.5, 23.0 ],
+									"patching_rect" : [ 26.0, 425.0, 266.5, 23.0 ],
 									"text" : "dada.base test dadatestdb.txt"
 								}
 
@@ -2325,6 +2352,13 @@
 								"patchline" : 								{
 									"destination" : [ "obj-8", 0 ],
 									"source" : [ "obj-12", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-1", 0 ],
+									"source" : [ "obj-14", 0 ]
 								}
 
 							}
@@ -2425,7 +2459,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 825.0, 584.0 ],
+						"rect" : [ 100.0, 105.0, 825.0, 584.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,

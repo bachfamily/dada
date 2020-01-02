@@ -92,6 +92,7 @@ void			base_table_destroy(t_base *x, t_symbol *tablename);
 t_max_err		base_attr_name_set(t_base *x, void *attr, long argc, t_atom *argv);
 void			base_appendtodictionary(t_base *x, t_dictionary *d);
 void    base_dblclick(t_base *x);
+void    base_wopen(t_base *x);
 void    base_edclose(t_base *x, char **ht, long size);
 void  base_okclose(t_base *x, char *s, short *result);
 //long    base_edsave(t_base *x, char **ht, long size);
@@ -127,6 +128,8 @@ void xbase_free_lllls(t_xbase *b);
 
 t_llll *xbase_db_query_from_llll(t_xbase *b, t_llll *query, char output_fieldnames);
 t_llll *xbase_db_get_table_header(t_xbase *b, long table_idx);
+long xbase_db_count_all_rows(t_xbase *b);
+long xbase_db_count_table_rows(t_xbase *b, long table_num);
 
 
 
@@ -191,12 +194,19 @@ void C74_EXPORT ext_main(void *moduleRef)
     
     
     // @method (doubleclick) @digest Edit database as text
-    // @description Doubleclicking on the object forces a text editor to open up, where the whole database can be edited directly in text form.
+    // @description Doubleclicking on the object opens a text editor, where the whole database can be edited directly in text form.
+    // To prevent unwanted long hangs, this is only true for small datasets: if you need to open large datasets in text form,
+    // please use the <m>wopen</m> message explicitly.
     class_addmethod(c, (method)base_dblclick,		"dblclick",		A_CANT, 0);
     class_addmethod(c, (method)base_edclose,		"edclose",		A_CANT, 0);
     class_addmethod(c, (method)base_okclose,        "okclose", A_CANT, 0);
 //    class_addmethod(c, (method)base_edsave,         "edsave", A_CANT, 0);
     
+
+    // @method wopen @digest Open text editor for database
+    // @description The <m>wopen</m> message will open a text editor for the database.
+    class_addmethod(c, (method)base_wopen,          "wopen",    0);
+
     // @method (drag) @digest Drag-and-drop database loading
     // @description The specified file is read from disk and the database it contains (as llll) is opened.
     class_addmethod(c, (method)base_acceptsdrag, "acceptsdrag_locked", A_CANT, 0);
@@ -444,9 +454,7 @@ long base_acceptsdrag(t_base *x, t_object *drag, t_object *view)
     return false;
 }
 
-
-// this lets us double-click on sphinx~ to open up the buffer~ it references
-void base_dblclick(t_base *x)
+void base_wopen(t_base *x)
 {
     if (!x->m_editor)
         x->m_editor = (t_object *)object_new(CLASS_NOBOX, gensym("jed"), (t_object *)x, 0);
@@ -455,11 +463,11 @@ void base_dblclick(t_base *x)
     
     char *buf = NULL;
     t_llll *ll = db_to_llll(x->xbase, true);
-
+    
     llll_to_text_buf_pretty(ll, &buf, 0, BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART, NULL);
-//    llll_to_text_buf_pretty(ll, &buf, 0, BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, 0, NULL);
-//    llll_to_text_buf(ll, &buf);
-
+    //    llll_to_text_buf_pretty(ll, &buf, 0, BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, 0, NULL);
+    //    llll_to_text_buf(ll, &buf);
+    
     void *rv = object_method(x->m_editor, gensym("settext"), buf, gensym("utf-8"));  // non-0 if the text was too long
     if (rv) {
         t_object *ed = x->m_editor;
@@ -468,7 +476,18 @@ void base_dblclick(t_base *x)
     } else {
         object_attr_setsym(x->m_editor, gensym("title"), gensym("Database as llll"));
     }
-    llll_free(ll);
+    llll_free(ll);}
+
+// this lets us double-click on sphinx~ to open up the buffer~ it references
+void base_dblclick(t_base *x)
+{
+    if (xbase_db_count_all_rows(x->xbase) > 10000) { /// < more than 10k entries would take a LONG time to deparse. one may use "wopen" then
+        object_warn((t_object *)x, "You have double clicked a dada.base containing more than 10000 entries: are you sure you want to deparse and show it in textual form?");
+        object_warn((t_object *)x, "   If yes, please use an explicit \"wopen\" message instead – this may take long!");
+        return;
+    }
+    
+    base_wopen(x);
 }
 
 void base_okclose(t_base *x, char *s, short *result)
@@ -1542,6 +1561,36 @@ void base_anything(t_base *x, t_symbol *msg, long ac, t_atom *av)
 }
 
 
+long xbase_db_count_table_rows(t_xbase *b, long table_num)
+{
+    char buf[2048];
+    t_symbol *table_name = b->table[table_num].name;
+    t_symbol *id_name = table_name_to_idname(table_name);
+    if (table_name && id_name) {
+        snprintf_zero(buf, 2048, "SELECT COUNT(%s) FROM %s", id_name->s_name, table_name->s_name);
+        
+        t_max_err    err = MAX_ERR_NONE;
+        t_db_result    *result = NULL;
+        err = db_query_direct(b->d_db, &result, buf);
+        if (err == MAX_ERR_NONE) {
+            long numrecords = db_result_numrecords(result);
+            if (numrecords >= 1) {
+                char **record = db_result_firstrecord(result);
+                return atol(record[0]);
+            }
+        }
+    }
+
+    return 0;
+}
+
+long xbase_db_count_all_rows(t_xbase *b)
+{
+    long count = 0;
+    for (long i = 0; i < b->num_tables; i++)
+        count += xbase_db_count_table_rows(b, i);
+    return count;
+}
 t_llll *xbase_db_query(t_xbase *b, char *buf, char output_fieldnames)
 {
 	t_max_err	err = MAX_ERR_NONE;

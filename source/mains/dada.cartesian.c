@@ -111,8 +111,7 @@ typedef struct _cartesian
 	t_hashtab	*d_columns;		///< The dataview columns:  column name -> column index
 	t_object	*d_view;		///< The dbview object that we need to display in a dataview
 	t_symbol	*d_query;
-    long        d_where_ac;
-	t_atom  	*d_where_av;
+	t_llll  	*d_where_llll;
 	t_symbol	*d_database;
     
 	t_object	*d_db;			///< the actual database object
@@ -248,7 +247,7 @@ void cartesian_initdataview(t_cartesian *x);
 
 t_max_err cartesian_set_query(t_cartesian *x, void *attr, long argc, t_atom *argv);
 t_max_err cartesian_set_database(t_cartesian *x, void *attr, long argc, t_atom *argv);
-t_max_err cartesian_set_where(t_cartesian *x, void *attr, long argc, t_atom *argv);
+t_max_err cartesian_setattr_where(t_cartesian *x, void *attr, long argc, t_atom *argv);
 
 t_llll *get_grain_contentfield(t_cartesian *x, t_cartesian_grain *gr);
 void output_grain_contentfield(t_cartesian *x, t_cartesian_grain *gr, t_symbol *router, char beat_sync);
@@ -270,6 +269,7 @@ void cartesian_end_preset(t_cartesian *x);
 */
 
 
+DEFINE_LLLL_ATTR_DEFAULT_GETTER(t_cartesian, d_where_llll, cartesian_getattr_where);
 
 //////////////////////// global class pointer variable
 static t_class *cartesian_class;
@@ -547,9 +547,9 @@ void C74_EXPORT ext_main(void *moduleRef)
 	CLASS_ATTR_INVISIBLE(c, "query", ATTR_GET_OPAQUE | ATTR_SET_OPAQUE);
 	// @exclude dada.cartesian
 	
-    CLASS_ATTR_ATOM_VARSIZE(c,"where", ATTR_SET_DEFER, t_cartesian, d_where_av, d_where_ac, 32500); // list limit is somewhere below 2^15, this should be a safe limit
+    CLASS_ATTR_LLLL(c,"where", ATTR_SET_DEFER, t_cartesian, d_where_llll, cartesian_getattr_where, cartesian_setattr_where);
     CLASS_ATTR_STYLE_LABEL(c, "where", 0, "text", "Where Clause For Display Query");
-    CLASS_ATTR_ACCESSORS(c,        "where",            NULL, cartesian_set_where);
+    CLASS_ATTR_BASIC(c, "where", 0);
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"where",0,"");
 	// @description Sets the SQLite 'WHERE' clause to sieve displayed data.
 
@@ -793,14 +793,21 @@ t_max_err cartesian_set_query(t_cartesian *x, void *attr, long argc, t_atom *arg
 }
 
 
-t_max_err cartesian_set_where(t_cartesian *x, void *attr, long argc, t_atom *argv)
+
+t_max_err cartesian_setattr_where(t_cartesian *x, void *attr, long argc, t_atom *argv)
 {
-    if (!argc) {
-        x->d_where_ac = 0;
-    } else {
-        x->d_where_ac = argc;
-        for (long i = 0; i < MIN(32500, argc); i++)
-            x->d_where_av[i] = argv[i];
+    t_llll *ll;
+    if ((ll = llllobj_parse_llll((t_object *) x, LLLL_OBJ_UI, _llllobj_sym_none, argc, argv, LLLL_PARSE_CLONE, LLLL_I_ALL))) {
+        t_llll *free_me;
+        dadaobj_mutex_lock(dadaobj_cast(x));
+        free_me = x->d_where_llll;
+        x->d_where_llll = ll;
+        if (ll && ll->l_head)
+            llll_destroyelem(ll->l_head);
+        if (ll->l_size == 1 && hatom_getsym(&ll->l_head->l_hatom) == _llllobj_sym_null) // we treat the "null" case separately, this has to be parsed and not ignore.
+            llll_clear(ll);
+        dadaobj_mutex_unlock(dadaobj_cast(x));
+        llll_free(free_me);
     }
     return MAX_ERR_NONE;
 }
@@ -961,7 +968,7 @@ void cartesian_free(t_cartesian *x)
 	db_view_remove(x->d_db, &x->d_view);
 	db_close(&x->d_db);
     llll_free(x->scheduled_times);
-    sysmem_freeptr(x->d_where_av);
+    llll_free(x->d_where_llll);
     llll_free(x->grains);
     object_free(x->loop_clock);
 	dadaobj_jbox_free((t_dadaobj_jbox *)x); // jbox_free and llllobj_free are inside here
@@ -1018,8 +1025,7 @@ void *cartesian_new(t_symbol *s, long argc, t_atom *argv)
 		x->curr_beat_ms = 1000;
         x->loop_clock = clock_new(x, (method)cartesian_loop_tick);
         x->is_creating_new_obj = true;
-        x->d_where_ac = 0;
-        x->d_where_av = (t_atom *)sysmem_newptr(32500 * sizeof(t_atom));
+        x->d_where_llll = llll_get();
         
         for (long i = 0; i < DADA_CARTESIAN_MAX_CONVEXCOMB; i++)
             x->field_convexcomb_max[i] = 1.;
@@ -1678,9 +1684,17 @@ long build_grains(t_cartesian *x)
 	}
 	
     long colorfield_idx = 3;
-    char query[DADA_QUERY_ALLOC_CHAR_SIZE];
-    long query_alloc = DADA_QUERY_ALLOC_CHAR_SIZE;
     
+    char *query = NULL;
+    long query_alloc = DADA_QUERY_ALLOC_CHAR_SIZE;
+    char *where = NULL;
+
+    if (x->d_where_llll->l_size > 0) {
+        query_alloc += llll_to_text_buf(x->d_where_llll, &where, 0, BACH_DEFAULT_MAXDECIMALS, LLLL_T_NONE, LLLL_TE_NONE, LLLL_TB_NONE, NULL);
+    }
+    
+    query = (char *)sysmem_newptr(query_alloc * sizeof(char));
+
     if (x->mode == DADA_CARTESIAN_MODE_CARTESIAN) {
         snprintf_zero(query, query_alloc, "SELECT %s,%s,%s,%s,%s,%s,%s,%s,%s FROM %s",
                       idname->s_name, xfield->s_name, yfield->s_name, colorfield->s_name, sizefield->s_name, shapefield->s_name, bpmfield->s_name, phasefield->s_name, lengthfield->s_name, tablename->s_name);
@@ -1692,16 +1706,15 @@ long build_grains(t_cartesian *x)
         snprintf_zero(query + strlen(query), query_alloc - strlen(query), "%s,%s,%s,%s,%s,%s FROM %s", colorfield->s_name, sizefield->s_name, shapefield->s_name, bpmfield->s_name, phasefield->s_name, lengthfield->s_name, tablename->s_name);
         colorfield_idx = x->field_convexcomb_size+1;
     }
-    
-    if (x->d_where_ac > 0) {
-        char *buf = NULL;
-        long size = 0;
-        atom_gettext(x->d_where_ac, x->d_where_av, &size, &buf, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE);
-		snprintf_zero(query + strlen(query), query_alloc - strlen(query), " WHERE %s", buf);
-        sysmem_freeptr(buf);
+
+    if (where) {
+        snprintf_zero(query + strlen(query), query_alloc - strlen(query), " WHERE %s", where);
+        sysmem_freeptr(where);
     }
 
 	err = db_query(x->d_db, &result, query);
+    
+    sysmem_freeptr(query);
 	
 	
 	if (err)

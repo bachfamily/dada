@@ -19,7 +19,7 @@
 #define DADA_XBASE_MAGIC_BAD 666
 
 
-#define DADA_QUERY_ALLOC_CHAR_SIZE (8192 * 4)
+#define DADA_QUERY_ALLOC_CHAR_SIZE (8192 * 4) // < basic query allocation chars
 
 
 typedef struct _db_table {

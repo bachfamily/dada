@@ -927,7 +927,6 @@ void C74_EXPORT ext_main(void *moduleRef)
     class_addmethod(c, (method) boids_bang,			"bang",			0);
 
 
-
     DADAOBJ_JBOX_DECLARE_READWRITE_METHODS(c);
     DADAOBJ_JBOX_DECLARE_IMAGE_METHODS(c);
     DADAOBJ_JBOX_DECLARE_ACCEPTSDRAG_METHODS(c);

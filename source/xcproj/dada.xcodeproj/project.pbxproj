@@ -40,8 +40,10 @@
 		1E045A2F1AEE91D600A1F2B9 /* dada.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */; };
 		1E045A331AEE91D600A1F2B9 /* lib_dada.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED9C9B1190D1224001973B8 /* lib_dada.a */; };
 		1E045A421AEE91F600A1F2B9 /* dada.base.c in Sources */ = {isa = PBXBuildFile; fileRef = 1E045A411AEE91F600A1F2B9 /* dada.base.c */; };
-		1E0E018F1B13671800F88916 /* dada.notation_spectral.c in Sources */ = {isa = PBXBuildFile; fileRef = 1E0E018D1B13671800F88916 /* dada.notation_spectral.c */; };
-		1E0E01901B13671800F88916 /* dada.notation_spectral.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E0E018E1B13671800F88916 /* dada.notation_spectral.h */; };
+		1E0E018F1B13671800F88916 /* dada.notation.spectral.c in Sources */ = {isa = PBXBuildFile; fileRef = 1E0E018D1B13671800F88916 /* dada.notation.spectral.c */; };
+		1E0E01901B13671800F88916 /* dada.notation.spectral.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E0E018E1B13671800F88916 /* dada.notation.spectral.h */; };
+		1E149F1B23F5D26800E525D5 /* dada.spectral.c in Sources */ = {isa = PBXBuildFile; fileRef = 1E149F1923F5D26800E525D5 /* dada.spectral.c */; };
+		1E149F1C23F5D26800E525D5 /* dada.spectral.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E149F1A23F5D26800E525D5 /* dada.spectral.h */; };
 		1E2A3ACC1DBF55D40009CF52 /* dada.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */; };
 		1E2A3AD01DBF55D40009CF52 /* lib_dada.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED9C9B1190D1224001973B8 /* lib_dada.a */; };
 		1E2A3ADA1DBF55ED0009CF52 /* dada.distances.c in Sources */ = {isa = PBXBuildFile; fileRef = 1E2A3AD91DBF55ED0009CF52 /* dada.distances.c */; };
@@ -124,6 +126,17 @@
 		1ECA8C291A45B2FB001B9251 /* dada.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */; };
 		1ECA8C2A1A45B2FB001B9251 /* dada.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */; };
 		1ECA8C2B1A45B2FB001B9251 /* dada.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */; };
+		1ECC5AC323F5D04600D860C3 /* icon_block.png in Resources */ = {isa = PBXBuildFile; fileRef = 1ED646E31DAD4011003CA9B1 /* icon_block.png */; };
+		1ECC5AC423F5D04600D860C3 /* icon_coin.png in Resources */ = {isa = PBXBuildFile; fileRef = 1ED646E41DAD4011003CA9B1 /* icon_coin.png */; };
+		1ECC5AC523F5D04600D860C3 /* icon_gamechar.png in Resources */ = {isa = PBXBuildFile; fileRef = 1ED646E51DAD4011003CA9B1 /* icon_gamechar.png */; };
+		1ECC5AC623F5D04600D860C3 /* icon_level.png in Resources */ = {isa = PBXBuildFile; fileRef = 1ED646E61DAD4011003CA9B1 /* icon_level.png */; };
+		1ECC5AC723F5D04600D860C3 /* icon_portal.png in Resources */ = {isa = PBXBuildFile; fileRef = 1ED646E71DAD4011003CA9B1 /* icon_portal.png */; };
+		1ECC5AC823F5D04600D860C3 /* dada.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */; };
+		1ECC5AC923F5D04600D860C3 /* PressStart2P.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1ED0A6361DABD53E00BE2DE7 /* PressStart2P.ttf */; };
+		1ECC5ACD23F5D04600D860C3 /* lib_dada.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED9C9B1190D1224001973B8 /* lib_dada.a */; };
+		1ECC5ACE23F5D04600D860C3 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED0A6321DABCFCC00BE2DE7 /* ApplicationServices.framework */; };
+		1ECC5ACF23F5D04600D860C3 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED0A6301DABCFB100BE2DE7 /* CoreServices.framework */; };
+		1ECC5AD723F5D07C00D860C3 /* dada.rhythmogram.c in Sources */ = {isa = PBXBuildFile; fileRef = 1ECC5AD623F5D07C00D860C3 /* dada.rhythmogram.c */; };
 		1ED0A6311DABCFB100BE2DE7 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED0A6301DABCFB100BE2DE7 /* CoreServices.framework */; };
 		1ED0A6331DABCFCC00BE2DE7 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED0A6321DABCFCC00BE2DE7 /* ApplicationServices.framework */; };
 		1ED0A6371DABD54400BE2DE7 /* PressStart2P.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1ED0A6361DABD53E00BE2DE7 /* PressStart2P.ttf */; };
@@ -372,6 +385,13 @@
 			remoteGlobalIDString = 1EA5950019767DA700D3BFFC;
 			remoteInfo = dada.surf;
 		};
+		1ECC5AC023F5D04600D860C3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1ED9C9B0190D1224001973B8;
+			remoteInfo = lib_dada;
+		};
 		1EE2A7581982FDEE00B335ED /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
@@ -391,8 +411,10 @@
 /* Begin PBXFileReference section */
 		1E045A381AEE91D600A1F2B9 /* dada.base.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dada.base.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E045A411AEE91F600A1F2B9 /* dada.base.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.base.c; path = ../mains/dada.base.c; sourceTree = SOURCE_ROOT; };
-		1E0E018D1B13671800F88916 /* dada.notation_spectral.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.notation_spectral.c; path = ../commons/dada.notation_spectral.c; sourceTree = SOURCE_ROOT; };
-		1E0E018E1B13671800F88916 /* dada.notation_spectral.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dada.notation_spectral.h; path = ../commons/dada.notation_spectral.h; sourceTree = SOURCE_ROOT; };
+		1E0E018D1B13671800F88916 /* dada.notation.spectral.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.notation.spectral.c; path = ../commons/dada.notation.spectral.c; sourceTree = SOURCE_ROOT; };
+		1E0E018E1B13671800F88916 /* dada.notation.spectral.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dada.notation.spectral.h; path = ../commons/dada.notation.spectral.h; sourceTree = SOURCE_ROOT; };
+		1E149F1923F5D26800E525D5 /* dada.spectral.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.spectral.c; path = ../commons/dada.spectral.c; sourceTree = "<group>"; };
+		1E149F1A23F5D26800E525D5 /* dada.spectral.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dada.spectral.h; path = ../commons/dada.spectral.h; sourceTree = "<group>"; };
 		1E2A3AD51DBF55D40009CF52 /* dada.distances.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dada.distances.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E2A3AD91DBF55ED0009CF52 /* dada.distances.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.distances.c; path = ../mains/dada.distances.c; sourceTree = SOURCE_ROOT; };
 		1E2A3ADD1DBF579E0009CF52 /* SimpleMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimpleMatrix.h; path = ../lib/SimpleMatrix_v4.1/code/SimpleMatrix.h; sourceTree = "<group>"; };
@@ -461,6 +483,8 @@
 		1ECA89A11A45B2CF001B9251 /* dada.undo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dada.undo.h; path = ../commons/dada.undo.h; sourceTree = SOURCE_ROOT; };
 		1ECA8C241A45B2FB001B9251 /* dada.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = dada.xcconfig; sourceTree = SOURCE_ROOT; };
 		1ECA8C2E1A45B30E001B9251 /* dada_lib.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = dada_lib.xcconfig; sourceTree = SOURCE_ROOT; };
+		1ECC5AD423F5D04600D860C3 /* dada.rhythmogram.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dada.rhythmogram.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
+		1ECC5AD623F5D07C00D860C3 /* dada.rhythmogram.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.rhythmogram.c; path = ../mains/dada.rhythmogram.c; sourceTree = "<group>"; };
 		1ED0A6301DABCFB100BE2DE7 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = ../../../../../System/Library/Frameworks/CoreServices.framework; sourceTree = "<group>"; };
 		1ED0A6321DABCFCC00BE2DE7 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = ../../../../../System/Library/Frameworks/ApplicationServices.framework; sourceTree = "<group>"; };
 		1ED0A6361DABD53E00BE2DE7 /* PressStart2P.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = PressStart2P.ttf; path = "../resources/codeman38_press-start-2p/PressStart2P.ttf"; sourceTree = "<group>"; };
@@ -614,6 +638,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1ECC5ACC23F5D04600D860C3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1ECC5ACD23F5D04600D860C3 /* lib_dada.a in Frameworks */,
+				1ECC5ACE23F5D04600D860C3 /* ApplicationServices.framework in Frameworks */,
+				1ECC5ACF23F5D04600D860C3 /* CoreServices.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1ED9C9AF190D1224001973B8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -670,6 +704,7 @@
 				1E4ECD391D4E1810002FEA2A /* dada.terrain~.mxo */,
 				1E2A3AD51DBF55D40009CF52 /* dada.distances.mxo */,
 				1E8914241EFDB906009EBADE /* dada.music~.mxo */,
+				1ECC5AD423F5D04600D860C3 /* dada.rhythmogram.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -677,6 +712,7 @@
 		1E8BFE2C190D7DB700396FEA /* mains */ = {
 			isa = PBXGroup;
 			children = (
+				1ECC5AD623F5D07C00D860C3 /* dada.rhythmogram.c */,
 				1E045A411AEE91F600A1F2B9 /* dada.base.c */,
 				1E53FB731BA0769700FF1F3D /* dada.bodies.c */,
 				1E5399161D43ED1C00439855 /* dada.boids.c */,
@@ -715,8 +751,10 @@
 				1ED363B81EB7C30D00B99266 /* dada.windows.h */,
 				1EAE109A1C271E9800EFA81C /* dada_doc_commons.h */,
 				1E92FA271DBA369200E1C68E /* dada_doc_substitutions.h */,
-				1E0E018D1B13671800F88916 /* dada.notation_spectral.c */,
-				1E0E018E1B13671800F88916 /* dada.notation_spectral.h */,
+				1E149F1923F5D26800E525D5 /* dada.spectral.c */,
+				1E149F1A23F5D26800E525D5 /* dada.spectral.h */,
+				1E0E018D1B13671800F88916 /* dada.notation.spectral.c */,
+				1E0E018E1B13671800F88916 /* dada.notation.spectral.h */,
 				1E6E12511AF3B7B000E91285 /* dada.db.c */,
 				1E6E12521AF3B7B000E91285 /* dada.db.h */,
 				1ECA89811A45B2CF001B9251 /* dada.commons.c */,
@@ -910,6 +948,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1ECC5AC123F5D04600D860C3 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E149F1C23F5D26800E525D5 /* dada.spectral.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1ED9C9AD190D1224001973B8 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -932,7 +978,7 @@
 				1ECA89C01A45B2CF001B9251 /* dada.popupmenu.h in Headers */,
 				1ECA89C21A45B2CF001B9251 /* dada.undo.h in Headers */,
 				1E6E12541AF3B7B000E91285 /* dada.db.h in Headers */,
-				1E0E01901B13671800F88916 /* dada.notation_spectral.h in Headers */,
+				1E0E01901B13671800F88916 /* dada.notation.spectral.h in Headers */,
 				1ED363BA1EB7C30D00B99266 /* dada.windows.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1268,6 +1314,26 @@
 			productReference = 1EA5950D19767DA700D3BFFC /* dada.nodes.mxo */;
 			productType = "com.apple.product-type.bundle";
 		};
+		1ECC5ABE23F5D04600D860C3 /* dada.rhythmogram */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1ECC5AD123F5D04600D860C3 /* Build configuration list for PBXNativeTarget "dada.rhythmogram" */;
+			buildPhases = (
+				1ECC5AC123F5D04600D860C3 /* Headers */,
+				1ECC5AC223F5D04600D860C3 /* Resources */,
+				1ECC5ACA23F5D04600D860C3 /* Sources */,
+				1ECC5ACC23F5D04600D860C3 /* Frameworks */,
+				1ECC5AD023F5D04600D860C3 /* Rez */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1ECC5ABF23F5D04600D860C3 /* PBXTargetDependency */,
+			);
+			name = dada.rhythmogram;
+			productName = iterator;
+			productReference = 1ECC5AD423F5D04600D860C3 /* dada.rhythmogram.mxo */;
+			productType = "com.apple.product-type.bundle";
+		};
 		1ED9C9B0190D1224001973B8 /* lib_dada */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1ED9C9B4190D1326001973B8 /* Build configuration list for PBXNativeTarget "lib_dada" */;
@@ -1338,6 +1404,7 @@
 				1E8914151EFDB906009EBADE /* dada.music~ */,
 				1EA5950019767DA700D3BFFC /* dada.nodes */,
 				1E36335619D8297700D52726 /* dada.platform */,
+				1ECC5ABE23F5D04600D860C3 /* dada.rhythmogram */,
 				1E7850FF1AF294220079E361 /* dada.segment */,
 				1E8CCB4419B7E04E002D2CB0 /* dada.stage */,
 				1E4ECD2A1D4E1810002FEA2A /* dada.terrain~ */,
@@ -1481,6 +1548,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1ECC5AC223F5D04600D860C3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1ECC5AC323F5D04600D860C3 /* icon_block.png in Resources */,
+				1ECC5AC423F5D04600D860C3 /* icon_coin.png in Resources */,
+				1ECC5AC523F5D04600D860C3 /* icon_gamechar.png in Resources */,
+				1ECC5AC623F5D04600D860C3 /* icon_level.png in Resources */,
+				1ECC5AC723F5D04600D860C3 /* icon_portal.png in Resources */,
+				1ECC5AC823F5D04600D860C3 /* dada.xcconfig in Resources */,
+				1ECC5AC923F5D04600D860C3 /* PressStart2P.ttf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1EE2A75A1982FDEE00B335ED /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1598,6 +1679,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		1EA5950919767DA700D3BFFC /* Rez */ = {
+			isa = PBXRezBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1ECC5AD023F5D04600D860C3 /* Rez */ = {
 			isa = PBXRezBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1742,6 +1830,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1ECC5ACA23F5D04600D860C3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E149F1B23F5D26800E525D5 /* dada.spectral.c in Sources */,
+				1ECC5AD723F5D07C00D860C3 /* dada.rhythmogram.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1ED9C9AE190D1224001973B8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1763,7 +1860,7 @@
 				1ECA89BF1A45B2CF001B9251 /* dada.popupmenu.c in Sources */,
 				1ECA89C11A45B2CF001B9251 /* dada.undo.c in Sources */,
 				1E6E12531AF3B7B000E91285 /* dada.db.c in Sources */,
-				1E0E018F1B13671800F88916 /* dada.notation_spectral.c in Sources */,
+				1E0E018F1B13671800F88916 /* dada.notation.spectral.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1942,6 +2039,11 @@
 			isa = PBXTargetDependency;
 			target = 1EA5950019767DA700D3BFFC /* dada.nodes */;
 			targetProxy = 1EA595E21976903C00D3BFFC /* PBXContainerItemProxy */;
+		};
+		1ECC5ABF23F5D04600D860C3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1ED9C9B0190D1224001973B8 /* lib_dada */;
+			targetProxy = 1ECC5AC023F5D04600D860C3 /* PBXContainerItemProxy */;
 		};
 		1EE2A7571982FDEE00B335ED /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2640,6 +2742,45 @@
 			};
 			name = Deployment;
 		};
+		1ECC5AD223F5D04600D860C3 /* Development */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */;
+			buildSettings = {
+				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = (
+					"-DU_HAVE_GCC_ATOMICS=0",
+					"-fvisibility=hidden",
+				);
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
+			};
+			name = Development;
+		};
+		1ECC5AD323F5D04600D860C3 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */;
+			buildSettings = {
+				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
+				OTHER_CFLAGS = (
+					"-DU_HAVE_GCC_ATOMICS=0",
+					"-fvisibility=hidden",
+				);
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
+			};
+			name = Deployment;
+		};
 		1ED9C9A4190D11F2001973B8 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2935,6 +3076,15 @@
 			buildConfigurations = (
 				1EA5950B19767DA700D3BFFC /* Development */,
 				1EA5950C19767DA700D3BFFC /* Deployment */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
+		};
+		1ECC5AD123F5D04600D860C3 /* Build configuration list for PBXNativeTarget "dada.rhythmogram" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1ECC5AD223F5D04600D860C3 /* Development */,
+				1ECC5AD323F5D04600D860C3 /* Deployment */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;

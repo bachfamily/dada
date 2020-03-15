@@ -39,19 +39,6 @@
 		"subpatcher_template" : "",
 		"boxes" : [ 			{
 				"box" : 				{
-					"hidden" : 1,
-					"id" : "obj-22",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 2,
-					"outlettype" : [ "", "bang" ],
-					"patching_rect" : [ 305.0, 407.5, 313.0, 22.0 ],
-					"text" : "dada.base dadacommondbhelp winterdb.txt @readonly 1"
-				}
-
-			}
-, 			{
-				"box" : 				{
 					"bubble" : 1,
 					"fontname" : "Arial",
 					"fontsize" : 13.0,
@@ -60,7 +47,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 521.5, 112.5, 115.0, 98.0 ],
+					"patching_rect" : [ 521.5, 112.5, 117.0, 98.0 ],
 					"text" : "Use the slider and see how the horizontal lines in the grid change with automatic grid"
 				}
 
@@ -381,26 +368,7 @@
 				}
 
 			}
- ],
-		"parameters" : 		{
-			"obj-59" : [ "number", "number", 0 ],
-			"obj-54" : [ "slider", "slider", 0 ],
-			"parameterbanks" : 			{
-
-			}
-
-		}
-,
-		"dependency_cache" : [ 			{
-				"name" : "dada.cartesian.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "dada.base.mxo",
-				"type" : "iLaX"
-			}
- ],
-		"autosave" : 0
+ ]
 	}
 
 }

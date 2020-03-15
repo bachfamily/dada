@@ -40,6 +40,19 @@
 		"boxes" : [ 			{
 				"box" : 				{
 					"hidden" : 1,
+					"id" : "obj-1",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 2,
+					"outlettype" : [ "", "bang" ],
+					"patching_rect" : [ 355.0, 520.5, 304.0, 22.0 ],
+					"text" : "dada.base dadacommondbhelp winterdb.txt @volatile 1"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"hidden" : 1,
 					"id" : "obj-33",
 					"linecount" : 5,
 					"maxclass" : "message",
@@ -290,7 +303,7 @@
 					"id" : "obj-8",
 					"lockeddragscroll" : 0,
 					"maxclass" : "bpatcher",
-					"name" : "dada.commons.graphic.maxpat",
+					"name" : "dada.commons.grid.maxpat",
 					"numinlets" : 0,
 					"numoutlets" : 0,
 					"offset" : [ 0.0, 0.0 ],

@@ -737,7 +737,7 @@ void C74_EXPORT ext_main(void *moduleRef)
 	CLASS_ATTR_DOUBLE(c,"zeroveldist",0, t_bodies, zero_velocity_distance);
 	CLASS_ATTR_STYLE_LABEL(c, "zeroveldist", 0, "text", "Zero-Velocity Distance");
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"zeroveldist",0,"500");
-    // @s Sets the distance which will be associated to zero-velocity notes. Planets moving farther than this distance, with respect to a
+    // @description Sets the distance which will be associated to zero-velocity notes. Planets moving farther than this distance, with respect to a
     // given star, will not trigger any of the star's notes.
 
 	CLASS_ATTR_DOUBLE(c,"maxveldist",0, t_bodies, max_velocity_distance);
@@ -1699,6 +1699,8 @@ void send_noteoff(t_bodies *x, long idx){
 			llll_free(outr);
 		}
         
+        x->last_played_note[idx] = -1;
+        
 /*		if (x->playtoroll) {
 			t_llll *outl = llll_get();
 			llll_appendsym(outl, _llllobj_sym_unsel, 0, WHITENULL_llll);
@@ -2112,8 +2114,9 @@ void bodies_task(t_bodies *x){
     }
     
     for (j = 0; j < num_bodies; j++)
-        if (no_playing_arrows[j])
+        if (no_playing_arrows[j]) {
             send_noteoff(x, j);
+        }
     
 	setclock_fdelay(x->b_ob.d_ob.m_play.setclock->s_thing, x->b_ob.d_ob.m_play.m_clock,  x->b_ob.d_ob.m_play.play_step_ms);
     

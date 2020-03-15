@@ -5,7 +5,7 @@
 */
 
 #include "foundation/bach.h"
-#include "dada.notation_spectral.h" // notation.h is inside here
+#include "dada.notation.spectral.h" // notation.h is inside here
 #include "math/llll_settheory.h"
 
 /// ******************************

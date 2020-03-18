@@ -801,11 +801,11 @@ t_max_err cartesian_setattr_where(t_cartesian *x, void *attr, long argc, t_atom 
         t_llll *free_me;
         dadaobj_mutex_lock(dadaobj_cast(x));
         free_me = x->d_where_llll;
-        x->d_where_llll = ll;
         if (ll && ll->l_head)
             llll_destroyelem(ll->l_head);
         if (ll->l_size == 1 && hatom_getsym(&ll->l_head->l_hatom) == _llllobj_sym_null) // we treat the "null" case separately, this has to be parsed and not ignore.
             llll_clear(ll);
+        x->d_where_llll = ll;
         dadaobj_mutex_unlock(dadaobj_cast(x));
         llll_free(free_me);
     }

@@ -724,7 +724,6 @@ void C74_EXPORT ext_main(void *moduleRef)
 	class_register(CLASS_BOX, s_rhythmogram_class);
 	
 	dev_post("dada.rhythmogram compiled %s %s", __DATE__, __TIME__);
-	return 0;
 }
 
 

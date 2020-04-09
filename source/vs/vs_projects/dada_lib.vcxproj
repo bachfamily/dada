@@ -30,7 +30,7 @@
     <ClCompile Include="..\..\commons\dada.items.c" />
     <ClCompile Include="..\..\commons\dada.math.c" />
     <ClCompile Include="..\..\commons\dada.notation.c" />
-    <ClCompile Include="..\..\commons\dada.notation_spectral.c" />
+    <ClCompile Include="..\..\commons\dada.notation.spectral.c" />
     <ClCompile Include="..\..\commons\dada.object.c" />
     <ClCompile Include="..\..\commons\dada.paint.c" />
     <ClCompile Include="..\..\commons\dada.popupmenu.c" />
@@ -52,7 +52,7 @@
     <ClInclude Include="..\..\commons\dada.items.h" />
     <ClInclude Include="..\..\commons\dada.math.h" />
     <ClInclude Include="..\..\commons\dada.notation.h" />
-    <ClInclude Include="..\..\commons\dada.notation_spectral.h" />
+    <ClInclude Include="..\..\commons\dada.notation.spectral.h" />
     <ClInclude Include="..\..\commons\dada.object.h" />
     <ClInclude Include="..\..\commons\dada.paint.h" />
     <ClInclude Include="..\..\commons\dada.popupmenu.h" />

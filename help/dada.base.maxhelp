@@ -1948,7 +1948,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 283.0, 347.5, 196.0, 54.0 ],
-									"presentation_linecount" : 4,
 									"text" : "open editor\n(also double click on the object for small databases)"
 								}
 
@@ -2667,7 +2666,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 582.0, 119.0, 195.0, 50.0 ],
-									"text" : "Each column has its own type: \ni = int, f = float, s = symbol, \nr = rational, l = llll",
+									"text" : "Each column has its own type: \ni = int, f = float, s = symbol, \nr = rational, p = pitch, l = llll",
 									"textcolor" : [ 0.5, 0.5, 0.5, 1.0 ]
 								}
 

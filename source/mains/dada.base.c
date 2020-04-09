@@ -311,7 +311,8 @@ void C74_EXPORT ext_main(void *moduleRef)
 	// @description An <m>addtable</m> message followed by a table name and some columns specifications 
 	// will add a table to the database having the given number and types of columns. 
 	// Column specification must be in the form <b>[<m>name1</m> <m>type1</m>] [<m>name2</m> <m>type2</m>]... </b>
-	// where each <m>name</m> is a symbol and each type is one of the symbols: "f" (float), "i" (integer), "s" (symbol), "r" (rational), "l" (llll).
+	// where each <m>name</m> is a symbol and each type is one of the symbols: "f" (float), "i" (integer),
+    // "s" (symbol), "r" (rational), "p" (pitch), "l" (llll).
 	// @marg 0 @name table_name @optional 0 @type symbol	
 	// @marg 1 @name columns @optional 0 @type llll
     // @example addtable towns [name s] [population i] @caption add a table named "towns" with two columns: name (symbol) and popuplation (integer)
@@ -821,9 +822,20 @@ void xbase_entry_create_do(t_xbase *b, t_symbol *table_name, t_llllelem *specs_h
                                     {
                                         t_llll *temp_ll = llll_get();
                                         char *buf = NULL;
-                                        llll_appendrat(temp_ll, ll->l_head->l_next ? hatom_getrational(&ll->l_head->l_next->l_hatom) : genrat(0,1), 0, WHITENULL_llll);
+                                        llll_appendrat(temp_ll, ll->l_head->l_next ? hatom_getrational(&ll->l_head->l_next->l_hatom) : genrat(0,1));
                                         llll_to_text_buf(temp_ll, &buf, 0, BACH_DEFAULT_MAXDECIMALS, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART, NULL);
-                                        this_values_size = snprintf_zero(values + values_cur, VALUES_ALLOC - values_size, firstname ? "%s" : ", %s", buf);
+                                        this_values_size = snprintf_zero(values + values_cur, VALUES_ALLOC - values_size, firstname ? "'%s'" : ", '%s'", buf);
+                                        bach_freeptr(buf);
+                                        llll_free(temp_ll);
+                                        break;
+                                    }
+                                    case 'p':
+                                    {
+                                        t_llll *temp_ll = llll_get();
+                                        char *buf = NULL;
+                                        llll_appendpitch(temp_ll, ll->l_head->l_next ? hatom_getpitch(&ll->l_head->l_next->l_hatom) : t_pitch(0));
+                                        llll_to_text_buf(temp_ll, &buf, 0, BACH_DEFAULT_MAXDECIMALS, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART, NULL);
+                                        this_values_size = snprintf_zero(values + values_cur, VALUES_ALLOC - values_size, firstname ? "'%s'" : ", '%s'", buf);
                                         bach_freeptr(buf);
                                         llll_free(temp_ll);
                                         break;
@@ -1677,6 +1689,17 @@ t_llll *xbase_db_query(t_xbase *b, char *buf, char output_fieldnames)
 						}
 						break;
 					}
+                    case 'p':
+                    {
+                        t_symbol *pitch_as_symbol = gensym(record[j]);
+                        if (pitch_as_symbol) {
+                            t_llll *temp = llll_from_text_buf(pitch_as_symbol->s_name, 0);
+                            if (temp && temp->l_head && hatom_gettype(&temp->l_head->l_hatom) == H_PITCH)
+                                llll_appendpitch(output_fieldnames ? this_field : this_record, hatom_getpitch(&temp->l_head->l_hatom));
+                            llll_free(temp);
+                        }
+                    }
+                        break;
 					case 's':
 						llll_appendsym(output_fieldnames ? this_field : this_record, gensym(record[j]));
 						break;
@@ -1784,6 +1807,9 @@ const char *xbase_column_type_to_sqltype(t_xbase *b, char type)
 			case 'r':
 				return "VARCHAR(512)";
 				break;
+            case 'p':
+                return "VARCHAR(512)";
+                break;
 			case 's':
 				return "VARCHAR(512)";
 				break;

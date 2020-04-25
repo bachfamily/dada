@@ -61,7 +61,7 @@
 #include "dada.notation.h"
 
 #define DADA_CARTESIAN_INTERFACE_GRAIN_TOLERANCE 5
-#define DADA_CARTESIAN_MAX_CONTENTFIELDS 10
+#define DADA_CARTESIAN_MAX_CONTENTFIELDS 32
 #define DADA_CARTESIAN_MAX_CONVEXCOMB 32
 
 ////////////////////////// structures

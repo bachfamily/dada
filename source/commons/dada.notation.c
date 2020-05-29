@@ -659,7 +659,7 @@ long dada_score_chord_applywin_fn(t_llll *gs, e_notation_objects notation_obj, v
 void dada_score_apply_window_on_velocities(t_llll *gs, e_dada_windows window_type, t_rational *tot_symduration)
 {
     long window_type_long = (long)window_type;
-    t_rational totdur = tot_symduration ? *tot_symduration : dada_score_gettotsymduration(gs);
+    t_rational totdur = tot_symduration ? *tot_symduration : dada_score_get_totsymduration(gs);
     dada_score_iterate_on_chords(gs, dada_score_chord_applywin_fn, k_NOTATION_OBJECT_ROLL, &window_type_long, &totdur, NULL);
 }
 
@@ -1326,6 +1326,7 @@ void dada_roll_stretch(t_llll *gs, double factor)
 ////// ******************* ///////
 
 
+// to do drop flags!
 void dada_score_iterate_on_measures(t_llll *gs, dada_gs_modif_fn modif_fn, e_notation_objects notation_obj, void *arg1, void *arg2, void *arg3)
 {
 	t_llllelem *voice, *meas, *next_meas;
@@ -1342,10 +1343,11 @@ void dada_score_iterate_on_measures(t_llll *gs, dada_gs_modif_fn modif_fn, e_not
             t_llll *measure_ll = hatom_getllll(&meas->l_hatom);
 			if (modif_fn(measure_ll, notation_obj, &idx, &symonset, arg1, arg2, arg3))
 				llll_destroyelem(meas);
-            symonset = rat_rat_sum(symonset, dada_measure_getsymdur(measure_ll));
+            symonset = rat_rat_sum(symonset, dada_measure_get_symdur(measure_ll));
 		}
 	}
 }
+
 
 
 void dada_score_iterate_on_chords(t_llll *gs, dada_gs_modif_fn modif_fn, e_notation_objects notation_obj, void *arg1, void *arg2, void *arg3)
@@ -1411,7 +1413,7 @@ void dada_score_iterate_on_chords(t_llll *gs, dada_gs_modif_fn modif_fn, e_notat
                 elem = nextelem;
             }
             
-            symonset_base = rat_rat_sum(symonset_base, dada_measure_getsymdur(measure_ll));
+            symonset_base = rat_rat_sum(symonset_base, dada_measure_get_symdur(measure_ll));
         }
     }
 }
@@ -1459,7 +1461,7 @@ long dada_score_measure_crop_tails_fn(t_llll *gs, e_notation_objects notation_ob
 	t_llllelem *measureinfo = gs->l_head;
 	t_timepoint tp = *(t_timepoint *)tail_pos;
 	t_timepoint idx = *(t_timepoint *)idx_param; 
-	t_rational measure_symdur = dada_measure_getsymdur(gs);
+	t_rational measure_symdur = dada_measure_get_symdur(gs);
 	
 	if (idx.measure_num > tp.measure_num || (idx.measure_num == tp.measure_num && tp.pt_in_measure.r_num == 0)) 
 		return 1; // delete measure
@@ -1573,7 +1575,7 @@ long dada_score_measure_crop_heads_fn(t_llll *gs, e_notation_objects notation_ob
 	t_timepoint tp = *(t_timepoint *)tail_pos;
 	t_timepoint idx = *(t_timepoint *)idx_param;
 	
-	t_rational measure_symdur = dada_measure_getsymdur(gs);
+	t_rational measure_symdur = dada_measure_get_symdur(gs);
 
 	if (idx.measure_num < tp.measure_num || (idx.measure_num == tp.measure_num && rat_rat_cmp(tp.pt_in_measure, measure_symdur) >= 0))
 		return 1; // delete measure
@@ -2032,7 +2034,7 @@ t_llll *dada_score_multisplit_measures(t_llll *gs, long num_splits, long *split_
 
 
 
-long dada_score_getnummeas(t_llll *gs)
+long dada_score_get_nummeas(t_llll *gs)
 {
 	t_llllelem *voice, *meas;
 	long num_meas = 0;
@@ -2054,7 +2056,7 @@ long dada_score_getnummeas(t_llll *gs)
 	return num_meas;
 }
 
-t_rational dada_measure_getsymdur(t_llll *gs)
+t_rational dada_measure_get_symdur(t_llll *gs)
 {
 	if (gs->l_head && hatom_gettype(&gs->l_head->l_hatom) == H_LLLL) {
 		t_llll *measureinfo_ll = hatom_getllll(&gs->l_head->l_hatom);
@@ -2068,7 +2070,7 @@ t_rational dada_measure_getsymdur(t_llll *gs)
 }
 
 
-t_rational dada_score_gettotsymduration(t_llll *gs)
+t_rational dada_score_get_totsymduration(t_llll *gs)
 {
     t_llllelem *voice, *meas;
     t_rational totsymdur = long2rat(0);
@@ -2082,7 +2084,7 @@ t_rational dada_score_gettotsymduration(t_llll *gs)
             if (hatom_gettype(&meas->l_hatom) != H_LLLL)
                 continue;
             
-            this_totsymdur = rat_rat_sum(this_totsymdur, dada_measure_getsymdur(hatom_getllll(&meas->l_hatom)));
+            this_totsymdur = rat_rat_sum(this_totsymdur, dada_measure_get_symdur(hatom_getllll(&meas->l_hatom)));
         }
         
         if (rat_rat_cmp(this_totsymdur, totsymdur) == 1)
@@ -2108,15 +2110,40 @@ long dada_score_measure_convert_to_ts_fn(t_llll *gs, e_notation_objects notation
 	return 1;
 }
 
+long dada_score_measure_get_symdur(t_llll *gs, e_notation_objects notation_obj, void *idx, void *onset, void *dummy, void *dummy2, void *dummy3)
+{
+    if (gs->l_head && hatom_gettype(&gs->l_head->l_hatom) == H_LLLL) {
+        t_llll *measureinfo_ll = hatom_getllll(&gs->l_head->l_hatom);
+        if (measureinfo_ll->l_head && hatom_gettype(&measureinfo_ll->l_head->l_hatom) == H_LLLL) {
+            t_llll *timesig = hatom_getllll(&measureinfo_ll->l_head->l_hatom);
+            t_timesignature ts = get_timesignature_from_llll(NULL, timesig);
+            hatom_change_to_rat_and_free(&gs->l_owner->l_hatom, genrat(ts.numerator, ts.denominator));
+            return 0;
+        }
+    }
+    
+    return 1;
+}
+
+
 
 
 //obtain llll with t_timesignature structures
-t_llll *dada_score_getts(t_llll *gs)
+t_llll *dada_score_get_ts(t_llll *gs)
 {
 	t_llll *ts = get_body(gs);
 	dada_score_iterate_on_measures(ts, dada_score_measure_convert_to_ts_fn, k_NOTATION_OBJECT_SCORE, NULL, NULL, NULL);
 
 	return ts;
+}
+
+//obtain llll with t_timesignature structures
+t_llll *dada_score_get_measuresymdurs(t_llll *gs)
+{
+    t_llll *ts = get_body(gs);
+    dada_score_iterate_on_measures(ts, dada_score_measure_get_symdur, k_NOTATION_OBJECT_SCORE, NULL, NULL, NULL);
+    
+    return ts;
 }
 
 

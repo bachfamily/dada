@@ -89,11 +89,14 @@ void dada_markers_delete_tempo_markers(t_llll *gs);
 void remove_all_marking_to_llll_lthings(t_llll *gs, e_notation_objects notation_obj);
 
 
-long dada_score_getnummeas(t_llll *gs);
-t_llll *dada_score_getts(t_llll *gs);
-t_rational dada_measure_getsymdur(t_llll *gs);
+long dada_score_get_nummeas(t_llll *gs);
+t_llll *dada_score_get_ts(t_llll *gs);
+t_llll *dada_score_get_measuresymdurs(t_llll *gs);
+
+
+t_rational dada_measure_get_symdur(t_llll *gs);
 t_llll *dada_score_getdivisions(t_llll *gs);
-t_rational dada_score_gettotsymduration(t_llll *gs);
+t_rational dada_score_get_totsymduration(t_llll *gs);
 
 // all returned tempi are allocated and need to be freed
 t_tempo *dada_measure_get_last_tempo(t_llll *gs);

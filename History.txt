@@ -1,0 +1,23 @@
+v 0.3
+
+*********************
+*** COMPATIBILITY ***
+*********************
+
+cage 0.6 requires bach 0.8.1.
+
+
+*************************
+*** IMPORTANT CHANGES ***
+*************************
+
+These might break compatibility with older patches
+
+- dada.segment		the presegment attribute now defaults at 0. 
+				to revert to the previous behavior, set it explicitly to 1
+
+
+
+***********************
+*** VERSION CHANGES ***
+***********************

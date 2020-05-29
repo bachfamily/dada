@@ -781,7 +781,8 @@ void xbase_entry_create_do(t_xbase *b, t_symbol *table_name, t_llllelem *specs_h
         long NAMES_ALLOC = STEP_SIZE, VALUES_ALLOC = STEP_SIZE;
         names = (char *)bach_newptr(NAMES_ALLOC * sizeof(char));
         values = (char *)bach_newptr(VALUES_ALLOC * sizeof(char));
-        names_size = NAMES_ALLOC; values_size = VALUES_ALLOC;
+        names_size = 1; values_size = 1;
+        // names_size = NAMES_ALLOC; values_size = VALUES_ALLOC; // why did we do this???
         
         long names_cur = 0, values_cur = 0;
 		names[0] = values[0] = 0;

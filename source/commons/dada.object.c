@@ -1145,7 +1145,7 @@ void dadaobj_class_init(t_class *c, e_llllobj_obj_types type, long flags)
     
     if (flags & DADAOBJ_EXPORTTOJITTER) {
         DADAOBJ_CLASS_ATTR_SYM_SUBSTRUCTURE(c,type,"jitmatrix",0, t_dadaobj, m_paint, t_paint_manager, jit_destination_matrix);
-        CLASS_ATTR_STYLE_LABEL(c,"jitmatrix",0,"text","");
+        CLASS_ATTR_STYLE_LABEL(c,"jitmatrix",0,"text","Jitter Matrix Mirror");
         CLASS_ATTR_DEFAULT_SAVE(c,"jitmatrix",0,"");
         CLASS_ATTR_CATEGORY(c, "jitmatrix", 0, "Behavior");
         // @description Sets the name of a jitter matrix to which the output should be mirrored.

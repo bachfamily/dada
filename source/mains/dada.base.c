@@ -45,6 +45,7 @@
 #include "dada.db.h"
 #ifdef WIN_VERSION
 #include "io.h"
+#define strtok_r strtok_s
 #endif
 #include <string.h>
 
@@ -1313,7 +1314,8 @@ void base_entries_create_from_csv_do(t_object *x, t_symbol *s, long ac, t_atom *
             } else {
                 
                 t_llll *specs = sticky ? llll_clone(sticky) : llll_get();
-                char* token = strsep(&temp, ",");
+				char *rest; //dummy
+                char* token = strtok_r(temp, ",", &rest);
                 long colnum = 0;
                 while (token && colnum < DADABASE_CSV_MAXCOLS) {
                     if (csvcols[colnum] != NULL) {
@@ -1333,7 +1335,8 @@ void base_entries_create_from_csv_do(t_object *x, t_symbol *s, long ac, t_atom *
                         }
                         llll_appendllll(specs, these_specs);
                     }
-                    token = strsep(&temp, ",");
+					char *rest; // dummy
+                    token = strtok_r(temp, ",", &rest);
                     colnum++;
                 }
                 

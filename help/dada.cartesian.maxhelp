@@ -3,7 +3,7 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 8,
-			"minor" : 0,
+			"minor" : 1,
 			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
@@ -37,8 +37,8 @@
 		"tags" : "",
 		"style" : "",
 		"subpatcher_template" : "",
-		"showrootpatcherontab" : 0,
-		"showontab" : 0,
+		"showontab" : 1,
+		"assistshowspatchername" : 0,
 		"boxes" : [ 			{
 				"box" : 				{
 					"fontname" : "Arial",
@@ -51,7 +51,7 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 0,
+							"minor" : 1,
 							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
@@ -86,6 +86,7 @@
 						"style" : "",
 						"subpatcher_template" : "",
 						"showontab" : 1,
+						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
 								"box" : 								{
 									"bgmode" : 0,
@@ -135,7 +136,7 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 0,
+							"minor" : 1,
 							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
@@ -170,6 +171,7 @@
 						"style" : "",
 						"subpatcher_template" : "",
 						"showontab" : 1,
+						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
 								"box" : 								{
 									"id" : "obj-1",
@@ -312,8 +314,9 @@
 									"patching_rect" : [ 401.0, 297.0, 300.0, 300.0 ],
 									"query" : "SELECT * FROM similarities",
 									"table" : "similarities",
-									"versionnumber" : 10200,
+									"versionnumber" : 20100,
 									"vzoom" : 1000.0,
+									"where" : [ "null" ],
 									"xfield" : "A",
 									"yfield" : "B",
 									"zoom" : 1000.0
@@ -636,7 +639,7 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 0,
+							"minor" : 1,
 							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
@@ -671,6 +674,7 @@
 						"style" : "",
 						"subpatcher_template" : "",
 						"showontab" : 1,
+						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
 								"box" : 								{
 									"id" : "obj-14",
@@ -869,8 +873,9 @@
 									"patching_rect" : [ 30.0, 283.5, 300.0, 300.0 ],
 									"query" : "SELECT * FROM scores",
 									"table" : "scores",
-									"versionnumber" : 10200,
+									"versionnumber" : 20100,
 									"vzoom" : 179.847207999999995,
+									"where" : [ "null" ],
 									"xfield" : "tc5",
 									"yfield" : "bpm",
 									"zoom" : 15.174478000000001
@@ -911,7 +916,7 @@
 									"pitcheditrange" : [ "null" ],
 									"stafflines" : [ 5 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"versionnumber" : 80100,
+									"versionnumber" : 80102,
 									"voicenames" : [ "[", "]" ],
 									"voicespacing" : [ 0.0, 17.0 ],
 									"zoom" : 151.679687999999999
@@ -1109,7 +1114,7 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 0,
+							"minor" : 1,
 							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
@@ -1144,6 +1149,7 @@
 						"style" : "",
 						"subpatcher_template" : "",
 						"showontab" : 1,
+						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
 								"box" : 								{
 									"attr" : "mindist",
@@ -1290,7 +1296,7 @@
 									"pitcheditrange" : [ "null" ],
 									"stafflines" : [ 5, 5, 5 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"versionnumber" : 80100,
+									"versionnumber" : 80102,
 									"voicenames" : [ "[", "]", "[", "]", "[", "]" ],
 									"voicespacing" : [ 0.0, 17.0, 17.0, 17.0 ]
 								}
@@ -1439,7 +1445,7 @@
 										"fileversion" : 1,
 										"appversion" : 										{
 											"major" : 8,
-											"minor" : 0,
+											"minor" : 1,
 											"revision" : 5,
 											"architecture" : "x64",
 											"modernui" : 1
@@ -1473,6 +1479,7 @@
 										"tags" : "",
 										"style" : "",
 										"subpatcher_template" : "",
+										"assistshowspatchername" : 0,
 										"boxes" : [ 											{
 												"box" : 												{
 													"comment" : "interval in ms is reported here",
@@ -1682,8 +1689,9 @@
 									"showgridlabels" : 0,
 									"sizefield" : "loudness",
 									"table" : "scores",
-									"versionnumber" : 10200,
+									"versionnumber" : 20100,
 									"vzoom" : 1.0,
+									"where" : [ "null" ],
 									"xfield" : "spread",
 									"yfield" : "centroid",
 									"zoom" : 4.252504
@@ -1948,14 +1956,14 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 0,
+							"minor" : 1,
 							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 100.0, 126.0, 767.0, 622.0 ],
+						"rect" : [ 0.0, 26.0, 767.0, 622.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -1983,6 +1991,7 @@
 						"style" : "",
 						"subpatcher_template" : "",
 						"showontab" : 1,
+						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
 								"box" : 								{
 									"bubble" : 1,
@@ -1991,8 +2000,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 508.0, 85.0, 204.0, 83.0 ],
-									"presentation_linecount" : 5,
+									"patching_rect" : [ 508.0, 85.0, 205.0, 83.0 ],
 									"text" : "The same, assigning different weights to the knn algorithm (in this case, they compensate for the dimensions having different orders of magnitude)"
 								}
 
@@ -2005,7 +2013,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 357.0, 115.0, 149.0, 23.0 ],
-									"presentation_linecount" : 2,
 									"text" : "knn 4 [400 6000] [1. 0.1]"
 								}
 
@@ -2322,8 +2329,9 @@
 									"showaxeslabels" : 1,
 									"sizefield" : "loudness",
 									"table" : "scores",
-									"versionnumber" : 10200,
+									"versionnumber" : 20100,
 									"vzoom" : 1.201201201201201,
+									"where" : [ "null" ],
 									"xfield" : "spread",
 									"xlabel" : "spread",
 									"yfield" : "centroid",
@@ -2502,7 +2510,7 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 0,
+							"minor" : 1,
 							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
@@ -2537,6 +2545,7 @@
 						"style" : "",
 						"subpatcher_template" : "",
 						"showontab" : 1,
+						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
 								"box" : 								{
 									"bubble" : 1,
@@ -2704,7 +2713,7 @@
 									"showmeasurenumbers" : [ 1, 1 ],
 									"stafflines" : [ 5, 5 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"versionnumber" : 80100,
+									"versionnumber" : 80102,
 									"voicenames" : [ "[", "]", "[", "]" ],
 									"voicespacing" : [ -13.5, 26.0, 26.0 ],
 									"vzoom" : 60.0
@@ -2804,8 +2813,9 @@
 									"phasefield" : "phase",
 									"query" : "SELECT * FROM scores",
 									"table" : "scores",
-									"versionnumber" : 10200,
+									"versionnumber" : 20100,
 									"vzoom" : 937.263793999999962,
+									"where" : [ "null" ],
 									"xfield" : "measure",
 									"yfield" : "phase",
 									"zoom" : 257.423604000000012
@@ -2835,7 +2845,7 @@
 										"fileversion" : 1,
 										"appversion" : 										{
 											"major" : 8,
-											"minor" : 0,
+											"minor" : 1,
 											"revision" : 5,
 											"architecture" : "x64",
 											"modernui" : 1
@@ -2869,6 +2879,7 @@
 										"tags" : "",
 										"style" : "",
 										"subpatcher_template" : "",
+										"assistshowspatchername" : 0,
 										"boxes" : [ 											{
 												"box" : 												{
 													"fontname" : "Arial",
@@ -3143,7 +3154,7 @@
 									"showmeasurenumbers" : [ 1, 1 ],
 									"stafflines" : [ 5, 5 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"versionnumber" : 80100,
+									"versionnumber" : 80102,
 									"voicenames" : [ "[", "]", "[", "]" ],
 									"voicespacing" : [ 0.0, 26.0, 26.0 ],
 									"vzoom" : 70.0,
@@ -3166,7 +3177,7 @@
 										"fileversion" : 1,
 										"appversion" : 										{
 											"major" : 8,
-											"minor" : 0,
+											"minor" : 1,
 											"revision" : 5,
 											"architecture" : "x64",
 											"modernui" : 1
@@ -3200,6 +3211,7 @@
 										"tags" : "",
 										"style" : "",
 										"subpatcher_template" : "",
+										"assistshowspatchername" : 0,
 										"boxes" : [ 											{
 												"box" : 												{
 													"fontname" : "Arial",
@@ -3684,7 +3696,7 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 0,
+							"minor" : 1,
 							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
@@ -3719,6 +3731,7 @@
 						"style" : "",
 						"subpatcher_template" : "",
 						"showontab" : 1,
+						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
 								"box" : 								{
 									"bubble" : 1,
@@ -3920,7 +3933,7 @@
 									"showmeasurenumbers" : [ 1, 1 ],
 									"stafflines" : [ 5, 5 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"versionnumber" : 80100,
+									"versionnumber" : 80102,
 									"voicenames" : [ "[", "]", "[", "]" ],
 									"voicespacing" : [ -13.5, 26.0, 26.0 ],
 									"vzoom" : 60.0,
@@ -4002,8 +4015,9 @@
 									"patching_rect" : [ 10.0, 187.0, 298.0, 155.0 ],
 									"query" : "SELECT * FROM scores",
 									"table" : "scores",
-									"versionnumber" : 10200,
+									"versionnumber" : 20100,
 									"vzoom" : 937.263793999999962,
+									"where" : [ "null" ],
 									"xfield" : "measure",
 									"yfield" : "phase",
 									"zoom" : 257.423604000000012
@@ -4189,7 +4203,7 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 0,
+							"minor" : 1,
 							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
@@ -4224,6 +4238,7 @@
 						"style" : "",
 						"subpatcher_template" : "",
 						"showontab" : 1,
+						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
 								"box" : 								{
 									"bubble" : 1,
@@ -4359,7 +4374,7 @@
 									"pitcheditrange" : [ "null" ],
 									"stafflines" : [ 5, 5, 5 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"versionnumber" : 80100,
+									"versionnumber" : 80102,
 									"voicenames" : [ "[", "]", "[", "]", "[", "]" ],
 									"voicespacing" : [ 0.0, 17.0, 17.0, 17.0 ],
 									"vzoom" : 50.0
@@ -4688,8 +4703,9 @@
 									"shapefield" : "filename",
 									"sizefield" : "loudness",
 									"table" : "scores",
-									"versionnumber" : 10200,
+									"versionnumber" : 20100,
 									"vzoom" : 1.362995648709935,
+									"where" : [ "null" ],
 									"xfield" : "spread",
 									"yfield" : "centroid",
 									"zoom" : 4.315974121266803
@@ -4941,7 +4957,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 10.0, 10.0, 307.570952999999975, 57.567627000000002 ]
+					"patching_rect" : [ 10.0, 10.0, 307.54400634765625, 57.599853515625 ]
 				}
 
 			}
@@ -4957,7 +4973,7 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 0,
+							"minor" : 1,
 							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
@@ -4992,6 +5008,7 @@
 						"style" : "",
 						"subpatcher_template" : "",
 						"showontab" : 1,
+						"assistshowspatchername" : 0,
 						"boxes" : [  ],
 						"lines" : [  ]
 					}
@@ -5012,6 +5029,16 @@
 			}
  ],
 		"lines" : [  ],
+		"parameters" : 		{
+			"obj-15::obj-7::obj-8::obj-54" : [ "slider", "slider", 0 ],
+			"obj-15::obj-7::obj-8::obj-59" : [ "number", "number", 0 ],
+			"parameterbanks" : 			{
+
+			}
+,
+			"inherited_shortname" : 1
+		}
+,
 		"dependency_cache" : [ 			{
 				"name" : "helpname.js",
 				"bootpath" : "C74:/help/resources",
@@ -5185,7 +5212,7 @@
 				"implicit" : 1
 			}
 , 			{
-				"name" : "dada.commons.graphic.maxpat",
+				"name" : "dada.commons.grid.maxpat",
 				"bootpath" : "~/Documents/Max 7/Packages/dada/help",
 				"patcherrelativepath" : ".",
 				"type" : "JSON",
@@ -5321,14 +5348,6 @@
 			}
 , 			{
 				"name" : "bach.depth.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "dada.bodies.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "dada.bounce.mxo",
 				"type" : "iLaX"
 			}
  ],

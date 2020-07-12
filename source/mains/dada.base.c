@@ -42,6 +42,7 @@
 #include "ext.h"
 #include "ext_obex.h"
 #include "ext_database.h"
+#include "ext_drag.h"
 #include "dada.db.h"
 #ifdef WIN_VERSION
 #include "io.h"

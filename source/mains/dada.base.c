@@ -456,7 +456,7 @@ void base_assist(t_base *x, void *b, long m, long a, char *s)
 long base_acceptsdrag(t_base *x, t_object *drag, t_object *view)
 {
     if (true) {
-        jdrag_box_add(drag, (t_object *)x, gensym("read"));
+        jdrag_object_add(drag, (t_object *)x, gensym("read"));
         return true;
     }
     return false;

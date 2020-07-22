@@ -1315,6 +1315,32 @@ void base_entries_create_from_csv_do(t_object *x, t_symbol *s, long ac, t_atom *
             } else {
                 
                 t_llll *specs = sticky ? llll_clone(sticky) : llll_get();
+                char* token = strsep(&temp, ",");
+                long colnum = 0;
+                while (token && colnum < DADABASE_CSV_MAXCOLS) {
+                    if (csvcols[colnum] != NULL) {
+                        t_llll *these_specs = llll_get();
+                        llll_appendsym(these_specs, csvcols[colnum]);
+                        
+                        switch (csvcolstype[colnum]) {
+                            case 'i':
+                                llll_appendlong(these_specs, atol(token));
+                                break;
+                            case 'f':
+                                llll_appendlong(these_specs, atof(token));
+                                break;
+                            default:
+                                llll_appendsym(these_specs, gensym(token));
+                                break;
+                        }
+                        llll_appendllll(specs, these_specs);
+                    }
+                    token = strsep(&temp, ",");
+                    colnum++;
+                }
+                
+                /*
+                t_llll *specs = sticky ? llll_clone(sticky) : llll_get();
 				char *rest; //dummy
                 char* token = strtok_r(temp, ",", &rest);
                 long colnum = 0;
@@ -1340,6 +1366,7 @@ void base_entries_create_from_csv_do(t_object *x, t_symbol *s, long ac, t_atom *
                     token = strtok_r(temp, ",", &rest);
                     colnum++;
                 }
+                */
                 
                 xbase_entry_create_do(b->xbase, table, specs->l_head, fields, b->escape_single_quotes, b->convert_null_to_default);
                 

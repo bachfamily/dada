@@ -1231,6 +1231,27 @@ void base_entries_create_from_file(t_base *x, t_symbol *msg, long ac, t_atom *av
 }
 
 
+char* mystrsep(char** stringp, const char* delim)
+{
+    char* start = *stringp;
+    char* p;
+    
+    p = (start != NULL) ? strpbrk(start, delim) : NULL;
+    
+    if (p == NULL)
+    {
+        *stringp = NULL;
+    }
+    else
+    {
+        *p = '\0';
+        *stringp = p + 1;
+    }
+    
+    return start;
+}
+
+
 void base_entries_create_from_csv_do(t_object *x, t_symbol *s, long ac, t_atom *av)
 {
     const long DADABASE_CSV_MAXCOLS = 8192;
@@ -1315,7 +1336,7 @@ void base_entries_create_from_csv_do(t_object *x, t_symbol *s, long ac, t_atom *
             } else {
                 
                 t_llll *specs = sticky ? llll_clone(sticky) : llll_get();
-                char* token = strsep(&temp, ",");
+                char* token = mystrsep(&temp, ",");
                 long colnum = 0;
                 while (token && colnum < DADABASE_CSV_MAXCOLS) {
                     if (csvcols[colnum] != NULL) {
@@ -1335,38 +1356,9 @@ void base_entries_create_from_csv_do(t_object *x, t_symbol *s, long ac, t_atom *
                         }
                         llll_appendllll(specs, these_specs);
                     }
-                    token = strsep(&temp, ",");
+                    token = mystrsep(&temp, ",");
                     colnum++;
                 }
-                
-                /*
-                t_llll *specs = sticky ? llll_clone(sticky) : llll_get();
-				char *rest; //dummy
-                char* token = strtok_r(temp, ",", &rest);
-                long colnum = 0;
-                while (token && colnum < DADABASE_CSV_MAXCOLS) {
-                    if (csvcols[colnum] != NULL) {
-                        t_llll *these_specs = llll_get();
-                        llll_appendsym(these_specs, csvcols[colnum]);
-                        
-                        switch (csvcolstype[colnum]) {
-                            case 'i':
-                                llll_appendlong(these_specs, atol(token));
-                                break;
-                            case 'f':
-                                llll_appendlong(these_specs, atof(token));
-                                break;
-                            default:
-                                llll_appendsym(these_specs, gensym(token));
-                                break;
-                        }
-                        llll_appendllll(specs, these_specs);
-                    }
-					char *rest; // dummy
-                    token = strtok_r(temp, ",", &rest);
-                    colnum++;
-                }
-                */
                 
                 xbase_entry_create_do(b->xbase, table, specs->l_head, fields, b->escape_single_quotes, b->convert_null_to_default);
                 

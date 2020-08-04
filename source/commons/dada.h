@@ -25,7 +25,7 @@
 #include "graphics/bach_jit.h"
 
 #ifdef WIN_VERSION
-#define DADA_VERSION "0.2.2"
+#define DADA_VERSION "0.2.3"
 #endif
 
 // DEBUG FLAGS

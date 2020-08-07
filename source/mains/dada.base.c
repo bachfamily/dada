@@ -2351,6 +2351,7 @@ t_llll *llll_parse_sym2objs(long ac, t_atom *av) // creates a new llll from a li
             char prev_thing_end;
             switch (*cursor) {
                 case '(':
+                case '[':
                     temp_llll = llll_get();
                     llll_appendllll(this_llll, temp_llll, 0, WHITENULL_llll);
                     llll_stack_push(stack, this_llll);
@@ -2359,6 +2360,7 @@ t_llll *llll_parse_sym2objs(long ac, t_atom *av) // creates a new llll from a li
                     break;
                     
                 case ')': // terminates a sub-list
+                case ']': // terminates a sub-list
                     temp_llll = (t_llll *) llll_stack_pop(stack);
                     if (!temp_llll)
                         goto llll_parse_err;
@@ -2400,7 +2402,7 @@ t_llll *llll_parse_sym2objs(long ac, t_atom *av) // creates a new llll from a li
                     // search for the end of this element, which is given by:
                     
                     while (*thing_end &&																// the string end, or
-                           (backtick || (*thing_end != '(' && *thing_end != ')')) &&					// a parenthesis, but only if we don't have backtick set
+                           (backtick || (*thing_end != '(' && *thing_end != ')' && *thing_end != '[' && *thing_end != ']')) &&					// a parenthesis, but only if we don't have backtick set
                            (!isspace(*thing_end) || (prev_thing_end == '\\' && ac < 0))) {	// a space, but only if it's not backslashed, or we're not in string mode
                         prev_thing_end = *thing_end;
                         thing_end ++;

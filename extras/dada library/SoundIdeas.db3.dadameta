@@ -1,0 +1,8 @@
+	[ samples
+		[ filepath s ]
+		[ start f ]
+		[ end f ]
+		[ dur f ]
+		[ midinote i ]
+		[ designation s ]
+	]

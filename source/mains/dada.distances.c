@@ -940,24 +940,27 @@ t_max_err distances_set_where(t_distances *x, void *attr, long argc, t_atom *arg
 
 
 
+// this MUST be deferred_low, because if we have a [dada.base] with the same db name and a db3 binding in the patch,
+// and if it happens to be instantiated NEXT, the db_open(,NULL,) stuff will prevent the filenaming bond
+void distances_set_database_do(t_distances *x, t_symbol *msg, long argc, t_atom *argv)
+{
+    t_max_err err;
+    db_view_remove(x->d_db, &x->d_view);
+    db_close(&x->d_db);
+    
+    x->d_database = msg;
+    err = db_open(x->d_database, NULL, &x->d_db);
+    if (!err && x->d_db && x->d_query) {
+        x->db_ok = true;
+        defer_low(x, (method)view_create_deferred, NULL, 0, NULL);
+    }
+}
 
 t_max_err distances_set_database(t_distances *x, void *attr, long argc, t_atom *argv)
 {
-	t_max_err err;
-	
-	if (argc && argv && atom_gettype(argv) == A_SYM && atom_getsym(argv) && strlen(atom_getsym(argv)->s_name) > 0) {
-		db_view_remove(x->d_db, &x->d_view);
-		db_close(&x->d_db);
-		
-		x->d_database = atom_getsym(argv);
-		err = db_open(x->d_database, NULL, &x->d_db);
-		if (!err && x->d_db && x->d_query) {
-            x->db_ok = true;
-//			db_view_create(x->d_db, x->d_query->s_name, &x->d_view);
-//			object_attach_byptr_register(x, x->d_view, _sym_nobox);
-            defer_low(x, (method)view_create_deferred, NULL, 0, NULL);
-		}
-	}
+    if (argc && argv && atom_gettype(argv) == A_SYM && atom_getsym(argv) && strlen(atom_getsym(argv)->s_name) > 0) {
+        defer_low(x, (method) distances_set_database_do, atom_getsym(argv), 0, NULL);
+    }
 	return MAX_ERR_NONE;
 }
 

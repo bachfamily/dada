@@ -2076,7 +2076,7 @@ t_max_err rebuild_database(t_xbase *b, char readonly)
 // should be like this
 //        db_open_ext(b->d_name, filename_resolved->s_name, &b->d_db, readonly ? DB_OPEN_FLAGS_READONLY : DB_OPEN_FLAGS_NONE);
 // but the function db_open_ext() is not found in Max api, so read-only is unsupported by now
-        db_open(b->d_name, filename_resolved->s_name, &b->d_db);
+        t_max_err err = db_open(b->d_name, filename_resolved->s_name, &b->d_db);
 
         char metafile_found = false;
         t_symbol *metafile = filename_to_metafilename(filename_resolved);

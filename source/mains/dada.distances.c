@@ -2560,6 +2560,23 @@ void show_bg_popup_menu(t_distances *x, t_object *patcherview, t_pt pt, long mod
 
 ////////// INTERFACE FUNCTIONS
 
+
+char xbase_attach_to_sql_file(t_xbase *b)
+{
+    if (b->d_filename && strlen(b->d_filename->s_name) > 0 && strcmp(b->d_filename->s_name + strlen(b->d_filename->s_name) - 4, ".db3") == 0)
+        return 1;
+    return 0;
+}
+
+
+
+char xbase_store_lllls_with_phonenumbers(t_xbase *b)
+{
+    if (xbase_attach_to_sql_file(b))
+        return 0;
+    return 1;
+}
+
 // returns the content field already cloned
 t_llll *get_grain_contentfield(t_distances *x, t_distances_grain *gr)
 {
@@ -2608,11 +2625,19 @@ t_llll *get_grain_contentfield(t_distances *x, t_distances_grain *gr)
                     
                 default: // llll
                 {
-                    long phonenumber = db_result_long_local(result, 0, 0);
-                    t_llll *ll = llll_retrieve_from_phonenumber_and_retain(phonenumber);
-                    if (ll) {
-                        llll_chain_clone(this_out, ll);
-                        llll_release(ll);
+                    t_xbase *xbase = (t_xbase *)x->d_database->s_thing; // database already exists
+                    if (xbase_store_lllls_with_phonenumbers(xbase)) {
+                        long phonenumber = db_result_long_local(result, 0, 0);
+                        t_llll *ll = llll_retrieve_from_phonenumber_and_retain(phonenumber);
+                        if (ll) {
+                            llll_chain_clone(this_out, ll);
+                            llll_release(ll);
+                        }
+                    } else {
+                        char **record = db_result_firstrecord(result);
+                        t_llll *ll = llll_from_text_buf(record[0], false);
+                        llll_chain(this_out, ll);
+                        break;
                     }
                 }
                     break;

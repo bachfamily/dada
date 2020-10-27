@@ -124,7 +124,13 @@ typedef struct _peanos {
     char                synthesis_mode;
     double              noisiness_to_q_exp;
     char                autoclear_filters;
-    
+    long                interp_freq_samps;
+    long                interp_amp_samps;
+    long                interp_noisiness_samps;
+    long                interp_freq_samps_offset;
+    long                interp_amp_samps_offset;
+    long                interp_noisiness_samps_offset;
+
     long                bitrate;
     double              sr;
     double              timestep;
@@ -180,6 +186,7 @@ double get_gain_compensation(double freq, double noisiness, double sr);
 double peanos_dbtoa(float db);
 double peanos_atodb(double a);
 
+void peanos_clear(t_peanos *x);
 
 
 void *peanos_new(t_symbol *s, long argc, t_atom *argv);
@@ -414,12 +421,29 @@ void C74_EXPORT ext_main(void *moduleRef)
     CLASS_ATTR_BASIC(c, "synth", 0);
     // @description Sets the synthesis mode
 
-    CLASS_ATTR_CHAR(c, "clearfilters", 0, t_peanos, autoclear_filters);
-    CLASS_ATTR_STYLE_LABEL(c, "clearfilters", 0, "onoff", "Autoclear Filter Memory");
-    CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"synth",0,"0");
+    CLASS_ATTR_CHAR(c, "autoclear", 0, t_peanos, autoclear_filters);
+    CLASS_ATTR_STYLE_LABEL(c, "autoclear", 0, "onoff", "Autoclear Filter Memory");
+    CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"autoclear",0,"0");
     // @description Toggles the ability to automatically clear the memory of DSP filters when changing coordinate.
     // This comes at the price of possibly introducing clicks at coordinate change.
 
+    CLASS_ATTR_LONG(c, "freqsmooth", 0, t_peanos, interp_freq_samps);
+    CLASS_ATTR_STYLE_LABEL(c, "freqsmooth", 0, "text", "Number of Samples for Frequency Smoothing");
+    CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"freqsmooth",0,"4096");
+    // @description Sets the number of samples across which every frequency change is linearly interpolated.
+    
+    CLASS_ATTR_LONG(c, "magsmooth", 0, t_peanos, interp_amp_samps);
+    CLASS_ATTR_STYLE_LABEL(c, "magsmooth", 0, "text", "Number of Samples for Magnitude Smoothing");
+    CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"magsmooth",0,"4096");
+    // @description Sets the number of samples across which every amplitude change is linearly interpolated.
+
+    CLASS_ATTR_LONG(c, "noisesmooth", 0, t_peanos, interp_noisiness_samps);
+    CLASS_ATTR_STYLE_LABEL(c, "noisesmooth", 0, "text", "Number of Samples for Noisiness Smoothing");
+    CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"noisesmooth",0,"4096");
+    // @description Sets the number of samples across which every noisiness change is linearly interpolated.
+
+    
+    
     
 /*    CLASS_ATTR_DOUBLE(c, "noisinessexp", 0, t_peanos, noisiness_to_q_exp);
     CLASS_ATTR_STYLE_LABEL(c, "noisinessexp", 0, "text", "Noisiness to Q Conversion Exponent");
@@ -631,6 +655,14 @@ void output_coords(t_peanos *x)
     llll_free(ll);
 }
 
+void peanos_set_mustinterp(t_peanos *x)
+{
+    x->must_interp = true;
+    x->interp_amp_samps_offset = 0;
+    x->interp_freq_samps_offset = 0;
+    x->interp_noisiness_samps_offset = 0;
+}
+
 void process_coords(t_peanos *x)
 {
     // clipping in [0, 1]
@@ -662,7 +694,7 @@ void process_coords(t_peanos *x)
     // Noisiness
     unitIntervalToHyperCube(x->coord_hp[2], N, precision, x->next_noisinesses);
     
-    x->must_interp = true;
+    peanos_set_mustinterp(x);
 }
 
 
@@ -900,7 +932,7 @@ void peanos_paint(t_peanos *x, t_object *patcherview)
     paint_filledrectangle(g, DADA_WHITE, 0, 0, DADA_PEANOS_INSET_LEFT, rect.height);
     paint_filledrectangle(g, DADA_WHITE, rect.width - DADA_PEANOS_INSET_RIGHT, 0, DADA_PEANOS_INSET_RIGHT, rect.height);
     paint_filledrectangle(g, DADA_WHITE, 0, 0, rect.width, DADA_PEANOS_INSET_TOP);
-    paint_filledrectangle(g, DADA_WHITE, 0, rect.height - DADA_PEANOS_INSET_BOTTOM, rect.width, DADA_PEANOS_INSET_BOTTOM);
+    paint_filledrectangle(g, DADA_WHITE, 0, rect.height - DADA_PEANOS_INSET_BOTTOM, rect.width, DADA_PEANOS_INSET_BOTTOM + 1);
 
     paint_strokenrectangle(g, DADA_GREY_50, DADA_PEANOS_INSET_LEFT, DADA_PEANOS_INSET_TOP, innerwidth, innerheight, 1);
 
@@ -1126,8 +1158,12 @@ void peanos_post_array(t_peanos *x, long num_elems, double *elems)
 }
 
 
-double lininterp(double start, double end, long i, long numsteps)
+double lininterp(double start, double end, long i, long numsteps, bool *done)
 {
+    if (i >= numsteps - 1) {
+        *done = true;
+        return end; // done
+    }
     return start + (end - start) * (double)i/(numsteps-1);
 }
 
@@ -1235,7 +1271,12 @@ void peanos_perform64(t_peanos *x, t_object *dsp64, double **ins, long numins, d
     bool autoclear_filters = x->autoclear_filters;
     double sr = x->sr;
     double noisinessToQexponent = x->noisiness_to_q_exp;
-    long interp_freq_samps = 2048;
+    long interp_freq_samps = x->interp_freq_samps;
+    long interp_amp_samps = x->interp_amp_samps;
+    long interp_noisiness_samps = x->interp_noisiness_samps;
+    long interp_freq_samps_offset = x->interp_freq_samps_offset;
+    long interp_amp_samps_offset = x->interp_amp_samps_offset;
+    long interp_noisiness_samps_offset = x->interp_noisiness_samps_offset;
 
     if (numouts < 1)
         return;
@@ -1260,10 +1301,11 @@ void peanos_perform64(t_peanos *x, t_object *dsp64, double **ins, long numins, d
         
         // Noisiness
         unitIntervalToHyperCube(ins[2][0], N, precision, x->next_noisinesses);
-        must_interp = true;
+        peanos_set_mustinterp(x);
     }
     
     double freq, amp, noisiness; // = ins[2][0];
+    bool interp_freq_done = false, interp_amp_done = false, interp_noisiness_done = false;
     double b1, a0;
     double noise_gain, sine_gain;
     t_biquad_coeffs coeffs;
@@ -1289,9 +1331,9 @@ void peanos_perform64(t_peanos *x, t_object *dsp64, double **ins, long numins, d
         
         for (int i = 0; i < sampleframes; i++) {
             if (must_interp) {
-                freq = lininterp(x->curr_freqs[p], x->next_freqs[p], i, sampleframes);
-                amp = lininterp(x->curr_amps[p], x->next_amps[p], i, sampleframes);
-                noisiness = lininterp(x->curr_noisinesses[p], x->next_noisinesses[p], i, sampleframes);
+                freq = lininterp(x->curr_freqs[p], x->next_freqs[p], interp_freq_samps_offset + i, interp_freq_samps, &interp_freq_done);
+                amp = lininterp(x->curr_amps[p], x->next_amps[p], interp_amp_samps_offset + i, interp_amp_samps, &interp_amp_done);
+                noisiness = lininterp(x->curr_noisinesses[p], x->next_noisinesses[p], interp_noisiness_samps_offset + i, interp_noisiness_samps, &interp_noisiness_done);
                 get_split_gains(synthesis_mode, noisiness, freq, sr, &sine_gain, &noise_gain);
                 if (autoclear_filters)
                     peanos_clear(x);
@@ -1329,12 +1371,29 @@ void peanos_perform64(t_peanos *x, t_object *dsp64, double **ins, long numins, d
     }
     
     if (must_interp) {
-        for (long p = 0; p < np; p++) {
-            x->curr_amps[p] = x->next_amps[p];
-            x->curr_freqs[p] = x->next_freqs[p];
-            x->curr_noisinesses[p] = x->next_noisinesses[p];
+        if (interp_amp_done) {
+            for (long p = 0; p < np; p++)
+                x->curr_amps[p] = x->next_amps[p];
+            x->interp_amp_samps_offset = 0;
+        } else {
+            x->interp_amp_samps_offset += sampleframes;
         }
-        x->must_interp = false;
+        if (interp_freq_done) {
+            for (long p = 0; p < np; p++)
+                x->curr_freqs[p] = x->next_freqs[p];
+            x->interp_freq_samps_offset = 0;
+        } else {
+            x->interp_freq_samps_offset += sampleframes;
+        }
+        if (interp_noisiness_done) {
+            for (long p = 0; p < np; p++)
+                x->curr_noisinesses[p] = x->next_noisinesses[p];
+            x->interp_noisiness_samps_offset = 0;
+        } else {
+            x->interp_noisiness_samps_offset += sampleframes;
+        }
+        if (interp_amp_done && interp_freq_done && interp_noisiness_done)
+            x->must_interp = false;
     }
 
 #ifdef DENORM_WANT_FIX

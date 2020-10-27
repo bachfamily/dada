@@ -1,0 +1,2142 @@
+/**
+	@file
+	dada.peanos~.c
+	
+	@name
+	dada.peanos~
+	
+	@realname
+	dada.peanos~
+ 
+	@type
+	object
+	
+	@module
+	dada
+ 
+	@author
+	Daniele Ghisi
+	
+	@digest
+	The timbrotheque of Babel
+	
+	@description
+	Browse static timbres
+	
+	@discussion
+ 
+	@category
+	dada interfaces, dada audio
+ 
+	@keywords
+	peanos~, Peano, timbre, music, babel, disco, discoteque, browse, combinatorics, exploration, static
+	
+	@seealso
+	dada.terrain~
+	
+	@owner
+	Daniele Ghisi
+ */
+
+#include "dada.peanomath.h" // MPFR & GMP inside
+#include "dada.bandpassgaintable.h"
+#include <stdio.h>
+
+#include "dada.interface.h"
+#include "dada.geometry.h"
+#include "dada.paint.h"
+#include "notation/notation.h"
+//#include "dada.cursors.data.c"
+#include "dada.math.h"
+#include "dada.graphs.h"
+#include "dada.popupmenu.h"
+
+#include "ext.h"							// standard Max include, always required
+#include "ext_obex.h"						// required for new style Max object
+#include "jpatcher_api.h"
+#include "jgraphics.h"
+#include "z_dsp.h"							// should be after jpatcher_api.h
+#include "ext_drag.h"
+#include "ext_buffer.h"
+
+#include <signal.h>
+
+
+#define DADA_PEANOS_INSET_TOP 8
+#define DADA_PEANOS_INSET_LEFT 24
+#define DADA_PEANOS_INSET_BOTTOM 24
+#define DADA_PEANOS_INSET_RIGHT 48 //8 //< includes noisiness bar
+#define DADA_PEANOS_INSET_RIGHT_NOISINESS 36 //8 //< includes noisiness bar
+#define DADA_PEANOS_UI_NOISINESS_WIDTH 12
+
+#define DADA_PEANOS_DEBUG
+
+
+#ifdef DADA_PEANOS_DEBUG
+#define peanos_dev_post(...) if (x->debug) post(__VA_ARGS__)
+#else
+#define peanos_dev_post(...) ((void) 0)
+#endif
+
+#define DADA_PEANOS_LEGEND_SIZE       4096
+
+#define DADA_PEANOS_MAIN_VIEW_POS (1./2.)
+#define DADA_PEANOS_GLOBAL_VIEW_POS (3./4.)
+
+#define DADA_PEANOS_LODISPLAY_SAMPLE_THRESHOLD 1000000
+
+
+#define DADA_PEANOS_DEFAULT_MINPREC 500
+
+//#define DADA_PEANOS_MPFR_PRECISION       500
+//#define DADA_PEANOS_MPFR_PRECISION_HIGH  200000
+
+#define DADA_PEANOS_MPFR_RND         MPFR_RNDN
+
+// Coordinates for specifying a peanos~ point.
+typedef struct _ptn
+{
+    double x;                ///< The horizontal coordinate
+    double y;                ///< The vertical coordinate
+    double n;                ///< The noisiness angle
+} t_ptn;
+
+// Biquad coefficients
+typedef struct _biquad_coeffs
+{
+    double a1;
+    double a2;
+    double b0;
+    double b1;
+    double b2;
+} t_biquad_coeffs;
+
+
+
+
+
+typedef struct _peanos {
+    t_dadaobj_pxjbox	b_ob;
+    
+    char                mode;
+    
+    // synthesis
+    char                synthesis_mode;
+    double              noisiness_to_q_exp;
+    char                autoclear_filters;
+    
+    long                bitrate;
+    double              sr;
+    double              timestep;
+    
+    long                float_precision_minimum;
+    long                float_precision_maximum;
+    long                legend_num_digits;
+    char                show_legend;
+    char                show_spectrum;
+
+    char                legend[DADA_PEANOS_LEGEND_SIZE];
+    char                legend2[DADA_PEANOS_LEGEND_SIZE];
+    
+    // array containing values for: alpha, sigma, xi respectively
+    mpfr_t              coord_hp[3];
+    mpfr_t              screen_start_hp[3];
+    mpfr_t              screen_end_hp[3];
+    mpfr_t              screen_domain_hp[3];
+    long                mpfr_precision[3];
+
+    double              fzero;
+    
+    long                num_partials;
+    long                precision;
+    double              *curr_freqs;
+    double              *curr_amps;
+    double              *curr_noisinesses;
+    double              *next_freqs;
+    double              *next_amps;
+    double              *next_noisinesses;
+    double              *phases;
+
+    char                must_interp;
+    double              *mem_ff1;
+    double              *mem_ff2;
+    double              *mem_fb1;
+    double              *mem_fb2;
+    char                editing_noisiness;
+    
+    char                mousedrag_constraint;
+    
+    // debug stuff
+    char                dsp_debug;
+    char                debug;
+} t_peanos;
+
+
+
+void handle_aborts(int signal_number);
+
+void process_coords(t_peanos *x);
+double get_gain_compensation(double freq, double noisiness, double sr);
+double peanos_dbtoa(float db);
+double peanos_atodb(double a);
+
+
+
+void *peanos_new(t_symbol *s, long argc, t_atom *argv);
+void peanos_free(t_peanos *x);
+void peanos_assist(t_peanos *x, void *b, long m, long a, char *s);
+void peanos_paint(t_peanos *x, t_object *patcherview);
+t_atom_long peanos_acceptsdrag(t_peanos *x, t_object *drag, t_object *view);
+void peanos_perform64(t_peanos *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam);
+void peanos_dsp64(t_peanos *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void peanos_doset(t_peanos *x, t_symbol *s);
+void peanos_anything(t_peanos *x, t_symbol *msg, long ac, t_atom *av);
+void peanos_tick(t_peanos *x);
+t_max_err peanos_notify(t_peanos *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
+void peanos_bang(t_peanos *x);
+
+long peanos_key(t_peanos *x, t_object *patcherview, long keycode, long modifiers, long textcharacter);
+long peanos_keyup(t_peanos *x, t_object *patcherview, long keycode, long modifiers, long textcharacter);
+
+void peanos_iar(t_peanos *x);
+
+char *peanos_mpfr_get_str(int base, size_t size, mpfr_srcptr num_hp, mpfr_rnd_t precision, size_t cut_to_this_size, bool trim_ending_zeros);
+
+
+void peanos_focusgained(t_peanos *x, t_object *patcherview);
+void peanos_focuslost(t_peanos *x, t_object *patcherview);
+void peanos_mousemove(t_peanos *x, t_object *patcherview, t_pt pt, long modifiers);
+void peanos_mousedown(t_peanos *x, t_object *patcherview, t_pt pt, long modifiers);
+void peanos_mousedrag(t_peanos *x, t_object *patcherview, t_pt pt, long modifiers);
+void peanos_mousewheel(t_peanos *x, t_object *view, t_pt pt, long modifiers, double x_inc, double y_inc);
+void peanos_mouseup(t_peanos *x, t_object *patcherview, t_pt pt, long modifiers);
+void peanos_mouseenter(t_peanos *x, t_object *patcherview, t_pt pt, long modifiers);
+void peanos_mouseleave(t_peanos *x, t_object *patcherview, t_pt pt, long modifiers);
+
+void peanos_set(t_peanos *x, t_symbol *s);
+
+void peanos_zoom_by(t_peanos *x, int coord, double zoom_factor, double around_this_coord);
+void peanos_zoom_by_hp(t_peanos *x, int coord, double zoom_factor, mpfr_t around_this_coord_hp);
+void peanos_zoom_exp_hp(t_peanos *x, int coord, mpfr_t zoom_exponent, mpfr_t around_this_coord_hp);
+
+
+void peanos_send_mousedown_notification(t_peanos *x, t_symbol *sym, char force_verbose);
+
+double samp_uint16_to_double(uint16_t samp);
+t_float samp_uint16_to_float(uint16_t samp);
+
+void peanos_int(t_peanos *x, long num);
+
+
+
+static t_class *s_peanos_class;
+gmp_randstate_t r_state;
+
+
+// To DO: if one changes the attribute with audio on it's a mess! gotta make this thread safe.
+t_max_err peanos_setattr_numpartials(t_peanos *x, t_object *attr, long ac, t_atom *av){
+    if (ac) {
+        long this_num_partials = MAX(1, atom_getlong(av));
+        if (this_num_partials != x->num_partials) {
+            x->curr_amps = (double *)bach_resizeptrclear(x->curr_amps, this_num_partials * sizeof(double));
+            x->curr_freqs = (double *)bach_resizeptrclear(x->curr_freqs, this_num_partials * sizeof(double));
+            x->curr_noisinesses = (double *)bach_resizeptrclear(x->curr_noisinesses, this_num_partials * sizeof(double));
+            x->next_amps = (double *)bach_resizeptrclear(x->next_amps, this_num_partials * sizeof(double));
+            x->next_freqs = (double *)bach_resizeptrclear(x->next_freqs, this_num_partials * sizeof(double));
+            x->next_noisinesses = (double *)bach_resizeptrclear(x->next_noisinesses, this_num_partials * sizeof(double));
+            x->phases = (double *)bach_resizeptrclear(x->phases, this_num_partials * sizeof(double));
+            x->mem_ff1 = (double *)bach_resizeptrclear(x->mem_ff1, this_num_partials * sizeof(double));
+            x->mem_ff2 = (double *)bach_resizeptrclear(x->mem_ff2, this_num_partials * sizeof(double));
+            x->mem_fb1 = (double *)bach_resizeptrclear(x->mem_fb1, this_num_partials * sizeof(double));
+            x->mem_fb2 = (double *)bach_resizeptrclear(x->mem_fb2, this_num_partials * sizeof(double));
+            x->num_partials = this_num_partials;
+        }
+        process_coords(x);
+    }
+    return MAX_ERR_NONE;
+}
+
+
+void C74_EXPORT ext_main(void *moduleRef)
+{
+    common_symbols_init();
+    
+    llllobj_common_symbols_init();
+    
+    srand(time(NULL));
+    
+    if (dada_check_bach_version() || llllobj_test()) {
+        dada_error_bachcheck();
+        return;
+    }
+
+    t_class *c;
+
+    CLASS_NEW_CHECK_SIZE(c, "dada.peanos~", (method)peanos_new, (method)peanos_free, (long)sizeof(t_peanos), 0L /* leave NULL!! */, A_GIMME, 0);
+
+	c->c_flags |= CLASS_FLAG_NEWDICTIONARY;
+    jbox_initclass(c, JBOX_FONTATTR);	// include fonts
+	class_dspinitjbox(c);
+
+    signal(SIGABRT, &handle_aborts);
+    
+	class_addmethod(c, (method)peanos_dsp64,					"dsp64", A_CANT, 0);
+	class_addmethod(c, (method)peanos_paint,					"paint",	A_CANT, 0);
+	class_addmethod(c, (method)peanos_assist,                  "assist",		A_CANT, 0);
+	class_addmethod(c, (method)peanos_acceptsdrag,	"acceptsdrag_unlocked", A_CANT, 0);
+	class_addmethod(c, (method)peanos_acceptsdrag,	"acceptsdrag_locked", A_CANT, 0);
+    class_addmethod(c, (method)peanos_notify,                  "bachnotify", A_CANT, 0);
+    class_addmethod(c, (method)peanos_notify,                  "notify", A_CANT, 0);
+
+    
+    // @method zoomby @digest Zoom by a given factor
+    // @description A <m>zoomby</m> message, followed by a floating point number <m>N</m>, will increase or decrease the zoom by the factor <m>N</m>.
+    // By default, the zooming happens around the domain center; if an additional "cursor" symbol is given, the zooming happens around the play cursor;
+    // if instead of the "cursor" symbol a floating point number is given, the zooming happens around the specified coordinate.
+    // @marg 0 @name factor @optional 0 @type number
+    // @marg 1 @name center @optional 1 @type symbol/number
+    class_addmethod(c, (method)peanos_anything, "zoomby", A_GIMME, 0);
+
+    // @method zoomexp @digest Zoom by a given exponent
+    // @description A <m>zoomexp</m> message, followed by a floating point number <m>N</m>,
+    // will exponentially increase or decrease the zoom by the exponent <m>N</m>.
+    // By default, the zooming happens around the domain center; if an additional "cursor" symbol is given, the zooming happens around the play cursor;
+    // if instead of the "cursor" symbol a floating point number is given, the zooming happens around the specified coordinate.
+    // @marg 0 @name exponent @optional 0 @type number
+    // @marg 1 @name center @optional 1 @type symbol/number
+    class_addmethod(c, (method)peanos_anything, "zoomexp", A_GIMME, 0);
+
+    // @method clear @digest Clear filters
+    // @description A <m>clear</m> message clears the filter memory.
+    class_addmethod(c, (method)peanos_clear, "clear", 0);
+
+    class_addmethod(c, (method)peanos_anything, "postvalue", A_GIMME, 0);
+    class_addmethod(c, (method)peanos_anything, "anything", A_GIMME, 0);
+    class_addmethod(c, (method)peanos_bang, "bang", 0);
+    
+    
+    // interface
+    class_addmethod(c, (method) peanos_focusgained, "focusgained", A_CANT, 0);
+    class_addmethod(c, (method) peanos_focuslost, "focuslost", A_CANT, 0);
+    
+    class_addmethod(c, (method) peanos_mousedown, "mousedown", A_CANT, 0);
+    class_addmethod(c, (method) peanos_mouseup, "mouseup", A_CANT, 0);
+    class_addmethod(c, (method) peanos_mousemove, "mousemove", A_CANT, 0);
+    class_addmethod(c, (method) peanos_mousedrag, "mousedrag", A_CANT, 0);
+    class_addmethod(c, (method) peanos_mousewheel, "mousewheel", A_CANT, 0);
+    class_addmethod(c, (method) peanos_mouseenter, "mouseenter", A_CANT, 0);
+    class_addmethod(c, (method) peanos_mouseleave, "mouseleave", A_CANT, 0);
+
+    // @method (keyboard) @digest Play or set domain
+    // @description
+    // • <m>Spacebar</m>: toggle play<br />
+    class_addmethod(c, (method) peanos_key, "key", A_CANT, 0);
+    class_addmethod(c, (method) peanos_keyup, "keyup", A_CANT, 0);
+    
+    
+    dadaobj_class_init(c, LLLL_OBJ_UIMSP, DADAOBJ_ZOOM | DADAOBJ_AXES | DADAOBJ_GRID | DADAOBJ_GRID_SHOWDEFAULT | DADAOBJ_GRID_FIXEDDEFAULT | DADAOBJ_BORDER | DADAOBJ_LABELS | DADAOBJ_LABELS_SHOWDEFAULT | DADAOBJ_BG | DADAOBJ_MOUSEHOVER | DADAOBJ_NOTIFICATIONS | DADAOBJ_PLAY);
+
+    
+    CLASS_ATTR_INVISIBLE(c, "playstep", ATTR_GET_OPAQUE | ATTR_SET_OPAQUE);
+	CLASS_ATTR_DEFAULT(c,"patching_rect",0, "0. 0. 700. 200.");
+
+    CLASS_STICKY_ATTR(c,"category",0,"Color");
+    
+    CLASS_STICKY_ATTR_CLEAR(c, "category");
+
+
+    CLASS_STICKY_ATTR(c,"category",0,"Precision");
+
+    CLASS_ATTR_LONG(c, "minfloatprec", 0, t_peanos, float_precision_minimum);
+    CLASS_ATTR_STYLE_LABEL(c, "minfloatprec", 0, "text", "Minimum Floating-Point Numbers Precision");
+    CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"minfloatprec",0,"500");
+    // @description Sets the minimum precision of floating point numbers
+
+    CLASS_ATTR_LONG(c, "maxfloatprec", 0, t_peanos, float_precision_maximum);
+    CLASS_ATTR_STYLE_LABEL(c, "maxfloatprec", 0, "text", "Maximum Floating-Point Numbers Precision");
+    CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"maxfloatprec",0,"0");
+    // @description Sets the maximum precision of floating point numbers (while zooming); leave 0 for unlimited
+    // (but beware, things can become slow!!!)
+
+    CLASS_ATTR_LONG(c, "peanoprec", 0, t_peanos, precision);
+    CLASS_ATTR_STYLE_LABEL(c, "peanoprec", 0, "text", "Peano Computation Precision");
+    CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"peanoprec",0,"20");
+    // @description Sets the number of items in the Peano ternary expansions
+
+    CLASS_STICKY_ATTR_CLEAR(c, "category");
+
+    CLASS_STICKY_ATTR(c,"category",0,"Appearance");
+
+    CLASS_ATTR_CHAR(c, "showspectrum", 0, t_peanos, show_spectrum);
+    CLASS_ATTR_STYLE_LABEL(c, "showspectrum", 0, "onoff", "Show Spectrum");
+    CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"showspectrum",0,"1");
+    // @description Toggles the display of the spectral configuration
+
+    CLASS_ATTR_CHAR(c, "showcoords", 0, t_peanos, show_legend);
+    CLASS_ATTR_STYLE_LABEL(c, "showcoords", 0, "onoff", "Show Coordinates");
+    CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"showcoords",0,"1");
+    // @description Toggles the display of the coordinates legend
+
+    CLASS_ATTR_LONG(c, "coordsnumdigits", 0, t_peanos, legend_num_digits);
+    CLASS_ATTR_STYLE_LABEL(c, "coordsnumdigits", 0, "text", "Number of Digits Of the Displayed Coordinates");
+    CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"coordsnumdigits",0,"50");
+    // @description Sets the number of digits in the coordinates legend
+
+    CLASS_STICKY_ATTR_CLEAR(c, "category");
+
+    
+    
+    CLASS_STICKY_ATTR(c,"category",0,"Settings");
+
+    CLASS_ATTR_CHAR(c, "mode", 0, t_peanos, mode);
+    CLASS_ATTR_STYLE_LABEL(c, "mode", 0, "enumindex", "Mode");
+    CLASS_ATTR_ENUMINDEX(c,"mode", 0, "Active Passive");
+    CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"mode",0,"0");
+    CLASS_ATTR_BASIC(c, "mode", 0);
+    // @description Sets the fundamental frequency
+
+    CLASS_ATTR_LONG(c, "numpartials", 0, t_peanos, num_partials);
+    CLASS_ATTR_STYLE_LABEL(c, "numpartials", 0, "text", "Number Of Partials");
+    CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"numpartials",0,"16");
+    CLASS_ATTR_ACCESSORS(c, "numpartials", (method)NULL, (method)peanos_setattr_numpartials);
+    CLASS_ATTR_BASIC(c, "numpartials", 0);
+    // @description Sets the number of partials in the model
+
+    CLASS_STICKY_ATTR_CLEAR(c, "category");
+
+    
+    CLASS_STICKY_ATTR(c,"category",0,"Synthesis");
+    
+    CLASS_ATTR_CHAR(c, "synth", 0, t_peanos, synthesis_mode);
+    CLASS_ATTR_STYLE_LABEL(c, "synth", 0, "enumindex", "Synthesis Mode");
+    CLASS_ATTR_ENUMINDEX(c,"synth", 0, "Sinusoids+Filtered Noise Bandwidth-Enhanced Oscillators");
+    CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"synth",0,"0");
+    CLASS_ATTR_BASIC(c, "synth", 0);
+    // @description Sets the synthesis mode
+
+    CLASS_ATTR_CHAR(c, "clearfilters", 0, t_peanos, autoclear_filters);
+    CLASS_ATTR_STYLE_LABEL(c, "clearfilters", 0, "onoff", "Autoclear Filter Memory");
+    CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"synth",0,"0");
+    // @description Toggles the ability to automatically clear the memory of DSP filters when changing coordinate.
+    // This comes at the price of possibly introducing clicks at coordinate change.
+
+    
+/*    CLASS_ATTR_DOUBLE(c, "noisinessexp", 0, t_peanos, noisiness_to_q_exp);
+    CLASS_ATTR_STYLE_LABEL(c, "noisinessexp", 0, "text", "Noisiness to Q Conversion Exponent");
+    CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"noisinessexp",0,"8.");
+    // @description Sets the exponent for the conversion between noisiness and filter Q factor
+    // only when <m>synth</m> is "Sinusoids+Filtered Noise"
+  */
+    
+    CLASS_ATTR_DOUBLE(c, "fzero", 0, t_peanos, fzero);
+    CLASS_ATTR_STYLE_LABEL(c, "fzero", 0, "text", "Fundamental Frequency");
+    CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"fzero",0,"220");
+    CLASS_ATTR_BASIC(c, "fzero", 0);
+    // @description Sets the fundamental frequency
+    
+    CLASS_STICKY_ATTR_CLEAR(c, "category");
+
+    
+
+    CLASS_ATTR_CHAR(c, "debug", 0, t_peanos, debug);
+    CLASS_ATTR_STYLE_LABEL(c, "debug", 0, "onoff", "Debug");
+    CLASS_ATTR_INVISIBLE(c, "debug", ATTR_GET_OPAQUE | ATTR_SET_OPAQUE);
+    // @exclude all
+
+    CLASS_ATTR_CHAR(c, "dspdebug", 0, t_peanos, dsp_debug);
+    CLASS_ATTR_STYLE_LABEL(c, "dspdebug", 0, "onoff", "DSP Debug");
+    CLASS_ATTR_INVISIBLE(c, "dspdebug", ATTR_GET_OPAQUE | ATTR_SET_OPAQUE);
+    // @exclude all
+
+
+    
+
+    srand(time(NULL));
+    gmp_randinit_default (r_state);
+    
+	class_register(CLASS_BOX, c);
+	s_peanos_class = c;
+    dadaobj_class_add_fileusage_method(c);
+}
+
+void change_precision(t_peanos *x, int coord, long new_precision)
+{
+    x->mpfr_precision[coord] = new_precision;
+    mpfr_prec_round(x->coord_hp[coord], new_precision, DADA_PEANOS_MPFR_RND);
+    mpfr_prec_round(x->screen_start_hp[coord], new_precision, DADA_PEANOS_MPFR_RND);
+    mpfr_prec_round(x->screen_end_hp[coord], new_precision, DADA_PEANOS_MPFR_RND);
+    mpfr_prec_round(x->screen_domain_hp[coord], new_precision, DADA_PEANOS_MPFR_RND);
+}
+
+
+
+t_max_err peanos_notify(t_peanos *x, t_symbol *s, t_symbol *msg, void *sender, void *data)
+{
+    return jbox_notify((t_jbox *)x, s, msg, sender, data);
+}
+
+
+void *peanos_new(t_symbol *s, long argc, t_atom *argv)
+{
+	t_peanos *x = NULL;
+	t_dictionary *d=NULL;
+	long boxflags;
+    
+	if (!(d=object_dictionaryarg(argc,argv)))
+		return NULL;
+
+    if ((x = (t_peanos *)object_alloc_debug(s_peanos_class))) {
+        boxflags = 0
+        | JBOX_DRAWFIRSTIN
+        | JBOX_NODRAWBOX
+        | JBOX_DRAWINLAST
+        | JBOX_TRANSPARENT
+        //		| JBOX_NOGROW
+        //		| JBOX_GROWY
+        | JBOX_GROWBOTH
+        | JBOX_HILITE
+        //		| JBOX_BACKGROUND
+        //		| JBOX_DRAWBACKGROUND
+        //		| JBOX_NOFLOATINSPECTOR
+        //		| JBOX_TEXTFIELD
+        //		| JBOX_MOUSEDRAGDELTA
+        //		| JBOX_TEXTFIELD
+        ;
+        
+        jbox_new((t_jbox *)x, boxflags, argc, argv);
+        x->b_ob.r_ob.l_ob.z_box.b_firstin = (t_object *)x;
+        dsp_setupjbox((t_pxjbox *)x, 3);
+        
+        dadaobj_pxjbox_setup((t_dadaobj_pxjbox *)x, DADAOBJ_ZOOM | DADAOBJ_AXES | DADAOBJ_GRID | DADAOBJ_BORDER |  DADAOBJ_BG | DADAOBJ_MOUSEHOVER | DADAOBJ_NOTIFICATIONS | DADAOBJ_PLAY, build_pt(1., 1.), -1, -1, 2, NULL, (invalidate_and_redraw_fn)peanos_iar, "", 0, "44s", NULL);
+        x->b_ob.d_ob.m_zoom.max_zoom_perc = build_pt(100000, 100000);
+        //    dadaobj_addfunctions(dadaobj_cast(x), (dada_mousemove_fn)peanos_mousemove, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+        
+        x->sr = 44100; // will be replaced by the dsp methods
+        x->timestep = TWOPI * 1./x->sr;
+        x->float_precision_minimum = DADA_PEANOS_DEFAULT_MINPREC;
+        x->noisiness_to_q_exp = 8.;
+        
+        for (int i = 0; i < 3; i++) {
+            x->mpfr_precision[i] = x->float_precision_minimum;
+            mpfr_init2(x->screen_domain_hp[i], x->float_precision_minimum);
+            mpfr_init2(x->screen_start_hp[i], x->float_precision_minimum);
+            mpfr_init2(x->screen_end_hp[i], x->float_precision_minimum);
+            mpfr_init2(x->coord_hp[i], x->float_precision_minimum);
+        }
+        
+        for (int i = 0; i < 3; i++) {
+            mpfr_set_d(x->coord_hp[i], 0., DADA_PEANOS_MPFR_RND);
+            mpfr_set_d(x->screen_start_hp[i], 0., DADA_PEANOS_MPFR_RND);
+            mpfr_set_d(x->screen_end_hp[i], 1., DADA_PEANOS_MPFR_RND);
+            mpfr_set_d(x->screen_domain_hp[i], 1., DADA_PEANOS_MPFR_RND);
+        }
+
+        x->fzero = 220;
+        x->precision = 20;
+        x->num_partials = 16;
+        x->curr_amps = (double *)bach_newptrclear(16 * sizeof(double));
+        x->curr_freqs = (double *)bach_newptrclear(16 * sizeof(double));
+        x->curr_noisinesses = (double *)bach_newptrclear(16 * sizeof(double));
+        x->next_amps = (double *)bach_newptrclear(16 * sizeof(double));
+        x->next_freqs = (double *)bach_newptrclear(16 * sizeof(double));
+        x->next_noisinesses = (double *)bach_newptrclear(16 * sizeof(double));
+        x->phases = (double *)bach_newptrclear(16 * sizeof(double));
+        x->mem_ff1 = (double *)bach_newptrclear(16 * sizeof(double));
+        x->mem_ff2 = (double *)bach_newptrclear(16 * sizeof(double));
+        x->mem_fb1 = (double *)bach_newptrclear(16 * sizeof(double));
+        x->mem_fb2 = (double *)bach_newptrclear(16 * sizeof(double));
+
+        jbox_set_fontsize((t_object *)x, 8.);
+        jbox_set_fontname((t_object *)x, gensym("<Monospaced>"));
+        
+        attr_dictionary_process(x,d);
+        
+        jbox_ready((t_jbox *)x);
+        
+        dadaobj_set_current_version_number(dadaobj_cast(x));
+
+        return x;
+    }
+    
+    
+    return NULL;
+}
+
+
+void peanos_free(t_peanos *x)
+{
+    bach_freeptr(x->mem_fb1);
+    bach_freeptr(x->mem_fb2);
+    bach_freeptr(x->mem_ff1);
+    bach_freeptr(x->mem_ff2);
+    
+    bach_freeptr(x->curr_amps);
+    bach_freeptr(x->curr_freqs);
+    bach_freeptr(x->curr_noisinesses);
+    bach_freeptr(x->next_amps);
+    bach_freeptr(x->next_freqs);
+    bach_freeptr(x->next_noisinesses);
+    bach_freeptr(x->phases);
+                                                                                   
+    for (int i = 0; i < 3; i++) {
+        mpfr_clear(x->coord_hp[i]);
+        mpfr_clear(x->screen_start_hp[i]);
+        mpfr_clear(x->screen_end_hp[i]);
+        mpfr_clear(x->screen_domain_hp[i]);
+    }
+
+    dsp_freejbox((t_pxjbox *)x);
+    dadaobj_pxjbox_free((t_dadaobj_pxjbox *)x);
+}
+
+
+/// HANDLING SIGNALS
+
+void handle_aborts(int signal_number)
+{
+    error("Something is wrong.");
+    error("  If you are setting the cursor on a point, your computer isn't able to play from that point.");
+    error("  Wait for better computers, or resume from a previous point.");
+    
+    /*Your code goes here. You can output debugging info.
+     If you return from this function, and it was called
+     because abort() was called, your program will exit or crash anyway
+     (with a dialog box on Windows).
+     */
+}
+
+void output_coords(t_peanos *x)
+{
+    t_llll *coord = llll_get();
+    llll_appenddouble(coord, mpfr_get_d(x->coord_hp[0], DADA_PEANOS_MPFR_RND));
+    llll_appenddouble(coord, mpfr_get_d(x->coord_hp[1], DADA_PEANOS_MPFR_RND));
+    llll_appenddouble(coord, mpfr_get_d(x->coord_hp[2], DADA_PEANOS_MPFR_RND));
+    llllobj_outlet_llll((t_object *)x, LLLL_OBJ_UIMSP, 2, coord);
+    llll_free(coord);
+
+    t_llll *ll = llll_get();
+    t_llll *freqs = llll_get();
+    t_llll *amps = llll_get();
+    t_llll *nois = llll_get();
+    long np = x->num_partials;
+    for (long i = 0; i < np; i++) {
+        llll_appenddouble(freqs, x->curr_freqs[i]);
+        llll_appenddouble(amps, x->curr_amps[i]);
+        llll_appenddouble(nois, x->curr_noisinesses[i]);
+    }
+    llll_appendllll(ll, freqs);
+    llll_appendllll(ll, amps);
+    llll_appendllll(ll, nois);
+    llllobj_outlet_llll((t_object *)x, LLLL_OBJ_UIMSP, 1, ll);
+    llll_free(ll);
+}
+
+void process_coords(t_peanos *x)
+{
+    // clipping in [0, 1]
+    for (int i = 0; i < 3; i++) {
+        if (mpfr_cmp_d(x->coord_hp[i], 0.) < 0)
+            mpfr_set_d(x->coord_hp[i], 0., DADA_PEANOS_MPFR_RND);
+        
+        if (mpfr_cmp_d(x->coord_hp[i], 1.) > 0)
+            mpfr_set_d(x->coord_hp[i], 1., DADA_PEANOS_MPFR_RND);
+    }
+    
+    //
+    
+    long N = x->num_partials;
+    long precision = x->precision;
+    
+    // Amplitudes
+    double sph[N]; sph[0] = 1;
+    unitIntervalToHyperCube(x->coord_hp[0], N-1, precision, sph+1);
+    for (long i = 1; i < N; i++)
+        sph[i] *= PIOVERTWO;
+    sphericalToCartesian(sph, x->next_amps, N);
+    
+    // Freqs
+    unitIntervalToHyperCube(x->coord_hp[1], N, precision, x->next_freqs);
+    for (long i = 0; i < N; i++)
+        x->next_freqs[i] = (1 + i + x->next_freqs[i]) * x->fzero;
+    
+    // Noisiness
+    unitIntervalToHyperCube(x->coord_hp[2], N, precision, x->next_noisinesses);
+    
+    x->must_interp = true;
+}
+
+
+
+
+///// CONVERSIONS
+
+void peanos_pix_to_coord(t_peanos *x, t_rect *rect, t_ptn pixel, mpfr_t coord_hp[3], char high_precision)
+{
+    // coord = start_coord + pix/width * domain_coord
+    
+    for (int i = 0; i < 3; i++) {
+        // rough estimate
+        mpfr_set_d(coord_hp[i], (i == 0 ? pixel.x - DADA_PEANOS_INSET_LEFT :
+                                 i == 1 ? pixel.y - DADA_PEANOS_INSET_TOP :
+                                 pixel.n - DADA_PEANOS_INSET_TOP), DADA_PEANOS_MPFR_RND);
+        mpfr_div_d(coord_hp[i], coord_hp[i], (i == 0 ? rect->width - DADA_PEANOS_INSET_LEFT - DADA_PEANOS_INSET_RIGHT :
+                                              i == 1 ? rect->height - DADA_PEANOS_INSET_TOP - DADA_PEANOS_INSET_BOTTOM :
+                                              rect->height - DADA_PEANOS_INSET_TOP - DADA_PEANOS_INSET_BOTTOM), DADA_PEANOS_MPFR_RND);
+        mpfr_mul(coord_hp[i], coord_hp[i], x->screen_domain_hp[i], DADA_PEANOS_MPFR_RND);
+        if (i == 1 || i == 2)
+            mpfr_sub(coord_hp[i], x->screen_end_hp[i], coord_hp[i], DADA_PEANOS_MPFR_RND);
+        else
+            mpfr_add(coord_hp[i], coord_hp[i], x->screen_start_hp[i], DADA_PEANOS_MPFR_RND);
+        
+        if (high_precision) {
+            // TO DO: adjust precision automatically
+            
+/*            // needed precision, roughly inversely proportional to (1-coord)
+            mpfr_t temp;
+            mpfr_init2(temp, mpfr_get_prec(coord_hp[i]));
+            mpfr_d_sub(temp, 1., coord_hp[i], DADA_PEANOS_MPFR_RND);
+            mpfr_d_div(temp, 1., temp, DADA_PEANOS_MPFR_RND);
+            
+            mpfr_mul_d(temp, temp, DADA_PEANOS_MPFR_PRECISION_HIGH * x->bitrate/4, DADA_PEANOS_MPFR_RND);
+            
+            long precision = MIN(DADA_PEANOS_MPFR_PRECISION, mpfr_get_ui(temp, DADA_PEANOS_MPFR_RND) + 1);
+            //        post("%ld", precision);
+            mpfr_clear(temp);
+            
+            mpfr_set_prec(coord_hp[i], precision);
+            
+            // ok, now making precision better! :)
+            
+            mpfr_set_d(coord_hp[i], pixel.x, DADA_PEANOS_MPFR_RND);
+            mpfr_div_d(coord_hp[i], coord_hp[i], rect->width, DADA_PEANOS_MPFR_RND);
+            mpfr_mul(coord_hp[i], coord_hp[i], x->screen_domain_hp[i], DADA_PEANOS_MPFR_RND);
+            mpfr_add(coord_hp[i], coord_hp[i], x->screen_start_hp[i], DADA_PEANOS_MPFR_RND); */
+        }
+    }
+    
+    for (int i = 0; i < 3; i++) {
+        if (mpfr_cmp_d(x->coord_hp[i], 0.) < 0)
+            mpfr_set_d(x->coord_hp[i], 0., DADA_PEANOS_MPFR_RND);
+        
+        if (mpfr_cmp_d(x->coord_hp[i], 1.) > 0)
+            mpfr_set_d(x->coord_hp[i], 1., DADA_PEANOS_MPFR_RND);
+    }
+    
+}
+
+t_ptn peanos_coord_to_pix(t_peanos *x, t_rect *rect, mpfr_t coord_hp[3])
+{
+    t_ptn res;
+    
+    // pix = width * (coord - start_coord)/domain_coord
+    mpfr_t temp;
+    mpfr_init2(temp, x->mpfr_precision[0]);
+    mpfr_set(temp, coord_hp[0], DADA_PEANOS_MPFR_RND);
+    mpfr_sub(temp, temp, x->screen_start_hp[0], DADA_PEANOS_MPFR_RND);
+    mpfr_div(temp, temp, x->screen_domain_hp[0], DADA_PEANOS_MPFR_RND);
+    mpfr_mul_d(temp, temp, rect->width - DADA_PEANOS_INSET_LEFT - DADA_PEANOS_INSET_RIGHT, DADA_PEANOS_MPFR_RND);
+    
+    res.x = DADA_PEANOS_INSET_LEFT + mpfr_get_d(temp, DADA_PEANOS_MPFR_RND);
+
+    mpfr_clear(temp);
+
+
+    mpfr_init2(temp, x->mpfr_precision[1]);
+    mpfr_set(temp, coord_hp[1], DADA_PEANOS_MPFR_RND);
+    mpfr_sub(temp, temp, x->screen_start_hp[1], DADA_PEANOS_MPFR_RND);
+    mpfr_div(temp, temp, x->screen_domain_hp[1], DADA_PEANOS_MPFR_RND);
+    mpfr_mul_d(temp, temp, rect->height - DADA_PEANOS_INSET_TOP - DADA_PEANOS_INSET_BOTTOM, DADA_PEANOS_MPFR_RND);
+    
+    res.y = rect->height - DADA_PEANOS_INSET_BOTTOM - mpfr_get_d(temp, DADA_PEANOS_MPFR_RND);
+    
+    mpfr_clear(temp);
+
+    
+    // pix = width * (coord - start_coord)/domain_coord
+    mpfr_init2(temp, x->mpfr_precision[2]);
+    mpfr_set(temp, coord_hp[2], DADA_PEANOS_MPFR_RND);
+    mpfr_sub(temp, temp, x->screen_start_hp[2], DADA_PEANOS_MPFR_RND);
+    mpfr_div(temp, temp, x->screen_domain_hp[2], DADA_PEANOS_MPFR_RND);
+    mpfr_mul_d(temp, temp, rect->height - DADA_PEANOS_INSET_TOP - DADA_PEANOS_INSET_BOTTOM, DADA_PEANOS_MPFR_RND);
+
+    res.n = rect->height - DADA_PEANOS_INSET_BOTTOM - mpfr_get_d(temp, DADA_PEANOS_MPFR_RND);
+    
+    mpfr_clear(temp);
+
+    return res;
+}
+
+void peanos_coord_to_pix_hp(t_peanos *x, t_rect *rect, mpfr_t coord_hp[3], mpfr_t pix_hp[3])
+{
+    // pix = width * (coord - start_coord)/domain_coord
+    mpfr_set(pix_hp[0], coord_hp[0], DADA_PEANOS_MPFR_RND);
+    mpfr_sub(pix_hp[0], pix_hp[0], x->screen_start_hp[0], DADA_PEANOS_MPFR_RND);
+    mpfr_div(pix_hp[0], pix_hp[0], x->screen_domain_hp[0], DADA_PEANOS_MPFR_RND);
+    mpfr_mul_d(pix_hp[0], pix_hp[0], rect->width - DADA_PEANOS_INSET_LEFT - DADA_PEANOS_INSET_RIGHT, DADA_PEANOS_MPFR_RND);
+    mpfr_add_d(pix_hp[0], pix_hp[0], DADA_PEANOS_INSET_LEFT, DADA_PEANOS_MPFR_RND);
+
+    mpfr_set(pix_hp[1], coord_hp[1], DADA_PEANOS_MPFR_RND);
+    mpfr_sub(pix_hp[1], pix_hp[1], x->screen_start_hp[1], DADA_PEANOS_MPFR_RND);
+    mpfr_div(pix_hp[1], pix_hp[1], x->screen_domain_hp[1], DADA_PEANOS_MPFR_RND);
+    mpfr_mul_d(pix_hp[1], pix_hp[1], rect->height - DADA_PEANOS_INSET_TOP - DADA_PEANOS_INSET_BOTTOM, DADA_PEANOS_MPFR_RND);
+    mpfr_d_sub(pix_hp[1], rect->height - DADA_PEANOS_INSET_BOTTOM, pix_hp[1], DADA_PEANOS_MPFR_RND);
+
+    mpfr_set(pix_hp[2], coord_hp[2], DADA_PEANOS_MPFR_RND);
+    mpfr_sub(pix_hp[2], pix_hp[2], x->screen_start_hp[2], DADA_PEANOS_MPFR_RND);
+    mpfr_div(pix_hp[2], pix_hp[2], x->screen_domain_hp[2], DADA_PEANOS_MPFR_RND);
+    mpfr_d_sub(pix_hp[2], rect->height - DADA_PEANOS_INSET_BOTTOM, pix_hp[2], DADA_PEANOS_MPFR_RND);
+}
+
+
+
+
+void peanos_assist(t_peanos *x, void *b, long m, long a, char *s)
+{
+    if (m == ASSIST_INLET) {
+        if (a == 0) // @in 0 @type number/llll @digest amplitude configuration (alpha)
+            sprintf(s, "number/llll: amplitude configuration (α)");
+        else if (a == 1) // @in 1 @type number/llll @digest frequency shift configuration (sigma)
+            sprintf(s, "number/llll: frequency shift configuration (ς)");
+        else // @in 2 @type number/llll @digest noisiness configuration (xi)
+            sprintf(s, "number/llll: noisiness configuration (κ)");
+    }
+    else {
+        char *type = NULL;
+        llllobj_get_llll_outlet_type_as_string((t_object *) x, LLLL_OBJ_UIMSP, a, &type);
+        if (a == 0)	// @out 0 @type signal @digest Audio output
+            sprintf(s, "(signal): Audio");
+        else if (a == 1)	// @out 1 @type llll @digest Buffer as llll
+            sprintf(s, "llll (%s): Buffer", type);
+        else 	// @out 2 @type bang @digest bang when playhead position changes
+            sprintf(s, "bang When Changed");
+    }
+}
+
+
+void peanos_bang(t_peanos *x)
+{
+    process_coords(x);
+    output_coords(x);
+    peanos_iar(x);
+}
+
+/*
+double peanos_start_as_double(t_peanos *x)
+{
+    return mpfr_get_d(x->screen_start_hp, DADA_PEANOS_MPFR_RND);
+}
+
+
+double peanos_end_as_double(t_peanos *x)
+{
+    return mpfr_get_d(x->screen_end_hp, DADA_PEANOS_MPFR_RND);
+}
+
+
+double peanos_domain_as_double(t_peanos *x)
+{
+    return mpfr_get_d(x->screen_domain_hp, DADA_PEANOS_MPFR_RND);
+}
+*/
+
+void peanos_paint(t_peanos *x, t_object *patcherview)
+{
+    t_dadaobj *r_ob = dadaobj_cast(x);
+	t_rect rect;
+    t_jgraphics *g = (t_jgraphics *) patcherview_get_jgraphics(patcherview); // obtain graphics context
+    jbox_get_rect_for_view((t_object *)x, patcherview, &rect);
+    double fontsize = jbox_get_fontsize((t_object *)x);
+    t_jfont *jf = jfont_create_debug(jbox_get_fontname((t_object *)x)->s_name, (t_jgraphics_font_slant)jbox_get_font_slant((t_object *)x), (t_jgraphics_font_weight)jbox_get_font_weight((t_object *)x), jbox_get_fontsize((t_object *)x));
+    t_jfont *jf_greek = jfont_create_debug("Times New Roman", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL, 2 * jbox_get_fontsize((t_object *)x));
+
+    dadaobj_paint_background(r_ob, g, &rect);
+    
+    double innerwidth = rect.width - DADA_PEANOS_INSET_LEFT - DADA_PEANOS_INSET_RIGHT;
+    double innerheight = rect.height - DADA_PEANOS_INSET_TOP - DADA_PEANOS_INSET_BOTTOM;
+    
+    if (x->show_spectrum) { // it's a FALSE geometrical representation, quick'n'dirty
+        for (long p = 0; p < x->num_partials; p++) {
+            double amp = x->next_amps[p];
+            double freq = x->next_freqs[p];
+            double noisiness = x->next_noisinesses[p];
+            double sr = x->sr;
+            if (amp > 0 && freq > 0) {
+                const double HEIGHT = innerheight / 2.;
+                t_jrgba color = dada_long_to_color(p);
+                color.alpha = 0.2;
+                double amp_wk = rescale(peanos_atodb(amp * get_gain_compensation(freq, noisiness, sr)), -12, 60, 0., 1.);
+                double mc = 69 + 12. * log2(freq/440.);
+                double px = rescale(mc, 0, 130, DADA_PEANOS_INSET_LEFT, DADA_PEANOS_INSET_LEFT + innerwidth);
+                double semiwidth = rescale(pow(noisiness, 6.), 0, 1, 0, 5. * innerwidth);
+                if (noisiness > 0.999) {
+                    paint_rectangle(g, color, color, DADA_PEANOS_INSET_LEFT, DADA_PEANOS_INSET_TOP + innerheight - amp_wk * HEIGHT, innerwidth, amp_wk * HEIGHT, 1);
+                } else {
+                    paint_triangle(g, color, color, px - semiwidth, DADA_PEANOS_INSET_TOP + innerheight, px + semiwidth, DADA_PEANOS_INSET_TOP + innerheight, px, DADA_PEANOS_INSET_TOP + innerheight - amp_wk * HEIGHT, 1);
+                }
+            }
+        }
+    }
+    
+    // painting the point
+    t_ptn pt = peanos_coord_to_pix(x, &rect, x->coord_hp);
+    double LARGENUMBEROFPIXELS = 10000000;
+    if (pt.x > LARGENUMBEROFPIXELS)
+        pt.x = LARGENUMBEROFPIXELS;
+    if (pt.y > LARGENUMBEROFPIXELS)
+        pt.y = LARGENUMBEROFPIXELS;
+    if (pt.n > LARGENUMBEROFPIXELS)
+        pt.n = LARGENUMBEROFPIXELS;
+    
+    if (x->mousedrag_constraint == 1)
+        paint_dashed_line(g, build_jrgba(0., 0., 0., 0.2), pt.x, DADA_PEANOS_INSET_TOP, pt.x, DADA_PEANOS_INSET_TOP + innerheight, 1, 6);
+    if (x->mousedrag_constraint == 2)
+        paint_dashed_line(g, build_jrgba(0., 0., 0., 0.2), DADA_PEANOS_INSET_LEFT, pt.y, DADA_PEANOS_INSET_LEFT + innerwidth, pt.y, 1, 6);
+
+    paint_circle(g, build_jrgba(0., 0., 0., 0.1), build_jrgba(0., 0., 0., 0.1), pt.x, pt.y, 4., 0);
+    paint_circle(g, DADA_BLACK, DADA_BLACK, pt.x, pt.y, 1.5, 1.);
+//    paint_arc_stroken(g, DADA_BLACK, pt.x, pt.y, 20, 1., -PI, -PI + pt.n);
+    
+    // repainting borders
+    paint_filledrectangle(g, DADA_WHITE, 0, 0, DADA_PEANOS_INSET_LEFT, rect.height);
+    paint_filledrectangle(g, DADA_WHITE, rect.width - DADA_PEANOS_INSET_RIGHT, 0, DADA_PEANOS_INSET_RIGHT, rect.height);
+    paint_filledrectangle(g, DADA_WHITE, 0, 0, rect.width, DADA_PEANOS_INSET_TOP);
+    paint_filledrectangle(g, DADA_WHITE, 0, rect.height - DADA_PEANOS_INSET_BOTTOM, rect.width, DADA_PEANOS_INSET_BOTTOM);
+
+    paint_strokenrectangle(g, DADA_GREY_50, DADA_PEANOS_INSET_LEFT, DADA_PEANOS_INSET_TOP, innerwidth, innerheight, 1);
+
+    
+    // NOISINESS BAR
+    double NNESS_LEFT = rect.width - DADA_PEANOS_INSET_RIGHT_NOISINESS;
+    double NNESS_WIDTH = DADA_PEANOS_UI_NOISINESS_WIDTH;
+    
+    paint_strokenrectangle(g, DADA_GREY_50, NNESS_LEFT, DADA_PEANOS_INSET_TOP, NNESS_WIDTH, innerheight, 1);
+
+    if (pt.n <= rect.height - DADA_PEANOS_INSET_BOTTOM) {
+        if (pt.n < rect.height - DADA_PEANOS_INSET_BOTTOM)
+            paint_filledrectangle(g, DADA_GREY_25, NNESS_LEFT, pt.n, NNESS_WIDTH, rect.height - DADA_PEANOS_INSET_BOTTOM - pt.n);
+        paint_filledrectangle(g, DADA_BLACK, NNESS_LEFT, pt.n-1.5, NNESS_WIDTH, 3);
+    }
+    
+    // yet again
+    paint_filledrectangle(g, DADA_WHITE, 0, 0, rect.width, DADA_PEANOS_INSET_TOP);
+
+    
+    
+    // ZOOM POSITIONS
+    // power 10
+    mpfr_t screen_middle[3];
+    mpfr_t temp, exponent;
+    double zoombar_pos[3];
+    double zoombar_halfwidth[3][5];
+    for (int i = 0; i < 3; i++) {
+        mpfr_init2(temp, x->mpfr_precision[i]);
+        mpfr_init2(exponent, x->mpfr_precision[i]);
+        mpfr_init2(screen_middle[i], x->mpfr_precision[i]);
+        mpfr_set(screen_middle[i], x->screen_start_hp[i], DADA_PEANOS_MPFR_RND);
+        mpfr_add(screen_middle[i], screen_middle[i], x->screen_end_hp[i], DADA_PEANOS_MPFR_RND);
+        mpfr_div_ui(screen_middle[i], screen_middle[i], 2, DADA_PEANOS_MPFR_RND);
+        zoombar_pos[i] = mpfr_get_d(screen_middle[i], DADA_PEANOS_MPFR_RND);
+        
+        for (int j = 0; j < 5; j++) {
+            mpfr_set(temp, x->screen_domain_hp[i], DADA_PEANOS_MPFR_RND);
+            mpfr_set_ui(exponent, 10, DADA_PEANOS_MPFR_RND);
+            mpfr_pow_ui(exponent, exponent, j, DADA_PEANOS_MPFR_RND);
+            mpfr_ui_div(exponent, 1, exponent, DADA_PEANOS_MPFR_RND);
+            mpfr_pow(temp, temp, exponent, DADA_PEANOS_MPFR_RND);
+            zoombar_halfwidth[i][j] = mpfr_get_d(temp, DADA_PEANOS_MPFR_RND)/2.;
+        }
+        mpfr_clear(temp);
+        mpfr_clear(exponent);
+    }
+    /*
+    paint_rectangle(g, build_jrgba(0, 0, 0, 1), build_jrgba(0, 0, 0, 0.1),
+                    DADA_PEANOS_INSET_LEFT + innerwidth * (zoombar_pos[0] - zoombar_halfwidth[0]),
+                    rect.height - DADA_PEANOS_INSET_BOTTOM, innerwidth * 2 * zoombar_halfwidth[0], 4, 0);
+    paint_rectangle(g, build_jrgba(0, 0, 0, 1), build_jrgba(0, 0, 0, 0.1),
+                    DADA_PEANOS_INSET_LEFT - 4, DADA_PEANOS_INSET_TOP + innerheight * (zoombar_pos[1] - zoombar_halfwidth[1]),
+                    4, innerheight * 2 * zoombar_halfwidth[1], 0);
+    paint_rectangle(g, build_jrgba(0, 0, 0, 1), build_jrgba(0, 0, 0, 0.1),
+                    NNESS_LEFT + NNESS_WIDTH, DADA_PEANOS_INSET_TOP + innerheight * (zoombar_pos[2] - zoombar_halfwidth[2]),
+                    4, innerheight * 2 * zoombar_halfwidth[2], 0);
+    */
+
+    for (int j = 0; j < 5; j++) {
+        double alpha = 0.3 * pow(1. - j / 4., 1.);
+        double left_pos;
+        left_pos = MAX(0, zoombar_pos[0] - zoombar_halfwidth[0][j]);
+        paint_rectangle(g, build_jrgba(0, 0, 0, 1), build_jrgba(0, 0, 0, alpha),
+                        DADA_PEANOS_INSET_LEFT + innerwidth * left_pos,
+                        rect.height - DADA_PEANOS_INSET_BOTTOM, MAX(1, innerwidth * MIN(1-left_pos, 2 * zoombar_halfwidth[0][j])), 4, 0);
+        left_pos = MAX(0, (1 - zoombar_pos[1]) - zoombar_halfwidth[1][j]);
+        paint_rectangle(g, build_jrgba(0, 0, 0, 1), build_jrgba(0, 0, 0, alpha),
+                        DADA_PEANOS_INSET_LEFT - 4, DADA_PEANOS_INSET_TOP + innerheight * left_pos,
+                        4, MAX(1, innerheight * MIN(1-left_pos, 2 * zoombar_halfwidth[1][j])), 0);
+        left_pos = MAX(0, (1 - zoombar_pos[2]) - zoombar_halfwidth[2][j]);
+        paint_rectangle(g, build_jrgba(0, 0, 0, 1), build_jrgba(0, 0, 0, alpha),
+                        NNESS_LEFT + NNESS_WIDTH, DADA_PEANOS_INSET_TOP + innerheight * left_pos,
+                        4, MAX(1, innerheight * MIN(1-left_pos, 2 * zoombar_halfwidth[2][j])), 0);
+    }
+    
+    for (int i = 0; i < 3; i++)
+        mpfr_clear(screen_middle[i]);
+
+    
+    // LEGENDS
+    long MCx = MIN(40, innerwidth/(15. * (fontsize/8.)));
+    long MCy = MIN(40, innerheight/(15. * (fontsize/8.)));
+    char *text1 = peanos_mpfr_get_str(10, MCx, x->screen_start_hp[0], DADA_PEANOS_MPFR_RND, MCx, true);
+    char *text2 = peanos_mpfr_get_str(10, MCx, x->screen_end_hp[0], DADA_PEANOS_MPFR_RND, MCx, true);
+    char *text3 = peanos_mpfr_get_str(10, MCy, x->screen_start_hp[1], DADA_PEANOS_MPFR_RND, MCy, true);
+    char *text4 = peanos_mpfr_get_str(10, MCy, x->screen_end_hp[1], DADA_PEANOS_MPFR_RND, MCy, true);
+    char *text5 = peanos_mpfr_get_str(10, MCy, x->screen_start_hp[2], DADA_PEANOS_MPFR_RND, MCy, true);
+    char *text6 = peanos_mpfr_get_str(10, MCy, x->screen_end_hp[2], DADA_PEANOS_MPFR_RND, MCy, true);
+
+    // LEGEND ALPHA
+    {
+        write_text(g, jf_greek, DADA_GREY_25, "α", DADA_PEANOS_INSET_LEFT, rect.height - DADA_PEANOS_INSET_BOTTOM + 4, innerwidth, DADA_PEANOS_INSET_BOTTOM - 4, JGRAPHICS_TEXT_JUSTIFICATION_HCENTERED | JGRAPHICS_TEXT_JUSTIFICATION_VCENTERED, true, false);
+        
+        write_text(g, jf, DADA_GREY_50, text1, DADA_PEANOS_INSET_LEFT, rect.height - DADA_PEANOS_INSET_BOTTOM + 4, innerwidth / 2, DADA_PEANOS_INSET_BOTTOM - 4, JGRAPHICS_TEXT_JUSTIFICATION_LEFT | JGRAPHICS_TEXT_JUSTIFICATION_BOTTOM, true, false);
+        write_text(g, jf, DADA_GREY_50, text2, DADA_PEANOS_INSET_LEFT + innerwidth / 2., rect.height - DADA_PEANOS_INSET_BOTTOM + 4, innerwidth / 2., DADA_PEANOS_INSET_BOTTOM - 4, JGRAPHICS_TEXT_JUSTIFICATION_RIGHT | JGRAPHICS_TEXT_JUSTIFICATION_BOTTOM, true, false);
+    }
+
+    
+    /// LEGENDA SIGMA
+    {
+        jgraphics_set_source_rgba(g, 0, 0, 0, 1);   // setting alpha to 1 otherwise we have blending issues
+        double inset = DADA_PEANOS_INSET_LEFT - 8;
+        t_jsurface *forverticallegend = jgraphics_image_surface_create(JGRAPHICS_FORMAT_ARGB32, 2 * rect.height, 2 * inset);
+        t_jsurface *verticallegend = jgraphics_image_surface_create(JGRAPHICS_FORMAT_ARGB32, 2 * inset, 2 * rect.height);
+        t_jgraphics *g_forverticallegend = jgraphics_create(forverticallegend);
+        t_jfont *jf2 = jfont_create_debug(jbox_get_fontname((t_object *)x)->s_name, (t_jgraphics_font_slant)jbox_get_font_slant((t_object *)x), (t_jgraphics_font_weight)jbox_get_font_weight((t_object *)x), 2 * jbox_get_fontsize((t_object *)x));
+        t_jfont *jf_greek2 = jfont_create_debug("Times New Roman", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL, 2 * 2 * jbox_get_fontsize((t_object *)x));
+        
+        write_text(g_forverticallegend, jf_greek2, DADA_GREY_25, "ς", 2 * DADA_PEANOS_INSET_BOTTOM, 0, 2 * innerheight, 2 * inset, JGRAPHICS_TEXT_JUSTIFICATION_HCENTERED | JGRAPHICS_TEXT_JUSTIFICATION_VCENTERED, true, false);
+        
+        write_text(g_forverticallegend, jf2, DADA_GREY_50, text3, 2 * DADA_PEANOS_INSET_BOTTOM, 0, 2 * innerheight/2, 2 * inset, JGRAPHICS_TEXT_JUSTIFICATION_LEFT | JGRAPHICS_TEXT_JUSTIFICATION_BOTTOM, true, false);
+        write_text(g_forverticallegend, jf2, DADA_GREY_50, text4, 2 * (DADA_PEANOS_INSET_BOTTOM + innerheight/2.), 0, 2 * innerheight/2, 2 * inset, JGRAPHICS_TEXT_JUSTIFICATION_RIGHT | JGRAPHICS_TEXT_JUSTIFICATION_BOTTOM, true, false);
+        
+        t_jrgba color;
+        for (long i = 0; i < 2 * inset; i++) {
+            for (long j = 0; j < 2 * rect.height; j++) {
+                jgraphics_image_surface_get_pixel(forverticallegend, j, i, &color);
+                jgraphics_image_surface_set_pixel(verticallegend, i, 2*rect.height - j, color);
+            }
+        }
+        jfont_destroy(jf2);
+        jfont_destroy(jf_greek2);
+        jgraphics_destroy(g_forverticallegend);
+        jgraphics_image_surface_draw(g, verticallegend, build_rect(0, 0, 2*inset, 2*rect.height), build_rect(0, 0, inset, rect.height));
+        jgraphics_surface_destroy(forverticallegend);
+        jgraphics_surface_destroy(verticallegend);
+    }
+    
+
+    /// LEGENDA KAPPA
+    {
+        jgraphics_set_source_rgba(g, 0, 0, 0, 1);   // setting alpha to 1 otherwise we have blending issues
+        double inset = DADA_PEANOS_INSET_LEFT - 8;
+        t_jsurface *forverticallegend = jgraphics_image_surface_create(JGRAPHICS_FORMAT_ARGB32, 2 * rect.height, 2 * inset);
+        t_jsurface *verticallegend = jgraphics_image_surface_create(JGRAPHICS_FORMAT_ARGB32, 2 * inset, 2 * rect.height);
+        t_jgraphics *g_forverticallegend = jgraphics_create(forverticallegend);
+        t_jfont *jf2 = jfont_create_debug(jbox_get_fontname((t_object *)x)->s_name, (t_jgraphics_font_slant)jbox_get_font_slant((t_object *)x), (t_jgraphics_font_weight)jbox_get_font_weight((t_object *)x), 2 * jbox_get_fontsize((t_object *)x));
+        t_jfont *jf_greek2 = jfont_create_debug("Times New Roman", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL, 2 * 2 * jbox_get_fontsize((t_object *)x));
+        
+        write_text(g_forverticallegend, jf_greek2, DADA_GREY_25, "κ", 2 * DADA_PEANOS_INSET_TOP, 0, 2 * innerheight, 2 * inset, JGRAPHICS_TEXT_JUSTIFICATION_HCENTERED | JGRAPHICS_TEXT_JUSTIFICATION_VCENTERED, true, false);
+        
+        write_text(g_forverticallegend, jf2, DADA_GREY_50, text6, 2 * DADA_PEANOS_INSET_TOP, 0, 2 * innerheight/2, 2 * inset, JGRAPHICS_TEXT_JUSTIFICATION_LEFT | JGRAPHICS_TEXT_JUSTIFICATION_BOTTOM, true, false);
+        write_text(g_forverticallegend, jf2, DADA_GREY_50, text5, 2 * (DADA_PEANOS_INSET_TOP + innerheight/2.), 0, 2 * innerheight/2, 2 * inset, JGRAPHICS_TEXT_JUSTIFICATION_RIGHT | JGRAPHICS_TEXT_JUSTIFICATION_BOTTOM, true, false);
+        
+        t_jrgba color;
+        for (long i = 0; i < 2 * inset; i++) {
+            for (long j = 0; j < 2 * rect.height; j++) {
+                jgraphics_image_surface_get_pixel(forverticallegend, j, i, &color);
+                jgraphics_image_surface_set_pixel(verticallegend, 2 * inset - i, j, color);
+            }
+        }
+        jfont_destroy(jf2);
+        jfont_destroy(jf_greek2);
+        jgraphics_destroy(g_forverticallegend);
+        jgraphics_image_surface_draw(g, verticallegend, build_rect(0, 0, 2*inset, 2*rect.height), build_rect(NNESS_LEFT + NNESS_WIDTH+4, 0, inset, rect.height));
+        jgraphics_surface_destroy(forverticallegend);
+        jgraphics_surface_destroy(verticallegend);
+    }
+    
+    bach_freeptr(text1);
+    bach_freeptr(text2);
+    bach_freeptr(text3);
+    bach_freeptr(text4);
+    bach_freeptr(text5);
+    bach_freeptr(text6);
+    
+    // LEGEND
+    if (x->show_legend) {
+        long MC = MIN(x->legend_num_digits, innerwidth/(5.1 * (fontsize/8.)) - 3);
+        char *text_coord0 = peanos_mpfr_get_str(10, MC, x->coord_hp[0], DADA_PEANOS_MPFR_RND, MC, false);
+        char *text_coord1 = peanos_mpfr_get_str(10, MC, x->coord_hp[1], DADA_PEANOS_MPFR_RND, MC, false);
+        char *text_coord2 = peanos_mpfr_get_str(10, MC, x->coord_hp[2], DADA_PEANOS_MPFR_RND, MC, false);
+        char text_coords[2048];
+        snprintf_zero(text_coords, 2048, "α = %s\nς = %s\nκ = %s", text_coord0, text_coord1, text_coord2);
+        write_text(g, jf, DADA_GREY_50, text_coords, DADA_PEANOS_INSET_LEFT, DADA_PEANOS_INSET_TOP, innerwidth, innerheight, JGRAPHICS_TEXT_JUSTIFICATION_RIGHT | JGRAPHICS_TEXT_JUSTIFICATION_TOP, false, false);
+        
+        bach_freeptr(text_coord0);
+        bach_freeptr(text_coord1);
+        bach_freeptr(text_coord2);
+    }
+
+    
+    
+    dadaobj_paint_border(r_ob, g, &rect);
+    
+    jfont_destroy_debug(jf);
+}
+
+
+t_atom_long peanos_acceptsdrag(t_peanos *x, t_object *drag, t_object *view)
+{
+    return false;
+}
+
+void peanos_redraw_do(t_peanos *x, t_symbol *msg, long ac, t_atom *av)
+{
+    jbox_redraw((t_jbox *)x);
+}
+
+void peanos_post_array_do(t_peanos *x, t_symbol *msg, long ac, t_atom *av)
+{
+    long size;
+    char *text = NULL;
+    atom_gettext(ac, av, &size, &text, 0);
+    post("%s", text);
+    sysmem_freeptr(text);
+}
+
+void peanos_post_array(t_peanos *x, long num_elems, double *elems)
+{
+#ifdef MAC_VERSION
+#ifdef DADA_PEANOS_DEBUG
+    if (x->dsp_debug) {
+        t_atom a[num_elems];
+        long i;
+        for (i = 0; i < num_elems; i++)
+            atom_setfloat(a+i, elems[i]);
+        defer_low(x, (method)peanos_post_array_do, NULL, num_elems, a);
+    }
+#endif
+#endif
+}
+
+
+double lininterp(double start, double end, long i, long numsteps)
+{
+    return start + (end - start) * (double)i/(numsteps-1);
+}
+
+void peanos_clear(t_peanos *x)
+{
+    long np = x->num_partials;
+    for (long i = 0; i < np; i++) {
+        x->mem_ff1[i] = x->mem_ff2[i] = 0;
+        x->mem_fb1[i] = x->mem_fb2[i] = 0;
+    }
+}
+
+
+double biquad_apply(double sample, t_biquad_coeffs *coeffs, double *ff1, double *ff2, double *fb1, double *fb2)
+{
+    double res = sample * coeffs->b0 + (*ff1) * coeffs->b1 + (*ff2) * coeffs->b2 - (*fb1) * coeffs->a1 - (*fb2) * coeffs->a2;
+    *ff2 = *ff1;
+    *fb2 = *fb1;
+    *ff1 = sample;
+    *fb1 = res;
+    return res;
+}
+
+void biquad_coefficients_from_params(double cutoff_freq, double amp, double Q, double sr, t_biquad_coeffs *coeffs)
+{
+    if (Q == 0) {
+        double epsilon = 0.001;
+        coeffs->a1 = amp-epsilon;
+        coeffs->a2 = 0.;
+        coeffs->b0 = -(amp-epsilon);
+        coeffs->b1 = -0.001039;
+        coeffs->b2 = -0.998887;
+    } else {
+        double w0 = 2*PI*cutoff_freq/sr;
+        double alpha = sin(w0)/(2*Q);
+        double alpha_plus_one = (1 + alpha);
+        coeffs->a1 = -2 * cos(w0) / alpha_plus_one;
+        coeffs->a2 = (1 - alpha) / alpha_plus_one;
+        coeffs->b0 = alpha * amp / alpha_plus_one;
+        coeffs->b1 = 0;
+        coeffs->b2 = -alpha * amp / alpha_plus_one;
+    }
+}
+
+
+double noisiness_to_q(double noisiness, double sr, double exponent)
+{
+    return pow(1.-noisiness, exponent)*(sr/2.);
+}
+
+double peanos_dbtoa(float db)
+{
+    return pow(10, db/20.);
+}
+
+double peanos_atodb(double a)
+{
+    return 20 * log10(a);
+}
+
+double get_gain_compensation(double freq, double noisiness, double sr)
+{
+// using gain compensation table
+    int intf = (int)((round(freq) * 44100./sr) - 1);
+    int intn = (int)(round(noisiness*100));
+    if (intf < 22049 && intn < 101)
+        return peanos_dbtoa(-bandpass_gains[intf][intn]);
+    else
+        return 0.;
+}
+
+void get_split_gains(char synthesis_mode, double noisiness, double freq, double sr, double *sine_gain, double *noise_gain)
+{
+    if (synthesis_mode == 1) {
+        *sine_gain = sqrt(1 - noisiness);
+        *noise_gain = sqrt(2 * noisiness);
+    } else {
+        if (noisiness <= 0.) {
+            *sine_gain = 1;
+            *noise_gain = 0;
+        } else if (noisiness <= 0.3) {
+            *sine_gain = (1 - noisiness/0.3);
+            *sine_gain *= *sine_gain;
+            *noise_gain = sqrt(1 - *sine_gain * *sine_gain) * get_gain_compensation(freq, noisiness, sr);
+        } else {
+            *sine_gain = 0;
+            *noise_gain = get_gain_compensation(freq, noisiness, sr);
+        }
+    }
+}
+
+void peanos_perform64(t_peanos *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
+{
+    t_double	*out = outs[0];
+    long np = x->num_partials;
+    double *phases = x->phases;
+    double *mem_ff1 = x->mem_ff1;
+    double *mem_ff2 = x->mem_ff2;
+    double *mem_fb1 = x->mem_fb1;
+    double *mem_fb2 = x->mem_fb2;
+    double timestep = x->timestep;
+    double global_gain = 0.0625;
+    char must_interp = x->must_interp;
+    bool synthesis_mode = x->synthesis_mode;
+    bool autoclear_filters = x->autoclear_filters;
+    double sr = x->sr;
+    double noisinessToQexponent = x->noisiness_to_q_exp;
+    long interp_freq_samps = 2048;
+
+    if (numouts < 1)
+        return;
+    
+    // Beware, for Max ins[2] coincides with outs[0]
+    
+    if (x->mode == 1) { // passive
+        long N = x->num_partials;
+        long precision = x->precision;
+        
+        // Amplitudes
+        double sph[N]; sph[0] = 1;
+        unitIntervalToHyperCube(ins[0][0], N-1, precision, sph+1);
+        for (long i = 1; i < N; i++)
+            sph[i] *= PIOVERTWO;
+        sphericalToCartesian(sph, x->next_amps, N);
+        
+        // Freqs
+        unitIntervalToHyperCube(ins[1][0], N, precision, x->next_freqs);
+        for (long i = 0; i < N; i++)
+            x->next_freqs[i] = (1 + i + x->next_freqs[i]) * x->fzero;
+        
+        // Noisiness
+        unitIntervalToHyperCube(ins[2][0], N, precision, x->next_noisinesses);
+        must_interp = true;
+    }
+    
+    double freq, amp, noisiness; // = ins[2][0];
+    double b1, a0;
+    double noise_gain, sine_gain;
+    t_biquad_coeffs coeffs;
+    
+    for (int i = 0; i < sampleframes; i++)
+        out[i] = 0.;
+
+    for (long p = 0; p < np; p++) {
+        if (!must_interp) {
+            freq = x->curr_freqs[p];
+            amp = x->curr_amps[p];
+            noisiness = x->curr_noisinesses[p];
+            get_split_gains(synthesis_mode, noisiness, freq, sr, &sine_gain, &noise_gain);
+//                b1 = exp(-2.0 * PI * (cutoff_freq/x->sr));
+//            b1 = exp(-2.0 * PI * (10000/44100.));
+            if (synthesis_mode == 1) {
+                b1 = exp(-2.0 * PI * (pow(noisiness, 2.)/2));
+                a0 = 1.0 - b1;
+            } else {
+                biquad_coefficients_from_params(freq, amp, noisiness_to_q(noisiness, sr, noisinessToQexponent), sr, &coeffs);
+            }
+        }
+        
+        for (int i = 0; i < sampleframes; i++) {
+            if (must_interp) {
+                freq = lininterp(x->curr_freqs[p], x->next_freqs[p], i, sampleframes);
+                amp = lininterp(x->curr_amps[p], x->next_amps[p], i, sampleframes);
+                noisiness = lininterp(x->curr_noisinesses[p], x->next_noisinesses[p], i, sampleframes);
+                get_split_gains(synthesis_mode, noisiness, freq, sr, &sine_gain, &noise_gain);
+                if (autoclear_filters)
+                    peanos_clear(x);
+//                b1 = exp(-2.0 * PI * (cutoff_freq/x->sr));
+//                b1 = exp(-2.0 * PI * (10000/44100.));
+                if (synthesis_mode == 1) {
+                    b1 = exp(-2.0 * PI * (pow(noisiness, 2.)/2)); // equivalent to: cutoff_freq = pow(noisiness, 2.)*sr/2
+                    a0 = 1.0 - b1;
+                } else {
+                    biquad_coefficients_from_params(freq, amp, noisiness_to_q(noisiness, sr, noisinessToQexponent), sr, &coeffs);
+                }
+            }
+            
+            phases[p] += freq * timestep;
+            while (phases[p] > TWOPI) phases[p] -= TWOPI;
+            
+            double sinusoid = sin(phases[p]); // TO DO substitute this with a proper lookup table
+            double whitenoise = 2 * (double)rand()/RAND_MAX - 1;
+            double filterednoise;
+            
+            if (synthesis_mode == 1) {
+                // two passages of a 1-st order lowpass
+                filterednoise =  whitenoise * a0 + mem_ff1[p] * b1;
+                mem_ff1[p] = filterednoise;
+                filterednoise =  filterednoise * a0 + mem_ff2[p] * b1;
+                mem_ff2[p] = filterednoise;
+                
+                out[i] += global_gain * amp * (sine_gain + noise_gain * filterednoise) * sinusoid; // TO DO substitute this with a proper lookup table
+                // 24dB of attenuation are built-in, as our sinusoids can get loud ;)
+            } else { // additive synth + filtered noise via biquad
+                filterednoise = noisiness == 1 ? whitenoise : biquad_apply(whitenoise, &coeffs, mem_ff1+p, mem_ff2+p, mem_fb1+p, mem_fb2+p);
+                out[i] += global_gain * amp * (sine_gain * sinusoid + noise_gain * filterednoise);
+            }
+        }
+    }
+    
+    if (must_interp) {
+        for (long p = 0; p < np; p++) {
+            x->curr_amps[p] = x->next_amps[p];
+            x->curr_freqs[p] = x->next_freqs[p];
+            x->curr_noisinesses[p] = x->next_noisinesses[p];
+        }
+        x->must_interp = false;
+    }
+
+#ifdef DENORM_WANT_FIX
+    for (int i = 0; i < sampleframes; i++)
+        out[i] = FIX_DENORM_NAN_DOUBLE(out[i]);
+#endif
+    
+}
+
+void peanos_dsp64(t_peanos *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+{
+    if (x->sr != samplerate) {
+        x->sr = samplerate;
+        x->timestep = TWOPI * 1./x->sr;
+//        reset_coords_to_zero(x, true);
+    }
+    object_method(dsp64, gensym("dsp_add64"), x, peanos_perform64, 0, NULL);
+}
+
+
+void peanos_anything_do(t_peanos *x, t_symbol *msg, long ac, t_atom *av)
+{
+    dadaobj_anything(dadaobj_cast(x), msg, ac, av);
+    
+    t_llll *parsed = llllobj_parse_llll((t_object *) x, LLLL_OBJ_UI, msg, ac, av, LLLL_PARSE_CLONE);
+    if (parsed && parsed->l_head && hatom_gettype(&parsed->l_head->l_hatom) == H_SYM) {
+        t_symbol *router = hatom_getsym(&parsed->l_head->l_hatom);
+        llll_behead(parsed);
+        
+        if (dadaobj_anything_handle_domain_or_range(dadaobj_cast(x), router, parsed, 1)) {
+            // nothing to do!
+/*        } else if (router == gensym("zoomby") && parsed->l_head) {
+            double factor = hatom_getdouble(&parsed->l_head->l_hatom);
+            
+            t_llllelem *center_el = parsed->l_head->l_next;
+            if (center_el && hatom_gettype(&center_el->l_hatom) == H_SYM && hatom_getsym(&center_el->l_hatom) == _llllobj_sym_cursor) // zoom around cursor
+                peanos_zoom_by_hp(x, factor, x->mousedowncoord_hp);
+            else if (center_el && is_hatom_number(&center_el->l_hatom)) // zoom around specific point
+                peanos_zoom_by(x, factor, hatom_getdouble(&center_el->l_hatom));
+            else { // zoom around domain center
+                mpfr_t temp;
+                mpfr_init2(temp, x->mpfr_precision);
+                mpfr_set(temp, x->screen_domain_hp, DADA_PEANOS_MPFR_RND);
+                mpfr_mul_d(temp, temp, 0.5, DADA_PEANOS_MPFR_RND);
+                mpfr_add(temp, temp, x->screen_start_hp, DADA_PEANOS_MPFR_RND);
+                peanos_zoom_by_hp(x, factor, temp);
+                mpfr_clear(temp);
+            }
+            jbox_redraw((t_jbox *)x);
+            
+        } else if (router == gensym("zoomexp") && parsed->l_head) {
+            mpfr_t exponent;
+            mpfr_init2(exponent, x->mpfr_precision);
+            mpfr_set_d(exponent, hatom_getdouble(&parsed->l_head->l_hatom), DADA_PEANOS_MPFR_RND);
+            
+            t_llllelem *center_el = parsed->l_head->l_next;
+            if (center_el && hatom_gettype(&center_el->l_hatom) == H_SYM && hatom_getsym(&center_el->l_hatom) == _llllobj_sym_cursor) // zoom around cursor
+                peanos_zoom_exp_hp(x, exponent, x->mousedowncoord_hp);
+            else if (center_el && is_hatom_number(&center_el->l_hatom)) { // zoom around specific point
+                mpfr_t temp;
+                mpfr_init2(temp, x->mpfr_precision);
+                mpfr_set_d(temp, hatom_getdouble(&center_el->l_hatom), DADA_PEANOS_MPFR_RND);
+                peanos_zoom_exp_hp(x, exponent, temp);
+                mpfr_clear(temp);
+            } else { // zoom around domain center
+                mpfr_t temp;
+                mpfr_init2(temp, x->mpfr_precision);
+                mpfr_set(temp, x->screen_domain_hp, DADA_PEANOS_MPFR_RND);
+                mpfr_mul_d(temp, temp, 0.5, DADA_PEANOS_MPFR_RND);
+                mpfr_add(temp, temp, x->screen_start_hp, DADA_PEANOS_MPFR_RND);
+                peanos_zoom_exp_hp(x, exponent, temp);
+                mpfr_clear(temp);
+            }
+            
+            mpfr_clear(exponent);
+            jbox_redraw((t_jbox *)x);
+            
+        } else if ((router == gensym("setcursor") || router == gensym("cursor")) && parsed->l_head) {
+            
+            if (parsed->l_size == 1 && hatom_gettype(&parsed->l_head->l_hatom) == H_SYM) {
+                t_buffer_ref *ref = buffer_ref_new((t_object *)x, hatom_getsym(&parsed->l_head->l_hatom));
+                if (ref) {
+                    x->mousedownnumsamps = peanos_buffer_to_numsamples_and_bufferidx(x, ref, x->mousedownbufferidx);
+                    fill_mousedown_fields_from_samplenum_and_bufferidx(x);
+                    object_free(ref);
+                }
+                
+            } else if (parsed->l_size == 1 && is_hatom_number(&parsed->l_head->l_hatom)) {
+                double coord = hatom_getdouble(&parsed->l_head->l_hatom);
+                mpfr_set_d(x->mousedowncoord_hp, coord, DADA_PEANOS_MPFR_RND);
+                fill_mousedown_fields_from_coord(x);
+            
+            } else if (parsed->l_size == 2 && is_hatom_number(&parsed->l_head->l_hatom) && is_hatom_number(&parsed->l_head->l_next->l_hatom)) {
+                long samps = 0;
+                mpz_t bufferidx;
+                mpz_init(bufferidx);
+                samps = hatom_getlong(&parsed->l_head->l_hatom);
+                if (parsed->l_head->l_next && hatom_gettype(&parsed->l_head->l_next->l_hatom) == H_LONG) {
+                    mpz_set_ui(bufferidx, hatom_getlong(&parsed->l_head->l_next->l_hatom));
+                } else if (parsed->l_head->l_next && hatom_gettype(&parsed->l_head->l_next->l_hatom) == H_DOUBLE) {
+                    mpfr_t phase;
+                    mpfr_init2(phase, DADA_PEANOS_MPFR_PRECISION_HIGH);
+                    mpfr_set_d(phase, hatom_getdouble(&parsed->l_head->l_next->l_hatom), DADA_PEANOS_MPFR_RND);
+                    peanos_get_num_buffers_for_samplenum(x, samps, bufferidx);
+                    mpfr_mul_z(phase, phase, bufferidx, DADA_PEANOS_MPFR_RND);
+                    mpfr_get_z(bufferidx, phase, MPFR_RNDD);
+                    mpfr_clear(phase);
+                }
+                peanos_samplenum_and_bufferidx_to_coord(x, samps, bufferidx, x->mousedowncoord_hp);
+                fill_mousedown_fields_from_coord(x);
+                mpz_clear(bufferidx);
+                
+            } else if (parsed->l_size >= 2 && hatom_gettype(&parsed->l_head->l_hatom) == H_LONG && hatom_gettype(&parsed->l_head->l_next->l_hatom) == H_SYM) {
+                long samps = hatom_getlong(&parsed->l_head->l_hatom);
+
+                // converting llll to hexadecimal
+                long STEP_SIZE = 8192;
+                long hex_string_allocated = STEP_SIZE;
+                char *hex_string = (char *)bach_newptr(STEP_SIZE * sizeof(char));
+                long cur = 0;
+                for (t_llllelem *el = parsed->l_head->l_next; el; el = el->l_next) {
+                    if (hatom_gettype(&el->l_hatom) != H_SYM) continue;
+                    t_symbol *this_hex = hatom_getsym(&el->l_hatom);
+                    if (this_hex) {
+                        long this_len = strlen(this_hex->s_name);
+                        while (cur + this_len + 1 >= hex_string_allocated) {
+                            hex_string_allocated += STEP_SIZE;
+                            hex_string = (char *)sysmem_resizeptr(hex_string, hex_string_allocated);
+                        }
+                        if (this_len >= 2 && this_hex->s_name[0] == '0' && this_hex->s_name[1] == 'x')
+                            cur += snprintf_zero(hex_string + cur, this_len + 1, "%s", this_hex->s_name + 2);
+                        else
+                            cur += snprintf_zero(hex_string + cur, this_len + 1, "%s", this_hex->s_name);
+                    }
+                }
+                hex_string[cur] = 0;
+                
+                mpz_t bufferidx;
+                mpz_init(bufferidx);
+                mpz_set_ui(bufferidx, 0);
+                char c[2];
+                c[1]=0;
+                
+                for (long i = 0; i < strlen(hex_string); i++) {
+                    c[0] = hex_string[i];
+                    mpz_mul_ui(bufferidx, bufferidx, 16);
+                    mpz_add_ui(bufferidx, bufferidx, strtol(c, NULL, 16));
+                }
+                
+                peanos_samplenum_and_bufferidx_to_coord(x, samps, bufferidx, x->mousedowncoord_hp);
+                fill_mousedown_fields_from_coord(x);
+                mpz_clear(bufferidx);
+            } else if (hatom_gettype(&parsed->l_head->l_hatom) == H_SYM && parsed->l_head->l_next && hatom_gettype(&parsed->l_head->l_next->l_hatom) == H_LLLL) {
+                t_llll *ll = hatom_getllll(&parsed->l_head->l_next->l_hatom);
+                long samps = ll->l_size;
+                long multiplier = powl(2, x->bitrate);
+                mpz_t bufferidx;
+                mpz_init(bufferidx);
+                mpz_set_ui(bufferidx, 0);
+                for (t_llllelem *elem = ll->l_head; elem; elem = elem->l_next) {
+                    mpz_mul_ui(bufferidx, bufferidx, multiplier);
+                    if (hatom_gettype(&elem->l_hatom) == H_LONG)
+                        mpz_add_ui(bufferidx, bufferidx, hatom_getlong(&elem->l_hatom));
+                    else if (hatom_gettype(&elem->l_hatom) == H_DOUBLE) {
+                        double d = hatom_getdouble(&elem->l_hatom);
+                        long l = floor((d + 1) * (multiplier/2));
+                        mpz_add_ui(bufferidx, bufferidx, l);
+                    }
+                }
+                peanos_samplenum_and_bufferidx_to_coord(x, samps, bufferidx, x->mousedowncoord_hp);
+                fill_mousedown_fields_from_coord(x);
+                mpz_clear(bufferidx);
+            }
+            
+            if (router == gensym("cursor")) {
+                peanos_buffer_set(x, x->mousedownnumsamps, x->mousedownbufferidx, x->mousedownphase_hp, 1);
+                if (x->output_buffer)
+                    peanos_output_buffer(x);
+            }
+            jbox_redraw((t_jbox *)x);
+            
+        } else if (router == gensym("getcursor")) {
+            peanos_send_mousedown_notification(x, gensym("cursor"), true);
+
+        } else if (router == gensym("next")) {
+            peanos_buffer_next_do(x, false);
+            if (x->output_buffer)
+                peanos_output_buffer(x);
+
+        } else if (router == gensym("resetzoom")) {
+            mpfr_set_d(x->screen_start_hp, 0., DADA_PEANOS_MPFR_RND);
+            mpfr_set_d(x->screen_domain_hp, 1., DADA_PEANOS_MPFR_RND);
+            mpfr_set_d(x->screen_end_hp, 1., DADA_PEANOS_MPFR_RND);
+            jbox_redraw((t_jbox *)x);
+            
+        } else if (router == gensym("play")) {
+            x->curr_play_sample = 0;
+            x->is_playing_sample = true;
+            dadaobj_cast(x)->m_play.is_playing = true;
+            jbox_redraw((t_jbox *)x);
+        } else if (router == gensym("stop")) {
+            x->curr_play_sample = 0;
+            clock_unset(x->clock);
+            x->is_playing_sample = false;
+            dadaobj_cast(x)->m_play.is_playing = false;
+            jbox_redraw((t_jbox *)x); */
+        }
+    } else if (parsed) {
+    }
+    llll_free(parsed);
+}
+
+void peanos_anything(t_peanos *x, t_symbol *msg, long ac, t_atom *av)
+{
+    defer(x, (method)peanos_anything_do, msg, ac, av);
+}
+
+void peanos_iar(t_peanos *x)
+{
+    jbox_redraw((t_jbox *)x);
+}
+
+char *peanos_mpfr_get_str(int base, size_t size, mpfr_srcptr num_hp, mpfr_rnd_t rounding, size_t cut_to_this_size, bool trim_ending_zeros)
+{
+    mpfr_exp_t exponent = 0;
+    char *num_str = mpfr_get_str(NULL, &exponent, base, 0 /*size*/, num_hp, rounding);
+    char use_ellipsis = false;
+    
+    if (cut_to_this_size > 0 && cut_to_this_size < size) {
+        use_ellipsis = true;
+    }
+    
+    long len = strlen(num_str);
+
+    char *res = (char *)bach_newptr((len + exponent + 4) * sizeof(char)); // + 4 is :
+    res[0] = 0;
+    
+    if (exponent > 0) { // won't need anything with exp > 1
+        char *pre = (char *)bach_newptr((exponent + 1) * sizeof(char));
+        for (long i = 0; i < exponent && i < len; i++)
+            pre[i] = num_str[i];
+        pre[exponent] = 0;
+        snprintf_zero(res, len + exponent + 4, "%s.%s", pre, num_str+exponent);
+        bach_freeptr(pre);
+    } else if (exponent <= 0) {
+        exponent *= -1;
+        char *pre_zeros = (char *)bach_newptr((exponent + 1) * sizeof(char));
+        for (long i = 0; i < exponent; i++)
+            pre_zeros[i] = '0';
+        pre_zeros[exponent] = 0;
+        snprintf_zero(res, len + exponent + 4, "0.%s%s", pre_zeros, num_str);
+        bach_freeptr(pre_zeros);
+    }
+
+    if (size < (len + exponent + 1))
+        res[size] = 0;
+    
+    if (trim_ending_zeros) {
+        long l = strlen(res);
+        for (int i = l-1; i > 0; i--) {
+            if (res[i] == '0')
+                res[i] = 0;
+            else
+                break;
+        }
+    }
+
+    if (use_ellipsis && cut_to_this_size < (len + exponent + 1)) {
+        res[cut_to_this_size] = res[cut_to_this_size+1] = res[cut_to_this_size+2] = '.';
+        res[cut_to_this_size+3] = 0;
+    }
+    
+
+    mpfr_free_str(num_str);
+    return res;
+}
+
+////// INTERFACE
+
+
+void peanos_focusgained(t_peanos *x, t_object *patcherview)
+{
+    if (dadaobj_focusgained(dadaobj_cast(x), patcherview))
+        return;
+}
+
+void peanos_focuslost(t_peanos *x, t_object *patcherview)
+{
+    if (dadaobj_focuslost(dadaobj_cast(x), patcherview))
+        return;
+}
+
+void peanos_mousemove(t_peanos *x, t_object *patcherview, t_pt pt, long modifiers)
+{
+    
+    llll_format_modifiers(&modifiers, NULL);
+
+    long mousedrag_constraint = 0;
+    if (modifiers & eShiftKey && modifiers & eAltKey) {
+        mousedrag_constraint = 2;
+    } else if (modifiers & eShiftKey) {
+        mousedrag_constraint = 1;
+    } else {
+        mousedrag_constraint = 0;
+    }
+    
+    if (mousedrag_constraint != x->mousedrag_constraint) {
+        x->mousedrag_constraint = mousedrag_constraint;
+        peanos_iar(x);
+    }
+
+        
+    if (dadaobj_mousemove(dadaobj_cast(x), patcherview, pt, modifiers))
+        return;
+    
+
+    
+    /*
+    x->legend[0] = 0;
+    if (x->b_ob.d_ob.m_interface.allow_mouse_hover) {
+        if (!x->b_ob.d_ob.m_interface.mouse_is_down) {
+            unsigned long numsamps = 0;
+            t_rect rect;
+            get_center_pix(dadaobj_cast(x), patcherview, &rect);
+            peanos_pix_to_coord(x, &rect, pt, x->mousemovecoord_hp, false);
+
+            char lowprec = 0;
+            numsamps = peanos_coord_to_samplenum_and_bufferidx(x, x->mousemovecoord_hp, x->mousemovebufferidx, false, &lowprec);
+            if (lowprec) {
+                mpfr_set(x->mousemovephase_hp, x->mousemovecoord_hp, MPFR_RNDD);
+                mpfr_frac(x->mousemovephase_hp, x->mousemovephase_hp, MPFR_RNDD);
+            } else {
+                peanos_get_num_buffers_for_samplenum(x, numsamps, x->mousemovetotnumbuffers);
+                mpfr_set_z(x->mousemovephase_hp, x->mousemovebufferidx, MPFR_RNDD);
+                mpfr_div_z(x->mousemovephase_hp, x->mousemovephase_hp, x->mousemovetotnumbuffers, MPFR_RNDD);
+            }
+            
+            x->mousemovenumsamps = numsamps;
+            
+            char *phase_str = peanos_mpfr_get_str(16, numsamps * x->bitrate/4, x->mousemovephase_hp, DADA_PEANOS_MPFR_RND, 64);
+            snprintf(x->legend, DADA_PEANOS_LEGEND_SIZE, "%ld samps (%.3f sec)", numsamps, (1.*numsamps)/x->sr);
+            mpfr_snprintf(x->legend2, DADA_PEANOS_LEGEND_SIZE, "id: %ld.%s", numsamps, phase_str);
+            bach_freeptr(phase_str);
+
+            jbox_redraw((t_jbox *)x);
+        }
+    } else {
+        if (x->b_ob.d_ob.m_interface.mousemove_item_identifier.type != DADAITEM_TYPE_NONE) {
+            x->b_ob.d_ob.m_interface.mousemove_item_identifier.type = DADAITEM_TYPE_NONE;
+            dada_set_cursor(dadaobj_cast(x), patcherview, BACH_CURSOR_DEFAULT);
+            jbox_redraw((t_jbox *)x);
+        }
+    }
+    */
+    /*
+    if (popup_menu_is_shown(dadaobj_cast(x))) {
+        dada_set_cursor(dadaobj_cast(x), patcherview, BACH_CURSOR_DEFAULT);
+    } else if (x->b_ob.d_ob.m_tools.curr_tool == DADA_TOOL_SELECT) {
+        dada_set_cursor(dadaobj_cast(x), patcherview, BACH_CURSOR_CROSSHAIR);
+    } else if (x->b_ob.d_ob.m_interface.mousemove_item_identifier.type == DADAITEM_TYPE_VERTEX && modifiers == eAltKey) {
+        dada_set_cursor(dadaobj_cast(x), patcherview, BACH_CURSOR_DUPLICATE_POINT);
+    } else if ((x->b_ob.d_ob.m_interface.mousemove_item_identifier.type == DADAITEM_TYPE_VERTEX || x->b_ob.d_ob.m_interface.mousemove_item_identifier.type == DADAITEM_TYPE_EDGE)
+               && modifiers == eCommandKey) {
+        dada_set_cursor(dadaobj_cast(x), patcherview, BACH_CURSOR_DELETE);
+    } else if ((x->b_ob.d_ob.m_interface.mousemove_item_identifier.type == DADAITEM_TYPE_VERTEX || x->b_ob.d_ob.m_interface.mousemove_item_identifier.type == DADAITEM_TYPE_EDGE)
+               && x->b_ob.d_ob.m_tools.curr_tool == DADA_TOOL_ARROW) {
+        dada_set_cursor(dadaobj_cast(x), patcherview, BACH_CURSOR_MOVE);
+    } else if (x->b_ob.d_ob.m_interface.mousemove_item_identifier.type == DADAITEM_TYPE_MACHINE_OUTLET) {
+        dada_set_cursor(dadaobj_cast(x), patcherview, BACH_CURSOR_GLUE);
+    } else {
+        dada_set_cursor(dadaobj_cast(x), patcherview, BACH_CURSOR_DEFAULT);
+    }
+    */
+}
+
+
+long peanos_char2int(char c)
+{
+    switch (c) {
+        case '0': return 0;
+        case '1': return 1;
+        case '2': return 2;
+        case '3': return 3;
+        case '4': return 4;
+        case '5': return 5;
+        case '6': return 6;
+        case '7': return 7;
+        case '8': return 8;
+        case '9': return 9;
+        case 'a': return 10;
+        case 'b': return 11;
+        case 'c': return 12;
+        case 'd': return 13;
+        case 'e': return 14;
+        case 'f': return 15;
+        default: return 0;
+    }
+}
+
+double samp_uint16_to_double(uint16_t samp)
+{
+    return samp/32768. - 1.;
+}
+
+t_float samp_uint16_to_float(uint16_t samp)
+{
+    return samp/32768. - 1.;
+}
+
+
+void peanos_send_mousedown_notification(t_peanos *x, t_symbol *sym, char forceverbose)
+{
+    long n = dadaobj_cast(x)->m_interface.send_notifications;
+/*
+    if (forceverbose)
+        n = DADAOBJ_NOTIFY_VERBOSE;
+    switch (n) {
+        case DADAOBJ_NOTIFY_BASIC:
+            dadaobj_send_notification_sym(dadaobj_cast(x), sym);
+            break;
+            
+        case DADAOBJ_NOTIFY_VERBOSE:
+        {
+            t_llll *ll = llll_get();
+            t_llll *sub_ll = llll_get();
+            llll_appendsym(ll, sym);
+            llll_appenddouble(ll, mpfr_get_d(x->mousedowncoord_hp, DADA_PEANOS_MPFR_RND));
+            llll_appendlong(sub_ll, x->mousedownnumsamps);
+            llll_appenddouble(sub_ll, mpfr_get_d(x->mousedownphase_hp, DADA_PEANOS_MPFR_RND));
+            llll_appendllll(ll, sub_ll);
+            dadaobj_send_notification_llll(dadaobj_cast(x), ll);
+        }
+            break;
+        
+        default:
+            break;
+    }
+ */
+}
+
+void peanos_mousedown(t_peanos *x, t_object *patcherview, t_pt pt, long modifiers)
+{
+    if (dadaobj_mousedown(dadaobj_cast(x), patcherview, pt, modifiers)){
+        // don't return
+    }
+    
+//    x->b_ob.d_ob.m_interface.mousedown_item_identifier = pixel_to_element(x, pt, patcherview, &x->b_ob.d_ob.m_interface.mousedown_coord);
+    
+    x->b_ob.d_ob.m_interface.mousedown_item_identifier.type = 0;
+
+    if (modifiers & ePopupMenu) {
+        
+        
+    } else {
+        llll_format_modifiers(&modifiers, NULL);
+
+        t_rect rect;
+        get_center_pix(dadaobj_cast(x), patcherview, &rect);
+        
+        if (pt.x > rect.width - DADA_PEANOS_INSET_RIGHT_NOISINESS) {
+            // handling noisiness
+            t_ptn ptn = peanos_coord_to_pix(x, &rect, x->coord_hp);
+            ptn.n = pt.y;
+            peanos_pix_to_coord(x, &rect, ptn, x->coord_hp, true);
+            process_coords(x);
+            output_coords(x);
+            x->b_ob.d_ob.m_interface.mousedown_item_identifier.type = 2;
+        } else {
+            t_ptn ptn = peanos_coord_to_pix(x, &rect, x->coord_hp);
+            if (modifiers & eShiftKey && modifiers & eAltKey) {
+                x->mousedrag_constraint = 2;
+                ptn.x = pt.x;
+            } else if (modifiers & eShiftKey) {
+                x->mousedrag_constraint = 1;
+                ptn.y = pt.y;
+            } else {
+                ptn.x = pt.x;
+                ptn.y = pt.y;
+            }
+            peanos_pix_to_coord(x, &rect, ptn, x->coord_hp, true);
+            process_coords(x);
+            output_coords(x);
+            x->b_ob.d_ob.m_interface.mousedown_item_identifier.type = 1;
+        }
+
+    }
+    
+    jbox_redraw((t_jbox *)x);
+    
+}
+
+void peanos_mouseup(t_peanos *x, t_object *patcherview, t_pt pt, long modifiers)
+{
+    llll_format_modifiers(&modifiers, NULL);
+    if (x->mousedrag_constraint != 0) {
+        x->mousedrag_constraint = 0;
+        peanos_iar(x);
+    }
+    if (dadaobj_mouseup(dadaobj_cast(x), patcherview, pt, modifiers))
+        return;
+}
+
+
+
+
+void peanos_mousedrag(t_peanos *x, t_object *patcherview, t_pt pt, long modifiers)
+{
+    llll_format_modifiers(&modifiers, NULL);
+    
+    if (dadaobj_mousedrag(dadaobj_cast(x), patcherview, pt, modifiers))
+        return;
+
+    t_rect rect;
+    get_center_pix(dadaobj_cast(x), patcherview, &rect);
+
+    x->mousedrag_constraint = 0;
+    if (x->b_ob.d_ob.m_interface.mousedown_item_identifier.type == 1) {
+        t_ptn ptn = peanos_coord_to_pix(x, &rect, x->coord_hp);
+        if (modifiers & eShiftKey && modifiers & eAltKey) {
+            x->mousedrag_constraint = 2;
+            ptn.x = pt.x;
+        } else if (modifiers & eShiftKey) {
+            x->mousedrag_constraint = 1;
+            ptn.y = pt.y;
+        } else {
+            ptn.x = pt.x;
+            ptn.y = pt.y;
+        }
+        peanos_pix_to_coord(x, &rect, ptn, x->coord_hp, true);
+        process_coords(x);
+        output_coords(x);
+    } else if (x->b_ob.d_ob.m_interface.mousedown_item_identifier.type == 2) {
+        t_ptn ptn = peanos_coord_to_pix(x, &rect, x->coord_hp);
+        ptn.n = pt.y;
+        peanos_pix_to_coord(x, &rect, ptn, x->coord_hp, true);
+        process_coords(x);
+        output_coords(x);
+    }
+    
+//    peanos_send_mousedown_notification(x, gensym("movedcursor"), false);
+    jbox_redraw((t_jbox *)x);
+}
+
+
+void change_precision_according_to_domain(t_peanos *x)
+{
+    if (x->float_precision_maximum == 0 || x->float_precision_maximum > x->float_precision_minimum) {
+        for (int i = 0; i < 3; i++) {
+            mpfr_exp_t exponent = mpfr_get_exp(x->screen_domain_hp[i]);
+            long new_precision = MAX(x->float_precision_minimum, -exponent + x->float_precision_minimum);
+            if (x->mpfr_precision[i] != new_precision) {
+                change_precision(x, i, new_precision);
+                
+//                char text[1024];
+//                snprintf_zero(text, 1024, "New precision for coordinate %d: %ld", i, new_precision);
+//                post(text);
+            }
+        }
+    }
+}
+
+void peanos_zoom_by_hp(t_peanos *x, int coord, double zoom_factor, mpfr_t around_this_coord_hp)
+{
+    mpfr_t temp;
+    mpfr_init2(temp, mpfr_get_prec(around_this_coord_hp));
+    
+    mpfr_set(temp, x->screen_start_hp[coord], DADA_PEANOS_MPFR_RND);
+    mpfr_sub(temp, temp, around_this_coord_hp, DADA_PEANOS_MPFR_RND);
+    mpfr_div_d(temp, temp, zoom_factor, DADA_PEANOS_MPFR_RND);
+    mpfr_add(temp, temp, around_this_coord_hp, DADA_PEANOS_MPFR_RND);
+    mpfr_set(x->screen_start_hp[coord], temp, DADA_PEANOS_MPFR_RND);
+
+    mpfr_set(temp, x->screen_end_hp[coord], DADA_PEANOS_MPFR_RND);
+    mpfr_sub(temp, temp, around_this_coord_hp, DADA_PEANOS_MPFR_RND);
+    mpfr_div_d(temp, temp, zoom_factor, DADA_PEANOS_MPFR_RND);
+    mpfr_add(temp, temp, around_this_coord_hp, DADA_PEANOS_MPFR_RND);
+    mpfr_set(x->screen_end_hp[coord], temp, DADA_PEANOS_MPFR_RND);
+
+    if (mpfr_cmp_d(x->screen_start_hp[coord], 0.) < 0)
+        mpfr_set_d(x->screen_start_hp[coord], 0., DADA_PEANOS_MPFR_RND);
+
+    if (mpfr_cmp_d(x->screen_end_hp[coord], 1.) > 0)
+        mpfr_set_d(x->screen_end_hp[coord], 1., DADA_PEANOS_MPFR_RND);
+
+/*    if (mpfr_cmp(x->screen_end_hp, x->screen_start_hp) <= 0) {
+        mpfr_add_d(x->screen_end_hp, x->screen_start_hp, 0.000000001, DADA_PEANOS_MPFR_RND);
+    } */
+
+    mpfr_sub(x->screen_domain_hp[coord], x->screen_end_hp[coord], x->screen_start_hp[coord], DADA_PEANOS_MPFR_RND);
+    
+    change_precision_according_to_domain(x);
+    
+    mpfr_clear(temp);
+}
+
+void peanos_zoom_by(t_peanos *x, int coord, double zoom_factor, double around_this_coord)
+{
+    mpfr_t temp;
+    mpfr_init2(temp, x->mpfr_precision[coord]);
+    mpfr_set_d(temp, around_this_coord, DADA_PEANOS_MPFR_RND);
+    peanos_zoom_by_hp(x, coord, zoom_factor, temp);
+    mpfr_clear(temp);
+}
+
+void peanos_zoom_exp_hp(t_peanos *x, int coord, mpfr_t zoom_exponent, mpfr_t around_this_coord_hp)
+{
+    mpfr_t temp;
+    char negative = 0;
+    mpfr_init2(temp, mpfr_get_prec(around_this_coord_hp));
+    
+    mpfr_set(temp, x->screen_start_hp[coord], DADA_PEANOS_MPFR_RND);
+    mpfr_sub(temp, temp, around_this_coord_hp, DADA_PEANOS_MPFR_RND);
+    if (mpfr_cmp_d(temp, 0.) < 0) {
+        negative = 1;
+        mpfr_abs(temp, temp, DADA_PEANOS_MPFR_RND);
+    }
+    mpfr_pow(temp, temp, zoom_exponent, DADA_PEANOS_MPFR_RND);
+    if (negative)
+        mpfr_mul_d(temp, temp, -1., DADA_PEANOS_MPFR_RND);
+    mpfr_add(temp, temp, around_this_coord_hp, DADA_PEANOS_MPFR_RND);
+    mpfr_set(x->screen_start_hp[coord], temp, DADA_PEANOS_MPFR_RND);
+    
+    negative = 0;
+    mpfr_set(temp, x->screen_end_hp[coord], DADA_PEANOS_MPFR_RND);
+    mpfr_sub(temp, temp, around_this_coord_hp, DADA_PEANOS_MPFR_RND);
+    if (mpfr_cmp_d(temp, 0.) < 0) {
+        negative = 1;
+        mpfr_abs(temp, temp, DADA_PEANOS_MPFR_RND);
+    }
+    mpfr_pow(temp, temp, zoom_exponent, DADA_PEANOS_MPFR_RND);
+    if (negative)
+        mpfr_mul_d(temp, temp, -1., DADA_PEANOS_MPFR_RND);
+    mpfr_add(temp, temp, around_this_coord_hp, DADA_PEANOS_MPFR_RND);
+    mpfr_set(x->screen_end_hp[coord], temp, DADA_PEANOS_MPFR_RND);
+    
+    if (mpfr_cmp_d(x->screen_start_hp[coord], 0.) < 0)
+        mpfr_set_d(x->screen_start_hp[coord], 0., DADA_PEANOS_MPFR_RND);
+    
+    if (mpfr_cmp_d(x->screen_end_hp[coord], 1.) > 0)
+        mpfr_set_d(x->screen_end_hp[coord], 1., DADA_PEANOS_MPFR_RND);
+    
+/*    if (mpfr_cmp(x->screen_end_hp, x->screen_start_hp) <= 0) {
+        mpfr_add_d(x->screen_end_hp, x->screen_start_hp, 0.000000001, DADA_PEANOS_MPFR_RND);
+    } */
+    
+    mpfr_sub(x->screen_domain_hp[coord], x->screen_end_hp[coord], x->screen_start_hp[coord], DADA_PEANOS_MPFR_RND);
+    
+    change_precision_according_to_domain(x);
+    
+    mpfr_clear(temp);
+}
+
+
+
+void peanos_mousewheel(t_peanos *x, t_object *view, t_pt pt, long modifiers, double x_inc, double y_inc)
+{
+    llll_format_modifiers(&modifiers, NULL);  
+    t_dadaobj *r_ob = dadaobj_cast(x);
+    
+    t_rect rect;
+    get_center_pix(r_ob, view, &rect);
+
+    int coord = (pt.x > rect.width - DADA_PEANOS_INSET_RIGHT_NOISINESS ? 2 : (modifiers & eAltKey ? 1 : 0));
+    if (modifiers & eCommandKey) {
+
+        mpfr_t temp_hp[3];
+        for (int i = 0; i < 3; i++)
+            mpfr_init2(temp_hp[i], x->mpfr_precision[i]);
+        
+        t_ptn ptn = peanos_coord_to_pix(x, &rect, x->coord_hp);
+        if (coord == 2)
+            ptn.n = pt.y;
+        else
+            ptn.x = pt.x; ptn.y = pt.y;
+        peanos_pix_to_coord(x, &rect, ptn, temp_hp, false);
+        
+        if (modifiers & eControlKey) {
+            double zoom_exponent = exp(-y_inc * 0.01 * (modifiers & eShiftKey ? DADA_FINER_FROM_KEYBOARD : 1.));
+            mpfr_t zoom_exponent_hp;
+            mpfr_init2(zoom_exponent_hp, x->mpfr_precision[coord]);
+            mpfr_set_d(zoom_exponent_hp, zoom_exponent, DADA_PEANOS_MPFR_RND);
+            peanos_zoom_exp_hp(x, coord, zoom_exponent_hp, temp_hp[coord]);
+            mpfr_clear(zoom_exponent_hp);
+        } else {
+            double zoom_factor = exp(-y_inc * 0.01 * (modifiers & eShiftKey ? DADA_FINER_FROM_KEYBOARD : 1.));
+            peanos_zoom_by_hp(x, coord, zoom_factor, temp_hp[coord]);
+        }
+        
+        for (int i = 0; i < 3; i++)
+            mpfr_clear(temp_hp[i]);
+        
+        peanos_iar(x);
+
+    } else {
+        for (int c = 0; c < 3; c++) {
+            if (coord == 2 && c != 2)
+                continue;
+            double inc = (c == 0 ? x_inc : -y_inc);
+            if (inc != 0){
+                mpfr_t toadd_hp;
+                mpfr_init2(toadd_hp, x->mpfr_precision[c]);
+                mpfr_mul_d(toadd_hp, x->screen_domain_hp[c], - 0.01 * inc, DADA_PEANOS_MPFR_RND);
+                
+                mpfr_add(x->screen_start_hp[c], x->screen_start_hp[c], toadd_hp, DADA_PEANOS_MPFR_RND);
+                
+                if (mpfr_cmp_d(x->screen_start_hp[c], 0.) < 0)
+                    mpfr_set_d(x->screen_start_hp[c], 0., DADA_PEANOS_MPFR_RND);
+                
+                mpfr_add(x->screen_end_hp[c], x->screen_start_hp[c], x->screen_domain_hp[c], DADA_PEANOS_MPFR_RND);
+                
+                if (mpfr_cmp_d(x->screen_end_hp[c], 1.) > 0) {
+                    mpfr_set_d(x->screen_end_hp[c], 1., DADA_PEANOS_MPFR_RND);
+                    mpfr_sub(x->screen_start_hp[c], x->screen_end_hp[c], x->screen_domain_hp[c], DADA_PEANOS_MPFR_RND);
+                }
+                
+                mpfr_clear(toadd_hp);
+            }
+        }
+        peanos_iar(x);
+    }
+    
+    /*
+    if (dadaobj_mousewheel(dadaobj_cast(x), view, pt, modifiers, x_inc, y_inc)) {
+        jbox_invalidate_layer((t_object *)x, NULL, gensym("network"));
+        jbox_invalidate_layer((t_object *)x, NULL, gensym("grid"));
+        jbox_redraw((t_jbox *)x);
+        return;
+    } */
+}
+
+
+
+
+long peanos_keyup(t_peanos *x, t_object *patcherview, long keycode, long modifiers, long textcharacter){
+    
+    llll_format_modifiers(&modifiers, &keycode);
+    
+    if (dadaobj_keyup(dadaobj_cast(x), patcherview, keycode, modifiers, textcharacter))
+        return 1;
+    
+    return 0;
+}
+
+long peanos_key(t_peanos *x, t_object *patcherview, long keycode, long modifiers, long textcharacter)
+{
+    
+    
+    llll_format_modifiers(&modifiers, &keycode);
+    
+    if (dadaobj_key(dadaobj_cast(x), patcherview, keycode, modifiers, textcharacter)) {
+        return 1;
+    }
+    
+    if (keycode == JKEY_ESC) {
+        // reset zoom
+        for (int i = 0; i < 3; i++) {
+            mpfr_set_d(x->screen_start_hp[i], 0., DADA_PEANOS_MPFR_RND);
+            mpfr_set_d(x->screen_end_hp[i], 1., DADA_PEANOS_MPFR_RND);
+            mpfr_set_d(x->screen_domain_hp[i], 1., DADA_PEANOS_MPFR_RND);
+        }
+        jbox_redraw((t_jbox *)x);
+        return 1;
+    } else if (keycode == JKEY_TAB) {
+        // set coord around player
+        
+        for (int i = 0; i < 3; i++) {
+            mpfr_t toadd_hp;
+            mpfr_init2(toadd_hp, mpfr_get_prec(x->screen_domain_hp[i]));
+            mpfr_mul_d(toadd_hp, x->screen_domain_hp[i], 0.5, DADA_PEANOS_MPFR_RND);
+            
+            mpfr_add(x->screen_end_hp[i], x->coord_hp[i], toadd_hp, DADA_PEANOS_MPFR_RND);
+            mpfr_sub(x->screen_start_hp[i], x->coord_hp[i], toadd_hp, DADA_PEANOS_MPFR_RND);
+            
+            if (mpfr_cmp_d(x->screen_start_hp[i], 0.) < 0)
+                mpfr_set_d(x->screen_start_hp[i], 0., DADA_PEANOS_MPFR_RND);
+            
+            if (mpfr_cmp_d(x->screen_end_hp[i], 1.) > 0)
+                mpfr_set_d(x->screen_end_hp[i], 1., DADA_PEANOS_MPFR_RND);
+            
+            mpfr_sub(x->screen_domain_hp[i], x->screen_end_hp[i], x->screen_start_hp[i], DADA_PEANOS_MPFR_RND);
+            mpfr_clear(toadd_hp);
+        }
+        jbox_redraw((t_jbox *)x);
+        return 1;
+    }
+    return 0;
+}
+
+
+
+void peanos_mouseenter(t_peanos *x, t_object *patcherview, t_pt pt, long modifiers)
+{
+    if (dadaobj_mouseenter(dadaobj_cast(x), patcherview, pt, modifiers))
+        return;
+}
+
+void peanos_mouseleave(t_peanos *x, t_object *patcherview, t_pt pt, long modifiers)
+{
+    x->legend[0] = 0;
+    x->legend[1] = 0;
+    if (dadaobj_mouseleave(dadaobj_cast(x), patcherview, pt, modifiers))
+        return;
+}
+
+

@@ -515,7 +515,7 @@ void *music_new(t_symbol *s, long argc, t_atom *argv)
         
         jbox_new((t_jbox *)x, boxflags, argc, argv);
         x->b_ob.r_ob.l_ob.z_box.b_firstin = (t_object *)x;
-        dsp_setupjbox((t_pxjbox *)x, 2);
+        dsp_setupjbox((t_pxjbox *)x, 1);
         
         dadaobj_pxjbox_setup((t_dadaobj_pxjbox *)x, DADAOBJ_ZOOM | DADAOBJ_AXES | DADAOBJ_GRID | DADAOBJ_BORDER | DADAOBJ_BORDER_SHOWDEFAULT |  DADAOBJ_BG | DADAOBJ_MOUSEHOVER | DADAOBJ_NOTIFICATIONS | DADAOBJ_PLAY, build_pt(1., 1.), -1, -1, 2, NULL, (invalidate_and_redraw_fn)music_iar, "", 0, "44s");
         x->b_ob.d_ob.m_zoom.max_zoom_perc = build_pt(100000, 100000);
@@ -1228,7 +1228,7 @@ void music_perform64(t_music *x, t_object *dsp64, double **ins, long numins, dou
     long        curr_sample = x->curr_play_sample;
     t_double	*out = outs[0];
     
-    if (numins < 2 || numouts < 1 || !x->is_playing_sample)
+    if (numouts < 1 || !x->is_playing_sample)
         goto zero;
 
     n = sampleframes;

@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 100.0, 100.0, 767.0, 648.0 ],
+		"rect" : [ 100.0, 100.0, 811.0, 648.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -37,7 +37,8 @@
 		"tags" : "",
 		"style" : "",
 		"subpatcher_template" : "",
-		"showontab" : 1,
+		"showrootpatcherontab" : 0,
+		"showontab" : 0,
 		"assistshowspatchername" : 0,
 		"boxes" : [ 			{
 				"box" : 				{
@@ -58,7 +59,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 767.0, 622.0 ],
+						"rect" : [ 0.0, 26.0, 811.0, 622.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -143,7 +144,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 767.0, 622.0 ],
+						"rect" : [ 0.0, 26.0, 811.0, 622.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -314,7 +315,7 @@
 									"patching_rect" : [ 401.0, 297.0, 300.0, 300.0 ],
 									"query" : "SELECT * FROM similarities",
 									"table" : "similarities",
-									"versionnumber" : 20100,
+									"versionnumber" : 20300,
 									"vzoom" : 1000.0,
 									"where" : [ "null" ],
 									"xfield" : "A",
@@ -646,7 +647,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 767.0, 622.0 ],
+						"rect" : [ 0.0, 26.0, 811.0, 622.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -873,7 +874,7 @@
 									"patching_rect" : [ 30.0, 283.5, 300.0, 300.0 ],
 									"query" : "SELECT * FROM scores",
 									"table" : "scores",
-									"versionnumber" : 20100,
+									"versionnumber" : 20300,
 									"vzoom" : 179.847207999999995,
 									"where" : [ "null" ],
 									"xfield" : "tc5",
@@ -916,7 +917,7 @@
 									"pitcheditrange" : [ "null" ],
 									"stafflines" : [ 5 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"versionnumber" : 80102,
+									"versionnumber" : 80103,
 									"voicenames" : [ "[", "]" ],
 									"voicespacing" : [ 0.0, 17.0 ],
 									"zoom" : 151.679687999999999
@@ -1121,7 +1122,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 767.0, 622.0 ],
+						"rect" : [ 0.0, 26.0, 811.0, 622.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -1296,7 +1297,7 @@
 									"pitcheditrange" : [ "null" ],
 									"stafflines" : [ 5, 5, 5 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"versionnumber" : 80102,
+									"versionnumber" : 80103,
 									"voicenames" : [ "[", "]", "[", "]", "[", "]" ],
 									"voicespacing" : [ 0.0, 17.0, 17.0, 17.0 ]
 								}
@@ -1689,7 +1690,7 @@
 									"showgridlabels" : 0,
 									"sizefield" : "loudness",
 									"table" : "scores",
-									"versionnumber" : 20100,
+									"versionnumber" : 20300,
 									"vzoom" : 1.0,
 									"where" : [ "null" ],
 									"xfield" : "spread",
@@ -1963,7 +1964,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 767.0, 622.0 ],
+						"rect" : [ 0.0, 26.0, 811.0, 622.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -2000,7 +2001,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 508.0, 85.0, 205.0, 83.0 ],
+									"patching_rect" : [ 508.0, 85.0, 209.0, 83.0 ],
 									"text" : "The same, assigning different weights to the knn algorithm (in this case, they compensate for the dimensions having different orders of magnitude)"
 								}
 
@@ -2329,7 +2330,7 @@
 									"showaxeslabels" : 1,
 									"sizefield" : "loudness",
 									"table" : "scores",
-									"versionnumber" : 20100,
+									"versionnumber" : 20300,
 									"vzoom" : 1.201201201201201,
 									"where" : [ "null" ],
 									"xfield" : "spread",
@@ -2517,7 +2518,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 767.0, 622.0 ],
+						"rect" : [ 0.0, 26.0, 811.0, 622.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -2713,7 +2714,7 @@
 									"showmeasurenumbers" : [ 1, 1 ],
 									"stafflines" : [ 5, 5 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"versionnumber" : 80102,
+									"versionnumber" : 80103,
 									"voicenames" : [ "[", "]", "[", "]" ],
 									"voicespacing" : [ -13.5, 26.0, 26.0 ],
 									"vzoom" : 60.0
@@ -2813,7 +2814,7 @@
 									"phasefield" : "phase",
 									"query" : "SELECT * FROM scores",
 									"table" : "scores",
-									"versionnumber" : 20100,
+									"versionnumber" : 20300,
 									"vzoom" : 937.263793999999962,
 									"where" : [ "null" ],
 									"xfield" : "measure",
@@ -3154,7 +3155,7 @@
 									"showmeasurenumbers" : [ 1, 1 ],
 									"stafflines" : [ 5, 5 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"versionnumber" : 80102,
+									"versionnumber" : 80103,
 									"voicenames" : [ "[", "]", "[", "]" ],
 									"voicespacing" : [ 0.0, 26.0, 26.0 ],
 									"vzoom" : 70.0,
@@ -3703,7 +3704,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 767.0, 622.0 ],
+						"rect" : [ 0.0, 26.0, 811.0, 622.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -3933,7 +3934,7 @@
 									"showmeasurenumbers" : [ 1, 1 ],
 									"stafflines" : [ 5, 5 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"versionnumber" : 80102,
+									"versionnumber" : 80103,
 									"voicenames" : [ "[", "]", "[", "]" ],
 									"voicespacing" : [ -13.5, 26.0, 26.0 ],
 									"vzoom" : 60.0,
@@ -4015,7 +4016,7 @@
 									"patching_rect" : [ 10.0, 187.0, 298.0, 155.0 ],
 									"query" : "SELECT * FROM scores",
 									"table" : "scores",
-									"versionnumber" : 20100,
+									"versionnumber" : 20300,
 									"vzoom" : 937.263793999999962,
 									"where" : [ "null" ],
 									"xfield" : "measure",
@@ -4210,7 +4211,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 767.0, 622.0 ],
+						"rect" : [ 100.0, 126.0, 811.0, 622.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -4374,7 +4375,7 @@
 									"pitcheditrange" : [ "null" ],
 									"stafflines" : [ 5, 5, 5 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"versionnumber" : 80102,
+									"versionnumber" : 80103,
 									"voicenames" : [ "[", "]", "[", "]", "[", "]" ],
 									"voicespacing" : [ 0.0, 17.0, 17.0, 17.0 ],
 									"vzoom" : 50.0
@@ -4703,7 +4704,7 @@
 									"shapefield" : "filename",
 									"sizefield" : "loudness",
 									"table" : "scores",
-									"versionnumber" : 20100,
+									"versionnumber" : 20300,
 									"vzoom" : 1.362995648709935,
 									"where" : [ "null" ],
 									"xfield" : "spread",
@@ -4980,7 +4981,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 767.0, 622.0 ],
+						"rect" : [ 0.0, 26.0, 811.0, 622.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,

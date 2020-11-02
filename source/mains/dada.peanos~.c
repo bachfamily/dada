@@ -70,6 +70,8 @@
 #define DADA_PEANOS_UI_NOISINESS_WIDTH 12
 
 
+#define DADA_PEANOS_NUM_COORDS 3
+
 #define DADA_PEANOS_MAXPARTIALS 1024
 
 #define DADA_PEANOS_DEBUG
@@ -267,7 +269,7 @@ static t_class *s_peanos_class;
 t_llll *peanos_get_state(t_peanos *x)
 {
     t_llll *out = llll_get();
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < DADA_PEANOS_NUM_COORDS; i++) {
         char *str = peanos_mpfr_get_str(10, 0, x->coord_hp[i], DADA_PEANOS_MPFR_RND, 0, 0);
         llll_appendsym(out, gensym(str));
         bach_freeptr(str);
@@ -278,13 +280,13 @@ t_llll *peanos_get_state(t_peanos *x)
 void peanos_set_state(t_peanos *x, t_llll *ll)
 {
     // clearing things first
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < DADA_PEANOS_NUM_COORDS; i++)
         mpfr_set_d(x->coord_hp[i], 0, DADA_PEANOS_MPFR_RND);
 
     // parsing ll then
     if (ll->l_size >= 3) {
         t_llllelem *el = ll->l_head;
-        for (int i = 0; i < 3 && el; i++) {
+        for (int i = 0; i < DADA_PEANOS_NUM_COORDS && el; i++) {
             t_symbol *sym = hatom_getsym(&el->l_hatom);
             if (sym) {
                 mpfr_set_str(x->coord_hp[i], sym->s_name, 10, DADA_PEANOS_MPFR_RND);
@@ -726,7 +728,7 @@ void *peanos_new(t_symbol *s, long argc, t_atom *argv)
         x->float_precision_minimum = DADA_PEANOS_DEFAULT_MINPREC;
         x->noisiness_to_q_exp = 8.;
         
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < DADA_PEANOS_NUM_COORDS; i++) {
             x->mpfr_precision[i] = x->float_precision_minimum;
             mpfr_init2(x->screen_domain_hp[i], x->float_precision_minimum);
             mpfr_init2(x->screen_start_hp[i], x->float_precision_minimum);
@@ -734,7 +736,7 @@ void *peanos_new(t_symbol *s, long argc, t_atom *argv)
             mpfr_init2(x->coord_hp[i], x->float_precision_minimum);
         }
         
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < DADA_PEANOS_NUM_COORDS; i++) {
             mpfr_set_d(x->coord_hp[i], 0., DADA_PEANOS_MPFR_RND);
             mpfr_set_d(x->screen_start_hp[i], 0., DADA_PEANOS_MPFR_RND);
             mpfr_set_d(x->screen_end_hp[i], 1., DADA_PEANOS_MPFR_RND);
@@ -800,7 +802,7 @@ void peanos_free(t_peanos *x)
     bach_freeptr(x->next_noisinesses);
     bach_freeptr(x->phases);
                                                                                    
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < DADA_PEANOS_NUM_COORDS; i++) {
         mpfr_clear(x->coord_hp[i]);
         mpfr_clear(x->screen_start_hp[i]);
         mpfr_clear(x->screen_end_hp[i]);
@@ -895,7 +897,7 @@ void process_coords(t_peanos *x)
     x->must_process_coords_when_interp_has_ended = false;
 
     // clipping in [0, 1]
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < DADA_PEANOS_NUM_COORDS; i++) {
         if (mpfr_cmp_d(x->coord_hp[i], 0.) < 0)
             mpfr_set_d(x->coord_hp[i], 0., DADA_PEANOS_MPFR_RND);
         
@@ -929,6 +931,8 @@ void process_coords(t_peanos *x)
         // Noisiness
         unitIntervalToHyperCube(x->coord_hp[2], N, precision, model_noisinesses);
 
+        // Modulation
+        
     } else { // Model padded for continuity
         
         // Amplitudes
@@ -985,7 +989,7 @@ void peanos_pix_to_coord(t_peanos *x, t_rect *rect, t_ptn pixel, mpfr_t coord_hp
 {
     // coord = start_coord + pix/width * domain_coord
     
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < DADA_PEANOS_NUM_COORDS; i++) {
         // rough estimate
         mpfr_set_d(coord_hp[i], (i == 0 ? pixel.x - DADA_PEANOS_INSET_LEFT :
                                  i == 1 ? pixel.y - DADA_PEANOS_INSET_TOP :
@@ -1025,7 +1029,7 @@ void peanos_pix_to_coord(t_peanos *x, t_rect *rect, t_ptn pixel, mpfr_t coord_hp
         }
     }
     
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < DADA_PEANOS_NUM_COORDS; i++) {
         if (mpfr_cmp_d(x->coord_hp[i], 0.) < 0)
             mpfr_set_d(x->coord_hp[i], 0., DADA_PEANOS_MPFR_RND);
         
@@ -1243,7 +1247,7 @@ void peanos_paint(t_peanos *x, t_object *patcherview)
     mpfr_t temp, exponent;
     double zoombar_pos[3];
     double zoombar_halfwidth[3][5];
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < DADA_PEANOS_NUM_COORDS; i++) {
         mpfr_init2(temp, x->mpfr_precision[i]);
         mpfr_init2(exponent, x->mpfr_precision[i]);
         mpfr_init2(screen_middle[i], x->mpfr_precision[i]);
@@ -1292,7 +1296,7 @@ void peanos_paint(t_peanos *x, t_object *patcherview)
                         4, MAX(1, innerheight * MIN(1-left_pos, 2 * zoombar_halfwidth[2][j])), 0);
     }
     
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < DADA_PEANOS_NUM_COORDS; i++)
         mpfr_clear(screen_middle[i]);
 
     
@@ -1783,9 +1787,9 @@ void peanos_anything(t_peanos *x, t_symbol *msg, long ac, t_atom *av)
 //            peanos_undo_step_push(x, gensym("Set State"));
             peanos_set_state(x, parsed);
         } else if (router == gensym("coords") || router == gensym("setcoords")) {
-            if (parsed->l_size == 3) {
+            if (parsed->l_size == DADA_PEANOS_NUM_COORDS) {
                 t_llllelem *el = parsed->l_head;
-                for (int i = 0; i < 3 && el; i++) {
+                for (int i = 0; i < DADA_PEANOS_NUM_COORDS && el; i++) {
                     if (hatom_gettype(&el->l_hatom) == H_SYM) {
                         t_symbol *s = hatom_getsym(&el->l_hatom);
                         mpfr_set_str(x->coord_hp[i], s->s_name, 10, DADA_PEANOS_MPFR_RND);
@@ -1806,9 +1810,9 @@ void peanos_anything(t_peanos *x, t_symbol *msg, long ac, t_atom *av)
                 object_error((t_object *)x, "Wrong input syntax.");
             }
         } else if (router == gensym("move")) {
-            if (parsed->l_size == 3) {
+            if (parsed->l_size == DADA_PEANOS_NUM_COORDS) {
                 t_llllelem *el = parsed->l_head;
-                for (int i = 0; i < 3 && el; i++) {
+                for (int i = 0; i < DADA_PEANOS_NUM_COORDS && el; i++) {
                     if (hatom_gettype(&el->l_hatom) == H_LLLL) {
                         t_llll *ll = hatom_getllll(&el->l_hatom);
                         if (ll && ll->l_size >= 2) {
@@ -2187,7 +2191,7 @@ void peanos_mousedrag(t_peanos *x, t_object *patcherview, t_pt pt, long modifier
 void change_precision_according_to_domain(t_peanos *x)
 {
     if (x->float_precision_maximum == 0 || x->float_precision_maximum > x->float_precision_minimum) {
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < DADA_PEANOS_NUM_COORDS; i++) {
             mpfr_exp_t exponent = mpfr_get_exp(x->screen_domain_hp[i]);
             long new_precision = MAX(x->float_precision_minimum, -exponent + x->float_precision_minimum);
             if (x->mpfr_precision[i] != new_precision) {
@@ -2306,7 +2310,7 @@ void peanos_mousewheel(t_peanos *x, t_object *view, t_pt pt, long modifiers, dou
     if (modifiers & eCommandKey) {
 
         mpfr_t temp_hp[3];
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < DADA_PEANOS_NUM_COORDS; i++)
             mpfr_init2(temp_hp[i], x->mpfr_precision[i]);
         
         t_ptn ptn = peanos_coord_to_pix(x, &rect, x->coord_hp);
@@ -2328,13 +2332,13 @@ void peanos_mousewheel(t_peanos *x, t_object *view, t_pt pt, long modifiers, dou
             peanos_zoom_by_hp(x, coord, zoom_factor, temp_hp[coord]);
         }
         
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < DADA_PEANOS_NUM_COORDS; i++)
             mpfr_clear(temp_hp[i]);
         
         peanos_iar(x);
 
     } else {
-        for (int c = 0; c < 3; c++) {
+        for (int c = 0; c < DADA_PEANOS_NUM_COORDS; c++) {
             if (coord == 2 && c != 2)
                 continue;
             double inc = (c == 0 ? x_inc : -y_inc);
@@ -2395,7 +2399,7 @@ long peanos_key(t_peanos *x, t_object *patcherview, long keycode, long modifiers
     
     if (keycode == JKEY_ESC) {
         // reset zoom
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < DADA_PEANOS_NUM_COORDS; i++) {
             mpfr_set_d(x->screen_start_hp[i], 0., DADA_PEANOS_MPFR_RND);
             mpfr_set_d(x->screen_end_hp[i], 1., DADA_PEANOS_MPFR_RND);
             mpfr_set_d(x->screen_domain_hp[i], 1., DADA_PEANOS_MPFR_RND);
@@ -2405,7 +2409,7 @@ long peanos_key(t_peanos *x, t_object *patcherview, long keycode, long modifiers
     } else if (keycode == JKEY_TAB) {
         // set coord around player
         
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < DADA_PEANOS_NUM_COORDS; i++) {
             mpfr_t toadd_hp;
             mpfr_init2(toadd_hp, mpfr_get_prec(x->screen_domain_hp[i]));
             mpfr_mul_d(toadd_hp, x->screen_domain_hp[i], 0.5, DADA_PEANOS_MPFR_RND);

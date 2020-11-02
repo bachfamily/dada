@@ -70,7 +70,7 @@
 #define DADA_PEANOS_UI_NOISINESS_WIDTH 12
 
 
-#define DADA_PEANOS_NUM_COORDS 3
+#define DADA_PEANOS_NUM_COORDS 4
 
 #define DADA_PEANOS_MAXPARTIALS 1024
 
@@ -103,7 +103,8 @@ typedef struct _ptn
 {
     double x;                ///< The horizontal coordinate
     double y;                ///< The vertical coordinate
-    double n;                ///< The noisiness angle
+    double n;                ///< The noisiness coordinate
+    double m;                ///< The modulation coordinate
 } t_ptn;
 
 // Biquad coefficients
@@ -117,8 +118,18 @@ typedef struct _biquad_coeffs
 } t_biquad_coeffs;
 
 
-#define DADA_PEANOS_SIN_TABLE_SIZE 8192
-double sin_table[DADA_PEANOS_SIN_TABLE_SIZE+1];
+#define DADA_PEANOS_OSC_TABLE_SIZE 8192
+double sin_table[DADA_PEANOS_OSC_TABLE_SIZE+1];
+
+
+typedef struct _peanos_modulation {
+    double  ampmod_freq;
+    double  ampmod_amp;
+    double  ampmod_table[DADA_PEANOS_OSC_TABLE_SIZE+1];
+    double  freqmod_freq;
+    double  freqmod_amp;
+    double  freqmod_table[DADA_PEANOS_OSC_TABLE_SIZE+1];
+} t_peanos_modulation;
 
 
 typedef struct _peanos {
@@ -159,23 +170,28 @@ typedef struct _peanos {
     char                legend2[DADA_PEANOS_LEGEND_SIZE];
     
     // array containing values for: alpha, sigma, xi respectively
-    mpfr_t              coord_hp[3];
-    mpfr_t              screen_start_hp[3];
-    mpfr_t              screen_end_hp[3];
-    mpfr_t              screen_domain_hp[3];
-    long                mpfr_precision[3];
+    mpfr_t              coord_hp[DADA_PEANOS_NUM_COORDS];
+    mpfr_t              screen_start_hp[DADA_PEANOS_NUM_COORDS];
+    mpfr_t              screen_end_hp[DADA_PEANOS_NUM_COORDS];
+    mpfr_t              screen_domain_hp[DADA_PEANOS_NUM_COORDS];
+    long                mpfr_precision[DADA_PEANOS_NUM_COORDS];
 
     double              fzero;
     
     long                num_partials;
+    long                num_modulation_partials;
     long                precision;
     double              *curr_freqs; // freqs are normalized freqs: 1 = fzero
     double              *curr_amps;
     double              *curr_noisinesses;
+    t_peanos_modulation *curr_modulations;
     double              *next_freqs;
     double              *next_amps;
     double              *next_noisinesses;
+    t_peanos_modulation *next_modulations;
     double              *phases;
+    double              *ampmod_phases;
+    double              *freqmod_phases;
 
     bool                must_interp;
     bool                must_process_coords_when_interp_has_ended;
@@ -331,17 +347,6 @@ void resize_partials_arrays(t_peanos *x, long newsize)
 {
     // we are static! much better ;)
     return;
-/*    x->curr_amps = (double *)bach_resizeptrclear(x->curr_amps, newsize * sizeof(double));
-    x->curr_freqs = (double *)bach_resizeptrclear(x->curr_freqs, newsize * sizeof(double));
-    x->curr_noisinesses = (double *)bach_resizeptrclear(x->curr_noisinesses, newsize * sizeof(double));
-    x->next_amps = (double *)bach_resizeptrclear(x->next_amps, newsize * sizeof(double));
-    x->next_freqs = (double *)bach_resizeptrclear(x->next_freqs, newsize * sizeof(double));
-    x->next_noisinesses = (double *)bach_resizeptrclear(x->next_noisinesses, newsize * sizeof(double));
-    x->phases = (double *)bach_resizeptrclear(x->phases, newsize * sizeof(double));
-    x->mem_ff1 = (double *)bach_resizeptrclear(x->mem_ff1, newsize * sizeof(double));
-    x->mem_ff2 = (double *)bach_resizeptrclear(x->mem_ff2, newsize * sizeof(double));
-    x->mem_fb1 = (double *)bach_resizeptrclear(x->mem_fb1, newsize * sizeof(double));
-    x->mem_fb2 = (double *)bach_resizeptrclear(x->mem_fb2, newsize * sizeof(double)); */
 }
 
 void peanos_change_model_do(t_peanos *x, long newmodel)
@@ -404,8 +409,8 @@ void C74_EXPORT ext_main(void *moduleRef)
         return;
     }
     
-    for (int i = 0; i < DADA_PEANOS_SIN_TABLE_SIZE + 1; i++) // + 1 is to ease interpolation later
-        sin_table[i] = sin(TWOPI * (double)i/DADA_PEANOS_SIN_TABLE_SIZE);
+    for (int i = 0; i < DADA_PEANOS_OSC_TABLE_SIZE + 1; i++) // + 1 is to ease interpolation later
+        sin_table[i] = sin(TWOPI * (double)i/DADA_PEANOS_OSC_TABLE_SIZE);
 
     t_class *c;
 
@@ -585,6 +590,11 @@ void C74_EXPORT ext_main(void *moduleRef)
     CLASS_ATTR_BASIC(c, "numpartials", 0);
     // @description Sets the number of partials in the model
 
+    CLASS_ATTR_LONG(c, "nummodpartials", 0, t_peanos, num_modulation_partials);
+    CLASS_ATTR_STYLE_LABEL(c, "nummodpartials", 0, "text", "Number Of Modulation Partials");
+    CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"nummodpartials",0,"4");
+    // @description Sets the number of partials in the model
+
     CLASS_STICKY_ATTR_CLEAR(c, "category");
 
     
@@ -749,14 +759,21 @@ void *peanos_new(t_symbol *s, long argc, t_atom *argv)
         x->fzero = 220;
         x->precision = 20;
         x->num_partials = 16;
-        // +3 is for the possible padding model
+        x->num_modulation_partials = 4;
+        
+        
+        // Allocating memory: +3 is for the possible padding model
         x->curr_amps = (double *)bach_newptrclear((DADA_PEANOS_MAXPARTIALS + 3) * sizeof(double));
         x->curr_freqs = (double *)bach_newptrclear((DADA_PEANOS_MAXPARTIALS + 3) * sizeof(double));
         x->curr_noisinesses = (double *)bach_newptrclear((DADA_PEANOS_MAXPARTIALS + 3) * sizeof(double));
+        x->curr_modulations = (t_peanos_modulation *)bach_newptrclear((DADA_PEANOS_MAXPARTIALS + 3) * sizeof(t_peanos_modulation));
         x->next_amps = (double *)bach_newptrclear((DADA_PEANOS_MAXPARTIALS + 3) * sizeof(double));
         x->next_freqs = (double *)bach_newptrclear((DADA_PEANOS_MAXPARTIALS + 3) * sizeof(double));
         x->next_noisinesses = (double *)bach_newptrclear((DADA_PEANOS_MAXPARTIALS + 3) * sizeof(double));
+        x->next_modulations = (t_peanos_modulation *)bach_newptrclear((DADA_PEANOS_MAXPARTIALS + 3) * sizeof(t_peanos_modulation));
         x->phases = (double *)bach_newptrclear((DADA_PEANOS_MAXPARTIALS + 3) * sizeof(double));
+        x->ampmod_phases = (double *)bach_newptrclear((DADA_PEANOS_MAXPARTIALS + 3) * sizeof(double));
+        x->freqmod_phases = (double *)bach_newptrclear((DADA_PEANOS_MAXPARTIALS + 3) * sizeof(double));
         x->mem_ff1 = (double *)bach_newptrclear((DADA_PEANOS_MAXPARTIALS + 3) * sizeof(double));
         x->mem_ff2 = (double *)bach_newptrclear((DADA_PEANOS_MAXPARTIALS + 3) * sizeof(double));
         x->mem_fb1 = (double *)bach_newptrclear((DADA_PEANOS_MAXPARTIALS + 3) * sizeof(double));
@@ -797,9 +814,11 @@ void peanos_free(t_peanos *x)
     bach_freeptr(x->curr_amps);
     bach_freeptr(x->curr_freqs);
     bach_freeptr(x->curr_noisinesses);
+    bach_freeptr(x->curr_modulations);
     bach_freeptr(x->next_amps);
     bach_freeptr(x->next_freqs);
     bach_freeptr(x->next_noisinesses);
+    bach_freeptr(x->next_modulations);
     bach_freeptr(x->phases);
                                                                                    
     for (int i = 0; i < DADA_PEANOS_NUM_COORDS; i++) {
@@ -883,6 +902,18 @@ void peanos_set_mustinterp(t_peanos *x)
     x->interp_noisiness_samps_offset = 0;
 }
 
+// table is supposed to be sized table_size + 1 for interpolation ease
+void table_build(double *table, long table_size, double *partial_amps, long num_partials)
+{
+    for (long i = 0; i < table_size + 1; i++)
+        table[i] = 0;
+    
+    for (long p = 1; p <= num_partials; p++) {
+        for (long i = 0; i < table_size + 1; i++)
+            table[i] += partial_amps[p-1] * sin(TWOPI * p * (double)i/DADA_PEANOS_OSC_TABLE_SIZE);
+    }
+}
+
 void process_coords(t_peanos *x)
 {
     dadaobj_mutex_lock(dadaobj_cast(x));
@@ -908,11 +939,13 @@ void process_coords(t_peanos *x)
     //
     
     long N = x->num_partials;
+    long M = x->num_modulation_partials;
     long precision = x->precision;
     
     double *model_amps = x->next_amps;
     double *model_freqs = x->next_freqs;
     double *model_noisinesses = x->next_noisinesses;
+    t_peanos_modulation *model_modulations = x->next_modulations;
 
     if (x->model == 0) { // Standard model
         // Amplitudes
@@ -932,7 +965,29 @@ void process_coords(t_peanos *x)
         unitIntervalToHyperCube(x->coord_hp[2], N, precision, model_noisinesses);
 
         // Modulation
-        
+        double modul[N];
+        unitIntervalToHyperCube(x->coord_hp[3], N, precision, modul); // for EACH partial we allow a different modulation (!)
+        for (long i = 0; i < N; i++) {
+            // the modulation is itself a Peano value embedding:
+            // rate (ampmod), rate (freqmod), amplitude (ampmod), amplitude (freqmod), interleaved spherical coords
+            double mod_sph[2*(M+2)];
+            double mod_partialamps[M];
+            unitIntervalToHyperCube(modul[i], 2*(M+2), precision, mod_sph);
+            for (long i = 4; i < 2*(M+2); i++)
+                mod_sph[i] *= PIOVERTWO;
+
+            sphericalToCartesianNoRadiusWithStep(mod_sph+4, mod_partialamps, M, 2);
+            model_modulations[i].ampmod_freq = rescale(mod_sph[0], 0, 1, 0, 50);
+            model_modulations[i].ampmod_amp = rescale(mod_sph[2], 0, 1, 0, 1);
+            table_build(model_modulations[i].ampmod_table, DADA_PEANOS_OSC_TABLE_SIZE, mod_partialamps, M);
+
+            sphericalToCartesianNoRadiusWithStep(mod_sph+5, mod_partialamps, M, 2);
+            model_modulations[i].freqmod_freq = rescale(mod_sph[1], 0, 1, 0, 50);
+            model_modulations[i].freqmod_amp = rescale(mod_sph[3], 0, 1, 0, 1);
+            table_build(model_modulations[i].freqmod_table, DADA_PEANOS_OSC_TABLE_SIZE, mod_partialamps, M);
+
+        }
+
     } else { // Model padded for continuity
         
         // Amplitudes
@@ -985,7 +1040,7 @@ void process_coords(t_peanos *x)
 
 ///// CONVERSIONS
 
-void peanos_pix_to_coord(t_peanos *x, t_rect *rect, t_ptn pixel, mpfr_t coord_hp[3], char high_precision)
+void peanos_pix_to_coord(t_peanos *x, t_rect *rect, t_ptn pixel, mpfr_t coord_hp[DADA_PEANOS_NUM_COORDS], char high_precision)
 {
     // coord = start_coord + pix/width * domain_coord
     
@@ -993,40 +1048,16 @@ void peanos_pix_to_coord(t_peanos *x, t_rect *rect, t_ptn pixel, mpfr_t coord_hp
         // rough estimate
         mpfr_set_d(coord_hp[i], (i == 0 ? pixel.x - DADA_PEANOS_INSET_LEFT :
                                  i == 1 ? pixel.y - DADA_PEANOS_INSET_TOP :
-                                 pixel.n - DADA_PEANOS_INSET_TOP), DADA_PEANOS_MPFR_RND);
+                                 i == 2 ? pixel.n - DADA_PEANOS_INSET_TOP :
+                                 pixel.m - DADA_PEANOS_INSET_TOP ), DADA_PEANOS_MPFR_RND);
         mpfr_div_d(coord_hp[i], coord_hp[i], (i == 0 ? rect->width - DADA_PEANOS_INSET_LEFT - DADA_PEANOS_INSET_RIGHT :
                                               i == 1 ? rect->height - DADA_PEANOS_INSET_TOP - DADA_PEANOS_INSET_BOTTOM :
                                               rect->height - DADA_PEANOS_INSET_TOP - DADA_PEANOS_INSET_BOTTOM), DADA_PEANOS_MPFR_RND);
         mpfr_mul(coord_hp[i], coord_hp[i], x->screen_domain_hp[i], DADA_PEANOS_MPFR_RND);
-        if (i == 1 || i == 2)
+        if (i > 0)
             mpfr_sub(coord_hp[i], x->screen_end_hp[i], coord_hp[i], DADA_PEANOS_MPFR_RND);
         else
             mpfr_add(coord_hp[i], coord_hp[i], x->screen_start_hp[i], DADA_PEANOS_MPFR_RND);
-        
-        if (high_precision) {
-            // TO DO: adjust precision automatically
-            
-/*            // needed precision, roughly inversely proportional to (1-coord)
-            mpfr_t temp;
-            mpfr_init2(temp, mpfr_get_prec(coord_hp[i]));
-            mpfr_d_sub(temp, 1., coord_hp[i], DADA_PEANOS_MPFR_RND);
-            mpfr_d_div(temp, 1., temp, DADA_PEANOS_MPFR_RND);
-            
-            mpfr_mul_d(temp, temp, DADA_PEANOS_MPFR_PRECISION_HIGH * x->bitrate/4, DADA_PEANOS_MPFR_RND);
-            
-            long precision = MIN(DADA_PEANOS_MPFR_PRECISION, mpfr_get_ui(temp, DADA_PEANOS_MPFR_RND) + 1);
-            //        post("%ld", precision);
-            mpfr_clear(temp);
-            
-            mpfr_set_prec(coord_hp[i], precision);
-            
-            // ok, now making precision better! :)
-            
-            mpfr_set_d(coord_hp[i], pixel.x, DADA_PEANOS_MPFR_RND);
-            mpfr_div_d(coord_hp[i], coord_hp[i], rect->width, DADA_PEANOS_MPFR_RND);
-            mpfr_mul(coord_hp[i], coord_hp[i], x->screen_domain_hp[i], DADA_PEANOS_MPFR_RND);
-            mpfr_add(coord_hp[i], coord_hp[i], x->screen_start_hp[i], DADA_PEANOS_MPFR_RND); */
-        }
     }
     
     for (int i = 0; i < DADA_PEANOS_NUM_COORDS; i++) {
@@ -1039,7 +1070,7 @@ void peanos_pix_to_coord(t_peanos *x, t_rect *rect, t_ptn pixel, mpfr_t coord_hp
     
 }
 
-t_ptn peanos_coord_to_pix(t_peanos *x, t_rect *rect, mpfr_t coord_hp[3])
+t_ptn peanos_coord_to_pix(t_peanos *x, t_rect *rect, mpfr_t coord_hp[DADA_PEANOS_NUM_COORDS])
 {
     t_ptn res;
     
@@ -1067,7 +1098,6 @@ t_ptn peanos_coord_to_pix(t_peanos *x, t_rect *rect, mpfr_t coord_hp[3])
     mpfr_clear(temp);
 
     
-    // pix = width * (coord - start_coord)/domain_coord
     mpfr_init2(temp, x->mpfr_precision[2]);
     mpfr_set(temp, coord_hp[2], DADA_PEANOS_MPFR_RND);
     mpfr_sub(temp, temp, x->screen_start_hp[2], DADA_PEANOS_MPFR_RND);
@@ -1075,13 +1105,23 @@ t_ptn peanos_coord_to_pix(t_peanos *x, t_rect *rect, mpfr_t coord_hp[3])
     mpfr_mul_d(temp, temp, rect->height - DADA_PEANOS_INSET_TOP - DADA_PEANOS_INSET_BOTTOM, DADA_PEANOS_MPFR_RND);
 
     res.n = rect->height - DADA_PEANOS_INSET_BOTTOM - mpfr_get_d(temp, DADA_PEANOS_MPFR_RND);
+
+    
+    mpfr_init2(temp, x->mpfr_precision[3]);
+    mpfr_set(temp, coord_hp[3], DADA_PEANOS_MPFR_RND);
+    mpfr_sub(temp, temp, x->screen_start_hp[3], DADA_PEANOS_MPFR_RND);
+    mpfr_div(temp, temp, x->screen_domain_hp[3], DADA_PEANOS_MPFR_RND);
+    mpfr_mul_d(temp, temp, rect->height - DADA_PEANOS_INSET_TOP - DADA_PEANOS_INSET_BOTTOM, DADA_PEANOS_MPFR_RND);
+    
+    res.m = rect->height - DADA_PEANOS_INSET_BOTTOM - mpfr_get_d(temp, DADA_PEANOS_MPFR_RND);
+
     
     mpfr_clear(temp);
 
     return res;
 }
 
-void peanos_coord_to_pix_hp(t_peanos *x, t_rect *rect, mpfr_t coord_hp[3], mpfr_t pix_hp[3])
+void peanos_coord_to_pix_hp(t_peanos *x, t_rect *rect, mpfr_t coord_hp[DADA_PEANOS_NUM_COORDS], mpfr_t pix_hp[DADA_PEANOS_NUM_COORDS])
 {
     // pix = width * (coord - start_coord)/domain_coord
     mpfr_set(pix_hp[0], coord_hp[0], DADA_PEANOS_MPFR_RND);
@@ -1205,7 +1245,9 @@ void peanos_paint(t_peanos *x, t_object *patcherview)
         pt.y = LARGENUMBEROFPIXELS;
     if (pt.n > LARGENUMBEROFPIXELS)
         pt.n = LARGENUMBEROFPIXELS;
-    
+    if (pt.m > LARGENUMBEROFPIXELS)
+        pt.m = LARGENUMBEROFPIXELS;
+
     if (x->mousedrag_constraint == 1)
         paint_dashed_line(g, build_jrgba(0., 0., 0., 0.2), pt.x, DADA_PEANOS_INSET_TOP, pt.x, DADA_PEANOS_INSET_TOP + innerheight, 1, 6);
     if (x->mousedrag_constraint == 2)
@@ -1243,10 +1285,10 @@ void peanos_paint(t_peanos *x, t_object *patcherview)
     
     // ZOOM POSITIONS
     // power 10
-    mpfr_t screen_middle[3];
+    mpfr_t screen_middle[DADA_PEANOS_NUM_COORDS];
     mpfr_t temp, exponent;
-    double zoombar_pos[3];
-    double zoombar_halfwidth[3][5];
+    double zoombar_pos[DADA_PEANOS_NUM_COORDS];
+    double zoombar_halfwidth[DADA_PEANOS_NUM_COORDS][5];
     for (int i = 0; i < DADA_PEANOS_NUM_COORDS; i++) {
         mpfr_init2(temp, x->mpfr_precision[i]);
         mpfr_init2(exponent, x->mpfr_precision[i]);
@@ -1553,6 +1595,16 @@ void get_split_gains(char synthesis_mode, double noisiness, double freq, double 
     }
 }
 
+// phase must be in [0, 2pi)
+double wavetable_lookup(double phase, double *table)
+{
+    double phmap = phase * DADA_PEANOS_OSC_TABLE_SIZE / TWOPI;
+    int i1 = (int)phmap;
+    double res = phmap - i1;
+    int i2 = i1+1;
+    return (1 - res) * table[i1] + res * table[i2];
+}
+
 void peanos_perform64(t_peanos *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
 {
     if (x->must_change_numpartials > 0) {
@@ -1568,9 +1620,11 @@ void peanos_perform64(t_peanos *x, t_object *dsp64, double **ins, long numins, d
     t_double	*out = outs[0];
     long np = model_get_num_partials(x);
     
-    assert(np < DADA_PEANOS_MAXPARTIALS);
+//    assert(np < DADA_PEANOS_MAXPARTIALS);
     
     double *phases = x->phases;
+    double *ampmod_phases = x->ampmod_phases;
+    double *freqmod_phases = x->freqmod_phases;
     double *mem_ff1 = x->mem_ff1;
     double *mem_ff2 = x->mem_ff2;
     double *mem_fb1 = x->mem_fb1;
@@ -1610,6 +1664,7 @@ void peanos_perform64(t_peanos *x, t_object *dsp64, double **ins, long numins, d
     }
     
     double freq, amp, noisiness; // = ins[2][0];
+    t_peanos_modulation *modul;
     bool interp_freq_done = false, interp_amp_done = false, interp_noisiness_done = false;
     double b1, a0;
     double noise_gain, sine_gain;
@@ -1623,6 +1678,7 @@ void peanos_perform64(t_peanos *x, t_object *dsp64, double **ins, long numins, d
             freq = x->curr_freqs[p] * fzero;
             amp = x->curr_amps[p];
             noisiness = x->curr_noisinesses[p];
+            modul = &x->curr_modulations[p];
             get_split_gains(synthesis_mode, noisiness, freq, sr, &sine_gain, &noise_gain);
             if (synthesis_mode == 1) {
                 b1 = exp(-2.0 * PI * (pow(noisiness, 2.)/2));
@@ -1637,6 +1693,7 @@ void peanos_perform64(t_peanos *x, t_object *dsp64, double **ins, long numins, d
                 freq = lininterp(x->curr_freqs[p] * fzero, x->next_freqs[p] * fzero, interp_freq_samps_offset + i, interp_freq_samps, &interp_freq_done);
                 amp = lininterp(x->curr_amps[p], x->next_amps[p], interp_amp_samps_offset + i, interp_amp_samps, &interp_amp_done);
                 noisiness = lininterp(x->curr_noisinesses[p], x->next_noisinesses[p], interp_noisiness_samps_offset + i, interp_noisiness_samps, &interp_noisiness_done);
+                modul = &x->curr_modulations[p];
                 get_split_gains(synthesis_mode, noisiness, freq, sr, &sine_gain, &noise_gain);
                 if (autoclear_filters)
                     peanos_clear(x);
@@ -1648,21 +1705,25 @@ void peanos_perform64(t_peanos *x, t_object *dsp64, double **ins, long numins, d
                 }
             }
             
-            phases[p] += freq * timestep;
+            ampmod_phases[p] += modul->ampmod_freq * timestep;
+            while (ampmod_phases[p] >= TWOPI) ampmod_phases[p] -= TWOPI;
+
+            freqmod_phases[p] += modul->freqmod_freq * timestep;
+            while (freqmod_phases[p] >= TWOPI) freqmod_phases[p] -= TWOPI;
+
+            // modulations
+            double ampmod_sinusoid = use_lookup_table ? wavetable_lookup(ampmod_phases[p], modul->ampmod_table) : cos(ampmod_phases[p]);
+            double freqmod_sinusoid = use_lookup_table ? wavetable_lookup(freqmod_phases[p], modul->freqmod_table) : cos(freqmod_phases[p]);
+
+            double amp_m = amp + modul->ampmod_amp * ampmod_sinusoid;
+            double freq_m = freq + modul->freqmod_amp * freqmod_sinusoid;
+
+            phases[p] += freq_m * timestep;
             while (phases[p] >= TWOPI) phases[p] -= TWOPI;
-            
+
             if (freq > 0 && freq < sr/2.) {
-                double sinusoid;
-                if (use_lookup_table) {
-                    double phmap = phases[p] * DADA_PEANOS_SIN_TABLE_SIZE / TWOPI;
-                    int i1 = (int)phmap;
-                    double res = phmap - i1;
-                    int i2 = i1+1;
-                    sinusoid = (1 - res) * sin_table[i1] + res * sin_table[i2];
-                } else {
-                    sinusoid = sin(phases[p]);
-                }
-                
+                double sinusoid = use_lookup_table ? wavetable_lookup(phases[p], sin_table) : sin(phases[p]);
+
                 double whitenoise = 2 * (double)rand()/RAND_MAX - 1;
                 double filterednoise;
                 
@@ -1673,10 +1734,10 @@ void peanos_perform64(t_peanos *x, t_object *dsp64, double **ins, long numins, d
                     filterednoise =  filterednoise * a0 + mem_ff2[p] * b1;
                     mem_ff2[p] = filterednoise;
                     
-                    out[i] += global_gain * amp * (sine_gain + noise_gain * filterednoise) * sinusoid;
+                    out[i] += global_gain * amp_m * (sine_gain + noise_gain * filterednoise) * sinusoid;
                 } else { // additive synth + filtered noise via biquad
                     filterednoise = noisiness == 1 ? whitenoise : biquad_apply(whitenoise, &coeffs, mem_ff1+p, mem_ff2+p, mem_fb1+p, mem_fb2+p);
-                    out[i] += global_gain * amp * (sine_gain * sinusoid + noise_gain * filterednoise);
+                    out[i] += global_gain * amp_m * (sine_gain * sinusoid + noise_gain * filterednoise);
                 }
             }
         }
@@ -1702,6 +1763,9 @@ void peanos_perform64(t_peanos *x, t_object *dsp64, double **ins, long numins, d
             x->interp_noisiness_samps_offset += sampleframes;
         }
         if (interp_amp_done && interp_freq_done && interp_noisiness_done) {
+            for (long p = 0; p < np; p++)
+                x->curr_modulations[p] = x->next_modulations[p];
+            
             x->interp_freq_samps_offset = 0;
             x->interp_amp_samps_offset = 0;
             x->interp_noisiness_samps_offset = 0;
@@ -1790,6 +1854,31 @@ void peanos_anything(t_peanos *x, t_symbol *msg, long ac, t_atom *av)
             if (parsed->l_size == DADA_PEANOS_NUM_COORDS) {
                 t_llllelem *el = parsed->l_head;
                 for (int i = 0; i < DADA_PEANOS_NUM_COORDS && el; i++) {
+                    if (hatom_gettype(&el->l_hatom) == H_SYM) {
+                        t_symbol *s = hatom_getsym(&el->l_hatom);
+                        mpfr_set_str(x->coord_hp[i], s->s_name, 10, DADA_PEANOS_MPFR_RND);
+                    } else if (hatom_gettype(&el->l_hatom) == H_RAT) {
+                        t_rational r = hatom_getrational(&el->l_hatom);
+                        mpfr_set_ui(x->coord_hp[i], r.r_num, DADA_PEANOS_MPFR_RND);
+                        mpfr_div_ui(x->coord_hp[i], x->coord_hp[i], r.r_den, DADA_PEANOS_MPFR_RND);
+                    } else {
+                        mpfr_set_d(x->coord_hp[i], hatom_getdouble(&el->l_hatom), DADA_PEANOS_MPFR_RND);
+                    }
+                    el = el->l_next;
+                }
+                process_coords(x);
+                if (router == gensym("coords"))
+                    output_coords(x);
+                jbox_redraw((t_jbox *)x);
+            } else {
+                object_error((t_object *)x, "Wrong input syntax.");
+            }
+        } else if (router == gensym("coord") || router == gensym("setcoord")) {
+            if (parsed->l_size == 2) {
+                t_llllelem *el = parsed->l_head;
+                long i = hatom_getlong(&el->l_hatom) - 1;
+                if (i >= 0 && i < DADA_PEANOS_NUM_COORDS) {
+                    el = el->l_next;
                     if (hatom_gettype(&el->l_hatom) == H_SYM) {
                         t_symbol *s = hatom_getsym(&el->l_hatom);
                         mpfr_set_str(x->coord_hp[i], s->s_name, 10, DADA_PEANOS_MPFR_RND);
@@ -2309,7 +2398,7 @@ void peanos_mousewheel(t_peanos *x, t_object *view, t_pt pt, long modifiers, dou
     int coord = (pt.x > rect.width - DADA_PEANOS_INSET_RIGHT_NOISINESS ? 2 : (modifiers & eAltKey ? 1 : 0));
     if (modifiers & eCommandKey) {
 
-        mpfr_t temp_hp[3];
+        mpfr_t temp_hp[DADA_PEANOS_NUM_COORDS];
         for (int i = 0; i < DADA_PEANOS_NUM_COORDS; i++)
             mpfr_init2(temp_hp[i], x->mpfr_precision[i]);
         

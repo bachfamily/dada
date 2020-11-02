@@ -19,6 +19,19 @@ void sphericalToCartesian(double *spherical, double *cartesian, long N)
     cartesian[N-1] = r * temp;
 }
 
+// spherical is assumed to be of dimension step*(N-1), with unexplicited radius = 1
+void sphericalToCartesianNoRadiusWithStep(double *spherical, double *cartesian, long N, int step)
+{
+    double temp = 1.;
+    long s = 0;
+    for (long i = 0; i < N-1; i++, s += step) {
+        cartesian[i] = temp * cos(spherical[s]);
+        temp *= sin(spherical[s]);
+    }
+    cartesian[N-1] = temp;
+}
+
+
 void cartesianToSpherical(double *cartesian, double *spherical, long N)
 {
     double temp = 0.;

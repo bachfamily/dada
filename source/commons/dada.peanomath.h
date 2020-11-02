@@ -15,6 +15,9 @@
 void cartesianToSpherical(double *cartesian, double *spherical, long N);
 void sphericalToCartesian(double *spherical, double *cartesian, long N);
 
+// somewhat internal version
+void sphericalToCartesianNoRadiusWithStep(double *spherical, double *cartesian, long N, int step);
+
 void ternaryDigitsToHyperCube(short *ternary_digits, long N, long precision, double *output_coord);
 
 void unitIntervalToTernaryRepresentation(double input, long numdigits, short *ternary_digits);

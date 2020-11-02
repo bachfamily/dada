@@ -11,7 +11,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
-	<string>0.2</string>
+	<string>0.2c</string>
 	<key>CFBundleLongVersionString</key>
 	<string>${PRODUCT_NAME} ${PRODUCT_VERSION}, Copyright 2017-2019 Daniele Ghisi</string>
 	<key>CFBundlePackageType</key>

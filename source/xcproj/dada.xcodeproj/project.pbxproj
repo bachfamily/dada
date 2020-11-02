@@ -2774,7 +2774,7 @@
 				COPY_PHASE_STRIP = NO;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.bachproject.$(TARGET_NAME)";
-				PRODUCT_VERSION = 0.2.0;
+				PRODUCT_VERSION = 0.2.0c;
 				SDKROOT = macosx;
 			};
 			name = Development;
@@ -2787,7 +2787,7 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.bachproject.$(TARGET_NAME)";
-				PRODUCT_VERSION = 0.2.0;
+				PRODUCT_VERSION = 0.2.0c;
 				SDKROOT = macosx;
 			};
 			name = Deployment;

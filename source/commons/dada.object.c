@@ -243,8 +243,9 @@ void dadaobj_jbox_setup(t_dadaobj_jbox *b_ob, long flags, t_pt zoom_static_addit
 }
 
 void dadaobj_pxjbox_setup(t_dadaobj_pxjbox *b_ob, long flags, t_pt zoom_static_additional,
-						long playout_outlet, long changebang_outlet, long notification_outlet, dada_paint_ext_fn paint_ext, invalidate_and_redraw_fn invalidate_and_redraw,
-						const char *tools, long stores, const char *outlets, ...)
+                          long playout_outlet, long changebang_outlet, long notification_outlet,
+                          dada_paint_ext_fn paint_ext, invalidate_and_redraw_fn invalidate_and_redraw,
+                          const char *tools, long stores, const char *outlets, ...)
 {
 	va_list args;
     va_start(args, outlets);

@@ -47,6 +47,7 @@ void cartesianToSpherical(double *cartesian, double *spherical, long N)
 }
 
 
+// PEANO INVERSO: prendo un numero tra 0 e 1 e lo butto su [0, 1]^N
 void ternaryDigitsToHyperCube(short *ternary_digits, long N, long precision, double *output_coord)
 {
     for (long i = 0; i < N; i++)

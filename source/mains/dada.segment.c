@@ -800,12 +800,21 @@ t_llll *segment_roll(t_segment *x, t_llll *roll, t_llll **meta)
         t_llll *result = llll_get();
         t_llllelem *elem, *first_nonheader_elem = get_first_nonheader_elem(roll);
         t_llll *header = llll_get();
-
+        t_llll *voicenames_ll = NULL;
+        
         if (meta)
             *meta = llll_get();
         
-        for (elem = roll->l_head; elem && elem != first_nonheader_elem; elem = elem->l_next)
-            llll_appendhatom_clone(header, &elem->l_hatom);
+        for (elem = roll->l_head; elem && elem != first_nonheader_elem; elem = elem->l_next) {
+            // should not clone
+            t_llll *templl = NULL;
+            if (hatom_gettype(&elem->l_hatom) == H_LLLL && (templl = hatom_getllll(&elem->l_hatom)) &&
+                templl->l_head && hatom_getsym(&templl->l_head->l_hatom) == _llllobj_sym_voicenames) {
+                voicenames_ll= templl;
+            } else {
+                llll_appendhatom_clone(header, &elem->l_hatom);
+            }
+        }
         
         long i = 1;
         for (; elem; elem = elem->l_next, i++)
@@ -813,6 +822,17 @@ t_llll *segment_roll(t_segment *x, t_llll *roll, t_llll **meta)
                 t_llll *this_ll = llll_clone(header);
                 t_llll *this_meta = NULL;
                 t_llll *this_result = NULL;
+                
+                if (this_ll && voicenames_ll) {
+                    t_llllelem *el = llll_getindex(voicenames_ll, i+1, I_STANDARD);
+                    if (el) {
+                        t_llll *temp = llll_get();
+                        llll_appendsym(temp, _llllobj_sym_voicenames);
+                        llll_appendhatom_clone(temp, &el->l_hatom);
+                        llll_appendllll(this_ll, temp);
+                    }
+                }
+                
                 llll_appendllll_clone(this_ll, hatom_getllll(&elem->l_hatom));
                 this_result = segment_roll_do(x, this_ll, &this_meta, i);
                 llll_chain(result, this_result);
@@ -1422,12 +1442,21 @@ t_llll *segment_score(t_segment *x, t_llll *score, t_llll **meta)
         t_llll *result = llll_get();
         t_llllelem *elem, *first_nonheader_elem = get_first_nonheader_elem(score);
         t_llll *header = llll_get();
+        t_llll *voicenames_ll = NULL;
         
         if (meta)
             *meta = llll_get();
         
-        for (elem = score->l_head; elem && elem != first_nonheader_elem; elem = elem->l_next)
-            llll_appendhatom_clone(header, &elem->l_hatom);
+        for (elem = score->l_head; elem && elem != first_nonheader_elem; elem = elem->l_next) {
+            t_llll *templl = NULL;
+            if (hatom_gettype(&elem->l_hatom) == H_LLLL && (templl = hatom_getllll(&elem->l_hatom)) &&
+                templl->l_head && hatom_getsym(&templl->l_head->l_hatom) == _llllobj_sym_voicenames) {
+                // don't copy voicenames
+                voicenames_ll = templl;
+            } else {
+                llll_appendhatom_clone(header, &elem->l_hatom);
+            }
+        }
         
         // substitute 1 to all markers' voices
         for (t_llllelem *tmp_elem = header->l_head; tmp_elem; tmp_elem = tmp_elem->l_next) {
@@ -1455,6 +1484,17 @@ t_llll *segment_score(t_segment *x, t_llll *score, t_llll **meta)
                 t_llll *this_ll = llll_clone(header);
                 t_llll *this_meta = NULL;
                 t_llll *this_result = NULL;
+                
+                if (this_ll && voicenames_ll) {
+                    t_llllelem *el = llll_getindex(voicenames_ll, i+1, I_STANDARD);
+                    if (el) {
+                        t_llll *temp = llll_get();
+                        llll_appendsym(temp, _llllobj_sym_voicenames);
+                        llll_appendhatom_clone(temp, &el->l_hatom);
+                        llll_appendllll(this_ll, temp);
+                    }
+                }
+                
                 llll_appendllll_clone(this_ll, hatom_getllll(&elem->l_hatom));
                 this_result = segment_score_do(x, this_ll, &this_meta, i);
                 llll_chain(result, this_result);

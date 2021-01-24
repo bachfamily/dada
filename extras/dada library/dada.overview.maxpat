@@ -732,13 +732,6 @@
 				"implicit" : 1
 			}
 , 			{
-				"name" : "logos.png",
-				"bootpath" : "~/Dropbox/TESI_dottorato/Latex/img",
-				"patcherrelativepath" : "../../../../../../Dropbox/TESI_dottorato/Latex/img",
-				"type" : "PNG",
-				"implicit" : 1
-			}
-, 			{
 				"name" : "bach.filter.maxpat",
 				"bootpath" : "~/Documents/Max 7/Packages/bach/patchers",
 				"patcherrelativepath" : "../../../bach/patchers",
@@ -812,6 +805,13 @@
 				"bootpath" : "~/Documents/Max 7/Packages/bach/patchers",
 				"patcherrelativepath" : "../../../bach/patchers",
 				"type" : "JSON",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "logos.png",
+				"bootpath" : "~/Dropbox/TESI_dottorato/Latex/img",
+				"patcherrelativepath" : "../../../../../../Dropbox/TESI_dottorato/Latex/img",
+				"type" : "PNG",
 				"implicit" : 1
 			}
 , 			{

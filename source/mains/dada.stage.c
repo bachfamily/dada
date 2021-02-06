@@ -975,7 +975,7 @@ void stage_paint_ext(t_stage *x, t_object *view, t_dada_force_graphics *force_gr
 			
 			if (x->show_faders) {
 				double tri_height = 5 * x->b_ob.d_ob.m_zoom.zoom.x;
-				double tri_y = rescale_with_slope(CLAMP(x->cards[i].value, x->value_min, x->value_max), x->value_min, x->value_max, card_rect.y + card_rect.height, card_rect.y, x->faderslope);
+				double tri_y = rescale_with_slope(CLAMP(x->cards[i].value, x->value_min, x->value_max), x->value_min, x->value_max, card_rect.y + card_rect.height, card_rect.y, x->faderslope, k_SLOPE_MAPPING_BACH);
 				paint_line(g, x->j_fadercolor, card_rect.x + card_rect.width, card_rect.y, card_rect.x + card_rect.width, 
 						   card_rect.y + card_rect.height, 2);
 				

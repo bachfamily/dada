@@ -57,6 +57,7 @@ typedef enum _dada_segmentation_algorithm
 	DADA_SEGMENTATION_ALGORITHM_EQUATION = 0,
 	DADA_SEGMENTATION_ALGORITHM_MARKERS,
 	DADA_SEGMENTATION_ALGORITHM_LABELS,
+    DADA_SEGMENTATION_ALGORITHM_REGIONS,
 	DADA_SEGMENTATION_ALGORITHM_LAMBDA,
 } e_dada_segmentation_algorithm;
 
@@ -163,7 +164,7 @@ void C74_EXPORT ext_main(void *moduleRef)
 	
 	CLASS_ATTR_CHAR(c,"algorithm",0, t_segment, algorithm);
 	CLASS_ATTR_STYLE_LABEL(c,"algorithm",0,"enumindex","Algorithm");
-	CLASS_ATTR_ENUMINDEX(c,"algorithm", 0, "Equation Markers Labels"); 
+	CLASS_ATTR_ENUMINDEX(c,"algorithm", 0, "Equation Markers Labels Regions");
     CLASS_ATTR_ACCESSORS(c, "algorithm", (method)NULL, (method)segment_setattr_algorithm);
 	CLASS_ATTR_BASIC(c, "algorithm", 0);
 	// @description Sets the segmentation algorithm: <br />
@@ -173,7 +174,8 @@ void C74_EXPORT ext_main(void *moduleRef)
 	// "measuresymdur" (the overall measure symbolic duration), "division" (the measure division) or "beat" (the measure beat). For instance
 	// <b>beat/2</b> will yield a segmentation each half beat. <br />
 	// - Markers: each marker is identified as a splitting point. Currently works for <o>bach.roll</o> only. <br />
-	// - Labels: each label family (collection of elements sharing the same label) is considered as a grain. Currently works for <o>bach.roll</o> only.
+	// - Labels: each label family (collection of elements sharing the same label) is considered as a grain. Currently works for <o>bach.roll</o> only. <br />
+    // - Regions: each marker region is considered as a grain. Currently works for <o>bach.roll</o> only.
 
     CLASS_ATTR_CHAR(c,"voicewise",0, t_segment, voicewise);
     CLASS_ATTR_STYLE_LABEL(c,"voicewise",0,"onoff","Voicewise Segmentation");
@@ -470,7 +472,7 @@ void process_standard_features_roll(t_segment *x, t_llll *features, t_llll *gs, 
 
 // measure_num is 0-based, but 1-based at output
 void process_standard_features_score(t_segment *x, t_llll *features, long index, long measure_num, t_rational division, t_tempo *tempo,
-									 t_rational pim, t_rational phase, t_rational sym_dur, long voice_number)
+									 t_rational pim, t_rational phase, t_rational sym_dur, long voice_number, t_symbol *label)
 {
 	if (x->feature_index) 
 		llll_appendllll(features, symbol_and_long_to_llll(gensym("idx"), index), 0, WHITENULL_llll); // can't use "index": Sqlite doesn't like that
@@ -483,56 +485,63 @@ void process_standard_features_score(t_segment *x, t_llll *features, long index,
 
 	if (x->feature_pim) {
 		t_llll *ll = llll_get();
-		llll_appendsym(ll, _llllobj_sym_pim, 0, WHITENULL_llll);
-		llll_appenddouble(ll, rat2double(pim), 0, WHITENULL_llll);
-		llll_appendllll(features, ll, 0, WHITENULL_llll);
+		llll_appendsym(ll, _llllobj_sym_pim);
+		llll_appenddouble(ll, rat2double(pim));
+		llll_appendllll(features, ll);
 	}
+
+    if (x->feature_label && label) {
+        t_llll *ll = llll_get();
+        llll_appendsym(ll, _llllobj_sym_label);
+        llll_appendsym(ll, label);
+        llll_appendllll(features, ll);
+    }
 
 	if (x->feature_phase) {
 		t_llll *ll = llll_get();
-		llll_appendsym(ll, gensym("phase"), 0, WHITENULL_llll);
-		llll_appenddouble(ll, rat2double(phase), 0, WHITENULL_llll);
-		llll_appendllll(features, ll, 0, WHITENULL_llll);
+		llll_appendsym(ll, gensym("phase"));
+		llll_appenddouble(ll, rat2double(phase));
+		llll_appendllll(features, ll);
 	}	
 	
 	if (x->feature_symduration) {
 		t_llll *ll = llll_get();
-		llll_appendsym(ll, _llllobj_sym_symduration, 0, WHITENULL_llll);
-		llll_appendrat(ll, sym_dur, 0, WHITENULL_llll);
-		llll_appendllll(features, ll, 0, WHITENULL_llll);
+		llll_appendsym(ll, _llllobj_sym_symduration);
+		llll_appendrat(ll, sym_dur);
+		llll_appendllll(features, ll);
 	}	
 
     if (x->feature_symonset) {
         t_llll *ll = llll_get();
-        llll_appendsym(ll, _llllobj_sym_symonset, 0, WHITENULL_llll);
-        llll_appendrat(ll, pim, 0, WHITENULL_llll);
-        llll_appendllll(features, ll, 0, WHITENULL_llll);
+        llll_appendsym(ll, _llllobj_sym_symonset);
+        llll_appendrat(ll, pim);
+        llll_appendllll(features, ll);
     }	
 
 	if (x->feature_objtype) {
 		t_llll *ll = llll_get();
-		llll_appendsym(ll, _llllobj_sym_type, 0, WHITENULL_llll);
-		llll_appendsym(ll, _llllobj_sym_score, 0, WHITENULL_llll);
-		llll_appendllll(features, ll, 0, WHITENULL_llll);
+		llll_appendsym(ll, _llllobj_sym_type);
+		llll_appendsym(ll, _llllobj_sym_score);
+		llll_appendllll(features, ll);
 	}
 
 	if (x->feature_bpm) {
 		t_llll *ll = llll_get();
-		llll_appendsym(ll, gensym("bpm"), 0, WHITENULL_llll);
-		llll_appenddouble(ll, tempo ? rat2double(rat_rat_prod(tempo->figure_tempo_value, rat_rat_div(tempo->tempo_figure, division))) : 60., 0, WHITENULL_llll);
-		llll_appendllll(features, ll, 0, WHITENULL_llll);
+		llll_appendsym(ll, gensym("bpm"));
+		llll_appenddouble(ll, tempo ? rat2double(rat_rat_prod(tempo->figure_tempo_value, rat_rat_div(tempo->tempo_figure, division))) : 60.);
+		llll_appendllll(features, ll);
 	}	
 	
 	if (x->feature_tempo) {
 		t_llll *ll = llll_get();
-		llll_appendsym(ll, _llllobj_sym_tempo, 0, WHITENULL_llll);
+		llll_appendsym(ll, _llllobj_sym_tempo);
 		if (tempo) {
 			t_llll *inner = llll_get();
-			llll_appendrat(inner, tempo->tempo_figure, 0, WHITENULL_llll);
-			llll_appendrat(inner, tempo->tempo_value, 0, WHITENULL_llll);
-			llll_appendllll(ll, inner, 0, WHITENULL_llll);
+			llll_appendrat(inner, tempo->tempo_figure);
+			llll_appendrat(inner, tempo->tempo_value);
+			llll_appendllll(ll, inner);
 		}
-		llll_appendllll(features, ll, 0, WHITENULL_llll);
+		llll_appendllll(features, ll);
 	}	
 	
 }
@@ -731,6 +740,95 @@ t_llll *segment_roll_markers(t_segment *x, t_llll *roll, t_llll **meta, long voi
 }
 
 
+t_llll *segment_roll_regions(t_segment *x, t_llll *roll, t_llll **meta, long voice_number)
+{
+    t_llll *markers = dada_get_markers(roll);
+    t_llll *onsets = llll_get();
+    t_llll *durations = llll_get();
+    t_llll *names = llll_get();
+    
+    double curr_onset = 0;
+    t_llll *result = llll_get();
+    double tot_length = dada_roll_get_length(roll);
+
+    // get durations
+    t_llllelem *mk_elem;
+    if (markers) {
+        for (mk_elem = markers->l_head; mk_elem; mk_elem = mk_elem->l_next) {
+            double curr_marker_ms = dada_marker_get_onset_from_gs(hatom_getllll(&mk_elem->l_hatom));
+            double curr_marker_dur = dada_marker_get_duration_from_gs(hatom_getllll(&mk_elem->l_hatom));
+            if (curr_marker_dur != 0) {
+                // region-marker
+                if (curr_marker_dur < 0) { // till next
+                    if (mk_elem->l_next) {
+                        // till next marker
+                        double next_marker_ms = dada_marker_get_onset_from_gs(hatom_getllll(&mk_elem->l_next->l_hatom));
+                        curr_marker_dur = next_marker_ms - curr_marker_ms;
+                    } else {
+                        // till the end
+                        curr_marker_dur = tot_length - curr_marker_ms;
+                    }
+                }
+                llll_appenddouble(onsets, curr_marker_ms);
+                llll_appenddouble(durations, curr_marker_dur);
+                llll_appendhatom_clone(names, &mk_elem->l_hatom.h_w.w_llll->l_head->l_next->l_hatom); // marker name
+            }
+        }
+    }
+    
+    if (meta)
+        *meta = llll_get();
+    
+    t_llllelem *dur_elem = durations->l_head, *onset_elem = onsets->l_head, *name_elem = names->l_head;
+    long i = 1;
+    double phase = 0;
+    for ( ; dur_elem && onset_elem; dur_elem = dur_elem->l_next, onset_elem = onset_elem->l_next, name_elem = name_elem ? name_elem->l_next : NULL) {
+        double this_onset = hatom_getdouble(&onset_elem->l_hatom);
+        double this_duration = hatom_getdouble(&dur_elem->l_hatom);
+        t_symbol *label = NULL;
+        if (name_elem) {
+            if (hatom_gettype(&name_elem->l_hatom) == H_SYM)
+                label = hatom_getsym(&name_elem->l_hatom);
+            else if (hatom_gettype(&name_elem->l_hatom) == H_LLLL) {
+                t_llll *ll = hatom_getllll(&name_elem->l_hatom);
+                if (ll && ll->l_head && hatom_gettype(&ll->l_head->l_hatom) == H_SYM)
+                    label = hatom_getsym(&ll->l_head->l_hatom);
+            }
+        }
+        
+        t_llll *cropped = dada_roll_crop(roll, this_onset, this_onset + this_duration, x->copy_tempi_marker);
+        
+        if (x->window_type != DADA_WINDOW_NONE)
+            dada_roll_apply_window_on_velocities(cropped, (e_dada_windows)x->window_type, &this_duration);
+        
+        llll_appendllll(result, cropped);
+        
+        // meta-information
+        if (meta) {
+            t_llll *this_meta = llll_get();
+            if (x->feature_phase) {
+                char is_division = 0;
+                dada_get_first_marker_division_or_barline(cropped, &is_division);
+                if (is_division)
+                    phase+=1;
+            }
+            
+            process_standard_features_roll(x, this_meta, cropped, i, curr_onset, this_duration, label, voice_number, phase);
+            process_custom_features(x, this_meta, cropped);
+            
+            llll_appendllll(*meta, this_meta, 0, WHITENULL_llll);
+        }
+        i++;
+    }
+    
+    llll_free(markers);
+    llll_free(names);
+    llll_free(durations);
+    llll_free(onsets);
+    return result;
+}
+
+
 
 t_llll *segment_roll_labels(t_segment *x, t_llll *roll, t_llll **meta, long voice_number)
 {
@@ -786,6 +884,9 @@ t_llll *segment_roll_do(t_segment *x, t_llll *roll, t_llll **meta, long voice_nu
 		case DADA_SEGMENTATION_ALGORITHM_LABELS:
 			result = segment_roll_labels(x, roll, meta, voice_number);
 			break;
+        case DADA_SEGMENTATION_ALGORITHM_REGIONS:
+            result = segment_roll_regions(x, roll, meta, voice_number);
+            break;
 		default:
 			object_error((t_object *)x, "Can't use the defined segmentation algorithm for bach.roll.");
 			break;
@@ -849,7 +950,7 @@ t_llll *segment_roll(t_segment *x, t_llll *roll, t_llll **meta)
 
 
 // if cut_points is NULL, they are calculated via segmentsize and hopsize
-t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_llll *score, t_llll *result, t_llll **meta, long measure_offset, long *idx_offset, long voice_number, t_llll *cut_points)
+t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_llll *score, t_llll *result, t_llll **meta, long measure_offset, long *idx_offset, long voice_number, t_llll *cut_points, t_llll *labels)
 {
     char dont_segment = ((cut_points == NULL) && (x->segmentsize_as_sym == _llllobj_sym_empty_symbol || x->segmentsize_as_sym == _llllobj_sym_none));
 
@@ -884,7 +985,7 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                 this_tempo = dada_score_get_first_tempo(temp);
             
             process_standard_features_score(x, this_meta, 0 + (*idx_offset) + 1, measure_offset, this_div, this_tempo,
-                                            long2rat(0), this_beat_phase, this_segm_size, voice_number);
+                                            long2rat(0), this_beat_phase, this_segm_size, voice_number, NULL);
             process_custom_features(x, this_meta, temp);
 
             (*idx_offset) += 1;
@@ -914,6 +1015,7 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
             t_llll *beat_phases = llll_get();
             t_llll *divs_out = llll_get();
             
+            t_llllelem *label_elem = labels ? labels->l_head : NULL;
             t_llllelem *elem, *ts_elem = ts->l_head;
             if (ts_elem && hatom_gettype(&ts_elem->l_hatom) == H_LLLL)
                 ts_elem = hatom_getllll(&ts_elem->l_hatom)->l_head;
@@ -1097,7 +1199,7 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                     
                     //				t_rational new_global_sym_onset = rat_rat_sum(global_sym_onset, seg_size);
                     t_rational new_global_sym_onset = rat_rat_sum(global_sym_onset, hop_size);
-                    t_rational temp = global_sym_onset;
+                    t_rational temp = global_sym_onset, delta_pt_in_measure;
                     while (elem) {
                         if (hatom_gettype(&elem->l_hatom) == H_OBJ) { // new measure
                             tp.measure_num ++;
@@ -1127,8 +1229,10 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                             } else if (cmp > 0) {
                                 // overflow
                                 //                            tp.pt_in_measure = new_global_sym_onset; //rat_rat_sum(tp.pt_in_measure, rat_rat_diff(new_global_sym_onset, temp));
+                                t_rational old_pt_in_measure = tp.pt_in_measure;
                                 tp.pt_in_measure = rat_rat_sum(rat_rat_sum(tp.pt_in_measure, this_size), rat_rat_diff(size_accum, tp_global_sym_onset));
                                 tp.pt_in_measure = rat_rat_diff(tp.pt_in_measure, rat_rat_diff(temp, new_global_sym_onset));
+                                delta_pt_in_measure = tp.pt_in_measure - old_pt_in_measure;
                                 tp_global_sym_onset = new_global_sym_onset;
                                 break;
                             }
@@ -1156,8 +1260,11 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                         llll_appendlong(tp_as_ll, 1);
                         
                         elem = elem->l_next;
-                    } else
+                    } else {
+                        tp.pt_in_measure -= delta_pt_in_measure;
+                        tp_global_sym_onset -= delta_pt_in_measure;
                         llll_appendlong(tp_as_ll, 0);
+                    }
                     
                     if (!hop_defined)
                         llll_appendllll_clone(timepoints_end, tp_as_ll); // actually timepoints + global sym onset + is_on_barline?
@@ -1173,7 +1280,7 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
             t_timepoint prev_tp_start = build_timepoint(0, long2rat(0));
             for (count = 0, temp_seg = segm_size->l_head, temp_tp_start = timepoints_start->l_head, temp_tp_end = timepoints_end->l_head, temp_beatphase = beat_phases->l_head, temp_div = divs_out->l_head;
                  temp_seg && temp_tp_start && temp_tp_end && temp_beatphase && temp_div;
-                 temp_seg = temp_seg->l_next, temp_tp_start = temp_tp_start->l_next, temp_tp_end = temp_tp_end->l_next, temp_beatphase = temp_beatphase->l_next, temp_div = temp_div->l_next, count++) {
+                 temp_seg = temp_seg->l_next, temp_tp_start = temp_tp_start->l_next, temp_tp_end = temp_tp_end->l_next, temp_beatphase = temp_beatphase->l_next, temp_div = temp_div->l_next, label_elem = label_elem ? label_elem->l_next : NULL, count++) {
                 t_timesignature ts;
                 t_tempo tempo;
                 t_timepoint this_tp_start = build_timepoint(temp_tp_start->l_hatom.h_w.w_llll->l_head->l_hatom.h_w.w_long, hatom_getrational(&temp_tp_start->l_hatom.h_w.w_llll->l_head->l_next->l_hatom));
@@ -1200,10 +1307,12 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                         t_llll *freeme2 = dada_score_split(temp, tp_diff, &ts, &tempo, true);
                         llll_free(freeme1);
                         llll_free(freeme2);
-                    } else
+                    } else {
                         right = dada_score_split(temp, tp_diff, &ts, &tempo, true);
-                } else
+                    }
+                } else {
                     right = dada_score_split(temp, tp_diff, &ts, &tempo, true);
+                }
                 
                 //            post("---");
                 //            llll_print(temp, NULL, 0, 6, NULL);
@@ -1226,8 +1335,7 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                     if (x->feature_bpm || x->feature_tempo)  // no need to compute tempo otherwise
                         this_tempo = dada_score_get_first_tempo(temp);
                     
-                    process_standard_features_score(x, this_meta, count + (*idx_offset) + 1, measure_offset + prev_tp_start.measure_num, this_div, this_tempo,
-                                                    this_tp_start.pt_in_measure, this_beat_phase, this_segm_size, voice_number);
+                    process_standard_features_score(x, this_meta, count + (*idx_offset) + 1, measure_offset + prev_tp_start.measure_num, this_div, this_tempo, this_tp_start.pt_in_measure, this_beat_phase, this_segm_size, voice_number, label_elem ? hatom_getsym(&label_elem->l_hatom) : NULL);
                     process_custom_features(x, this_meta, temp);
                     
                     llll_appendllll(*meta, this_meta, 0, WHITENULL_llll);
@@ -1271,7 +1379,7 @@ t_llll *segment_score_standard(t_segment *x, t_llll *score, t_llll **meta, long 
         long idx_offset = 0;
         if (meta)
             *meta = llll_get();
-        segment_segment_presegmented_score_and_append_standard(x, score, res, meta, 0, &idx_offset, voice_number, NULL);
+        segment_segment_presegmented_score_and_append_standard(x, score, res, meta, 0, &idx_offset, voice_number, NULL, NULL);
         return res;
 
     } else {
@@ -1301,7 +1409,7 @@ t_llll *segment_score_standard(t_segment *x, t_llll *score, t_llll **meta, long 
         long idx_offset = 0;
         for (elem = presegm_scores->l_head; elem && i < num_measures; elem = elem->l_next, i++) {
             if (hatom_gettype(&elem->l_hatom) == H_LLLL) {
-                segment_segment_presegmented_score_and_append_standard(x, hatom_getllll(&elem->l_hatom), res, meta, i < 0 ? 0 : splits[i], &idx_offset, voice_number, NULL);
+                segment_segment_presegmented_score_and_append_standard(x, hatom_getllll(&elem->l_hatom), res, meta, i < 0 ? 0 : splits[i], &idx_offset, voice_number, NULL, NULL);
             }
         }
         
@@ -1355,6 +1463,7 @@ t_llll *segment_score_markers(t_segment *x, t_llll *score, t_llll **meta, long v
     t_llll *markers = dada_get_markers(score);
     t_llll *measuresymdurs = dada_score_get_measuresymdurs(score);
     t_llll *res = llll_get();
+    t_llll *names = llll_get();
 
     // building cumulative measure symdurs
     t_llll *measuresymdurs_cumulative = llll_get();
@@ -1365,7 +1474,8 @@ t_llll *segment_score_markers(t_segment *x, t_llll *score, t_llll **meta, long v
         llll_appendrat(measuresymdurs_cumulative_voice, cur);
         for (t_llllelem *el = measuresymdurs_voice->l_head; el; el = el->l_next) {
             t_rational r = hatom_getrational(&el->l_hatom);
-            llll_appendrat(measuresymdurs_cumulative_voice, cur+r);
+            cur = cur + r;
+            llll_appendrat(measuresymdurs_cumulative_voice, cur);
         }
         llll_appendllll(measuresymdurs_cumulative, measuresymdurs_cumulative_voice);
     }
@@ -1394,6 +1504,11 @@ t_llll *segment_score_markers(t_segment *x, t_llll *score, t_llll **meta, long v
                                 if (measure_onset_el) {
                                     t_rational measure_onset = measure_onset_el ? hatom_getrational(&measure_onset_el->l_hatom) : long2rat(0);
                                     llll_appendrat(cut_points, measure_onset + mk_onset);
+
+                                    if (mk_llll && mk_llll->l_head && mk_llll->l_head->l_next)
+                                        llll_appendhatom_clone(names, &mk_llll->l_head->l_next->l_hatom); // marker name
+                                    else
+                                        llll_appendllll(names, llll_get());
                                 }
                             }
                         }
@@ -1406,9 +1521,9 @@ t_llll *segment_score_markers(t_segment *x, t_llll *score, t_llll **meta, long v
         if (meta)
             *meta = llll_get();
         
-//        llll_print(cut_points);
+        llll_print(cut_points);
         
-        segment_segment_presegmented_score_and_append_standard(x, score, res, meta, 0, &idx_offset, voice_number, cut_points);
+        segment_segment_presegmented_score_and_append_standard(x, score, res, meta, 0, &idx_offset, voice_number, cut_points, names);
     }
     
     
@@ -1417,6 +1532,192 @@ t_llll *segment_score_markers(t_segment *x, t_llll *score, t_llll **meta, long v
     
     return res;
 }
+
+
+
+
+
+t_llll *segment_score_regions(t_segment *x, t_llll *score, t_llll **meta, long voice_number)
+{
+    t_llll *markers = dada_get_markers(score);
+    t_llll *measuresymdurs = dada_score_get_measuresymdurs(score);
+    t_llll *res = llll_get();
+    
+    dada_markers_only_keep_markers_with_certain_attachment(markers, k_MARKER_ATTACH_TO_MEASURE);
+    dada_markers_delete_non_region_markers(markers);
+    
+    llll_print(measuresymdurs);
+    
+    // building cumulative measure symdurs
+    t_llll *measuresymdurs_cumulative = llll_get();
+    for (t_llllelem *el = measuresymdurs->l_head; el; el = el->l_next) {
+        t_llll *measuresymdurs_voice = hatom_getllll(&el->l_hatom);
+        t_llll *measuresymdurs_cumulative_voice = llll_get();
+        t_rational cur = long2rat(0);
+        llll_appendrat(measuresymdurs_cumulative_voice, cur);
+        for (t_llllelem *el = measuresymdurs_voice->l_head; el; el = el->l_next) {
+            t_rational r = hatom_getrational(&el->l_hatom);
+            cur = cur + r;
+            llll_appendrat(measuresymdurs_cumulative_voice, cur);
+        }
+        llll_appendllll(measuresymdurs_cumulative, measuresymdurs_cumulative_voice);
+    }
+    
+    //    llll_print(measuresymdurs_cumulative);
+    
+    if (measuresymdurs_cumulative && measuresymdurs_cumulative->l_head && markers) {
+        // getting cut_points from markers
+        t_llll *global_onsets = llll_get();
+        t_llll *symdurs = llll_get();
+        t_llll *names = llll_get();
+
+        for (t_llllelem *el = markers->l_head; el; el = el->l_next) {
+            if (hatom_gettype(&el->l_hatom) == H_LLLL) {
+                t_llll *mk_llll = hatom_getllll(&el->l_hatom);
+                if (mk_llll && mk_llll->l_head) {
+                    t_timepoint position;
+                    char error = dada_marker_get_timepoint_from_gs(mk_llll, &position);
+                    t_rational this_symdur = dada_marker_get_symduration_from_gs(mk_llll);
+
+                    if (!error) {
+                        t_llllelem *voice_el = llll_getindex(measuresymdurs_cumulative, position.voice_num+1, I_STANDARD);
+                        if (voice_el) {
+                            t_llll *voice_ll = hatom_getllll(&voice_el->l_hatom);
+                            if (voice_ll) {
+                                t_llllelem *measure_onset_el = llll_getindex(voice_ll, position.measure_num+1, I_STANDARD);
+                                if (measure_onset_el) {
+                                    t_rational measure_onset = measure_onset_el ? hatom_getrational(&measure_onset_el->l_hatom) : long2rat(0);
+                                    t_rational this_global_onset = measure_onset + position.pt_in_measure;
+                                    llll_appendrat(global_onsets, this_global_onset);
+                                    
+                                    if (this_symdur.r_num < 0) { // till next
+                                        if (el->l_next) {
+                                            t_timepoint next_position;
+                                            dada_marker_get_timepoint_from_gs(hatom_getllll(&el->l_next->l_hatom), &next_position);
+                                            
+                                            t_llllelem *n_voice_el = llll_getindex(measuresymdurs_cumulative, next_position.voice_num+1, I_STANDARD);
+                                            llll_print(measuresymdurs_cumulative);
+                                            if (n_voice_el) {
+                                                t_llll *n_voice_ll = hatom_getllll(&n_voice_el->l_hatom);
+                                                if (n_voice_ll) {
+                                                    t_llllelem *n_measure_onset_el = llll_getindex(n_voice_ll, next_position.measure_num+1, I_STANDARD);
+                                                    if (n_measure_onset_el) {
+                                                        t_rational measure_onset = n_measure_onset_el ? hatom_getrational(&n_measure_onset_el->l_hatom) : long2rat(0);
+                                                        t_rational next_global_onset = measure_onset + next_position.pt_in_measure;
+                                                        this_symdur = next_global_onset - this_global_onset;
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            t_llllelem *n_voice_el = llll_getindex(measuresymdurs_cumulative, position.voice_num+1, I_STANDARD);
+                                            if (n_voice_el) {
+                                                t_llll *n_voice_ll = hatom_getllll(&voice_el->l_hatom);
+                                                if (n_voice_ll) {
+                                                    t_llllelem *n_measure_onset_el = voice_ll->l_tail;
+                                                    if (n_measure_onset_el) {
+                                                        t_rational measure_onset = n_measure_onset_el ? hatom_getrational(&n_measure_onset_el->l_hatom) : long2rat(0);
+                                                        this_symdur = measure_onset - this_global_onset;
+                                                    }
+                                                }
+                                            
+                                            }
+                                            
+                                        }
+                                    }
+                                    
+                                    llll_appendrat(symdurs, this_symdur);
+                                    
+                                    if (mk_llll && mk_llll->l_head && mk_llll->l_head->l_next)
+                                        llll_appendhatom_clone(names, &mk_llll->l_head->l_next->l_hatom); // marker name
+                                    else
+                                        llll_appendllll(names, llll_get());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        if (meta)
+            *meta = llll_get();
+        
+        //        llll_print(cut_points);
+        
+        t_llllelem *dur_elem = symdurs->l_head, *onset_elem = global_onsets->l_head, *name_elem = names->l_head;
+        long i = 1;
+        for ( ; dur_elem && onset_elem; dur_elem = dur_elem->l_next, onset_elem = onset_elem->l_next, name_elem = name_elem ? name_elem->l_next : NULL) {
+            t_rational this_onset = hatom_getrational(&onset_elem->l_hatom);
+            t_rational this_duration = hatom_getrational(&dur_elem->l_hatom);
+            t_symbol *label = NULL;
+            if (name_elem) {
+                if (hatom_gettype(&name_elem->l_hatom) == H_SYM)
+                    label = hatom_getsym(&name_elem->l_hatom);
+                else if (hatom_gettype(&name_elem->l_hatom) == H_LLLL) {
+                    t_llll *ll = hatom_getllll(&name_elem->l_hatom);
+                    if (ll && ll->l_head && hatom_gettype(&ll->l_head->l_hatom) == H_SYM)
+                        label = hatom_getsym(&ll->l_head->l_hatom);
+                }
+            }
+            
+            t_llll *cut_points = llll_get();
+            llll_appendrat(cut_points, this_onset);
+            llll_appendrat(cut_points, rat_rat_sum(this_onset, this_duration));
+            
+            t_llll *temp_res = llll_get();
+            t_llll *temp_meta = llll_get();
+            
+            long idx_offset = i-2;
+            llll_print(cut_points);
+            t_llll *temp_names = llll_get();
+            for (long t = 0; t < 3; t++)
+                llll_appendhatom_clone(temp_names, &name_elem->l_hatom);
+            
+            segment_segment_presegmented_score_and_append_standard(x, score, temp_res, &temp_meta, 0, &idx_offset, voice_number, cut_points, names);
+            
+            llll_free(temp_names);
+            
+            if (temp_res->l_size == 3) {
+                llll_destroyelem(temp_res->l_head);
+                llll_destroyelem(temp_meta->l_head);
+                llll_destroyelem(temp_res->l_tail);
+                llll_destroyelem(temp_meta->l_tail);
+            } else if (temp_res->l_size == 2) {
+                if (this_onset.r_num == 0) {
+                    llll_destroyelem(temp_res->l_tail);
+                    llll_destroyelem(temp_meta->l_tail);
+                } else {
+                    llll_destroyelem(temp_res->l_head);
+                    llll_destroyelem(temp_meta->l_head);
+                }
+            } else {
+                object_error((t_object *)x, "Error during segmentation.");
+            }
+            
+            llll_chain(res, temp_res);
+            if (meta)
+                llll_chain(*meta, temp_meta);
+            
+            i++;
+        }
+        
+        llll_free(markers);
+        llll_free(global_onsets);
+        llll_free(symdurs);
+        llll_free(names);
+    }
+    
+    
+    llll_free(measuresymdurs);
+    llll_free(markers);
+    
+    return res;
+}
+
+
+
+
+
 
 t_llll *segment_score_do(t_segment *x, t_llll *score, t_llll **meta, long voice_number)
 {
@@ -1427,6 +1728,9 @@ t_llll *segment_score_do(t_segment *x, t_llll *score, t_llll **meta, long voice_
 			break;
         case DADA_SEGMENTATION_ALGORITHM_MARKERS:
             result = segment_score_markers(x, score, meta, voice_number);
+            break;
+        case DADA_SEGMENTATION_ALGORITHM_REGIONS:
+            result = segment_score_regions(x, score, meta, voice_number);
             break;
 		default:
 			object_error((t_object *)x, "Can't use the defined segmentation algorithm for bach.score.");
@@ -1553,13 +1857,13 @@ void segment_anything(t_segment *x, t_symbol *msg, long ac, t_atom *av)
 t_max_err segment_setattr_algorithm(t_segment *x, t_object *attr, long ac, t_atom *av)
 {
     if (ac > 0) {
-        x->algorithm = CLAMP(atom_getlong(av), 0, 2);
+        x->algorithm = CLAMP(atom_getlong(av), 0, 3);
         
         object_attr_setdisabled((t_object *)x, gensym("tempomarkersseg"), x->algorithm != DADA_SEGMENTATION_ALGORITHM_MARKERS);
         object_attr_setdisabled((t_object *)x, gensym("segmentsize"), x->algorithm != DADA_SEGMENTATION_ALGORITHM_EQUATION);
         object_attr_setdisabled((t_object *)x, gensym("hopsize"), x->algorithm != DADA_SEGMENTATION_ALGORITHM_EQUATION);
 
-        object_attr_setdisabled((t_object *)x, gensym("ftlabel"), x->algorithm != DADA_SEGMENTATION_ALGORITHM_MARKERS && x->algorithm != DADA_SEGMENTATION_ALGORITHM_LABELS);
+        object_attr_setdisabled((t_object *)x, gensym("ftlabel"), x->algorithm != DADA_SEGMENTATION_ALGORITHM_MARKERS && x->algorithm != DADA_SEGMENTATION_ALGORITHM_REGIONS && x->algorithm != DADA_SEGMENTATION_ALGORITHM_LABELS);
     }
     return MAX_ERR_NONE;
 }

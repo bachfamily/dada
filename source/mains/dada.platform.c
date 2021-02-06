@@ -1576,7 +1576,7 @@ void platform_add_items_from_prototype(t_platform *x, t_symbol *prototype_name, 
 	for (elem = pos->l_head; elem; elem = elem->l_next) {
 		if (hatom_gettype(&elem->l_hatom) == H_LLLL) {
 			t_dadaitem *item = dadaitem_add_from_llll(dadaobj_cast(x), type, prototype->attr, flags);
-			dadaitem_set_attr_from_llll(dadaobj_cast(x), item, get_bach_attribute(x->b_ob.d_ob.m_inspector.attr_manager, dadaitem_class_get_id(&x->b_ob.d_ob.m_classes, type), gensym("coord")), hatom_getllll(&elem->l_hatom), false);
+			dadaitem_set_attr_from_llll(dadaobj_cast(x), item, bach_attribute_get(x->b_ob.d_ob.m_inspector.attr_manager, dadaitem_class_get_id(&x->b_ob.d_ob.m_classes, type), gensym("coord")), hatom_getllll(&elem->l_hatom), false);
 		}
 	}
 	

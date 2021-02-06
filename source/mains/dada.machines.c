@@ -346,7 +346,7 @@ void machine_invert_fn(t_machines *x, long numins, t_llll **in, long numouts, t_
 
 void machine_slice_fn(t_machines *x, long numins, t_llll **in, long numouts, t_llll **out)
 {
-    out[1] = dada_roll_slice(in[0], in[0]->l_thing.w_double / 2., true, true, false);
+    out[1] = dada_roll_split(in[0], in[0]->l_thing.w_double / 2., true, true, false);
     out[0] = in[0];
     dada_roll_prepend_roll_sym(out[0]);
     dada_roll_prepend_roll_sym(out[1]);

@@ -40,9 +40,9 @@ void dada_roll_invert(t_llll *gs, double pitch_for_mirroring_mc);
 void dada_roll_shift(t_llll *gs, double shift_delta_ms, char via_cropping = true);
 void dada_roll_shiftncrop(t_llll *gs, double shift_delta_ms, double crop_length_ms);
 void dada_roll_mix(t_llll *gs1, t_llll *gs2, long sew_this = DADA_CUT_NOTE_START, long with_this = DADA_CUT_NOTE_END);
-t_llll *dada_roll_slice(t_llll *gs, double slice_point, char mark_split_left_parts, char mark_split_right_parts, char copy_tempi);
-t_llll *dada_roll_split_preserve(t_llll *gs, double split_point, char mark_split_left_parts, char mark_split_right_parts, char copy_tempi); // preserves the note position
-t_llll *dada_roll_split(t_llll *gs, double split_point, char mark_split_left_parts, char mark_split_right_parts, char copy_tempi);
+t_llll *dada_roll_split(t_llll *gs, double split_point, char mark_split_left_parts, char mark_split_right_parts, char copy_tempi, double epsilon = CONST_EPSILON_DOUBLE_EQ);
+t_llll *dada_roll_split_preserve(t_llll *gs, double split_point, char mark_split_left_parts, char mark_split_right_parts, char copy_tempi, double epsilon = CONST_EPSILON_DOUBLE_EQ); // preserves the note position
+t_llll *dada_roll_crop(t_llll *gs, double from, double to, char copy_tempi);
 void dada_roll_blend(t_llll *gs1, t_llll *gs2, double split_point, double mark_split);
 void dada_roll_join(t_llll *gs1, t_llll *gs2);
 void dada_roll_circularshift(t_llll *gs, double shift_delta_ms);
@@ -85,6 +85,17 @@ t_llll *dada_get_markers(t_llll *gs); // markers are cloned
 t_tempo *dada_get_first_marker_tempo(t_llll *gs); // tempo is allocated
 double dada_get_first_marker_division_or_barline(t_llll *gs, char *is_division);
 void dada_markers_delete_tempo_markers(t_llll *gs);
+void dada_markers_delete_non_region_markers(t_llll *gs);
+void dada_markers_only_keep_markers_with_certain_attachment(t_llll *gs, long attachment_type);
+
+double dada_marker_get_onset_from_gs(t_llll *marker_ll);
+double dada_marker_get_duration_from_gs(t_llll *marker_ll);
+t_rational dada_marker_get_symduration_from_gs(t_llll *marker_ll);
+char dada_marker_get_timepoint_from_gs(t_llll *marker_ll, t_timepoint *tp);
+long dada_marker_get_attachment_from_gs(t_llll *marker_ll);
+
+void dada_marker_set_onset_to_gs(t_llll *marker_ll, double onset);
+void dada_marker_set_duration_to_gs(t_llll *marker_ll, double duration);
 
 void remove_all_marking_to_llll_lthings(t_llll *gs, e_notation_objects notation_obj);
 

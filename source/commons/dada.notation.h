@@ -55,6 +55,7 @@ void dada_roll_trim_blank_starting_space(t_llll *gs, double *new_gs_offset_ms);
 t_llll *dada_roll_get_labels(t_llll *gs);
 void dada_roll_retain_label(t_llll *gs, t_hatom *label);
 t_llll *dada_roll_extract_label(t_llll *gs, t_hatom *label, double *new_gs_offset_ms);
+void dada_roll_delete_region_markers(t_llll *gs);
 long dada_roll_get_max_num_notes_per_chord(t_llll *gs);
 long dada_roll_get_num_chords(t_llll *gs);
 double dada_roll_get_average_pitch(t_llll *gs, char use_dur_and_vel);

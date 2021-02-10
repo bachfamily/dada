@@ -779,6 +779,10 @@ t_llll *segment_roll_regions(t_segment *x, t_llll *roll, t_llll **meta, long voi
     if (meta)
         *meta = llll_get();
     
+    t_llll *roll_noregionmarker = llll_clone(roll);
+    dada_roll_delete_region_markers(roll_noregionmarker);
+
+
     t_llllelem *dur_elem = durations->l_head, *onset_elem = onsets->l_head, *name_elem = names->l_head;
     long i = 1;
     double phase = 0;
@@ -796,7 +800,7 @@ t_llll *segment_roll_regions(t_segment *x, t_llll *roll, t_llll **meta, long voi
             }
         }
         
-        t_llll *cropped = dada_roll_crop(roll, this_onset, this_onset + this_duration, x->copy_tempi_marker);
+        t_llll *cropped = dada_roll_crop(roll_noregionmarker, this_onset, this_onset + this_duration, x->copy_tempi_marker);
         
         if (x->window_type != DADA_WINDOW_NONE)
             dada_roll_apply_window_on_velocities(cropped, (e_dada_windows)x->window_type, &this_duration);
@@ -825,6 +829,7 @@ t_llll *segment_roll_regions(t_segment *x, t_llll *roll, t_llll **meta, long voi
     llll_free(names);
     llll_free(durations);
     llll_free(onsets);
+    llll_free(roll_noregionmarker);
     return result;
 }
 

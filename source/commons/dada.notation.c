@@ -299,7 +299,17 @@ void dada_markers_delete_tempo_markers(t_llll *gs)
     }
 }
 
-
+char dada_marker_is_region(t_llll *marker)
+{
+    if (!marker->l_head || hatom_gettype(&marker->l_head->l_hatom) != H_LLLL)
+        return 0;
+    else {
+        t_llll *head_ll = hatom_getllll(&marker->l_head->l_hatom);
+        if (!head_ll || !head_ll->l_head || hatom_getsym(&head_ll->l_head->l_hatom) != sym_region)
+            return 0;
+    }
+    return 1;
+}
 void dada_markers_delete_non_region_markers(t_llll *gs)
 {
     if (!gs)
@@ -309,23 +319,18 @@ void dada_markers_delete_non_region_markers(t_llll *gs)
         nextelem = elem->l_next;
         if (hatom_gettype(&elem->l_hatom) == H_LLLL) {
             t_llll *marker = hatom_getllll(&elem->l_hatom);
-            if (!marker->l_head || hatom_gettype(&marker->l_head->l_hatom) != H_LLLL)
+            if (!dada_marker_is_region(marker))
                 llll_destroyelem(elem);
-            else {
-                t_llll *head_ll = hatom_getllll(&marker->l_head->l_hatom);
-                if (!head_ll || !head_ll->l_head || hatom_getsym(&head_ll->l_head->l_hatom) != sym_region)
-                    llll_destroyelem(elem);
-            }
         }
     }
 }
 
-void dada_markers_only_keep_markers_with_certain_attachment(t_llll *gs, long attachment_type)
+void dada_markers_only_keep_markers_with_certain_attachment(t_llll *markers, long attachment_type)
 {
-    if (!gs)
+    if (!markers)
         return;
     t_llllelem *elem, *nextelem = NULL;
-    for (elem = gs->l_head; elem; elem = nextelem) {
+    for (elem = markers->l_head; elem; elem = nextelem) {
         nextelem = elem->l_next;
         if (hatom_gettype(&elem->l_hatom) == H_LLLL) {
             t_llll *marker = hatom_getllll(&elem->l_hatom);
@@ -985,6 +990,7 @@ long dada_roll_retain_label_fn(t_llll *gs, e_notation_objects notation_obj, void
 	return 0;
 }
 
+
 long dada_roll_retain_label_for_markers_fn(t_llll *marker, e_notation_objects notation_obj, void *idx, void *onset, void *label_hatom, void *dummy2, void *dummy3)
 {
 	if (marker && marker->l_head) {
@@ -1015,6 +1021,21 @@ void dada_roll_retain_label(t_llll *gs, t_hatom *label)
 {
 	dada_roll_iterate_on_chords(gs, (dada_gs_modif_fn)dada_roll_retain_label_fn, k_NOTATION_OBJECT_ROLL, label, NULL, NULL);
 	dada_iterate_on_markers(gs, (dada_gs_modif_fn)dada_roll_retain_label_for_markers_fn, k_NOTATION_OBJECT_ROLL, label, NULL, NULL);
+}
+
+
+long dada_roll_delete_region_markers_fn(t_llll *marker, e_notation_objects notation_obj, void *idx, void *onset, void *label_hatom, void *dummy2, void *dummy3)
+{
+    if (marker && marker->l_head) {
+        if (dada_marker_is_region(marker))
+            return 1;
+    }
+    return 0;
+}
+
+void dada_roll_delete_region_markers(t_llll *gs)
+{
+    dada_iterate_on_markers(gs, (dada_gs_modif_fn)dada_roll_delete_region_markers_fn, k_NOTATION_OBJECT_ROLL, NULL, NULL, NULL);
 }
 
 

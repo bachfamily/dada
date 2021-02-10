@@ -1526,7 +1526,7 @@ t_llll *segment_score_markers(t_segment *x, t_llll *score, t_llll **meta, long v
         if (meta)
             *meta = llll_get();
         
-        llll_print(cut_points);
+//        llll_print(cut_points);
         
         segment_segment_presegmented_score_and_append_standard(x, score, res, meta, 0, &idx_offset, voice_number, cut_points, names);
     }
@@ -1551,7 +1551,7 @@ t_llll *segment_score_regions(t_segment *x, t_llll *score, t_llll **meta, long v
     dada_markers_only_keep_markers_with_certain_attachment(markers, k_MARKER_ATTACH_TO_MEASURE);
     dada_markers_delete_non_region_markers(markers);
     
-    llll_print(measuresymdurs);
+//    llll_print(measuresymdurs);
     
     // building cumulative measure symdurs
     t_llll *measuresymdurs_cumulative = llll_get();
@@ -1673,7 +1673,7 @@ t_llll *segment_score_regions(t_segment *x, t_llll *score, t_llll **meta, long v
             t_llll *temp_meta = llll_get();
             
             long idx_offset = i-2;
-            llll_print(cut_points);
+ //           llll_print(cut_points);
             t_llll *temp_names = llll_get();
             for (long t = 0; t < 3; t++)
                 llll_appendhatom_clone(temp_names, &name_elem->l_hatom);

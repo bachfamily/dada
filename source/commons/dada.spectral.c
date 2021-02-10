@@ -432,7 +432,7 @@ void cluster_averaging(t_llll **chords_in_gathered_syntax, double thresh_ms)
     llll_flat(cloned, 0, 1, 0, LLLL_FREETHING_DONT); // remove "voice" level
     llll_inplacesort(cloned, (sort_fn)llll_sort_by_first); // sorting by onset
     
-    dev_llll_print(cloned, NULL, 0, 2, NULL);
+//    dev_llll_print(cloned, NULL, 0, 2, NULL);
     
     // clustering and averaging
     while (true) {

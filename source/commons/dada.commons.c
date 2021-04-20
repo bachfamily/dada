@@ -684,17 +684,24 @@ t_symbol *dada_ezlocate_file(t_symbol *file_name, t_fourcc *file_type)
 	return NULL;
 }
 
-t_symbol *dada_ezresolve_file(t_symbol *file_name, short *outpath)
+t_symbol *dada_ezresolve_file(t_symbol *file_name)
 {
     char tempfile[MAX_PATH_CHARS];
     char outfile[MAX_PATH_CHARS];
-    short path = path_getdefault();
+    char outpath[MAX_PATH_CHARS];
+    short path = 0;
     
     snprintf_zero(tempfile, MAX_PATH_CHARS, "%s", file_name ? file_name->s_name : "Untitled.txt");
 
-    path_topotentialname(path, tempfile, outfile, false);
+    if (path_frompathname(tempfile, &path, outfile)) {
+        // cannot resolve, try with default path
+        path_topotentialname(path_getdefault(), tempfile, outpath, false);
+    } else {
+        path_topathname(path, outfile, outpath);
+    }
     
-    return gensym(outfile);
+    
+    return gensym(outpath);
 }
 
 long dada_llll_check(t_llll *ll)

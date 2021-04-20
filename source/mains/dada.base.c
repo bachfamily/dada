@@ -2070,8 +2070,7 @@ t_max_err rebuild_database(t_xbase *b, char readonly)
 	db_close(&b->d_db);
 
     if (filename) {
-        short outpath = 0;
-        t_symbol *filename_resolved = dada_ezresolve_file(filename, &outpath);
+        t_symbol *filename_resolved = dada_ezresolve_file(filename);
 
 // should be like this
 //        db_open_ext(b->d_name, filename_resolved->s_name, &b->d_db, readonly ? DB_OPEN_FLAGS_READONLY : DB_OPEN_FLAGS_NONE);

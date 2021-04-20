@@ -68,7 +68,7 @@ return; \
 
 t_symbol *dada_ezlocate_file(t_symbol *file_name, t_fourcc *file_type);
 t_symbol *dada_ezlocate_folder(t_symbol *foldername);
-t_symbol *dada_ezresolve_file(t_symbol *file_name, short *outpath);
+t_symbol *dada_ezresolve_file(t_symbol *file_name);
 
 //t_jsurface *dada_quick_surface_from_file(char *file_name); // use gensurface_from_file
 //t_jpattern *dada_quick_pattern_from_file(char *file_name);

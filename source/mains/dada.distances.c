@@ -884,7 +884,7 @@ void C74_EXPORT ext_main(void *moduleRef)
 	return;
 }
 
-void view_create_deferred(t_distances *x, t_symbol *msg, long ac, t_atom *av)
+void view_create_do(t_distances *x, t_symbol *msg, long ac, t_atom *av)
 {
     db_view_create(x->d_db, x->d_query->s_name, &x->d_view);
     object_attach_byptr_register(x, x->d_view, _sym_nobox);
@@ -920,7 +920,7 @@ t_max_err distances_set_query(t_distances *x, void *attr, long argc, t_atom *arg
 		if (x->d_db && x->d_query) {
 //			db_view_create(x->d_db, x->d_query->s_name, &x->d_view);
 //			object_attach_byptr_register(x, x->d_view, _sym_nobox);
-            defer_low(x, (method)view_create_deferred, NULL, 0, NULL);
+            defer_low(x, (method)view_create_do, NULL, 0, NULL);
 		}
 	}
 	return MAX_ERR_NONE;
@@ -952,8 +952,10 @@ void distances_set_database_do(t_distances *x, t_symbol *msg, long argc, t_atom 
     err = db_open(x->d_database, NULL, &x->d_db);
     if (!err && x->d_db && x->d_query) {
         x->db_ok = true;
-        defer_low(x, (method)view_create_deferred, NULL, 0, NULL);
+        defer_low(x, (method)view_create_do, NULL, 0, NULL);
     }
+
+    object_attr_touch((t_object *)x, gensym("database"));
 }
 
 t_max_err distances_set_database(t_distances *x, void *attr, long argc, t_atom *argv)
@@ -1002,18 +1004,20 @@ t_max_err distances_notify(t_distances *x, t_symbol *s, t_symbol *msg, void *sen
             object_attr_setdisabled((t_object *)x, gensym("uniformpar"), x->also_compute_uniform_grid == 0);
             object_attr_setdisabled((t_object *)x, gensym("uniformls"), x->also_compute_uniform_grid == 0);
             if (x->also_compute_uniform_grid == 0) {
-                x->need_rebuild_grains = true;
-                if (!x->is_creating_new_obj)
+                if (!x->is_creating_new_obj) {
+                    x->need_rebuild_grains = true;
                     rebuild_grains(x, true); // straight away
+                }
                 distances_iar(x);
             }
         }
 		if (attr_name == _sym_table || attr_name == gensym("colorfield") || attr_name == gensym("sizefield") || attr_name == gensym("shapefield") ||
 			attr_name == gensym("distancetable") ||  attr_name == gensym("table") || attr_name == gensym("lengthfield") ||
             attr_name == gensym("where") || attr_name == gensym("database") || attr_name == gensym("labelfield") || attr_name == gensym("maxdistedge") || attr_name == gensym("uniformlr") || attr_name == gensym("uniformsize") || attr_name == gensym("alpha") || attr_name == gensym("maxr") || attr_name == gensym("minr") || attr_name == gensym("seed") || attr_name == gensym("numiter"))  {
-			x->need_rebuild_grains = true;
-            if (!x->is_creating_new_obj)
+            if (!x->is_creating_new_obj) {
+                x->need_rebuild_grains = true;
                 rebuild_grains(x, true); // straight away
+            }
             distances_iar(x);
         } else if (attr_name == gensym("center") || attr_name == gensym("zoom") || attr_name == gensym("vzoom") || attr_name == gensym("grid") || attr_name == gensym("uniform") || attr_name == gensym("showedges") || attr_name == gensym("showgrains") || attr_name == gensym("edgecolor") || attr_name == gensym("graincolor")) {
             distances_iar(x);
@@ -1155,6 +1159,22 @@ void distances_task(t_distances *x)
     llll_clear(x->scheduled_times);
 }
 
+void post_creation_do(t_distances *x, t_symbol *msg, long ac, t_atom *av)
+{
+    x->is_creating_new_obj = false;
+    
+    dadaobj_set_current_version_number(dadaobj_cast(x));
+    
+    if (x->db_ok) {
+        x->need_rebuild_grains = false;
+        rebuild_grains(x, false);
+
+        // has to be deferred, because it should not happen before database has been set (and that operation was deferred): but this whole function has been deferlowed, so no need to defer again
+        dadaobj_invalidate_and_redraw(dadaobj_cast(x));
+        //        rebuild_grains_defer_low(x, false);
+    }
+}
+
 
 void *distances_new(t_symbol *s, long argc, t_atom *argv)
 {
@@ -1211,22 +1231,14 @@ void *distances_new(t_symbol *s, long argc, t_atom *argv)
 		distances_initdataview(x);
         
         attr_dictionary_process(x,d);
-		
-		// changing min and max zoom
-		x->b_ob.d_ob.m_zoom.max_zoom_perc = build_pt(10000, 10000);
-		x->b_ob.d_ob.m_zoom.min_zoom_perc = build_pt(0.01, 0.01);
-		
-		jbox_ready((t_jbox *)x);
 
-        dadaobj_set_current_version_number(dadaobj_cast(x));
-
-        x->is_creating_new_obj = false;
+        // changing min and max zoom
+        x->b_ob.d_ob.m_zoom.max_zoom_perc = build_pt(10000, 10000);
+        x->b_ob.d_ob.m_zoom.min_zoom_perc = build_pt(0.01, 0.01);
         
-        x->need_rebuild_grains = true;
-        if (x->need_rebuild_grains) {
-            x->need_rebuild_grains = false;
-            rebuild_grains_defer_low(x, false); // straight away
-        }
+        jbox_ready((t_jbox *)x);
+        
+        defer_low(x, (method)post_creation_do, NULL, 0, NULL);
     }
 	return x;
 }

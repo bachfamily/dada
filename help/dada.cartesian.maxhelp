@@ -144,7 +144,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 811.0, 622.0 ],
+						"rect" : [ 100.0, 105.0, 811.0, 622.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -316,11 +316,11 @@
 									"query" : "SELECT * FROM similarities",
 									"table" : "similarities",
 									"versionnumber" : 20300,
-									"vzoom" : 1000.0,
+									"vzoom" : 2721.088435374149412,
 									"where" : [ "null" ],
 									"xfield" : "A",
 									"yfield" : "B",
-									"zoom" : 1000.0
+									"zoom" : 2721.088435374149412
 								}
 
 							}
@@ -452,7 +452,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 10.0, 10.0, 307.570952999999975, 57.567627000000002 ]
+									"patching_rect" : [ 10.0, 10.0, 307.54400634765625, 57.599853515625 ]
 								}
 
 							}
@@ -857,7 +857,7 @@
 , 							{
 								"box" : 								{
 									"beatsync" : 1,
-									"center" : [ -0.231723, -92.832173999999995 ],
+									"center" : [ -0.231723328750007, -92.832173997500007 ],
 									"colorfield" : "filename",
 									"convexcombmax" : [ 1.0 ],
 									"convexcombmin" : [ 0.0 ],
@@ -875,11 +875,11 @@
 									"query" : "SELECT * FROM scores",
 									"table" : "scores",
 									"versionnumber" : 20300,
-									"vzoom" : 179.847207999999995,
+									"vzoom" : 179.847207899996164,
 									"where" : [ "null" ],
 									"xfield" : "tc5",
 									"yfield" : "bpm",
-									"zoom" : 15.174478000000001
+									"zoom" : 15.174478005366979
 								}
 
 							}
@@ -911,8 +911,8 @@
 									"numinlets" : 6,
 									"numoutlets" : 8,
 									"numvoices" : 1,
-									"out" : "nnnnnnnn",
-									"outlettype" : [ "", "", "", "", "", "", "", "" ],
+									"out" : "nnnnnnn",
+									"outlettype" : [ "", "", "", "", "", "", "", "bang" ],
 									"patching_rect" : [ 495.0, 454.0, 174.0, 90.833336000000003 ],
 									"pitcheditrange" : [ "null" ],
 									"stafflines" : [ 5 ],
@@ -982,7 +982,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 10.0, 10.0, 307.570952999999975, 57.567627000000002 ]
+									"patching_rect" : [ 10.0, 10.0, 307.54400634765625, 57.599853515625 ]
 								}
 
 							}
@@ -1291,8 +1291,8 @@
 									"numoutlets" : 8,
 									"numparts" : [ 1, 1, 1 ],
 									"numvoices" : 3,
-									"out" : "nnnnnnnn",
-									"outlettype" : [ "", "", "", "", "", "", "", "" ],
+									"out" : "nnnnnnn",
+									"outlettype" : [ "", "", "", "", "", "", "", "bang" ],
 									"patching_rect" : [ 19.0, 412.0, 466.0, 176.5 ],
 									"pitcheditrange" : [ "null" ],
 									"stafflines" : [ 5, 5, 5 ],
@@ -1671,7 +1671,7 @@
 							}
 , 							{
 								"box" : 								{
-									"center" : [ -712.745348000000035, -5345.375 ],
+									"center" : [ -712.745347807499911, -5345.375 ],
 									"colorfield" : "tonalcentroid5th",
 									"convexcombmax" : [ 1.0 ],
 									"convexcombmin" : [ 0.0 ],
@@ -1691,11 +1691,11 @@
 									"sizefield" : "loudness",
 									"table" : "scores",
 									"versionnumber" : 20300,
-									"vzoom" : 1.0,
+									"vzoom" : 0.948090948090948,
 									"where" : [ "null" ],
 									"xfield" : "spread",
 									"yfield" : "centroid",
-									"zoom" : 4.252504
+									"zoom" : 4.252503913601114
 								}
 
 							}
@@ -1726,7 +1726,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 10.0, 10.0, 307.570952999999975, 57.567627000000002 ]
+									"patching_rect" : [ 10.0, 10.0, 307.54400634765625, 57.599853515625 ]
 								}
 
 							}
@@ -2707,8 +2707,8 @@
 									"numoutlets" : 9,
 									"numparts" : [ 1, 1 ],
 									"numvoices" : 2,
-									"out" : "nnnnnnnnn",
-									"outlettype" : [ "", "", "", "", "", "", "", "", "" ],
+									"out" : "nnnnnnnn",
+									"outlettype" : [ "", "", "", "", "", "", "", "", "bang" ],
 									"patching_rect" : [ 506.0, 470.0, 172.0, 100.0 ],
 									"pitcheditrange" : [ "null" ],
 									"showmeasurenumbers" : [ 1, 1 ],
@@ -2815,11 +2815,11 @@
 									"query" : "SELECT * FROM scores",
 									"table" : "scores",
 									"versionnumber" : 20300,
-									"vzoom" : 937.263793999999962,
+									"vzoom" : 937.263794406651527,
 									"where" : [ "null" ],
 									"xfield" : "measure",
 									"yfield" : "phase",
-									"zoom" : 257.423604000000012
+									"zoom" : 257.423604362379876
 								}
 
 							}
@@ -3146,8 +3146,8 @@
 									"numoutlets" : 9,
 									"numparts" : [ 1, 1 ],
 									"numvoices" : 2,
-									"out" : "nnnnnnnnn",
-									"outlettype" : [ "", "", "", "", "", "", "", "", "" ],
+									"out" : "nnnnnnnn",
+									"outlettype" : [ "", "", "", "", "", "", "", "", "bang" ],
 									"patching_rect" : [ 10.0, 193.0, 324.0, 124.666663999999997 ],
 									"pitcheditrange" : [ "null" ],
 									"presentation" : 1,
@@ -3927,8 +3927,8 @@
 									"numoutlets" : 9,
 									"numparts" : [ 1, 1 ],
 									"numvoices" : 2,
-									"out" : "nnnnnnnnn",
-									"outlettype" : [ "", "", "", "", "", "", "", "", "" ],
+									"out" : "nnnnnnnn",
+									"outlettype" : [ "", "", "", "", "", "", "", "", "bang" ],
 									"patching_rect" : [ 190.0, 456.0, 172.0, 111.0 ],
 									"pitcheditrange" : [ "null" ],
 									"showmeasurenumbers" : [ 1, 1 ],
@@ -4017,11 +4017,11 @@
 									"query" : "SELECT * FROM scores",
 									"table" : "scores",
 									"versionnumber" : 20300,
-									"vzoom" : 937.263793999999962,
+									"vzoom" : 937.263794406651527,
 									"where" : [ "null" ],
 									"xfield" : "measure",
 									"yfield" : "phase",
-									"zoom" : 257.423604000000012
+									"zoom" : 257.423604362379876
 								}
 
 							}
@@ -4051,7 +4051,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 10.0, 10.0, 307.570952999999975, 57.567627000000002 ]
+									"patching_rect" : [ 10.0, 10.0, 307.54400634765625, 57.599853515625 ]
 								}
 
 							}
@@ -4211,7 +4211,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 100.0, 105.0, 811.0, 622.0 ],
+						"rect" : [ 0.0, 26.0, 811.0, 622.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -4369,8 +4369,8 @@
 									"numoutlets" : 8,
 									"numparts" : [ 1, 1, 1 ],
 									"numvoices" : 3,
-									"out" : "nnnnnnnn",
-									"outlettype" : [ "", "", "", "", "", "", "", "" ],
+									"out" : "nnnnnnn",
+									"outlettype" : [ "", "", "", "", "", "", "", "bang" ],
 									"patching_rect" : [ 468.5, 451.5, 159.0, 115.5 ],
 									"pitcheditrange" : [ "null" ],
 									"stafflines" : [ 5, 5, 5 ],

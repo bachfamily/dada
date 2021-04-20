@@ -1025,7 +1025,7 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
             if (ts_elem && hatom_gettype(&ts_elem->l_hatom) == H_LLLL)
                 ts_elem = hatom_getllll(&ts_elem->l_hatom)->l_head;
             
-            // building divs_wk
+            // building divs_wk: a list of divisions interleaved with WHITENULL measure separators
             t_timesignature *this_ts = ts ? (t_timesignature *)hatom_getobj(&ts_elem->l_hatom) : NULL;
             for (elem = hatom_getllll(&divs->l_head->l_hatom)->l_head; elem; elem = elem->l_next) {
                 if (hatom_gettype(&elem->l_hatom) == H_LLLL) {
@@ -1041,6 +1041,7 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                 t_rational global_sym_onset = long2rat(0), size_accum = long2rat(0);
                 t_rational measure_sym_onset = long2rat(0);
                 long beat_num = 0;
+                t_rational beat_phase = long2rat(0);
                 double approx_error = 0;
                 
                 t_llll *first_tp_as_ll = llll_get();
@@ -1063,7 +1064,10 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                         while (cut_points_new_onset == cut_points_curr_onset) {
                             cut_points_curr_idx++;
                             t_llllelem *el = llll_getindex(cut_points, cut_points_curr_idx, I_STANDARD);
-                            cut_points_new_onset = hatom_getrational(&el->l_hatom);
+                            if (!el) // last cut point!
+                                cut_points_new_onset = llll_sum_of_rat_llll(divs_wk);
+                            else
+                                cut_points_new_onset = hatom_getrational(&el->l_hatom);
                         }
                         seg_size = cut_points_new_onset - cut_points_curr_onset;
                         hop_size = seg_size;
@@ -1131,9 +1135,10 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                     }
                     
                     
-                    llll_appendrat(segm_size, seg_size, 0, WHITENULL_llll);
-                    llll_appendrat(beat_phases, rat_long_sum(rat_rat_div(rat_rat_diff(tp.pt_in_measure, size_accum), div), beat_num), 0, WHITENULL_llll);
-                    llll_appendrat(divs_out, div, 0, WHITENULL_llll);
+                    llll_appendrat(segm_size, seg_size);
+                    llll_appendrat(beat_phases, rat_long_sum(beat_phase, beat_num));
+//                    llll_appendrat(beat_phases, rat_long_sum(rat_rat_div(rat_rat_diff(tp.pt_in_measure, size_accum), div), beat_num), 0, WHITENULL_llll);
+                    llll_appendrat(divs_out, div);
                     
                     
                     // Computing timepoint end
@@ -1204,7 +1209,7 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                     
                     //				t_rational new_global_sym_onset = rat_rat_sum(global_sym_onset, seg_size);
                     t_rational new_global_sym_onset = rat_rat_sum(global_sym_onset, hop_size);
-                    t_rational temp = global_sym_onset, delta_pt_in_measure;
+                    t_rational temp = global_sym_onset, delta_pt_in_measure = long2rat(0);
                     while (elem) {
                         if (hatom_gettype(&elem->l_hatom) == H_OBJ) { // new measure
                             tp.measure_num ++;
@@ -1217,33 +1222,36 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                             t_rational this_size = hatom_getrational(&elem->l_hatom);
                             temp = rat_rat_sum(size_accum, this_size);
                             long cmp = rat_rat_cmp(temp, new_global_sym_onset);
-                            if (cmp < 0) {
+                            if (cmp < 0) { // the size of this
+                                // nothing to do : END OF GRAIN HAPPENS AFTER THE END OF THE DIVISION
                                 tp.pt_in_measure = rat_rat_sum(tp.pt_in_measure, this_size);
                                 tp_global_sym_onset = rat_rat_sum(tp_global_sym_onset, this_size);
                                 size_accum = temp;
-                                // nothing to do
+                                beat_num++;
                             } else if (cmp == 0) {
-                                // precise cut
+                                // precise cut : END OF GRAIN HAPPENS PRECISELY AT THE END OF THE DIVISION
                                 //                            tp.pt_in_measure = temp;
                                 tp.pt_in_measure = rat_rat_sum(rat_rat_sum(tp.pt_in_measure, this_size), rat_rat_diff(size_accum, tp_global_sym_onset));
                                 tp_global_sym_onset = temp;
                                 elem = elem->l_next;
                                 beat_num++;
+                                beat_phase = long2rat(0);
                                 size_accum = temp;
                                 break;
                             } else if (cmp > 0) {
-                                // overflow
+                                // overflow: END OF GRAIN HAPPENS BEFORE THE END OF THE DIVISION
                                 //                            tp.pt_in_measure = new_global_sym_onset; //rat_rat_sum(tp.pt_in_measure, rat_rat_diff(new_global_sym_onset, temp));
                                 t_rational old_pt_in_measure = tp.pt_in_measure;
+                                // new pt in measure is tp.pt_in_measure + this_size + (size_accum - tp_global_sym_onset)
                                 tp.pt_in_measure = rat_rat_sum(rat_rat_sum(tp.pt_in_measure, this_size), rat_rat_diff(size_accum, tp_global_sym_onset));
                                 tp.pt_in_measure = rat_rat_diff(tp.pt_in_measure, rat_rat_diff(temp, new_global_sym_onset));
                                 delta_pt_in_measure = tp.pt_in_measure - old_pt_in_measure;
                                 tp_global_sym_onset = new_global_sym_onset;
+                                beat_phase = rat_rat_div(rat_rat_diff(temp, new_global_sym_onset), this_size);
                                 break;
                             }
                         }
                         elem = elem->l_next;
-                        beat_num++;
                     }
                     
                     // converting timepoint to llll
@@ -1262,7 +1270,7 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                         ts_elem = ts_elem ? ts_elem->l_next : NULL;
                         this_ts = ts ? (t_timesignature *)hatom_getobj(&ts_elem->l_hatom) : NULL;
                         
-                        llll_appendlong(tp_as_ll, 1);
+                        llll_appendlong(tp_as_ll, 1); // 1 means: is on barline
                         
                         elem = elem->l_next;
                     } else {
@@ -1340,7 +1348,7 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                     if (x->feature_bpm || x->feature_tempo)  // no need to compute tempo otherwise
                         this_tempo = dada_score_get_first_tempo(temp);
                     
-                    process_standard_features_score(x, this_meta, count + (*idx_offset) + 1, measure_offset + prev_tp_start.measure_num, this_div, this_tempo, this_tp_start.pt_in_measure, this_beat_phase, this_segm_size, voice_number, label_elem ? hatom_getsym(&label_elem->l_hatom) : NULL);
+                    process_standard_features_score(x, this_meta, count + (*idx_offset) + 1, measure_offset + this_tp_start.measure_num, this_div, this_tempo, this_tp_start.pt_in_measure, this_beat_phase, this_segm_size, voice_number, label_elem ? hatom_getsym(&label_elem->l_hatom) : NULL);
                     process_custom_features(x, this_meta, temp);
                     
                     llll_appendllll(*meta, this_meta, 0, WHITENULL_llll);

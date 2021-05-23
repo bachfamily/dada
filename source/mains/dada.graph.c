@@ -126,6 +126,7 @@ typedef struct _uigraph
     // room and uigraph
     t_dada_graph        network_graph;    ///< The uigraph representing the bouncing room
     double                graph_arc_linewidth;
+    double          graph_arrow_size;
     
     char            autozoom;
     
@@ -225,6 +226,7 @@ void uigraph_network_process(t_uigraph *x, t_llll *ll);
 t_max_err uigraph_setattr_linestyle(t_uigraph *x, t_object *attr, long ac, t_atom *av);
 t_max_err uigraph_setattr_tonedivision(t_uigraph *x, t_object *attr, long ac, t_atom *av);
 t_max_err uigraph_setattr_edgewidth(t_uigraph *x, t_object *attr, long ac, t_atom *av);
+t_max_err uigraph_setattr_arrowsize(t_uigraph *x, t_object *attr, long ac, t_atom *av);
 
 void uigraph_autozoom(t_uigraph *x);
 void uigraph_recompute_nodes_width_height(t_uigraph *x);
@@ -664,7 +666,13 @@ void C74_EXPORT ext_main(void *moduleRef)
     CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"edgewidth",0,"1.5");
     CLASS_ATTR_ACCESSORS(c, "edgewidth", (method)NULL, (method)uigraph_setattr_edgewidth);
     // @description Sets the line with for the edge lines.
-    
+
+    CLASS_ATTR_DOUBLE(c, "arrowsize", 0, t_uigraph, graph_arrow_size);
+    CLASS_ATTR_STYLE_LABEL(c, "arrowsize", 0, "text", "Arrow Size");
+    CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"arrowsize",0,"7");
+    CLASS_ATTR_ACCESSORS(c, "arrowsize", (method)NULL, (method)uigraph_setattr_arrowsize);
+    // @description Sets the size of the arrows.
+
     CLASS_ATTR_CHAR(c, "linestyle", 0, t_uigraph, line_style);
     CLASS_ATTR_STYLE_LABEL(c, "linestyle", 0, "enumindex", "Line Style");
     CLASS_ATTR_ENUMINDEX(c,"linestyle", 0, "Straight Segmented Curve");
@@ -722,6 +730,15 @@ t_max_err uigraph_setattr_edgewidth(t_uigraph *x, t_object *attr, long ac, t_ato
 {
     if (ac && av && is_atom_number(av)) {
         x->graph_arc_linewidth = atom_getfloat(av);
+        uigraph_iar(x);
+    }
+    return MAX_ERR_NONE;
+}
+
+t_max_err uigraph_setattr_arrowsize(t_uigraph *x, t_object *attr, long ac, t_atom *av)
+{
+    if (ac && av && is_atom_number(av)) {
+        x->graph_arrow_size = atom_getfloat(av);
         uigraph_iar(x);
     }
     return MAX_ERR_NONE;
@@ -1854,7 +1871,7 @@ void repaint_hovered_elements(t_uigraph *x, t_jgraphics *g, t_rect rect, t_pt ce
                 t_pt avg = pt_number_prod(pt_pt_sum(pt1, pt2), 0.5);
                 
                 graph_paint_edge(dadaobj_cast(x), g, rect, center, &x->network_graph, change_alpha(x->j_arccolor, 0.3), x->b_ob.d_ob.m_interface.mousemove_item_identifier.idx,
-                                 0, 0, (vertex_to_properties_fn)uigraph_vertex_to_properties, x->graph_arc_linewidth + 2, x->edge_retouch_mode, (edge_to_properties_fn)uigraph_edge_to_properties, false, NULL, false);
+                                 0, 0, (vertex_to_properties_fn)uigraph_vertex_to_properties, x->graph_arc_linewidth + 2, x->edge_retouch_mode, (edge_to_properties_fn)uigraph_edge_to_properties, false, NULL, false, 0);
             }
                 break;
         }
@@ -1872,7 +1889,7 @@ void uigraph_paint_arcs(t_uigraph *x, t_object *view, t_rect rect, t_pt center, 
     t_jfont *jf = x->show_arc_values ? jfont_create_debug("Arial", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_BOLD, fontsize) : NULL;
     if (g) {
         graph_paint(dadaobj_cast(x), g, rect_00, center, &x->network_graph, x->j_arccolor, false, true, x->node_size, x->node_size,
-                    (vertex_to_properties_fn)uigraph_vertex_to_properties, x->graph_arc_linewidth, x->edge_retouch_mode, (edge_to_properties_fn)uigraph_edge_to_properties, false, jf, x->show_arrows);
+                    (vertex_to_properties_fn)uigraph_vertex_to_properties, x->graph_arc_linewidth, x->edge_retouch_mode, (edge_to_properties_fn)uigraph_edge_to_properties, false, jf, x->show_arrows, x->graph_arrow_size);
         
         if (view)
             jbox_end_layer((t_object *)x, view, gensym("arcs"));

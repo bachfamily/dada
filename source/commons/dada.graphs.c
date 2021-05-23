@@ -473,7 +473,7 @@ void graph_paint_edge(t_dadaobj *r_ob, t_jgraphics *g, t_rect rect, t_pt center,
 					  t_jrgba graph_color, long edge_index,
 					  double fixed_vertex_width, double fixed_vertex_height, vertex_to_properties_fn vertex_to_properties,
 					  double edge_width, char edge_retouch_mode, edge_to_properties_fn edge_to_properties, char paint_hover,
-                      t_jfont *jf_label, char show_arrows)
+                      t_jfont *jf_label, char show_arrows, double arrow_size)
 {
 	long i = edge_index;
 	t_dada_graph_vertex *v1 = &graph->vertices[graph->edges[i].start];
@@ -550,18 +550,17 @@ void graph_paint_edge(t_dadaobj *r_ob, t_jgraphics *g, t_rect rect, t_pt center,
     if (graph->edges[i].flag & DADA_GRAPH_EDGE_FLAG_PASSTHROUGH)
         graph_color = change_alpha(graph_color, 0.1);
     
-	paint_line_advanced(g, graph_color, start, end, edge_width, graph->line_style, show_arrows && !(graph->flags & DADA_GRAPH_FLAG_SYMMETRIC), DADA_GRAPH_ARROW_SIZE, label, jf_label, DADA_GRAPH_CURVE_AMOUNT * r_ob->m_zoom.zoom.x);
+	paint_line_advanced(g, graph_color, start, end, edge_width, graph->line_style, show_arrows && !(graph->flags & DADA_GRAPH_FLAG_SYMMETRIC), arrow_size, label, jf_label, DADA_GRAPH_CURVE_AMOUNT * r_ob->m_zoom.zoom.x);
 	
 	if (paint_hover && r_ob->m_interface.mousemove_item_identifier.type == DADAITEM_TYPE_EDGE && r_ob->m_interface.mousemove_item_identifier.idx == i)
-		paint_line_advanced(g, change_alpha(graph_color, 0.3), start, end, edge_width + DADA_GRAPH_EDGE_DEFAULT_SELECTION_PAD, graph->line_style, 
-							!(graph->flags & DADA_GRAPH_FLAG_SYMMETRIC), DADA_GRAPH_ARROW_SIZE, label, jf_label, DADA_GRAPH_CURVE_AMOUNT * r_ob->m_zoom.zoom.x);
+		paint_line_advanced(g, change_alpha(graph_color, 0.3), start, end, edge_width + DADA_GRAPH_EDGE_DEFAULT_SELECTION_PAD, graph->line_style, !(graph->flags & DADA_GRAPH_FLAG_SYMMETRIC), arrow_size, label, jf_label, DADA_GRAPH_CURVE_AMOUNT * r_ob->m_zoom.zoom.x);
 }
 
 
 void graph_paint(t_dadaobj *r_ob, t_jgraphics *g, t_rect rect, t_pt center, t_dada_graph *graph,
 				 t_jrgba graph_color, char paint_vertices, char paint_edges, 
 				 double fixed_vertex_width, double fixed_vertex_height, vertex_to_properties_fn vertex_to_properties,
-				 double edge_width, char edge_retouch_mode, edge_to_properties_fn edge_to_properties, char paint_hover, t_jfont *jf_label, char show_arrows)
+				 double edge_width, char edge_retouch_mode, edge_to_properties_fn edge_to_properties, char paint_hover, t_jfont *jf_label, char show_arrows, double arrow_size)
 {
 	long i;
 	
@@ -569,7 +568,7 @@ void graph_paint(t_dadaobj *r_ob, t_jgraphics *g, t_rect rect, t_pt center, t_da
 	if (paint_edges) {
 		for (i = 0; i < graph->num_edges; i++) 
 			graph_paint_edge(r_ob, g, rect, center, graph, graph_color, i, fixed_vertex_width, fixed_vertex_height, vertex_to_properties,
-							 edge_width, edge_retouch_mode, edge_to_properties, paint_hover, jf_label, show_arrows);
+							 edge_width, edge_retouch_mode, edge_to_properties, paint_hover, jf_label, show_arrows, arrow_size);
 	}
 	
 	// painting vertices

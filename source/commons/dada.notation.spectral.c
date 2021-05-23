@@ -187,14 +187,14 @@ void get_spectral_rhythm_config_in_window(double win_start_ms, double win_end_ms
 				}
 				
 				//b. change weigth depending on velocities
-				weight_velocity = rescale_with_slope((vel2 + vel1)/2., CONST_MIN_VELOCITY, CONST_MAX_VELOCITY, 0, 1, velocity_handling_slope);
+				weight_velocity = rescale_with_slope((vel2 + vel1)/2., CONST_MIN_VELOCITY, CONST_MAX_VELOCITY, 0, 1, velocity_handling_slope, k_SLOPE_MAPPING_BACH);
 
 				//c. change weight depending on voices
 				weight_voices = (voicenum1 == voicenum2 ? 1. : voice_coupling);
 				accounted_couples += weight_voices;
 				
 				//d. change weight depending on pitches
-				weight_pitch = CLAMP(rescale_with_slope(fabs(mc2 - mc1), inner_mc_threshold, outer_mc_threshold, 0, 1, 0), 0., 1.);
+				weight_pitch = CLAMP(rescale_with_slope(fabs(mc2 - mc1), inner_mc_threshold, outer_mc_threshold, 0, 1, 0, k_SLOPE_MAPPING_BACH), 0., 1.);
 				
 				dev_post("(%.2fms, %.2fmc, voice %ld) and (%.2fms, %.2fmc, voice %ld)", onset1, mc1, voicenum1, onset2, mc2, voicenum2);
 				dev_post("    >> freq: %.2fbpm, %.2fHz. Weights: window %.2f, vel %.2f, pitch %.2f, voices %.2f", freq, bpm, weight_windowing, weight_velocity, weight_pitch, weight_voices);
@@ -246,7 +246,7 @@ void take_amplitude_into_account(double bpm, double ampli, char consider_phase, 
 		}
 		
 		for (i = min_idx; i <= max_idx; i++){
-			double this_bpm = rescale_with_slope(i, 0, num_sampling_points - 1, min_bpm, max_bpm, 0);
+			double this_bpm = rescale_with_slope(i, 0, num_sampling_points - 1, min_bpm, max_bpm, 0, k_SLOPE_MAPPING_BACH);
 			double this_weight;
 			if (decay_bpm < 0)
 				this_weight = ampli;
@@ -1075,7 +1075,7 @@ void gathered_syntax_to_onset_wave(t_llll *chords_in_gathered_syntax,
 					t_llll *thisll = llll_get();
 
 					// change gain depending on velocities
-					couple_gain *= rescale_with_slope(vel2 + vel1, 0, 2 * CONST_MAX_VELOCITY, 0., 1., 0.);
+					couple_gain *= rescale_with_slope(vel2 + vel1, 0, 2 * CONST_MAX_VELOCITY, 0., 1., 0., k_SLOPE_MAPPING_BACH);
 					
 					// change gain depending on voices
 					couple_gain *= (voicenum1 == voicenum2 ? 1. : voice_coupling);
@@ -1108,7 +1108,7 @@ void gathered_syntax_to_onset_wave(t_llll *chords_in_gathered_syntax,
 
 					// change gain depending on onsets (the farther the notes are, the more we will ignore the contribution)
 					if (onset2 - onset1 > inner_onset_threshold)
-						couple_gain *= rescale_with_slope(CLAMP(onset2 - onset1 - inner_onset_threshold, 0, outer_onset_threshold - inner_onset_threshold), 0, outer_onset_threshold - inner_onset_threshold, 1, 0, onset_decay_slope);
+						couple_gain *= rescale_with_slope(CLAMP(onset2 - onset1 - inner_onset_threshold, 0, outer_onset_threshold - inner_onset_threshold), 0, outer_onset_threshold - inner_onset_threshold, 1, 0, onset_decay_slope, k_SLOPE_MAPPING_BACH);
 
 					// change gain depending on non sequentiality
 					if (!(idx2 == idx1 + 1 && voicenum1 == voicenum2))
@@ -1119,7 +1119,7 @@ void gathered_syntax_to_onset_wave(t_llll *chords_in_gathered_syntax,
 
 					// change importance
 					if (onset2 - onset1 > outer_onset_threshold)	// we change the importance only for notes OUTSIDE the outer threshold
-						couple_importance *= rescale_with_slope(onset2 - onset1 - outer_onset_threshold, 0, outer_onset_threshold - inner_onset_threshold, 1, 0, onset_decay_slope);
+						couple_importance *= rescale_with_slope(onset2 - onset1 - outer_onset_threshold, 0, outer_onset_threshold - inner_onset_threshold, 1, 0, onset_decay_slope, k_SLOPE_MAPPING_BACH);
 
 //					if (!(idx2 == idx1 + 1 && voicenum1 == voicenum2))
 //						couple_importance *= 0.7 * rescale_with_slope(CLAMP(onset2 - onset1, 0, outer_onset_threshold), 0, outer_onset_threshold, 1, 0, 0); // CONSTANT TO GAUGE

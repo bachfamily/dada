@@ -2087,7 +2087,7 @@ void bodies_task(t_bodies *x){
                         if (x->velocity_slope == 0.)
                             vel = rescale(dist[j], x->zero_velocity_distance, x->max_velocity_distance, 0, CONST_MAX_VELOCITY);
                         else
-                            vel = rescale_with_slope(dist[j], x->zero_velocity_distance, x->max_velocity_distance, 0, CONST_MAX_VELOCITY, x->velocity_slope);
+                            vel = rescale_with_slope(dist[j], x->zero_velocity_distance, x->max_velocity_distance, 0, CONST_MAX_VELOCITY, x->velocity_slope, k_SLOPE_MAPPING_BACH);
                         
                         t_llll *this_arrownote_to_play = llll_get();
                         llll_appendlong(this_arrownote_to_play, j);

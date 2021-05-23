@@ -31,9 +31,9 @@ typedef enum _dadaitem_action_flags // DIA stands for Dada Item Action
 #define DECLARE_DADA_ATTR(r_ob, man, forced_position, name, displayed_label, owner_type, struct_name, struct_member, attr_type, attr_size, display_type, preprocess_flags, postprocess_flags, default) \
 { \
 	long di_class_id = dadaitem_class_get_id(&((t_dadaobj *)r_ob)->m_classes, owner_type); \
-	declare_bach_attribute(man, forced_position, name, displayed_label, di_class_id, calcoffset(struct_name, struct_member), attr_type, attr_size, display_type, preprocess_flags, postprocess_flags); \
-	bach_attribute_add_functions(get_bach_attribute(man, di_class_id, name), (bach_getter_fn)dada_default_get_bach_attr, (bach_setter_fn)dada_default_set_bach_attr, (bach_attr_process_fn)dada_default_attr_preprocess, (bach_attr_process_fn)dada_default_attr_postprocess, (bach_inactive_fn)dada_default_attr_inactive); \
-    if (default) get_bach_attribute(man, di_class_id, name)->default_val = default; \
+	bach_attribute_declare(man, forced_position, name, displayed_label, di_class_id, calcoffset(struct_name, struct_member), attr_type, attr_size, display_type, preprocess_flags, postprocess_flags); \
+	bach_attribute_add_functions(bach_attribute_get(man, di_class_id, name), (bach_getter_fn)dada_default_get_bach_attr, (bach_setter_fn)dada_default_set_bach_attr, (bach_attr_process_fn)dada_default_attr_preprocess, (bach_attr_process_fn)dada_default_attr_postprocess, (bach_inactive_fn)dada_default_attr_inactive); \
+    if (default) bach_attribute_get(man, di_class_id, name)->default_val = default; \
 }
 
 
@@ -41,7 +41,7 @@ typedef enum _dadaitem_action_flags // DIA stands for Dada Item Action
 { \
 	long di_class_id = dadaitem_class_get_id(&((t_dadaobj *)r_ob)->m_classes, owner_type); \
 	declare_bach_attribute(man, forced_position, name, displayed_label, di_class_id, calcoffset(struct_name, struct_member) + calcoffset(substruct_name, substruct_member), attr_type, attr_size, display_type, preprocess_flags, postprocess_flags); \
-	bach_attribute_add_functions(get_bach_attribute(man, di_class_id, name), (bach_getter_fn)dada_default_get_bach_attr, (bach_setter_fn)dada_default_set_bach_attr, NULL, NULL, (bach_inactive_fn)dada_default_attr_inactive); \
+	bach_attribute_add_functions(bach_attribute_get(man, di_class_id, name), (bach_getter_fn)dada_default_get_bach_attr, (bach_setter_fn)dada_default_set_bach_attr, NULL, NULL, (bach_inactive_fn)dada_default_attr_inactive); \
 }
 
 
@@ -473,7 +473,7 @@ void dadaitem_class_set_from_llll(t_dadaobj *r_ob, e_dadaitem_types type, t_llll
 void dadaitem_set_from_message(t_dadaobj *r_ob, t_llll *message, long flags);
 t_dadaitem *dadaitem_add_from_message(t_dadaobj *r_ob, t_llll *message, long flags);
 void dadaitem_delete_from_message(t_dadaobj *r_ob, t_llll *message, long flags);
-t_bach_attribute *get_dada_attribute(t_dadaobj *r_ob, e_dadaitem_types elemtype, t_symbol *name);
+t_bach_attribute *dada_attribute_get(t_dadaobj *r_ob, e_dadaitem_types elemtype, t_symbol *name);
 
 
 #endif // _DADA_ITEMS_H_

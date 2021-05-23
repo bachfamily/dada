@@ -379,7 +379,7 @@ long dada_score_crop_and_shift_markers_fn(t_llll *marker, e_notation_objects not
         this_tp.pt_in_measure = hatom_getrational(&mk_ll->l_head->l_next->l_next->l_hatom);
         
         if (from_tp.measure_num >= 0 && to_tp.measure_num >= 0) {
-            if (timepoints_compare(this_tp, from_tp) < 0 || timepoints_compare(this_tp, to_tp) >= 0)
+            if (timepoint_compare(this_tp, from_tp) < 0 || timepoint_compare(this_tp, to_tp) >= 0)
                 return 1;
             else {
                 // must shift timepoint, anyway
@@ -388,7 +388,7 @@ long dada_score_crop_and_shift_markers_fn(t_llll *marker, e_notation_objects not
                 hatom_setrational(&mk_ll->l_head->l_next->l_next->l_hatom, res_tp.pt_in_measure);
             }
         } else if (from_tp.measure_num >= 0 && to_tp.measure_num < 0) {
-            if (timepoints_compare(this_tp, from_tp) < 0)
+            if (timepoint_compare(this_tp, from_tp) < 0)
                 return 1;
             else {
                 // must shift timepoint, anyway
@@ -397,7 +397,7 @@ long dada_score_crop_and_shift_markers_fn(t_llll *marker, e_notation_objects not
                 hatom_setrational(&mk_ll->l_head->l_next->l_next->l_hatom, res_tp.pt_in_measure);
             }
         } else if (from_tp.measure_num < 0 && to_tp.measure_num >= 0) {
-            if (timepoints_compare(this_tp, to_tp) >= 0)
+            if (timepoint_compare(this_tp, to_tp) >= 0)
                 return 1;
         }
         

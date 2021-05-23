@@ -1576,7 +1576,7 @@ void platform_add_items_from_prototype(t_platform *x, t_symbol *prototype_name, 
 	for (elem = pos->l_head; elem; elem = elem->l_next) {
 		if (hatom_gettype(&elem->l_hatom) == H_LLLL) {
 			t_dadaitem *item = dadaitem_add_from_llll(dadaobj_cast(x), type, prototype->attr, flags);
-			dadaitem_set_attr_from_llll(dadaobj_cast(x), item, get_bach_attribute(x->b_ob.d_ob.m_inspector.attr_manager, dadaitem_class_get_id(&x->b_ob.d_ob.m_classes, type), gensym("coord")), hatom_getllll(&elem->l_hatom), false);
+			dadaitem_set_attr_from_llll(dadaobj_cast(x), item, bach_attribute_get(x->b_ob.d_ob.m_inspector.attr_manager, dadaitem_class_get_id(&x->b_ob.d_ob.m_classes, type), gensym("coord")), hatom_getllll(&elem->l_hatom), false);
 		}
 	}
 	
@@ -2265,7 +2265,7 @@ void *platform_new(t_symbol *s, long argc, t_atom *argv)
         DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("title"), (char *)"Title", DADAITEM_TYPE_LEVEL, t_levelinfo, levelname, k_BACH_ATTR_SYM, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
         DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("width"), (char *)"Width", DADAITEM_TYPE_LEVEL, t_levelinfo, level_width, k_BACH_ATTR_DOUBLE, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
         DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("height"), (char *)"Height", DADAITEM_TYPE_LEVEL, t_levelinfo, level_height, k_BACH_ATTR_DOUBLE, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
-        get_dada_attribute(dadaobj_cast(x), (e_dadaitem_types)DADAITEM_TYPE_LEVEL, gensym("height"))->postprocess = (bach_attr_process_fn)platform_undo_postprocess_levelheight;
+        dada_attribute_get(dadaobj_cast(x), (e_dadaitem_types)DADAITEM_TYPE_LEVEL, gensym("height"))->postprocess = (bach_attr_process_fn)platform_undo_postprocess_levelheight;
         DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("bgsprite"), (char *)"Background Sprite", DADAITEM_TYPE_LEVEL, t_levelinfo, background_sprite, k_BACH_ATTR_SYM, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
         DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("hero"), (char *)"Hero Name", DADAITEM_TYPE_LEVEL, t_levelinfo, hero_name, k_BACH_ATTR_SYM, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
         DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("maxtime"), (char *)"Maximum Time", DADAITEM_TYPE_LEVEL, t_levelinfo, maxtime, k_BACH_ATTR_ATOM, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
@@ -2284,9 +2284,9 @@ void *platform_new(t_symbol *s, long argc, t_atom *argv)
 		DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("sprite"), (char *)"Sprite", DADAITEM_TYPE_BLOCK, t_dada_block, sprite, k_BACH_ATTR_SYM, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
         DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("solid"), (char *)"Solid", DADAITEM_TYPE_BLOCK, t_dada_block, solid, k_BACH_ATTR_CHAR, 1, k_BACH_ATTR_DISPLAY_ONOFF, 0, 0, "1");
         DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("howhit"), (char *)"Hitting Ways", DADAITEM_TYPE_BLOCK, t_dada_block, how_bumpeable, k_BACH_ATTR_LONG, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
-        bach_attribute_add_functions(get_dada_attribute(dadaobj_cast(x), (e_dadaitem_types)DADAITEM_TYPE_BLOCK, gensym("howhit")), (bach_getter_fn)platform_gamechar_getattr_howhit, (bach_setter_fn)platform_gamechar_setattr_howhit, NULL, NULL, NULL);
+        bach_attribute_add_functions(dada_attribute_get(dadaobj_cast(x), (e_dadaitem_types)DADAITEM_TYPE_BLOCK, gensym("howhit")), (bach_getter_fn)platform_gamechar_getattr_howhit, (bach_setter_fn)platform_gamechar_setattr_howhit, NULL, NULL, NULL);
         DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("hitcount"), (char *)"Hit Count", DADAITEM_TYPE_BLOCK, t_dada_block, hit_count, k_BACH_ATTR_LONG, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
-        get_dada_attribute(dadaobj_cast(x), (e_dadaitem_types)DADAITEM_TYPE_BLOCK, gensym("hitcount"))->flags = DADA_ATTRIBUTE_FLAG_DONTRETRIEVE;
+        dada_attribute_get(dadaobj_cast(x), (e_dadaitem_types)DADAITEM_TYPE_BLOCK, gensym("hitcount"))->flags = DADA_ATTRIBUTE_FLAG_DONTRETRIEVE;
         DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("hitseq"), (char *)"Hit Sequence", DADAITEM_TYPE_BLOCK, t_dada_block, hit_sequence, k_BACH_ATTR_LLLL, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
         DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("loophitseq"), (char *)"Loop Hit Sequence", DADAITEM_TYPE_BLOCK, t_dada_block, loop_hit_sequence, k_BACH_ATTR_CHAR, 1, k_BACH_ATTR_DISPLAY_ONOFF, 0, 0, NULL);
         DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("breaksprite"), (char *)"Fragment Sprite", DADAITEM_TYPE_BLOCK, t_dada_block, fragment_sprite, k_BACH_ATTR_SYM, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
@@ -2294,7 +2294,7 @@ void *platform_new(t_symbol *s, long argc, t_atom *argv)
 		DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("pointsgiven"), (char *)"Points Given", DADAITEM_TYPE_BLOCK, t_dada_block, points, k_BACH_ATTR_DOUBLE, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
 		DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("music"), (char *)"Music", DADAITEM_TYPE_BLOCK, t_dada_block, music, k_BACH_ATTR_LLLL, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
         DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("prototype"), (char *)"Prototype", DADAITEM_TYPE_BLOCK, t_dada_block, prototype_dummy_for_attr, k_BACH_ATTR_SYM, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
-        prototype_attr = get_dada_attribute(dadaobj_cast(x), (e_dadaitem_types)DADAITEM_TYPE_BLOCK, gensym("prototype"));
+        prototype_attr = dada_attribute_get(dadaobj_cast(x), (e_dadaitem_types)DADAITEM_TYPE_BLOCK, gensym("prototype"));
         bach_attribute_add_functions(prototype_attr, (bach_getter_fn)platform_dadaitem_getattr_prototype, (bach_setter_fn)platform_dadaitem_setattr_prototype, NULL, NULL, NULL);
         prototype_attr->flags = DADA_ATTRIBUTE_FLAG_DONTRETRIEVE;
         
@@ -2310,7 +2310,7 @@ void *platform_new(t_symbol *s, long argc, t_atom *argv)
 		DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("vpgiven"), (char *)"Victory Points Given", DADAITEM_TYPE_COIN, t_dada_coin, vp, k_BACH_ATTR_LONG, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
 		DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("music"), (char *)"Music", DADAITEM_TYPE_COIN, t_dada_coin, music, k_BACH_ATTR_LLLL, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
         DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("prototype"), (char *)"Prototype", DADAITEM_TYPE_COIN, t_dada_coin, prototype_dummy_for_attr, k_BACH_ATTR_SYM, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
-        prototype_attr = get_dada_attribute(dadaobj_cast(x), (e_dadaitem_types)DADAITEM_TYPE_COIN, gensym("prototype"));
+        prototype_attr = dada_attribute_get(dadaobj_cast(x), (e_dadaitem_types)DADAITEM_TYPE_COIN, gensym("prototype"));
         bach_attribute_add_functions(prototype_attr, (bach_getter_fn)platform_dadaitem_getattr_prototype, (bach_setter_fn)platform_dadaitem_setattr_prototype, NULL, NULL, NULL);
         prototype_attr->flags = DADA_ATTRIBUTE_FLAG_DONTRETRIEVE;
 
@@ -2328,19 +2328,19 @@ void *platform_new(t_symbol *s, long argc, t_atom *argv)
         DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("ext"), (char *)"Physics Left/Right/Top/Bottom Extensions", DADAITEM_TYPE_GAMECHAR, t_dada_gamechar, physics_ext, k_BACH_ATTR_DOUBLE_ARRAY, 4, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
 		DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("name"), (char *)"Name", DADAITEM_TYPE_GAMECHAR, t_dadaitem, name, k_BACH_ATTR_SYM, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, "none");
 		DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, _llllobj_sym_type, (char *)"Type", DADAITEM_TYPE_GAMECHAR, t_dada_gamechar, type, k_BACH_ATTR_LONG, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
-//        bach_attribute_add_enumindex(get_dada_attribute(dadaobj_cast(x), (e_dadaitem_types)DADAITEM_TYPE_GAMECHAR, _llllobj_sym_type), 5, gamechartypes);
-        bach_attribute_add_functions(get_dada_attribute(dadaobj_cast(x), (e_dadaitem_types)DADAITEM_TYPE_GAMECHAR, _llllobj_sym_type), (bach_getter_fn)platform_gamechar_getattr_type, (bach_setter_fn)platform_gamechar_setattr_type, NULL, NULL, NULL);
+//        bach_attribute_add_enumindex(dada_attribute_get(dadaobj_cast(x), (e_dadaitem_types)DADAITEM_TYPE_GAMECHAR, _llllobj_sym_type), 5, gamechartypes);
+        bach_attribute_add_functions(dada_attribute_get(dadaobj_cast(x), (e_dadaitem_types)DADAITEM_TYPE_GAMECHAR, _llllobj_sym_type), (bach_getter_fn)platform_gamechar_getattr_type, (bach_setter_fn)platform_gamechar_setattr_type, NULL, NULL, NULL);
         DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("points"), (char *)"Points", DADAITEM_TYPE_GAMECHAR, t_dada_gamechar, points, k_BACH_ATTR_DOUBLE, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
 		DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("vp"), (char *)"Victory Points", DADAITEM_TYPE_GAMECHAR, t_dada_gamechar, vp, k_BACH_ATTR_LONG, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
 		DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("direction"), (char *)"Direction", DADAITEM_TYPE_GAMECHAR, t_dada_gamechar, direction, k_BACH_ATTR_CHAR, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
 		DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("state"), (char *)"Current State", DADAITEM_TYPE_GAMECHAR, t_dada_gamechar, state, k_BACH_ATTR_LONG, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
-        bach_attribute_add_functions(get_dada_attribute(dadaobj_cast(x), (e_dadaitem_types)DADAITEM_TYPE_GAMECHAR, gensym("state")), (bach_getter_fn)platform_gamechar_getattr_state, (bach_setter_fn)platform_gamechar_setattr_state, NULL, NULL, NULL);
+        bach_attribute_add_functions(dada_attribute_get(dadaobj_cast(x), (e_dadaitem_types)DADAITEM_TYPE_GAMECHAR, gensym("state")), (bach_getter_fn)platform_gamechar_getattr_state, (bach_setter_fn)platform_gamechar_setattr_state, NULL, NULL, NULL);
 		DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("ability"), (char *)"Abilities", DADAITEM_TYPE_GAMECHAR, t_dada_gamechar, abilities, k_BACH_ATTR_LONG, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
-        bach_attribute_add_functions(get_dada_attribute(dadaobj_cast(x), (e_dadaitem_types)DADAITEM_TYPE_GAMECHAR, gensym("ability")), (bach_getter_fn)platform_gamechar_getattr_ability, (bach_setter_fn)platform_gamechar_setattr_ability, NULL, NULL, NULL);
+        bach_attribute_add_functions(dada_attribute_get(dadaobj_cast(x), (e_dadaitem_types)DADAITEM_TYPE_GAMECHAR, gensym("ability")), (bach_getter_fn)platform_gamechar_getattr_ability, (bach_setter_fn)platform_gamechar_setattr_ability, NULL, NULL, NULL);
 		DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("howdies"), (char *)"Dying Ways", DADAITEM_TYPE_GAMECHAR, t_dada_gamechar, how_dies, k_BACH_ATTR_LONG, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
-        bach_attribute_add_functions(get_dada_attribute(dadaobj_cast(x), (e_dadaitem_types)DADAITEM_TYPE_GAMECHAR, gensym("howdies")), (bach_getter_fn)platform_gamechar_getattr_howdies, (bach_setter_fn)platform_gamechar_setattr_howdies, NULL, NULL, NULL);
+        bach_attribute_add_functions(dada_attribute_get(dadaobj_cast(x), (e_dadaitem_types)DADAITEM_TYPE_GAMECHAR, gensym("howdies")), (bach_getter_fn)platform_gamechar_getattr_howdies, (bach_setter_fn)platform_gamechar_setattr_howdies, NULL, NULL, NULL);
 		DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("howkills"), (char *)"Killing Ways", DADAITEM_TYPE_GAMECHAR, t_dada_gamechar, how_kills, k_BACH_ATTR_LONG, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
-        bach_attribute_add_functions(get_dada_attribute(dadaobj_cast(x), (e_dadaitem_types)DADAITEM_TYPE_GAMECHAR, gensym("howkills")), (bach_getter_fn)platform_gamechar_getattr_howkills, (bach_setter_fn)platform_gamechar_setattr_howkills, NULL, NULL, NULL);
+        bach_attribute_add_functions(dada_attribute_get(dadaobj_cast(x), (e_dadaitem_types)DADAITEM_TYPE_GAMECHAR, gensym("howkills")), (bach_getter_fn)platform_gamechar_getattr_howkills, (bach_setter_fn)platform_gamechar_setattr_howkills, NULL, NULL, NULL);
 		DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("idlesprite"), (char *)"Idle Sprite", DADAITEM_TYPE_GAMECHAR, t_dada_gamechar, sprite_idle, k_BACH_ATTR_SYM, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
 		DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("walksprite"), (char *)"Walk Sprite", DADAITEM_TYPE_GAMECHAR, t_dada_gamechar, sprite_walk, k_BACH_ATTR_SYM, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
 		DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("jumpsprite"), (char *)"Jump Sprite", DADAITEM_TYPE_GAMECHAR, t_dada_gamechar, sprite_jump, k_BACH_ATTR_SYM, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
@@ -2350,7 +2350,7 @@ void *platform_new(t_symbol *s, long argc, t_atom *argv)
         DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("deathseq"), (char *)"Death Sequence", DADAITEM_TYPE_GAMECHAR, t_dada_gamechar, kill_sequence, k_BACH_ATTR_LLLL, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
 		DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("resurrectpositions"), (char *)"Resurrection Positions", DADAITEM_TYPE_GAMECHAR, t_dada_gamechar, resurrectpositions, k_BACH_ATTR_LLLL, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
         DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("prototype"), (char *)"Prototype", DADAITEM_TYPE_GAMECHAR, t_dada_gamechar, prototype_dummy_for_attr, k_BACH_ATTR_SYM, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
-        prototype_attr = get_dada_attribute(dadaobj_cast(x), (e_dadaitem_types)DADAITEM_TYPE_GAMECHAR, gensym("prototype"));
+        prototype_attr = dada_attribute_get(dadaobj_cast(x), (e_dadaitem_types)DADAITEM_TYPE_GAMECHAR, gensym("prototype"));
         bach_attribute_add_functions(prototype_attr, (bach_getter_fn)platform_dadaitem_getattr_prototype, (bach_setter_fn)platform_dadaitem_setattr_prototype, NULL, NULL, NULL);
         prototype_attr->flags = DADA_ATTRIBUTE_FLAG_DONTRETRIEVE;
 
@@ -2364,15 +2364,15 @@ void *platform_new(t_symbol *s, long argc, t_atom *argv)
         DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("sprite"), (char *)"Sprite", DADAITEM_TYPE_PORTAL, t_dada_portal, sprite, k_BACH_ATTR_SYM, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
         DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("open"), (char *)"Open", DADAITEM_TYPE_PORTAL, t_dada_portal, open, k_BACH_ATTR_CHAR, 1, k_BACH_ATTR_DISPLAY_ONOFF, 0, 0, "1");
         DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("howenter"), (char *)"Entering Ways", DADAITEM_TYPE_PORTAL, t_dada_portal, how_enter, k_BACH_ATTR_LONG, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
-        bach_attribute_add_functions(get_dada_attribute(dadaobj_cast(x), (e_dadaitem_types)DADAITEM_TYPE_PORTAL, gensym("howenter")), (bach_getter_fn)platform_gamechar_getattr_howenter, (bach_setter_fn)platform_gamechar_setattr_howenter, NULL, NULL, NULL);
+        bach_attribute_add_functions(dada_attribute_get(dadaobj_cast(x), (e_dadaitem_types)DADAITEM_TYPE_PORTAL, gensym("howenter")), (bach_getter_fn)platform_gamechar_getattr_howenter, (bach_setter_fn)platform_gamechar_setattr_howenter, NULL, NULL, NULL);
         DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("howexit"), (char *)"Exiting Ways", DADAITEM_TYPE_PORTAL, t_dada_portal, how_exit, k_BACH_ATTR_LONG, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
-        bach_attribute_add_functions(get_dada_attribute(dadaobj_cast(x), (e_dadaitem_types)DADAITEM_TYPE_PORTAL, gensym("howexit")), (bach_getter_fn)platform_gamechar_getattr_howexit, (bach_setter_fn)platform_gamechar_setattr_howexit, NULL, NULL, NULL);
+        bach_attribute_add_functions(dada_attribute_get(dadaobj_cast(x), (e_dadaitem_types)DADAITEM_TYPE_PORTAL, gensym("howexit")), (bach_getter_fn)platform_gamechar_getattr_howexit, (bach_setter_fn)platform_gamechar_setattr_howexit, NULL, NULL, NULL);
         DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("enterseq"), (char *)"Entering Sequence", DADAITEM_TYPE_PORTAL, t_dada_portal, enter_sequence, k_BACH_ATTR_LLLL, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
         DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("exitseq"), (char *)"Exiting Sequence", DADAITEM_TYPE_PORTAL, t_dada_portal, exit_sequence, k_BACH_ATTR_LLLL, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
         DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("music"), (char *)"Music", DADAITEM_TYPE_PORTAL, t_dada_portal, music, k_BACH_ATTR_LLLL, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
         DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("heroonly"), (char *)"For Hero Only", DADAITEM_TYPE_PORTAL, t_dada_portal, hero_only, k_BACH_ATTR_CHAR, 1, k_BACH_ATTR_DISPLAY_ONOFF, 0, 0, NULL);
         DECLARE_DADA_ATTR(dadaobj_cast(x), man, -1, gensym("prototype"), (char *)"Prototype", DADAITEM_TYPE_PORTAL, t_dada_portal, prototype_dummy_for_attr, k_BACH_ATTR_SYM, 1, k_BACH_ATTR_DISPLAY_TEXT, 0, 0, NULL);
-        prototype_attr = get_dada_attribute(dadaobj_cast(x), (e_dadaitem_types)DADAITEM_TYPE_PORTAL, gensym("prototype"));
+        prototype_attr = dada_attribute_get(dadaobj_cast(x), (e_dadaitem_types)DADAITEM_TYPE_PORTAL, gensym("prototype"));
         bach_attribute_add_functions(prototype_attr, (bach_getter_fn)platform_dadaitem_getattr_prototype, (bach_setter_fn)platform_dadaitem_setattr_prototype, NULL, NULL, NULL);
         prototype_attr->flags = DADA_ATTRIBUTE_FLAG_DONTRETRIEVE;
   
@@ -2674,7 +2674,7 @@ void platform_anything(t_platform *x, t_symbol *msg, long ac, t_atom *av)
                                 for (el = elems->l_head; el; el = nextel) {
                                     nextel = el->l_next;
                                     t_dadaitem *item = (t_dadaitem *)hatom_getobj(&el->l_hatom);
-                                    t_bach_attribute *attr = get_dada_attribute(dadaobj_cast(x), item->type, attrname);
+                                    t_bach_attribute *attr = dada_attribute_get(dadaobj_cast(x), item->type, attrname);
                                     if (attr) {
                                         t_llll *actual_attr_val = dadaitem_get_attr_as_llll(dadaobj_cast(x), item, attr);
                                         if (!llll_eq_ignoretype(attrll, actual_attr_val))

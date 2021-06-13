@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 1,
-			"revision" : 5,
+			"revision" : 11,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -63,7 +63,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 243.0, 11.0, 120.0, 19.0 ],
-					"text" : "v0.2.3 alpha",
+					"text" : "v0.2.4 alpha",
 					"textcolor" : [ 0.109804, 0.109804, 0.109804, 1.0 ],
 					"varname" : "autohelp_top_digest[3]"
 				}
@@ -255,7 +255,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 1,
-							"revision" : 5,
+							"revision" : 11,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -811,13 +811,6 @@
 				"name" : "logos.png",
 				"bootpath" : "~/Dropbox/TESI_dottorato/Latex/img",
 				"patcherrelativepath" : "../../../../../../Dropbox/TESI_dottorato/Latex/img",
-				"type" : "PNG",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "dada_logo_web_h.png",
-				"bootpath" : "~/max-sdk-7.0.3/source/bach_additionalstuff/graphics/WebSite/images",
-				"patcherrelativepath" : "../../../../../../max-sdk-7.0.3/source/bach_additionalstuff/graphics/WebSite/images",
 				"type" : "PNG",
 				"implicit" : 1
 			}

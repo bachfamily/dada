@@ -1,10 +1,12 @@
-v 0.3
+
+
+v 0.2.4
 
 *********************
 *** COMPATIBILITY ***
 *********************
 
-cage 0.6 requires bach 0.8.1.
+dada 0.2.3 or higher requires bach 0.8.1.
 
 
 *************************
@@ -21,3 +23,10 @@ These might break compatibility with older patches
 ***********************
 *** VERSION CHANGES ***
 ***********************
+
+- dada.peanos~: experimental undocumented object
+
+- dada.cartesian, dada.distances 
+	are now binded to datasets AFTER dada.base
+		so that if datasets are file-attached no issues arise
+	now lllls are properly output even when db is attached to DB3 sqlite 

@@ -1,4 +1,9 @@
 
+v 0.2.5
+
+- dada.base: queries such as "SELECT MAX(...)" or "SELECT MIN(...)" 
+		now infer the output type from the column type
+
 
 v 0.2.4
 

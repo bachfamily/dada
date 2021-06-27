@@ -1833,13 +1833,30 @@ t_llll *xbase_db_query(t_xbase *b, char *buf, char output_fieldnames)
 		// retrieving field types
 		for (j = 0; j < numfields && j < DADA_XBASE_MAX_COLUMNS; j++) {
 			char *thisfieldname = db_result_fieldname_local(result, j);
-			fieldnames[j] = gensym(thisfieldname);
-			if (fieldnames[j] == table_name_to_idname(b->table[table_idx].name))
-				fieldtypes[j] = 'i';
-			else {
-				long fieldidx = colname_to_colidx(b, table_idx, fieldnames[j]);
-				fieldtypes[j] = (fieldidx >= 0 ? b->table[table_idx].column_type[fieldidx] : 0);
-			}
+            // handling MAX() MIN() COUNT()
+            fieldnames[j] = gensym(thisfieldname);
+            if (strncmp(thisfieldname, "MAX(", 4) == 0 || strncmp(thisfieldname, "MIN(", 4) == 0) {
+                char *temp = bach_newptr((1 + strlen(thisfieldname)) * sizeof(char));
+                sprintf(temp, "%s", thisfieldname+4);
+                temp[strlen(temp)-1] = 0;
+                t_symbol *temp_sym = gensym(temp);
+                if (temp_sym == table_name_to_idname(b->table[table_idx].name))
+                    fieldtypes[j] = 'i';
+                else {
+                    long fieldidx = colname_to_colidx(b, table_idx, temp_sym);
+                    fieldtypes[j] = (fieldidx >= 0 ? b->table[table_idx].column_type[fieldidx] : 0);
+                }
+                bach_freeptr(temp);
+            } else if (strncmp(thisfieldname, "COUNT(", 6) == 0) {
+                fieldtypes[j] = 'i';
+            } else {
+                if (fieldnames[j] == table_name_to_idname(b->table[table_idx].name))
+                    fieldtypes[j] = 'i';
+                else {
+                    long fieldidx = colname_to_colidx(b, table_idx, fieldnames[j]);
+                    fieldtypes[j] = (fieldidx >= 0 ? b->table[table_idx].column_type[fieldidx] : 0);
+                }
+            }
 		} 
 		
 		global = llll_get();

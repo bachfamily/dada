@@ -1907,7 +1907,7 @@ t_llll *xbase_db_query(t_xbase *b, char *buf, char output_fieldnames)
                         break;
 					default:
                         // might be another query such as MAX(...) MIN(...) COUNT(...) // TO DO: how do I automatically get the type???
-                        llll_appenddouble(output_fieldnames ? this_field : this_record, atol(record[j]));
+                        llll_appenddouble(output_fieldnames ? this_field : this_record, atof(record[j]));
                         break;
 				}
 				

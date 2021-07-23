@@ -2564,7 +2564,7 @@ void show_bg_popup_menu(t_distances *x, t_object *patcherview, t_pt pt, long mod
 ////////// INTERFACE FUNCTIONS
 
 
-char xbase_attach_to_sql_file(t_xbase *b)
+char xbase_is_attached_to_sql_file(t_xbase *b)
 {
     if (b->d_filename && strlen(b->d_filename->s_name) > 0 && strcmp(b->d_filename->s_name + strlen(b->d_filename->s_name) - 4, ".db3") == 0)
         return 1;
@@ -2575,7 +2575,7 @@ char xbase_attach_to_sql_file(t_xbase *b)
 
 char xbase_store_lllls_with_phonenumbers(t_xbase *b)
 {
-    if (xbase_attach_to_sql_file(b))
+    if (xbase_is_attached_to_sql_file(b))
         return 0;
     return 1;
 }

@@ -415,14 +415,14 @@ char filename_is_not_sql_file(t_symbol *s)
 }
 
 
-char xbase_attach_to_text_file(t_xbase *b)
+char xbase_is_attached_to_text_file(t_xbase *b)
 {
     if (filename_is_not_sql_file(b->d_filename))
         return 1;
     return 0;
 }
 
-char xbase_attach_to_sql_file(t_xbase *b)
+char xbase_is_attached_to_sql_file(t_xbase *b)
 {
     if (b->d_filename && strlen(b->d_filename->s_name) > 0 && strcmp(b->d_filename->s_name + strlen(b->d_filename->s_name) - 4, ".db3") == 0)
         return 1;
@@ -433,7 +433,7 @@ char xbase_attach_to_sql_file(t_xbase *b)
 
 char xbase_store_lllls_with_phonenumbers(t_xbase *b)
 {
-    if (xbase_attach_to_sql_file(b))
+    if (xbase_is_attached_to_sql_file(b))
         return 0;
     return 1;
 }
@@ -548,7 +548,7 @@ void base_appendtodictionary(t_base *x, t_dictionary *d)
 {
     if (!x->is_volatile && x->xbase && x->xbase->d_dirty) {
         
-        if (xbase_attach_to_text_file(x->xbase)) {
+        if (xbase_is_attached_to_text_file(x->xbase)) {
             t_llll *ll = db_to_llll(x->xbase, true);
             //        llll_print(ll, NULL, 0, 0, NULL);
             if (x->d_filetype == 1280068684) // 'LLLL': file was native
@@ -562,7 +562,7 @@ void base_appendtodictionary(t_base *x, t_dictionary *d)
         }
         
         if (!x->creating_new_obj) {
-            if (xbase_attach_to_sql_file(x->xbase)) {
+            if (xbase_is_attached_to_sql_file(x->xbase)) {
                 t_llll *ll = xbase_get_all_table_headers(x->xbase);
                 t_llll *arguments = llll_get();
                 llll_appendsym(arguments, filename_to_metafilename(x->xbase->d_filename));
@@ -615,26 +615,39 @@ t_base* base_new(t_symbol *s, short argc, t_atom *argv)
                         x->d_filename = dada_ezlocate_file(x->d_filename, &x->d_filetype);
                     } else
                         x->d_filename = located;
+                } else {
+                    // database is SQL
+/*                    t_symbol *located = dada_ezlocate_file(x->d_filename, &x->d_filetype);
+                    if (!located) { // create empty SQL file
+                        t_symbol *temp = symbol_unique();
+                        t_database *temp_db = NULL;
+                        t_max_err err = db_open(temp, x->d_filename->s_name, &temp_db);
+                        object_free(temp_db);
+                        x->d_filename = dada_ezlocate_file(x->d_filename, &x->d_filetype);
+                    } */
                 }
             }
 			
 			object_attr_setsym(x, _sym_name, dbname);
 		} else
             object_attr_setsym(x, _sym_name, symbol_unique());
-        
+
         if (x->xbase)
             x->xbase->d_nodirty = true;
         attr_args_process(x, argc, argv);
 		
-		if (xbase_attach_to_text_file(x->xbase))
+
+		if (xbase_is_attached_to_text_file(x->xbase))
 			base_read(x, x->xbase->d_filename);
         
+
         if (x->xbase)
             x->d_filename = x->xbase->d_filename;
         x->creating_new_obj = false;
         if (x->xbase)
             x->xbase->d_nodirty = false;
 	}
+    
 	return x;
 }
 
@@ -1211,7 +1224,7 @@ void base_entries_create_from_file_do(t_base *x, t_symbol *table_name, t_symbol 
 
 void base_entries_create_from_file(t_base *x, t_symbol *msg, long ac, t_atom *av)
 {
-    if (xbase_attach_to_sql_file(x->xbase))
+    if (xbase_is_attached_to_sql_file(x->xbase))
         db_transaction_start(x->xbase->d_db);
     
     t_llll *parsed = llllobj_parse_llll((t_object *) x, LLLL_OBJ_VANILLA, NULL, ac, av, LLLL_PARSE_RETAIN);
@@ -1226,7 +1239,7 @@ void base_entries_create_from_file(t_base *x, t_symbol *msg, long ac, t_atom *av
         llll_free(parsed);
     }
 
-    if (xbase_attach_to_sql_file(x->xbase))
+    if (xbase_is_attached_to_sql_file(x->xbase))
         db_transaction_end(x->xbase->d_db);
 }
 
@@ -1381,7 +1394,7 @@ void base_entries_create_from_csv_do(t_object *x, t_symbol *s, long ac, t_atom *
 
 void base_entries_create_from_csv(t_base *x, t_symbol *msg, long ac, t_atom *av)
 {
-    if (xbase_attach_to_sql_file(x->xbase))
+    if (xbase_is_attached_to_sql_file(x->xbase))
         db_transaction_start(x->xbase->d_db);
     
     t_llll *parsed = llllobj_parse_llll((t_object *) x, LLLL_OBJ_VANILLA, NULL, ac, av, LLLL_PARSE_RETAIN);
@@ -1403,7 +1416,7 @@ void base_entries_create_from_csv(t_base *x, t_symbol *msg, long ac, t_atom *av)
         llll_free(parsed);
     }
     
-    if (xbase_attach_to_sql_file(x->xbase))
+    if (xbase_is_attached_to_sql_file(x->xbase))
         db_transaction_end(x->xbase->d_db);
 }
 
@@ -2077,22 +2090,23 @@ t_max_err rebuild_database(t_xbase *b, char readonly)
 
 	
 	// close the old database (if needed) and open the new one
-    t_symbol *filename = b->d_filename; //dada_ezlocate_file(b->d_filename, NULL); // UNSUPPORTED FOR NOW
+    t_symbol *filename = b->d_filename;
     if (filename && strlen(filename->s_name) <= 0)
         filename = NULL;
-    if (xbase_attach_to_text_file(b)) // attached to textual file.
+    if (xbase_is_attached_to_text_file(b)) // attached to textual file.
         filename = NULL;
 	
-	xbase_free_lllls(b);
+    xbase_free_lllls(b);
 	db_close(&b->d_db);
 
     if (filename) {
         short outpath = 0;
         t_symbol *filename_resolved = dada_ezresolve_file(filename, &outpath);
-
+        
 // should be like this
 //        db_open_ext(b->d_name, filename_resolved->s_name, &b->d_db, readonly ? DB_OPEN_FLAGS_READONLY : DB_OPEN_FLAGS_NONE);
 // but the function db_open_ext() is not found in Max api, so read-only is unsupported by now
+        
         t_max_err err = db_open(b->d_name, filename_resolved->s_name, &b->d_db);
 
         char metafile_found = false;

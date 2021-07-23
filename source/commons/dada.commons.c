@@ -684,17 +684,52 @@ t_symbol *dada_ezlocate_file(t_symbol *file_name, t_fourcc *file_type)
 	return NULL;
 }
 
+
+
 t_symbol *dada_ezresolve_file(t_symbol *file_name, short *outpath)
 {
     char tempfile[MAX_PATH_CHARS];
     char outfile[MAX_PATH_CHARS];
-    short path = path_getdefault();
     
     snprintf_zero(tempfile, MAX_PATH_CHARS, "%s", file_name ? file_name->s_name : "Untitled.txt");
 
-    path_topotentialname(path, tempfile, outfile, false);
+    
+    char in_path[MAX_PATH_CHARS];
+    char in_file[MAX_FILENAME_CHARS];
+    dada_path_split(tempfile, in_path, in_file);
+    
+    if (in_path[0] == 0) { //filename only
+        path_topotentialname(path_getdefault(), tempfile, outfile, false);
+    } else {
+        t_symbol *folder_raw = gensym(in_path);
+        t_symbol *folder = dada_ezlocate_folder(folder_raw);
+        if (!folder) // we assume it's relative to the path
+            path_topotentialname(path_getdefault(), tempfile, outfile, false);
+        else {
+            snprintf_zero(outfile, MAX_PATH_CHARS, "%s/%s", folder->s_name, in_file);
+        }
+    }
     
     return gensym(outfile);
+}
+
+void dada_path_split(const char *fullpath, char *path, char *filename)
+{
+    long lastslash = -1;
+    for (long i = strlen(fullpath)-1; i>=0; i--) {
+        if (fullpath[i] == '/' || fullpath[i] == '\\') {
+            lastslash = i;
+            break;
+        }
+    }
+    if (lastslash >= 0) {
+        snprintf_zero(path, MAX_PATH_CHARS, "%s", fullpath);
+        path[lastslash] = 0;
+        snprintf_zero(filename, MAX_FILENAME_CHARS, "%s", fullpath + lastslash + 1);
+    } else {
+        path[0] = 0;
+        snprintf_zero(filename, MAX_FILENAME_CHARS, "%s", fullpath);
+    }
 }
 
 long dada_llll_check(t_llll *ll)

@@ -1056,7 +1056,7 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                                 long cmp = rat_rat_cmp(temp_end, new_global_sym_onset_end);
                                 if (cmp < 0) {
                                     tp_end.pt_in_measure = rat_rat_sum(tp_end.pt_in_measure, this_size_end);
-                                    tp_global_sym_onset_end = rat_rat_sum(tp_global_sym_onset_end, this_size_end);
+                                    tp_global_sym_onset_end = rat_rat_sum(rat_rat_sum(tp_global_sym_onset_end, this_size_end), rat_rat_diff(size_accum_end, tp_global_sym_onset_end));
                                     size_accum_end = temp_end;
                                     // nothing to do
                                 } else if (cmp == 0) {
@@ -1165,8 +1165,8 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                 }
             }
             
-//            llll_print(timepoints_start);
-//            llll_print(timepoints_end);
+            llll_print(timepoints_start);
+            llll_print(timepoints_end);
             
             t_llllelem *temp_seg, *temp_tp_start, *temp_tp_end, *temp_beatphase, *temp_div;
             long count;

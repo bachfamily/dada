@@ -1068,7 +1068,7 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                                     break;
                                 } else if (cmp > 0) {
                                     // overflow
-                                    tp_end.pt_in_measure = rat_rat_sum(rat_rat_sum(tp_end.pt_in_measure, this_size_end), rat_rat_diff(size_accum_end, tp_global_sym_onset_end));
+                                    tp_end.pt_in_measure = rat_rat_sum(rat_rat_sum(tp_end.pt_in_measure, this_size_end), rat_rat_diff(size_accum_end, tp_global_sym_onset_end)); // tp_end.pt_in_measure + this_size_end
                                     tp_end.pt_in_measure = rat_rat_diff(tp_end.pt_in_measure, rat_rat_diff(temp_end, new_global_sym_onset_end));
                                     tp_global_sym_onset_end = new_global_sym_onset_end;
                                     break;
@@ -1110,9 +1110,9 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                             t_rational this_size = hatom_getrational(&elem->l_hatom);
                             temp = rat_rat_sum(size_accum, this_size);
                             long cmp = rat_rat_cmp(temp, new_global_sym_onset);
-                            if (cmp < 0) {
+                            if (cmp < 0) { // division is still within the ending point of the segment
                                 tp.pt_in_measure = rat_rat_sum(tp.pt_in_measure, this_size);
-                                tp_global_sym_onset = rat_rat_sum(tp_global_sym_onset, this_size);
+                                tp_global_sym_onset = rat_rat_sum(rat_rat_sum(tp_global_sym_onset, this_size), rat_rat_diff(size_accum, tp_global_sym_onset));
                                 size_accum = temp;
                                 // nothing to do
                             } else if (cmp == 0) {
@@ -1125,7 +1125,7 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                                 size_accum = temp;
                                 break;
                             } else if (cmp > 0) {
-                                // overflow
+                                // division overflows with respect to ending point
                                 //                            tp.pt_in_measure = new_global_sym_onset; //rat_rat_sum(tp.pt_in_measure, rat_rat_diff(new_global_sym_onset, temp));
                                 tp.pt_in_measure = rat_rat_sum(rat_rat_sum(tp.pt_in_measure, this_size), rat_rat_diff(size_accum, tp_global_sym_onset));
                                 tp.pt_in_measure = rat_rat_diff(tp.pt_in_measure, rat_rat_diff(temp, new_global_sym_onset));

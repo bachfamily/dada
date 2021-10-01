@@ -1852,6 +1852,8 @@ void rebuild_grains(t_cartesian *x, char preserve_turtle)
     llll_appendsym(numgrains_ll, gensym("numgrains"));
     llll_appendlong(numgrains_ll, num_grains);
     llllobj_outlet_llll((t_object *)x, LLLL_OBJ_UI, 2, numgrains_ll);
+    
+    jbox_redraw((t_jbox *)x);
 }
 
 

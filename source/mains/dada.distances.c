@@ -356,7 +356,8 @@ void C74_EXPORT ext_main(void *moduleRef)
 				  0L /* leave NULL!! */, A_GIMME, 0);
 	
 	c->c_flags |= CLASS_FLAG_NEWDICTIONARY;
-	jbox_initclass(c, 0);	// include textfield and Fonts attributes
+    jbox_initclass(c, JBOX_FONTATTR);    // include textfield and Fonts attributes
+//	jbox_initclass(c, 0);	// include textfield and Fonts attributes
 	//	jbox_initclass(c, 0);
 	
 	// paint & utilities
@@ -565,7 +566,6 @@ void C74_EXPORT ext_main(void *moduleRef)
 	CLASS_ATTR_DEFAULT(c, "presentation_rect", 0, "0 0 300 300");
 	// @exclude dada.distances
 	
-
 	CLASS_STICKY_ATTR(c,"category",0,"Color");
 	
 	CLASS_ATTR_RGBA(c, "legendcolor", 0, t_distances, j_legendcolor);
@@ -872,6 +872,8 @@ void C74_EXPORT ext_main(void *moduleRef)
     
     CLASS_STICKY_ATTR_CLEAR(c, "category");
 
+    CLASS_ATTR_DEFAULT(c, "fontsize", 0, "10");
+    
 	
 	class_register(CLASS_BOX, c); /* CLASS_NOBOX */
 	distances_class = c;
@@ -988,6 +990,9 @@ t_max_err distances_notify(t_distances *x, t_symbol *s, t_symbol *msg, void *sen
         }
         if (attr_name == gensym("memory")) {
             llll_clear(x->turtled_grain_history);
+        }
+        if (attr_name == _sym_fontname || attr_name == _sym_fontsize || attr_name == _sym_fontface) {
+            distances_iar(x);
         }
 		if (attr_name == _sym_table) {
 			char query[1024];
@@ -2334,6 +2339,8 @@ void rebuild_grains(t_distances *x, char preserve_turtle)
         dadaobj_cast(x)->m_zoom.must_autozoom = true;
     dadaobj_mutex_unlock(dadaobj_cast(x));
     llllobj_outlet_symbol_as_llll((t_object *)x, LLLL_OBJ_UI, 2, _sym_done);
+    
+    jbox_redraw((t_jbox *)x);
 }
 
 
@@ -2357,8 +2364,9 @@ void distances_paint_ext(t_distances *x, t_object *view, t_dada_force_graphics *
 	t_rect rect = force_graphics->rect;
 	t_pt center = force_graphics->center_pix;
 	t_jfont *jf = jfont_create_debug("Arial", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL, x->legend_text_size);
-    t_jfont *jf_labels = jfont_create_debug("Arial", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL, x->labels_text_size);
+    t_jfont *jf_labels = jfont_create_debug(jbox_get_fontname((t_object *)x)->s_name, (t_jgraphics_font_slant)jbox_get_font_slant((t_object *)x), (t_jgraphics_font_weight)jbox_get_font_weight((t_object *)x), jbox_get_fontsize((t_object *)x));
 
+    
     if (!x->db_ok) {
         dadaobj_paint_background(dadaobj_cast(x), g, &rect);
         write_text(g, jf, DADA_GREY_50, "(must set 'database', 'table' & 'distancetable' attributes)", 0, 0, rect.width, rect.height, JGRAPHICS_TEXT_JUSTIFICATION_CENTERED, true, true);

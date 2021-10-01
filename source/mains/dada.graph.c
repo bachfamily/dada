@@ -711,7 +711,7 @@ void C74_EXPORT ext_main(void *moduleRef)
 	uigraph_class = c;
     dadaobj_class_add_fileusage_method(c);
 
-	dev_post("dada.uigraph compiled %s %s", __DATE__, __TIME__);
+	dev_post("dada.graph compiled %s %s", __DATE__, __TIME__);
 	return;
 }
 
@@ -770,6 +770,8 @@ t_max_err uigraph_notify(t_uigraph *x, t_symbol *s, t_symbol *msg, void *sender,
         } else if (attr_name == gensym("grid")) {
             jbox_invalidate_layer((t_object *)x, NULL, gensym("grid"));
             jbox_redraw((t_jbox *)x);
+        } else if (attr_name == _sym_fontname || attr_name == _sym_fontsize || attr_name == _sym_fontface) {
+            uigraph_iar(x);
         }
     }
     

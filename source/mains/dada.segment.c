@@ -1165,8 +1165,8 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                 }
             }
             
-            llll_print(timepoints_start);
-            llll_print(timepoints_end);
+//            llll_print(timepoints_start);
+//            llll_print(timepoints_end);
             
             t_llllelem *temp_seg, *temp_tp_start, *temp_tp_end, *temp_beatphase, *temp_div;
             long count;

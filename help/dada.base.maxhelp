@@ -1470,7 +1470,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 100.0, 105.0, 834.0, 584.0 ],
+						"rect" : [ 0.0, 26.0, 834.0, 584.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -2333,7 +2333,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 834.0, 584.0 ],
+						"rect" : [ 100.0, 105.0, 834.0, 584.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -2363,6 +2363,23 @@
 						"showontab" : 1,
 						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
+								"box" : 								{
+									"bubble" : 1,
+									"bubbleside" : 0,
+									"fontname" : "Arial",
+									"fontsize" : 13.0,
+									"id" : "obj-13",
+									"linecount" : 2,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 109.5, 446.0, 168.0, 55.0 ],
+									"presentation_linecount" : 3,
+									"text" : "Use a .db3 extension to attach to a db3 file type!"
+								}
+
+							}
+, 							{
 								"box" : 								{
 									"bubble" : 1,
 									"fontname" : "Arial",
@@ -2612,7 +2629,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 273.5, 503.0, 24.0, 24.0 ]
+									"patching_rect" : [ 273.5, 532.0, 24.0, 24.0 ]
 								}
 
 							}
@@ -2697,7 +2714,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 26.0, 474.0, 227.0, 23.0 ],
+									"patching_rect" : [ 26.0, 512.0, 227.0, 23.0 ],
 									"saved_object_attributes" : 									{
 										"versionnumber" : 80001
 									}

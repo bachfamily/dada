@@ -2116,16 +2116,18 @@ t_max_err rebuild_database(t_xbase *b, char readonly)
             metafile_found = true;
         
         if (metafile_found) {
-            // we recovere the tables
+            // we recover the tables
             llll_read((t_object *)b, metafile, (read_fn) xbase_set_header_from_llll);
         } else if (metafile) {
             // create metafile
-            t_llll *ll = xbase_get_all_table_headers(b);
-            t_llll *arguments = llll_get();
-            llll_appendsym(arguments, metafile);
-            llll_writetxt((t_object *)b, ll, arguments, BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART);
+            if (err == MAX_ERR_NONE) { // ...but only if the database opening was successful
+                t_llll *ll = xbase_get_all_table_headers(b);
+                t_llll *arguments = llll_get();
+                llll_appendsym(arguments, metafile);
+                llll_writetxt((t_object *)b, ll, arguments, BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART);
+            }
         } else {
-            error("No file attached!");
+            error("Something went wrong with database opening or creation.");
         }
 
     } else {

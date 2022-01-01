@@ -107,10 +107,12 @@ t_tempo *dada_score_get_last_tempo(t_llll *gs);
 void dada_measure_add_starting_tempo(t_llll *gs, t_tempo *tempo);
 
 long dada_get_num_voices(t_llll *gs);
+char is_llll_a_grace_level(t_llll *ll);
+char is_llll_root_a_grace_level(t_llll *ll);
 
 
 t_llll *dada_score_multisplit_measures(t_llll *gs, long num_splits, long *split_measure_num, char copy_tempi);
-t_llll *dada_score_split(t_llll *gs, t_timepoint split_pt, t_timesignature *splitpt_ts, t_tempo *splitpt_tempo, char copy_tempi);
+t_llll *dada_score_split(t_llll *gs, t_timepoint split_pt, t_timesignature *splitpt_ts, t_tempo *splitpt_tempo, char copy_tempi, long graces_stay_with_next);
 void dada_score_apply_window_on_velocities(t_llll *gs, e_dada_windows window_type, t_rational *tot_symduration);
 
 #endif // _DADA_NOTATION_H

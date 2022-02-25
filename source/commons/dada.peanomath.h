@@ -9,6 +9,7 @@
 #ifndef _DADA_PEANOMATH_H_
 #define _DADA_PEANOMATH_H_
 
+#include "math.h"
 #include <mpfr.h>
 #include <gmp.h>
 

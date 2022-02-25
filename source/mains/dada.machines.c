@@ -1524,9 +1524,10 @@ void machine_process_once(t_machines *x, long vertex_idx, t_llll **out)
     long type = label_to_machine(x, vb->type);
     long i;
     
-    if (type >= 0 && type < x->num_prototypes && x->prototype[type].fun)
-        (x->prototype[type].fun)(x, vb->num_ins, vb->ins, vb->num_outs, out);
-    else if (type >= x->num_standard_prototypes) {
+    if (type >= 0 && type < x->num_prototypes && x->prototype[type].fun) {
+        return CALL_METHOD_SAFE(void, (t_machines*, long, t_llll**, long, t_llll**), x->prototype[type].fun, x, vb->num_ins, vb->ins, vb->num_outs, out);
+//        (x->prototype[type].fun)(x, vb->num_ins, vb->ins, vb->num_outs, out);
+    } else if (type >= x->num_standard_prototypes) {
         // lambda processing
         
         // Storing a null default answer

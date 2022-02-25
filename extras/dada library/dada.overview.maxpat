@@ -63,7 +63,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 243.0, 11.0, 120.0, 19.0 ],
-					"text" : "v0.2.4 alpha",
+					"text" : "v0.2.5 alpha",
 					"textcolor" : [ 0.109804, 0.109804, 0.109804, 1.0 ],
 					"varname" : "autohelp_top_digest[3]"
 				}

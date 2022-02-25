@@ -3087,27 +3087,27 @@
 		2FBBEAD008F335010078DB84 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				COPY_PHASE_STRIP = NO;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.bachproject.$(TARGET_NAME)";
-				PRODUCT_VERSION = 0.2.4;
+				PRODUCT_VERSION = 0.2.5;
 				SDKROOT = macosx;
+				VALID_ARCHS = "x86_64 arm64";
 			};
 			name = Development;
 		};
 		2FBBEAD108F335010078DB84 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.bachproject.$(TARGET_NAME)";
-				PRODUCT_VERSION = 0.2.4;
+				PRODUCT_VERSION = 0.2.5;
 				SDKROOT = macosx;
+				VALID_ARCHS = "x86_64 arm64";
 			};
 			name = Deployment;
 		};

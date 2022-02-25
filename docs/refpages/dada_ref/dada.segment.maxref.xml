@@ -157,7 +157,6 @@
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Features" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Add Duration To Features" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
 		</attribute>
@@ -240,6 +239,7 @@
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Features" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Add Point In Measure To Features" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
 		</attribute>
@@ -295,7 +295,6 @@
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Features" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Add Notation Object Type To Features" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
 		</attribute>
@@ -309,6 +308,21 @@
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Features" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Add Voice Number To Features" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
+			</attributelist>
+		</attribute>
+		<attribute name="graceswithnext" get="1" set="1" type="int" size="1">
+			<digest>
+				Grace Chords Stay With Next Segment
+			</digest>
+			<description>
+				If set, grace notes stay with the next segment, (unless they are at the very end of a measure),
+				otherwise they stay with the previous one.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Settings" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Grace Chords Stay With Next Segment" />
 				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>

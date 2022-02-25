@@ -573,7 +573,7 @@ char platform_load_default_font(void)
     }
 #endif
     
-#ifdef MAC_VERSION
+#ifdef gggMAC_VERSION
     // MAC
     CFErrorRef error = NULL;
     CFBundleRef mainBundle = CFBundleGetBundleWithIdentifier(CFSTR("com.bachproject.dada.platform"));

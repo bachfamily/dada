@@ -49,6 +49,7 @@
 #define strtok_r strtok_s
 #endif
 #include <string.h>
+#include "unistd.h"
 
 // Data Structures
 typedef struct _base {

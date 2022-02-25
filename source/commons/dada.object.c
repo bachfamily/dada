@@ -1172,7 +1172,7 @@ void dadaobj_fileusage(t_object *x, void *w)
     atom_setsym(&a, gensym("fonts"));
     atomarray_appendatom(aa, &a);
 
-    fileusage_addpackage(w, "bach", (t_object*)aa);
+    fileusage_addpackage(w, "bach", aa);
 
     t_atomarray *aab = atomarray_new(0, NULL);
     atom_setsym(&a, gensym("externals"));
@@ -1182,7 +1182,7 @@ void dadaobj_fileusage(t_object *x, void *w)
     atom_setsym(&a, gensym("interfaces"));
     atomarray_appendatom(aab, &a);
     
-    fileusage_addpackage(w, "dada", (t_object*)aab);
+    fileusage_addpackage(w, "dada", aab);
 
     // fileusage takes ownership of aa and thus will take care of freeing it
 }

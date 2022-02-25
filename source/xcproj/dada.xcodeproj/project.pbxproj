@@ -525,7 +525,7 @@
 		1ED9C9B1190D1224001973B8 /* lib_dada.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = lib_dada.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1EDCC426196AE6F900638665 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 		1EDCC427196AE75A00638665 /* dada.kaleido.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.kaleido.c; path = ../mains/dada.kaleido.c; sourceTree = SOURCE_ROOT; };
-		1EDCC52D196AEC8B00638665 /* commonsyms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = commonsyms.c; path = "../../../max-sdk-7.3.3/source/c74support/max-includes/common/commonsyms.c"; sourceTree = SOURCE_ROOT; };
+		1EDCC52D196AEC8B00638665 /* commonsyms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = commonsyms.c; path = "../../../max-sdk/source/max-sdk-base/c74support/max-includes/common/commonsyms.c"; sourceTree = SOURCE_ROOT; };
 		1EE2A7631982FDEE00B335ED /* dada.life.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dada.life.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		1EE2A7801982FE0000B335ED /* dada.life.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.life.c; path = ../mains/dada.life.c; sourceTree = SOURCE_ROOT; };
 		91B76B9E233CD1AE00DC6B02 /* dada */ = {isa = PBXFileReference; lastKnownFileType = folder; name = dada; path = ../..; sourceTree = "<group>"; };
@@ -1453,6 +1453,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 089C166AFE841209C02AAC07 /* iterator */;

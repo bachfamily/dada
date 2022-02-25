@@ -11,6 +11,7 @@
 
 // Name & Version
 PRODUCT_NAME = $(PROJECT_NAME)
+ARCHS = x86_64 arm64
 
 // Paths
 MAXSDK = $(SRCROOT)/../../../max-sdk

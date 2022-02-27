@@ -9,17 +9,17 @@
 	"website" : "https://www.bachproject.net/dada/",
 	"extends" : "",
 	"extensible" : 0,
-	"max_version_min" : "7.3.5",
+	"max_version_min" : "8.2.0",
 	"max_version_max" : "none",
 	"os" : 	{
 		"macintosh" : 		{
 			"min_version" : "10.9.x",
-			"platform" : [ "x64" ]
+			"platform" : [ "x64", "aarch64" ]
 		}
 ,
 		"windows" : 		{
-			"min_version" : "7",
-			"platform" : [ "x64", "ia32" ]
+			"min_version" : "none",
+			"platform" : [ "x64" ]
 		}
 
 	}

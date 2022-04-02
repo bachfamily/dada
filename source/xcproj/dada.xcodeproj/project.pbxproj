@@ -13,8 +13,8 @@
 			buildPhases = (
 			);
 			dependencies = (
-				1EA0E53B2545E6BE00B549B7 /* PBXTargetDependency */,
-				1E097C9A2358E154007C4DAA /* PBXTargetDependency */,
+				1E387DE527F8935D00EF6B7D /* PBXTargetDependency */,
+				1E387DE327F8935800EF6B7D /* PBXTargetDependency */,
 				1E2A754E1DC0041D00F5D685 /* PBXTargetDependency */,
 				1E4ECD3F1D4E2C3E002FEA2A /* PBXTargetDependency */,
 				1E5399191D43ED4300439855 /* PBXTargetDependency */,
@@ -176,13 +176,6 @@
 			remoteGlobalIDString = 1E045A2A1AEE91D600A1F2B9;
 			remoteInfo = dada.base;
 		};
-		1E097C992358E154007C4DAA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 1E8914151EFDB906009EBADE;
-			remoteInfo = "dada.music~";
-		};
 		1E2A3AC91DBF55D40009CF52 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
@@ -210,6 +203,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 1E36335619D8297700D52726;
 			remoteInfo = dada.platform;
+		};
+		1E387DE227F8935800EF6B7D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1E8914151EFDB906009EBADE;
+			remoteInfo = "dada.music~";
+		};
+		1E387DE427F8935D00EF6B7D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1EA0E5252545DC6D00B549B7;
+			remoteInfo = "dada.peanos~";
 		};
 		1E434590197D2C04007DB98F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -371,13 +378,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 1ED9C9B0190D1224001973B8;
 			remoteInfo = lib_dada;
-		};
-		1EA0E53A2545E6BE00B549B7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 1EA0E5252545DC6D00B549B7;
-			remoteInfo = "dada.peano~";
 		};
 		1EA0FE6B1B36C55700A9AA55 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1981,11 +1981,6 @@
 			target = 1E045A2A1AEE91D600A1F2B9 /* dada.base */;
 			targetProxy = 1E045A431AEE91FD00A1F2B9 /* PBXContainerItemProxy */;
 		};
-		1E097C9A2358E154007C4DAA /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 1E8914151EFDB906009EBADE /* dada.music~ */;
-			targetProxy = 1E097C992358E154007C4DAA /* PBXContainerItemProxy */;
-		};
 		1E2A3AC81DBF55D40009CF52 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 1ED9C9B0190D1224001973B8 /* lib_dada */;
@@ -2005,6 +2000,16 @@
 			isa = PBXTargetDependency;
 			target = 1E36335619D8297700D52726 /* dada.platform */;
 			targetProxy = 1E3634E219D84FF500D52726 /* PBXContainerItemProxy */;
+		};
+		1E387DE327F8935800EF6B7D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1E8914151EFDB906009EBADE /* dada.music~ */;
+			targetProxy = 1E387DE227F8935800EF6B7D /* PBXContainerItemProxy */;
+		};
+		1E387DE527F8935D00EF6B7D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1EA0E5252545DC6D00B549B7 /* dada.peanos~ */;
+			targetProxy = 1E387DE427F8935D00EF6B7D /* PBXContainerItemProxy */;
 		};
 		1E43458F197D2C04007DB98F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2120,11 +2125,6 @@
 			isa = PBXTargetDependency;
 			target = 1ED9C9B0190D1224001973B8 /* lib_dada */;
 			targetProxy = 1EA0E5272545DC6D00B549B7 /* PBXContainerItemProxy */;
-		};
-		1EA0E53B2545E6BE00B549B7 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 1EA0E5252545DC6D00B549B7 /* dada.peanos~ */;
-			targetProxy = 1EA0E53A2545E6BE00B549B7 /* PBXContainerItemProxy */;
 		};
 		1EA0FE6A1B36C55700A9AA55 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

@@ -54,7 +54,8 @@ void ternaryDigitsToHyperCube(short *ternary_digits, long N, long precision, dou
         output_coord[i] = 0;
     
     // building partial sum array, for optimization
-    double ternary_digits_sum[N*precision];
+    double *ternary_digits_sum = (double *)malloc((N*precision) * sizeof(double));
+    double *ternary_digits_colsum = (double *)malloc(precision * sizeof(double));
     double temp = 0;
     for (long i = 0; i < N*precision; i++) {
         temp += ternary_digits[i];
@@ -64,7 +65,6 @@ void ternaryDigitsToHyperCube(short *ternary_digits, long N, long precision, dou
     for (long i = 1; i <= N; i++) {
         
         // building partial sum array, for optimization
-        double ternary_digits_colsum[precision];
         double temp = 0;
         for (long s = 0; s < precision; s++) {
             temp += ternary_digits[i+s*N-1];
@@ -95,6 +95,9 @@ void ternaryDigitsToHyperCube(short *ternary_digits, long N, long precision, dou
             div *= 3;
         }
     }
+    
+    free(ternary_digits_sum);
+    free(ternary_digits_colsum);
 }
 
 void unitIntervalToTernaryRepresentation(mpfr_t input, long numdigits, short *ternary_digits)
@@ -146,14 +149,16 @@ void unitIntervalToTernaryRepresentation(double input, long numdigits, short *te
 // Map a number between [0, 1] in a number in [0,1]^n via a Peano curve
 void unitIntervalToHyperCube(mpfr_t input, long N, long precision, double *output_coord)
 {
-    short ternary_digits[N*precision];
+    short *ternary_digits = (short *)malloc((N*precision) * sizeof(short));
     unitIntervalToTernaryRepresentation(input, N*precision, ternary_digits);
     ternaryDigitsToHyperCube(ternary_digits, N, precision, output_coord);
+    free(ternary_digits);
 }
 
 void unitIntervalToHyperCube(double input, long N, long precision, double *output_coord)
 {
-    short ternary_digits[N*precision];
+    short *ternary_digits = (short *)malloc((N*precision) * sizeof(short));
     unitIntervalToTernaryRepresentation(input, N*precision, ternary_digits);
     ternaryDigitsToHyperCube(ternary_digits, N, precision, output_coord);
+    free(ternary_digits);
 }

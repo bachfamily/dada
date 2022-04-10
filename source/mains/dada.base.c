@@ -49,7 +49,10 @@
 #define strtok_r strtok_s
 #endif
 #include <string.h>
+
+#ifdef MAC_VERSION
 #include "unistd.h"
+#endif
 
 // Data Structures
 typedef struct _base {

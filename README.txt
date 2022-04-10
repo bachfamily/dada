@@ -33,6 +33,8 @@ You can start by having a look at the dada.overview patcher inside the Extras me
 
 If you want to compile *dada*:
 
+* On Windows, only the x64 Release configuration is correctly setup. The Win32 platform is no longer supported, and should be removed at some point; the Debug configuration needs a lot of updating which might as well be done someday...
+
 * you'll need the `bach library <http://www.bachproject.net>`_, with its sources, installed as a Max package (at the same location where the *dada* folder is) and its dependencies (including the `Max SDK <https://cycling74.com/downloads/sdk>`_)
 
 * If you want to compile dada.music~, you need to have the GNU `GMP <https://gmplib.org/>`_ and `MPFR <https://www.mpfr.org/>`_ libraries installed. On OSX, they are expected to be at /usr/local/opt/gmp and /usr/local/opt/mpfr respectively (modify the Xcode parameters if you have them elsewhere); if you install them with Homebrew, they should be in those places. On Windows, we use MPIR (https://www.mpir.org) instead of GMP, and Brian Gladman's Windows port of MPFR (https://github.com/BrianGladman/mpfr.git), which are expected to be installed in C:\Program Files\mpir and C:\Program Files\mpfr respectively. We recommend downloading the binaries from http://www.holoborodko.com/pavel/wp-content/plugins/download-monitor/download.php?id=5. For both libraries, the binaries most be located in lib\x86\Release.

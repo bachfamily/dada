@@ -54,8 +54,8 @@ void ternaryDigitsToHyperCube(short *ternary_digits, long N, long precision, dou
         output_coord[i] = 0;
     
     // building partial sum array, for optimization
-    double *ternary_digits_sum = (double *)malloc((N*precision) * sizeof(double));
-    double *ternary_digits_colsum = (double *)malloc(precision * sizeof(double));
+    double *ternary_digits_sum = (double *)malloc((N*precision) * sizeof(double)); // TODO: avoid this allocation
+    double *ternary_digits_colsum = (double *)malloc(precision * sizeof(double)); // TODO: avoid this allocation
     double temp = 0;
     for (long i = 0; i < N*precision; i++) {
         temp += ternary_digits[i];
@@ -149,7 +149,7 @@ void unitIntervalToTernaryRepresentation(double input, long numdigits, short *te
 // Map a number between [0, 1] in a number in [0,1]^n via a Peano curve
 void unitIntervalToHyperCube(mpfr_t input, long N, long precision, double *output_coord)
 {
-    short *ternary_digits = (short *)malloc((N*precision) * sizeof(short));
+    short *ternary_digits = (short *)malloc((N*precision) * sizeof(short)); // TODO: avoid this allocation
     unitIntervalToTernaryRepresentation(input, N*precision, ternary_digits);
     ternaryDigitsToHyperCube(ternary_digits, N, precision, output_coord);
     free(ternary_digits);
@@ -157,7 +157,7 @@ void unitIntervalToHyperCube(mpfr_t input, long N, long precision, double *outpu
 
 void unitIntervalToHyperCube(double input, long N, long precision, double *output_coord)
 {
-    short *ternary_digits = (short *)malloc((N*precision) * sizeof(short));
+    short *ternary_digits = (short *)malloc((N*precision) * sizeof(short)); // TODO: avoid this allocation
     unitIntervalToTernaryRepresentation(input, N*precision, ternary_digits);
     ternaryDigitsToHyperCube(ternary_digits, N, precision, output_coord);
     free(ternary_digits);

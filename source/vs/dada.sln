@@ -41,6 +41,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dada.terrain~", "vs_project
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dada.rhythmogram", "vs_projects\dada.rhythmogram.vcxproj", "{B43F76F9-4BEE-4BE3-9A80-0CCD76AEB95B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dada.peanos~", "vs_projects\dada.peanos~.vcxproj", "{AE5D92D6-6D29-4417-BF35-1BC0AE868279}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -203,6 +205,14 @@ Global
 		{B43F76F9-4BEE-4BE3-9A80-0CCD76AEB95B}.Release|x64.ActiveCfg = Release|x64
 		{B43F76F9-4BEE-4BE3-9A80-0CCD76AEB95B}.Release|x86.ActiveCfg = Release|Win32
 		{B43F76F9-4BEE-4BE3-9A80-0CCD76AEB95B}.Release|x86.Build.0 = Release|Win32
+		{AE5D92D6-6D29-4417-BF35-1BC0AE868279}.Debug|x64.ActiveCfg = Debug|x64
+		{AE5D92D6-6D29-4417-BF35-1BC0AE868279}.Debug|x64.Build.0 = Debug|x64
+		{AE5D92D6-6D29-4417-BF35-1BC0AE868279}.Debug|x86.ActiveCfg = Debug|Win32
+		{AE5D92D6-6D29-4417-BF35-1BC0AE868279}.Debug|x86.Build.0 = Debug|Win32
+		{AE5D92D6-6D29-4417-BF35-1BC0AE868279}.Release|x64.ActiveCfg = Release|x64
+		{AE5D92D6-6D29-4417-BF35-1BC0AE868279}.Release|x64.Build.0 = Release|x64
+		{AE5D92D6-6D29-4417-BF35-1BC0AE868279}.Release|x86.ActiveCfg = Release|Win32
+		{AE5D92D6-6D29-4417-BF35-1BC0AE868279}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

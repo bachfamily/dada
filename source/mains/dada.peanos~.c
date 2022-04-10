@@ -622,6 +622,7 @@ void C74_EXPORT ext_main(void *moduleRef)
     CLASS_ATTR_LONG(c, "nummodpartials", 0, t_peanos, num_modulation_partials);
     CLASS_ATTR_STYLE_LABEL(c, "nummodpartials", 0, "text", "Number Of Modulation Partials");
     CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"nummodpartials",0,"4");
+    CLASS_ATTR_FILTER_CLIP(c, "nummodpartials", 0, DADA_PEANOS_MAXPARTIALS)
     // @description Sets the number of partials in the model
 
     CLASS_STICKY_ATTR_CLEAR(c, "category");
@@ -1026,7 +1027,7 @@ void process_coords(t_peanos *x)
 
     if (x->model == 0) { // Standard model
         // Amplitudes
-        double sph[N];
+        double sph[DADA_PEANOS_MAXPARTIALS+2];
         sph[0] = 1;
         unitIntervalToHyperCube(x->coord_hp[0], N-1, precision, sph+1);
         for (long i = 1; i < N; i++)
@@ -1045,7 +1046,7 @@ void process_coords(t_peanos *x)
         
         // Amplitudes
         long Npad = N+2;
-        double sph[N+2], valpha[N+2];
+        double sph[DADA_PEANOS_MAXPARTIALS+2+2], valpha[DADA_PEANOS_MAXPARTIALS+2+2];
         sph[0] = 1;
         unitIntervalToHyperCube(x->coord_hp[0], N+1, precision, sph+1);
         for (long i = 1; i < N+2; i++)
@@ -1086,13 +1087,13 @@ void process_coords(t_peanos *x)
     
     if (x->use_modulations) {
         // Modulation
-        double modul[Npad];
+        double modul[DADA_PEANOS_MAXPARTIALS+2];
         unitIntervalToHyperCube(x->coord_hp[3], Npad, precision, modul); // for EACH partial we allow a different modulation (!)
         for (long i = 0; i < Npad; i++) {
             // the modulation is itself a Peano value embedding:
             // rate (ampmod), rate (freqmod), amplitude (ampmod), amplitude (freqmod), interleaved spherical coords representing amplitude & phase of partials (ampmod & freqmod)
-            double mod_sph[2*(2*M+2)];
-            double mod_partials[M];
+            double mod_sph[2*(2*(DADA_PEANOS_MAXPARTIALS+2)+2)];
+            double mod_partials[DADA_PEANOS_MAXPARTIALS+2];
             unitIntervalToHyperCube(modul[i], 2*(2*M+2), precision, mod_sph);
             for (long i = 4; i < 2*(2*M+2); i++)
                 mod_sph[i] *= PIOVERTWO;
@@ -1363,13 +1364,13 @@ void peanos_paint(t_peanos *x, t_object *patcherview)
     }
 
     // MODULATION BAR
-    double MOD_LEFT = rect.width - DADA_PEANOS_INSET_RIGHT_COORD(x, 3);
+    double modulation_bar_left = rect.width - DADA_PEANOS_INSET_RIGHT_COORD(x, 3);
     if (x->use_modulations) {
-        paint_strokenrectangle(g, DADA_GREY_50, MOD_LEFT, DADA_PEANOS_INSET_TOP, DADA_PEANOS_UI_VERTICALBAR_WIDTH, innerheight, 1);
+        paint_strokenrectangle(g, DADA_GREY_50, modulation_bar_left, DADA_PEANOS_INSET_TOP, DADA_PEANOS_UI_VERTICALBAR_WIDTH, innerheight, 1);
         if (pt.m <= rect.height - DADA_PEANOS_INSET_BOTTOM) {
             if (pt.m < rect.height - DADA_PEANOS_INSET_BOTTOM)
-                paint_filledrectangle(g, DADA_GREY_25, MOD_LEFT, pt.m, DADA_PEANOS_UI_VERTICALBAR_WIDTH, rect.height - DADA_PEANOS_INSET_BOTTOM - pt.m);
-            paint_filledrectangle(g, DADA_BLACK, MOD_LEFT, pt.m-1.5, DADA_PEANOS_UI_VERTICALBAR_WIDTH, 3);
+                paint_filledrectangle(g, DADA_GREY_25, modulation_bar_left, pt.m, DADA_PEANOS_UI_VERTICALBAR_WIDTH, rect.height - DADA_PEANOS_INSET_BOTTOM - pt.m);
+            paint_filledrectangle(g, DADA_BLACK, modulation_bar_left, pt.m-1.5, DADA_PEANOS_UI_VERTICALBAR_WIDTH, 3);
         }
     }
 
@@ -1434,7 +1435,7 @@ void peanos_paint(t_peanos *x, t_object *patcherview)
         if (x->use_modulations) {
             left_pos = MAX(0, (1 - zoombar_pos[3]) - zoombar_halfwidth[3][j]);
             paint_rectangle(g, build_jrgba(0, 0, 0, 1), build_jrgba(0, 0, 0, alpha),
-                            MOD_LEFT + DADA_PEANOS_UI_VERTICALBAR_WIDTH, DADA_PEANOS_INSET_TOP + innerheight * left_pos,
+                            modulation_bar_left + DADA_PEANOS_UI_VERTICALBAR_WIDTH, DADA_PEANOS_INSET_TOP + innerheight * left_pos,
                             4, MAX(1, innerheight * MIN(1-left_pos, 2 * zoombar_halfwidth[3][j])), 0);
         }
     }

@@ -600,8 +600,8 @@ boids_rule_fn get_rule_prototype_from_code(t_boids *x, t_symbol *fun_name, t_sym
                   "    void                     *r_name; \n" // TO DO: can't substitute with t_symbol *...
                   "} t_boids_rule_param; \n"
                   " \n"
-                  "t_boids_coord %s(long num_boids, t_boids_coord *coord, t_boids_coord *vels, long boid_idx, long num_params, t_boids_rule_param *params); \n"
-                  "t_boids_coord %s(long num_boids, t_boids_coord *coord, t_boids_coord *vels, long boid_idx, long num_params, t_boids_rule_param *params) { \n"
+                  "extern \"C\" t_boids_coord %s(long num_boids, t_boids_coord *coord, t_boids_coord *vels, long boid_idx, long num_params, t_boids_rule_param *params); \n"
+                  "extern \"C\" t_boids_coord %s(long num_boids, t_boids_coord *coord, t_boids_coord *vels, long boid_idx, long num_params, t_boids_rule_param *params) { \n"
 /*                  "t_boids_coord res = get_null_boids_coord();"
                   "if (num_params >= 1 && coord[boid_idx].pt.y > params[0].r_param.w_double)"
                   "res.pt.y = -params[1].r_param.w_double;"
@@ -640,9 +640,10 @@ boids_rule_fn get_rule_prototype_from_code(t_boids *x, t_symbol *fun_name, t_sym
     boids_rule_fn rule_fn = (boids_rule_fn)atom_getobj(&fun);
     
     // must check that there is code, otherwise there was a compile error
-    if (!rule_fn)
+    if (!rule_fn) {
         object_error((t_object *)x, "Syntax error in custom rule!");
-    else {
+        object_method(clang, gensym("postlasterrors"), x);
+    } else {
         /*		// test rule
          t_cell cell = 0;
          int neighbors_size = 5;

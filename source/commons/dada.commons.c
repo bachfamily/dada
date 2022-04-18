@@ -873,10 +873,10 @@ long find_symbol_in_symbol_array(t_symbol *elem, t_symbol **array, long array_le
     return -1;
 }
 
-
 const char *dada_get_default_include()
 {
-    return "#ifndef PI \n"
+    return "extern \"C\" { \n "
+    "#ifndef PI \n"
     "#define PI 3.14159265358979323846 \n"
     "#endif \n"
     "#ifndef TWOPI \n"
@@ -913,7 +913,7 @@ const char *dada_get_default_include()
     " extern double ceil ( double ); \n"
     " extern double floor ( double ); \n"
     " extern double round ( double ); \n"
-    " \n";
+    " } \n";
 }
 
 

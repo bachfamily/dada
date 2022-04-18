@@ -552,14 +552,13 @@ void life_set_custom_rule(t_life *x, t_symbol *rule)
 	long size = strlen(rule->s_name) + 2000;
 	char *buf = (char *)bach_newptr(size * sizeof(char)); // buf + 100
 	
-	
 	snprintf_zero(buf, size, "%s \n"
 				  "typedef unsigned char t_cell; \n "
-				  "t_cell life_customstep_one(t_cell cell, int neighbors_size, t_cell **neighbors, int sum_neighbors, int nonzero_neighbors); \n"
-				  "t_cell life_customstep_one(t_cell cell, int neighbors_size, t_cell **neighbors, int sum_neighbors, int nonzero_neighbors) { \n"
+				  "extern \"C\" t_cell life_customstep_one(t_cell cell, int neighbors_size, t_cell **neighbors, int sum_neighbors, int nonzero_neighbors); \n"
+				  "extern \"C\" t_cell life_customstep_one(t_cell cell, int neighbors_size, t_cell **neighbors, int sum_neighbors, int nonzero_neighbors) { \n"
                   "%s \n"
 				  "}", dada_get_default_include(), rule->s_name);
-	
+
 	// recreate clang object
 	object_free(x->clang);
 	x->clang = (t_object *)object_new(CLASS_NOBOX, gensym("clang"), gensym("dadalife"));
@@ -592,9 +591,10 @@ void life_set_custom_rule(t_life *x, t_symbol *rule)
 	x->custom_rule = (life_custom_rule_fn)atom_getobj(&fun);
 	
 	// must check that there is code, otherwise there was a compile error
-	if (!x->custom_rule)
+    if (!x->custom_rule) {
 		object_error((t_object *)x, "Syntax error in custom rule!");
-	else {
+        object_method(x->clang, gensym("postlasterrors"), x);
+    } else {
 /*		// test rule
 		t_cell cell = 0;
 		int neighbors_size = 5;

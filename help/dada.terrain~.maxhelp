@@ -3,14 +3,14 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 8,
-			"minor" : 1,
-			"revision" : 5,
+			"minor" : 3,
+			"revision" : 0,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 100.0, 79.0, 831.0, 633.0 ],
+		"rect" : [ 100.0, 100.0, 831.0, 633.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -52,8 +52,8 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 1,
-							"revision" : 5,
+							"minor" : 3,
+							"revision" : 0,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -97,6 +97,7 @@
 									"enablevscroll" : 0,
 									"id" : "obj-7",
 									"lockeddragscroll" : 0,
+									"lockedsize" : 0,
 									"maxclass" : "bpatcher",
 									"name" : "dada.commons.maxpat",
 									"numinlets" : 0,
@@ -137,14 +138,14 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 1,
-							"revision" : 5,
+							"minor" : 3,
+							"revision" : 0,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 831.0, 607.0 ],
+						"rect" : [ 100.0, 126.0, 831.0, 607.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -181,6 +182,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 424.5, 189.847838999999993, 150.0, 23.0 ]
 								}
 
@@ -193,6 +195,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 424.5, 226.847838999999993, 150.0, 23.0 ]
 								}
 
@@ -205,6 +208,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 424.5, 264.847839000000022, 150.0, 23.0 ]
 								}
 
@@ -217,6 +221,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 424.5, 298.847839000000022, 150.0, 23.0 ]
 								}
 
@@ -229,6 +234,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 424.5, 331.847839000000022, 150.0, 23.0 ]
 								}
 
@@ -241,6 +247,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 420.5, 361.847839000000022, 242.0, 23.0 ]
 								}
 
@@ -253,6 +260,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 424.5, 160.847838999999993, 150.0, 23.0 ]
 								}
 
@@ -265,6 +273,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 10.0, 124.5, 220.0, 23.0 ]
 								}
 
@@ -348,7 +357,8 @@
 									"outlettype" : [ "signal" ],
 									"patching_rect" : [ 23.0, 311.847839000000022, 248.0, 232.152161000000007 ],
 									"staticfunction" : "",
-									"versionnumber" : 20300,
+									"type" : 1,
+									"versionnumber" : 20500,
 									"zoom" : 1.373224845219116
 								}
 
@@ -491,8 +501,8 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 1,
-							"revision" : 5,
+							"minor" : 3,
+							"revision" : 0,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -559,6 +569,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 325.0, 280.847839000000022, 150.0, 23.0 ]
 								}
 
@@ -571,6 +582,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 325.0, 255.847838999999993, 150.0, 23.0 ]
 								}
 
@@ -583,6 +595,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 271.0, 228.847838999999993, 457.0, 23.0 ]
 								}
 
@@ -647,6 +660,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 10.0, 93.847838999999993, 220.0, 23.0 ]
 								}
 
@@ -792,7 +806,8 @@
 									"outlettype" : [ "signal" ],
 									"patching_rect" : [ 23.0, 280.847839000000022, 248.0, 232.152161000000007 ],
 									"staticfunction" : "",
-									"versionnumber" : 20300,
+									"type" : 1,
+									"versionnumber" : 20500,
 									"zoom" : 1.373224845219116
 								}
 
@@ -980,14 +995,14 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 1,
-							"revision" : 5,
+							"minor" : 3,
+							"revision" : 0,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 100.0, 105.0, 831.0, 607.0 ],
+						"rect" : [ 0.0, 26.0, 831.0, 607.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -1400,10 +1415,8 @@
 									"patching_rect" : [ 23.0, 280.847839000000022, 247.0, 252.369567999999987 ],
 									"pathcolor" : [ 0.007977, 1.0, 0.0, 1.0 ],
 									"pathmode" : 0,
-									"polar" : 0,
 									"staticfunction" : "return cos(0.0001*x*y)*cos(0.0001*y*y);",
-									"type" : 0,
-									"versionnumber" : 20300,
+									"versionnumber" : 20500,
 									"zoom" : 10.0
 								}
 
@@ -1700,8 +1713,8 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 1,
-							"revision" : 5,
+							"minor" : 3,
+							"revision" : 0,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -1769,48 +1782,42 @@
 		}
 ,
 		"dependency_cache" : [ 			{
-				"name" : "helpname.js",
-				"bootpath" : "C74:/help/resources",
-				"type" : "TEXT",
-				"implicit" : 1
+				"name" : "bach.args.mxo",
+				"type" : "iLaX"
 			}
 , 			{
-				"name" : "helpdetails.js",
-				"bootpath" : "C74:/help/resources",
-				"type" : "TEXT",
-				"implicit" : 1
+				"name" : "dada.base.mxo",
+				"type" : "iLaX"
 			}
 , 			{
-				"name" : "dada.terrain.ellipse~.maxpat",
-				"bootpath" : "~/Documents/Max 7/Packages/dada/patchers",
-				"patcherrelativepath" : "../patchers",
-				"type" : "JSON",
-				"implicit" : 1
+				"name" : "dada.cartesian.mxo",
+				"type" : "iLaX"
 			}
 , 			{
-				"name" : "helpstarter.js",
-				"bootpath" : "C74:/help/resources",
-				"type" : "TEXT",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "dada.terrain.spiral~.maxpat",
-				"bootpath" : "~/Documents/Max 7/Packages/dada/patchers",
-				"patcherrelativepath" : "../patchers",
+				"name" : "dada.commons.grid.maxpat",
+				"bootpath" : "~/Documents/Max 8/Packages/dada/help",
+				"patcherrelativepath" : ".",
 				"type" : "JSON",
 				"implicit" : 1
 			}
 , 			{
 				"name" : "dada.commons.maxpat",
-				"bootpath" : "~/Documents/Max 7/Packages/dada/help",
+				"bootpath" : "~/Documents/Max 8/Packages/dada/help",
 				"patcherrelativepath" : ".",
 				"type" : "JSON",
 				"implicit" : 1
 			}
 , 			{
-				"name" : "dada.commons.grid.maxpat",
-				"bootpath" : "~/Documents/Max 7/Packages/dada/help",
-				"patcherrelativepath" : ".",
+				"name" : "dada.terrain.ellipse~.maxpat",
+				"bootpath" : "~/Documents/Max 8/Packages/dada/patchers",
+				"patcherrelativepath" : "../patchers",
+				"type" : "JSON",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "dada.terrain.spiral~.maxpat",
+				"bootpath" : "~/Documents/Max 8/Packages/dada/patchers",
+				"patcherrelativepath" : "../patchers",
 				"type" : "JSON",
 				"implicit" : 1
 			}
@@ -1819,16 +1826,22 @@
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "bach.args.mxo",
-				"type" : "iLaX"
+				"name" : "helpdetails.js",
+				"bootpath" : "C74:/help/resources",
+				"type" : "TEXT",
+				"implicit" : 1
 			}
 , 			{
-				"name" : "dada.cartesian.mxo",
-				"type" : "iLaX"
+				"name" : "helpname.js",
+				"bootpath" : "C74:/help/resources",
+				"type" : "TEXT",
+				"implicit" : 1
 			}
 , 			{
-				"name" : "dada.base.mxo",
-				"type" : "iLaX"
+				"name" : "helpstarter.js",
+				"bootpath" : "C74:/help/resources",
+				"type" : "TEXT",
+				"implicit" : 1
 			}
  ],
 		"autosave" : 0

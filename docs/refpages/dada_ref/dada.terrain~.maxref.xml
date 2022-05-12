@@ -533,12 +533,11 @@
 				Terrain Type
 			</digest>
 			<description>
-				If non-zero, the input is interpreted as polar coordinates (radius, angle: default);
-				otherwise as cartesian coordinates (x, y)
+				Sets the terrain type: either a static equation, or a buffer wheel
 			</description>
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Settings" />
-				<attribute name="default" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="default" get="1" set="1" type="int" size="1" value="0" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Terrain Type" />
 				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />

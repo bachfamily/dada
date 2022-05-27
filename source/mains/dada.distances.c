@@ -660,7 +660,7 @@ void C74_EXPORT ext_main(void *moduleRef)
 	
     CLASS_ATTR_SYM_VARSIZE(c, "contentfield", 0, t_distances, field_content, field_content_size, DADA_DISTANCES_MAX_CONTENTFIELDS);
     CLASS_ATTR_STYLE_LABEL(c, "contentfield", 0, "text", "Content Field(s)");
-	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"contentfield",0,"content");
+	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"contentfield",0,"none");
     CLASS_ATTR_BASIC(c, "contentfield", 0);
 	// @description Sets the name of the field or fields (columns) to be output
 	// when the grain is clicked or hovered (usually a score gathered syntax).
@@ -2603,6 +2603,10 @@ t_llll *get_grain_contentfield(t_distances *x, t_distances_grain *gr)
         return out;
     
     for (f = 0; f < x->field_content_size; f++) {
+        
+        if (x->field_content[f] == _sym_none)
+            continue;
+        
         t_db_result	*result = NULL;
         snprintf_zero(query, 256, "SELECT %s FROM %s WHERE %s = %ld", x->field_content[f]->s_name, tablename->s_name, idname->s_name, gr->db_id);
         err = db_query(x->d_db, &result, query);

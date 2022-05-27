@@ -3,6 +3,18 @@ v 0.2.5
 
 IMPORTANT: from dada 0.2.5, builds are 64-bit only, support M1 native architecture and require Max 8.2 or higher
 
+*************************
+*** IMPORTANT CHANGES ***
+*************************
+
+These might break compatibility with older patches
+
+- dada.cartesian/dada.distances        the contentfield attribute now defaults to "none"
+
+***********************
+*** VERSION CHANGES ***
+***********************
+
 - dada.base: 	fixed bug causing unsuccessful file attach for db3 databases unless 
 			in the same folder of the patch; now db3 file can be anywhere
 		queries such as "SELECT MAX(...)" or "SELECT MIN(...)" 

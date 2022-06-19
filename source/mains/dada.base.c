@@ -957,11 +957,20 @@ void xbase_entry_create_do(t_xbase *b, t_symbol *table_name, t_llllelem *specs_h
 //		if (db_query(b->d_db, NULL, "INSERT INTO %s ( %s ) VALUES ( %s )", table_name->s_name, names, values))
 //			xbase_error(b, "Error while creating entry");
 
-        char query_test[DADA_QUERY_ALLOC_CHAR_SIZE];
-        snprintf(query_test, DADA_QUERY_ALLOC_CHAR_SIZE, "INSERT INTO %s ( %s ) VALUES ( %s )", table_name->s_name, names, values);
-        if (db_query_direct(b->d_db, NULL, query_test))
-            xbase_error(b, "Error while creating entry");
-            
+        long querysize = strlen(names) + strlen(values) + strlen(table_name->s_name) + 256; // let's stay safe
+        if (querysize < DADA_QUERY_ALLOC_CHAR_SIZE) {
+            char query_test[DADA_QUERY_ALLOC_CHAR_SIZE];
+            snprintf(query_test, DADA_QUERY_ALLOC_CHAR_SIZE, "INSERT INTO %s ( %s ) VALUES ( %s )", table_name->s_name, names, values);
+            if (db_query_direct(b->d_db, NULL, query_test))
+                xbase_error(b, "Error while creating entry");
+        } else {
+            // need to allocate memory
+            char *query_test = (char *)bach_newptr(querysize * sizeof(char));
+            snprintf(query_test, querysize, "INSERT INTO %s ( %s ) VALUES ( %s )", table_name->s_name, names, values);
+            if (db_query_direct(b->d_db, NULL, query_test))
+                xbase_error(b, "Error while creating entry");
+            bach_freeptr(query_test);
+        }
         bach_freeptr(names);
         bach_freeptr(values);
         
@@ -1365,7 +1374,7 @@ void base_entries_create_from_csv_do(t_object *x, t_symbol *s, long ac, t_atom *
                                 llll_appendlong(these_specs, atol(token));
                                 break;
                             case 'f':
-                                llll_appendlong(these_specs, atof(token));
+                                llll_appenddouble(these_specs, atof(token));
                                 break;
                             default:
                                 llll_appendsym(these_specs, gensym(token));

@@ -48,7 +48,7 @@ void cartesianToSpherical(double *cartesian, double *spherical, long N)
 
 
 // PEANO INVERSO: prendo un numero tra 0 e 1 e lo butto su [0, 1]^N
-void ternaryDigitsToHyperCube(short *ternary_digits, long N, long precision, double *output_coord)
+void ternaryDigitsToHyperCube(short *ternary_digits, long N, double *output_coord, long precision)
 {
     for (long i = 0; i < N; i++)
         output_coord[i] = 0;
@@ -147,18 +147,18 @@ void unitIntervalToTernaryRepresentation(double input, long numdigits, short *te
 }
 
 // Map a number between [0, 1] in a number in [0,1]^n via a Peano curve
-void unitIntervalToHyperCube(mpfr_t input, long N, long precision, double *output_coord)
+void unitIntervalToHyperCube(mpfr_t input, long N, double *output_coord, long precision)
 {
     short *ternary_digits = (short *)malloc((N*precision) * sizeof(short)); // TODO: avoid this allocation
     unitIntervalToTernaryRepresentation(input, N*precision, ternary_digits);
-    ternaryDigitsToHyperCube(ternary_digits, N, precision, output_coord);
+    ternaryDigitsToHyperCube(ternary_digits, N, output_coord, precision);
     free(ternary_digits);
 }
 
-void unitIntervalToHyperCube(double input, long N, long precision, double *output_coord)
+void unitIntervalToHyperCube(double input, long N, double *output_coord, long precision)
 {
     short *ternary_digits = (short *)malloc((N*precision) * sizeof(short)); // TODO: avoid this allocation
     unitIntervalToTernaryRepresentation(input, N*precision, ternary_digits);
-    ternaryDigitsToHyperCube(ternary_digits, N, precision, output_coord);
+    ternaryDigitsToHyperCube(ternary_digits, N, output_coord, precision);
     free(ternary_digits);
 }

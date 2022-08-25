@@ -78,6 +78,7 @@ typedef struct _segment {
     
     long                window_type;
     long                graces_stay_with_next;
+    long                add_ties_while_cropping;
     
     char                use_tempo_markers_for_segmentation;
     char                copy_tempi_marker;
@@ -167,6 +168,11 @@ void C74_EXPORT ext_main(void *moduleRef)
     CLASS_ATTR_BASIC(c, "graceswithnext", 0);
     // @description If set, grace notes stay with the next segment, (unless they are at the very end of a measure),
     // otherwise they stay with the previous one.
+
+    CLASS_ATTR_LONG(c, "addties", 0, t_segment, add_ties_while_cropping);
+    CLASS_ATTR_STYLE_LABEL(c,"addties",0,"onoff","Add Ties While Cropping");
+    CLASS_ATTR_BASIC(c, "addties", 0);
+    // @description If set, when a note is cropped, a tie is added.
 
 	CLASS_ATTR_CHAR(c,"algorithm",0, t_segment, algorithm);
 	CLASS_ATTR_STYLE_LABEL(c,"algorithm",0,"enumindex","Algorithm");
@@ -361,6 +367,7 @@ t_segment* segment_new(t_symbol *s, short argc, t_atom *argv)
 		x->measure_segm_pattern[0] = 1;
         x->lambda_mode = 1;
         x->graces_stay_with_next = 1;
+        x->add_ties_while_cropping = 1;
 		
 		object_attr_setsym(x, gensym("segmentsize"), gensym("none"));
         object_attr_setsym(x, gensym("hopsize"), gensym(""));
@@ -1206,14 +1213,14 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                         t_timepoint tp_diff_hop = timepoints_diff(next_tp_start, this_tp_start);
                         
                         t_llll *freeme1 = llll_clone(temp);
-                        right = dada_score_split(freeme1, tp_diff_hop, NULL, NULL, true, x->graces_stay_with_next);
-                        t_llll *freeme2 = dada_score_split(temp, tp_diff, &ts, &tempo, true, x->graces_stay_with_next);
+                        right = dada_score_split(freeme1, tp_diff_hop, NULL, NULL, true, x->graces_stay_with_next, x->add_ties_while_cropping);
+                        t_llll *freeme2 = dada_score_split(temp, tp_diff, &ts, &tempo, true, x->graces_stay_with_next, x->add_ties_while_cropping);
                         llll_free(freeme1);
                         llll_free(freeme2);
                     } else
-                        right = dada_score_split(temp, tp_diff, &ts, &tempo, true, x->graces_stay_with_next);
+                        right = dada_score_split(temp, tp_diff, &ts, &tempo, true, x->graces_stay_with_next, x->add_ties_while_cropping);
                 } else
-                    right = dada_score_split(temp, tp_diff, &ts, &tempo, true, x->graces_stay_with_next);
+                    right = dada_score_split(temp, tp_diff, &ts, &tempo, true, x->graces_stay_with_next, x->add_ties_while_cropping);
                 
                 //            post("---");
                 //            llll_print(temp, NULL, 0, 6, NULL);

@@ -2,6 +2,9 @@ v 0.2.6
 
 all objects: fixed potential instabilities (especially, but not only, on Windows) with message attributes
 
+- dada.segment  New @gracewithnext and @addties attributes
+                Fixed several issues with segmentation
+
 
 v 0.2.5
 
@@ -24,7 +27,6 @@ These might break compatibility with older patches
 		queries such as "SELECT MAX(...)" or "SELECT MIN(...)" 
 			now infer the output type from the column type
                 fixed bug causing floating point columns working as int ones in CSV import
-
 
 v 0.2.4
 

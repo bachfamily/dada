@@ -1290,6 +1290,8 @@ void base_entries_create_from_csv_do(t_object *x, t_symbol *s, long ac, t_atom *
     t_llll *fields = (t_llll *)atom_getobj(av+1);
     t_llll *mapping = (t_llll *)atom_getobj(av+2);
     t_llll *sticky = (t_llll *)atom_getobj(av+3);
+    t_symbol *separator_sym = atom_getsym(av+4);
+    const char *separator = (separator_sym && separator_sym->s_name && strlen(separator_sym->s_name) > 0 ? separator_sym->s_name : ",");
 
     if (table == NULL) {
         object_error(x, "Undefined table!");
@@ -1322,7 +1324,7 @@ void base_entries_create_from_csv_do(t_object *x, t_symbol *s, long ac, t_atom *
             }
             
             if (line == 0) { // header
-                char* token = strtok(temp, ",");
+                char* token = strtok(temp, separator);
                 long numcsvcols = 0;
                 while (token && numcsvcols < DADABASE_CSV_MAXCOLS) {
                     t_symbol *s = gensym(token);
@@ -1355,14 +1357,14 @@ void base_entries_create_from_csv_do(t_object *x, t_symbol *s, long ac, t_atom *
                         csvcols[numcsvcols] = NULL;
                         csvcolstype[numcsvcols] = 0;
                     }
-                    token = strtok(NULL, ",");
+                    token = strtok(NULL, separator);
                     numcsvcols++;
                 }
                 
             } else {
                 
                 t_llll *specs = sticky ? llll_clone(sticky) : llll_get();
-                char* token = mystrsep(&temp, ",");
+                char* token = mystrsep(&temp, separator);
                 long colnum = 0;
                 while (token && colnum < DADABASE_CSV_MAXCOLS) {
                     if (csvcols[colnum] != NULL) {
@@ -1382,7 +1384,7 @@ void base_entries_create_from_csv_do(t_object *x, t_symbol *s, long ac, t_atom *
                         }
                         llll_appendllll(specs, these_specs);
                     }
-                    token = mystrsep(&temp, ",");
+                    token = mystrsep(&temp, separator);
                     colnum++;
                 }
                 
@@ -1414,17 +1416,19 @@ void base_entries_create_from_csv(t_base *x, t_symbol *msg, long ac, t_atom *av)
     t_llll *fields = NULL;
     t_llll *mapping = NULL;
     t_llll *sticky = NULL;
+    t_symbol *separator_sym = gensym(",");
     if (parsed) {
-        llll_parseargs_and_attrs(NULL, parsed, "lll", gensym("cols"), &fields, gensym("mapping"), &mapping, gensym("sticky"), &sticky);
+        llll_parseargs_and_attrs(NULL, parsed, "llls", gensym("cols"), &fields, gensym("mapping"), &mapping, gensym("sticky"), &sticky, gensym("separator"), &separator_sym);
         if (parsed && parsed->l_head && hatom_gettype(&parsed->l_head->l_hatom) == H_SYM) {
-            t_atom av[4];
+            t_atom av[5];
             t_symbol *sy = parsed->l_head->l_next && hatom_gettype(&parsed->l_head->l_next->l_hatom) == H_SYM ? hatom_getsym(&parsed->l_head->l_next->l_hatom) : NULL;
             atom_setsym(av, hatom_getsym(&parsed->l_head->l_hatom));
             atom_setobj(av+1, fields);
             atom_setobj(av+2, mapping);
             atom_setobj(av+3, sticky);
+            atom_setsym(av+4, separator_sym);
 
-            defer(x, (method)base_entries_create_from_csv_do, sy, 3, av); // will free all the fields, mapping and sticky lllls
+            defer(x, (method)base_entries_create_from_csv_do, sy, 4, av); // will free all the fields, mapping and sticky lllls
         }
         llll_free(parsed);
     }

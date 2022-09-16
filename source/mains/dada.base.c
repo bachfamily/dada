@@ -488,7 +488,8 @@ void base_wopen(t_base *x)
     } else {
         object_attr_setsym(x->m_editor, gensym("title"), gensym("Database as llll"));
     }
-    llll_free(ll);}
+    llll_free(ll);
+}
 
 // this lets us double-click on sphinx~ to open up the buffer~ it references
 void base_dblclick(t_base *x)
@@ -658,6 +659,8 @@ t_base* base_new(t_symbol *s, short argc, t_atom *argv)
 
 void base_free(t_base *x)
 {
+    if (x->m_editor)
+        object_free_debug(x->m_editor);
     xbase_free(x->xbase);
 //	db_close(&x->d_db);
 //	bach_freeptr(x->table);

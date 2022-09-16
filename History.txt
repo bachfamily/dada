@@ -22,6 +22,7 @@ These might break compatibility with older patches
 			now infer the output type from the column type
                 fixed bug causing floating point columns working as int ones in CSV import
                 Added @separator attribute for csv import
+                fixed bug causing potential crashes when editor of dada.base was open and object was freed
 
 - dada.segment  New @gracewithnext and @addties attributes
                 Fixed several issues with segmentation

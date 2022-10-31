@@ -46,6 +46,7 @@ typedef struct _xbase {
     long        ref_count;
     
     t_symbol    *d_filename;
+    char        d_force_store_lllls_as_text;
     
     char        d_dirty;
     char        d_nodirty; // if toggled, won't set d_dirty flag

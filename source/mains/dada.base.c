@@ -64,6 +64,7 @@ typedef struct _base {
 	char		output_fieldnames;
     char        escape_single_quotes;
     char        convert_null_to_default;
+    char        force_store_lllls_as_text;
 
     t_symbol    *utility_sym;
     t_llll      *utility_ll;
@@ -147,6 +148,18 @@ static t_symbol	*ps_event = NULL;
 
 /**********************************************************************/
 // Class Definition and Life Cycle
+
+t_max_err base_setattr_llllastext(t_base *x, t_object *attr, long ac, t_atom *av)
+{
+    if (ac) {
+        if (x->xbase && ac) {
+            long v = (atom_getlong(av) != 0 ? 1 : 0);
+            x->xbase->d_force_store_lllls_as_text = v;
+            x->force_store_lllls_as_text = v;
+        }
+    }
+    return MAX_ERR_NONE;
+}
 
 void C74_EXPORT ext_main(void *moduleRef)
 {
@@ -380,6 +393,12 @@ void C74_EXPORT ext_main(void *moduleRef)
     // @description Toggles the ability to convert null lllls to default values, for columns of type int, float and symbol.
     // Default is on. If you turn this off, the null lllls will result in NULL SQLite fields.
 
+    CLASS_ATTR_CHAR(c,"llllastext",0, t_base, force_store_lllls_as_text);
+    CLASS_ATTR_STYLE_LABEL(c,"llllastext",0,"onoff","Store lllls as Text");
+    CLASS_ATTR_ACCESSORS(c, "llllastext", (method)NULL, (method)base_setattr_llllastext);
+    // @description Toggles the ability to store lllls as text in the database, so that they you can query them
+    // (at the price of performance time).
+
     
 	CLASS_STICKY_ATTR_CLEAR(c, "category");
 
@@ -437,7 +456,7 @@ char xbase_is_attached_to_sql_file(t_xbase *b)
 
 char xbase_store_lllls_with_phonenumbers(t_xbase *b)
 {
-    if (xbase_is_attached_to_sql_file(b))
+    if (xbase_is_attached_to_sql_file(b) || b->d_force_store_lllls_as_text)
         return 0;
     return 1;
 }
@@ -594,6 +613,7 @@ t_base* base_new(t_symbol *s, short argc, t_atom *argv)
         x->escape_single_quotes = true;
 		x->d_filename = NULL;
 		x->d_filetype = 0;
+        x->force_store_lllls_as_text = false;
         x->m_editor = NULL;
         x->xbase = NULL;
 
@@ -2227,6 +2247,7 @@ t_xbase *xbase_new(t_symbol *name)
         b->d_db = NULL;
         b->d_name = name;
         b->magic = DADA_XBASE_MAGIC_GOOD;
+        b->d_force_store_lllls_as_text = force_store_lllls_as_text;
         b->d_dirty = false;
         b->d_nodirty = true;
         b->table = (t_db_table *)bach_newptr(DADA_XBASE_MAX_TABLES * sizeof(t_db_table));

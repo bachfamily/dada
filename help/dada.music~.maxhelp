@@ -2,14 +2,15 @@
 	"patcher" : 	{
 		"fileversion" : 1,
 		"appversion" : 		{
-			"major" : 7,
+			"major" : 8,
 			"minor" : 3,
-			"revision" : 4,
+			"revision" : 3,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 376.0, 81.0, 881.0, 692.0 ],
+		"classnamespace" : "box",
+		"rect" : [ 100.0, 100.0, 881.0, 692.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -38,6 +39,7 @@
 		"subpatcher_template" : "",
 		"showrootpatcherontab" : 0,
 		"showontab" : 0,
+		"assistshowspatchername" : 0,
 		"boxes" : [ 			{
 				"box" : 				{
 					"fontname" : "Arial",
@@ -49,13 +51,14 @@
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
-							"major" : 7,
+							"major" : 8,
 							"minor" : 3,
-							"revision" : 4,
+							"revision" : 3,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
+						"classnamespace" : "box",
 						"rect" : [ 0.0, 26.0, 881.0, 666.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
@@ -84,6 +87,7 @@
 						"style" : "",
 						"subpatcher_template" : "",
 						"showontab" : 1,
+						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
 								"box" : 								{
 									"id" : "obj-13",
@@ -92,7 +96,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 102.5, 278.0, 80.0, 23.0 ],
-									"style" : "",
 									"text" : "cursor 2 `d1"
 								}
 
@@ -106,7 +109,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 287.5, 262.5, 357.0, 54.0 ],
-									"style" : "",
 									"text" : "Set the cursor to 2-length samples at specified sample id (as symbol! hence you might want to backtick it it there's the risk of it being interpreted as integer, or pitch...)"
 								}
 
@@ -119,7 +121,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 200.5, 278.0, 85.0, 23.0 ],
-									"style" : "",
 									"text" : "cursor 2 \"40\""
 								}
 
@@ -133,7 +134,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 178.5, 222.5, 234.0, 40.0 ],
-									"style" : "",
 									"text" : "Set the cursor to 1-length samples at relative position 0.8"
 								}
 
@@ -146,7 +146,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 231.0, 318.5, 203.0, 23.0 ],
-									"style" : "",
 									"text" : "resetzoom, zoomby 64000 cursor"
 								}
 
@@ -159,7 +158,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 87.5, 231.0, 79.0, 23.0 ],
-									"style" : "",
 									"text" : "cursor 1 0.8"
 								}
 
@@ -171,8 +169,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 17.0, 77.567627, 64.0, 23.0 ],
-									"style" : "",
+									"patching_rect" : [ 17.0, 77.567627000000002, 64.0, 23.0 ],
 									"text" : "loadbang"
 								}
 
@@ -186,7 +183,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 130.5, 134.5, 234.0, 40.0 ],
-									"style" : "",
 									"text" : "Set the cursor to a specific position on the line, don't sync buffer"
 								}
 
@@ -200,7 +196,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 148.5, 565.5, 157.0, 40.0 ],
-									"style" : "",
 									"text" : "You might want to use something like this..."
 								}
 
@@ -215,13 +210,14 @@
 									"patcher" : 									{
 										"fileversion" : 1,
 										"appversion" : 										{
-											"major" : 7,
+											"major" : 8,
 											"minor" : 3,
-											"revision" : 4,
+											"revision" : 3,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
 ,
+										"classnamespace" : "box",
 										"rect" : [ 59.0, 104.0, 640.0, 480.0 ],
 										"bglocked" : 0,
 										"openinpresentation" : 0,
@@ -249,6 +245,7 @@
 										"tags" : "",
 										"style" : "",
 										"subpatcher_template" : "",
+										"assistshowspatchername" : 0,
 										"boxes" : [ 											{
 												"box" : 												{
 													"fontname" : "Arial",
@@ -259,7 +256,6 @@
 													"numoutlets" : 1,
 													"outlettype" : [ "signal" ],
 													"patching_rect" : [ 50.0, 130.0, 186.0, 23.0 ],
-													"style" : "",
 													"text" : "-~"
 												}
 
@@ -274,7 +270,6 @@
 													"numoutlets" : 1,
 													"outlettype" : [ "signal" ],
 													"patching_rect" : [ 217.0, 100.0, 98.0, 23.0 ],
-													"style" : "",
 													"text" : "onepole~ 5. Hz"
 												}
 
@@ -288,8 +283,7 @@
 													"numinlets" : 0,
 													"numoutlets" : 1,
 													"outlettype" : [ "signal" ],
-													"patching_rect" : [ 127.5, 40.0, 30.0, 30.0 ],
-													"style" : ""
+													"patching_rect" : [ 127.5, 40.0, 30.0, 30.0 ]
 												}
 
 											}
@@ -301,8 +295,7 @@
 													"maxclass" : "outlet",
 													"numinlets" : 1,
 													"numoutlets" : 0,
-													"patching_rect" : [ 50.0, 213.0, 30.0, 30.0 ],
-													"style" : ""
+													"patching_rect" : [ 50.0, 213.0, 30.0, 30.0 ]
 												}
 
 											}
@@ -345,11 +338,9 @@
 										"description" : "",
 										"digest" : "",
 										"globalpatchername" : "",
-										"style" : "",
 										"tags" : ""
 									}
 ,
-									"style" : "",
 									"text" : "p remove_dc_offsets"
 								}
 
@@ -362,7 +353,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 135.5, 176.5, 234.0, 25.0 ],
-									"style" : "",
 									"text" : "The same, also sync buffer"
 								}
 
@@ -376,8 +366,7 @@
 									"numoutlets" : 6,
 									"outlettype" : [ "float", "float", "float", "float", "list", "" ],
 									"patching_rect" : [ 510.0, 546.0, 207.0, 81.0 ],
-									"setmode" : 3,
-									"style" : ""
+									"setmode" : 3
 								}
 
 							}
@@ -389,7 +378,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 17.0, 107.0, 192.0, 23.0 ],
-									"style" : "",
 									"text" : "bitdepth 4, set thispieceofmusic"
 								}
 
@@ -398,22 +386,22 @@
 								"box" : 								{
 									"channels" : 1,
 									"id" : "obj-37",
+									"lastchannelcount" : 0,
 									"maxclass" : "live.gain~",
 									"numinlets" : 1,
 									"numoutlets" : 4,
 									"orientation" : 1,
 									"outlettype" : [ "signal", "", "float", "list" ],
 									"parameter_enable" : 1,
-									"patching_rect" : [ 17.0, 537.0, 171.0, 31.0 ],
-									"presentation_rect" : [ 0.0, 0.0, 50.0, 31.0 ],
+									"patching_rect" : [ 17.0, 537.0, 171.0, 30.0 ],
 									"saved_attribute_attributes" : 									{
 										"valueof" : 										{
+											"parameter_initial" : [ 0.0 ],
 											"parameter_longname" : "live.gain~[1]",
+											"parameter_mmax" : 6.0,
+											"parameter_mmin" : -70.0,
 											"parameter_shortname" : "live.gain~",
 											"parameter_type" : 0,
-											"parameter_mmin" : -70.0,
-											"parameter_mmax" : 6.0,
-											"parameter_initial" : [ 0.0 ],
 											"parameter_unitstyle" : 4
 										}
 
@@ -430,8 +418,7 @@
 									"maxclass" : "ezdac~",
 									"numinlets" : 2,
 									"numoutlets" : 0,
-									"patching_rect" : [ 17.0, 605.0, 45.0, 45.0 ],
-									"style" : ""
+									"patching_rect" : [ 17.0, 605.0, 45.0, 45.0 ]
 								}
 
 							}
@@ -443,7 +430,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 60.5, 176.5, 68.0, 23.0 ],
-									"style" : "",
 									"text" : "cursor 0.1"
 								}
 
@@ -456,7 +442,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 39.5, 143.0, 86.0, 23.0 ],
-									"style" : "",
 									"text" : "setcursor 0.1"
 								}
 
@@ -468,11 +453,11 @@
 									"fontsize" : 13.0,
 									"id" : "obj-1",
 									"maxclass" : "dada.music~",
-									"numinlets" : 2,
+									"numinlets" : 1,
 									"numoutlets" : 3,
 									"outlettype" : [ "signal", "", "" ],
 									"patching_rect" : [ 17.0, 351.0, 700.0, 179.0 ],
-									"versionnumber" : 10000
+									"versionnumber" : 20600
 								}
 
 							}
@@ -488,7 +473,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 10.0, 10.0, 267.12735, 57.567627 ]
+									"patching_rect" : [ 10.0, 10.0, 267.127349999999979, 57.567627000000002 ]
 								}
 
 							}
@@ -579,11 +564,9 @@
 						"digest" : "",
 						"fontsize" : 13.0,
 						"globalpatchername" : "",
-						"style" : "",
 						"tags" : ""
 					}
 ,
-					"style" : "",
 					"text" : "p \"target buffer\"",
 					"varname" : "basic_tab[1]"
 				}
@@ -604,7 +587,6 @@
 						"parameter_enable" : 0
 					}
 ,
-					"style" : "",
 					"text" : "js helpstarter.js dada.music~"
 				}
 
@@ -620,14 +602,15 @@
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
-							"major" : 7,
+							"major" : 8,
 							"minor" : 3,
-							"revision" : 4,
+							"revision" : 3,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 376.0, 107.0, 881.0, 666.0 ],
+						"classnamespace" : "box",
+						"rect" : [ 100.0, 126.0, 881.0, 666.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -655,6 +638,7 @@
 						"style" : "",
 						"subpatcher_template" : "",
 						"showontab" : 1,
+						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
 								"box" : 								{
 									"fontname" : "Arial",
@@ -664,7 +648,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 10.0, 146.0, 162.0, 21.0 ],
-									"style" : "",
 									"text" : "VERY IMPORTANT:",
 									"textcolor" : [ 0.792157, 0.0, 0.0, 1.0 ]
 								}
@@ -679,8 +662,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 132.0, 146.0, 699.0, 21.0 ],
-									"style" : "",
-									"text" : "dada.music~ only works at 64 bit"
+									"text" : "dada.music~ for the time being is MAC ONLY"
 								}
 
 							}
@@ -692,8 +674,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 12.0, 171.887726, 24.0, 24.0 ],
-									"style" : ""
+									"patching_rect" : [ 12.0, 171.887725999999986, 24.0, 24.0 ]
 								}
 
 							}
@@ -705,7 +686,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 69.5, 615.0, 107.0, 25.0 ],
-									"style" : "",
 									"text" : "Turn audio on"
 								}
 
@@ -718,7 +698,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 719.0, 312.0, 147.0, 25.0 ],
-									"style" : "",
 									"text" : "Supported bit depths"
 								}
 
@@ -731,7 +710,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 652.0, 312.0, 68.0, 23.0 ],
-									"style" : "",
 									"text" : "bitdepth 4"
 								}
 
@@ -744,7 +722,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 581.0, 312.0, 68.0, 23.0 ],
-									"style" : "",
 									"text" : "bitdepth 8"
 								}
 
@@ -757,7 +734,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 501.0, 312.0, 75.0, 23.0 ],
-									"style" : "",
 									"text" : "bitdepth 16"
 								}
 
@@ -771,7 +747,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 148.5, 565.5, 157.0, 40.0 ],
-									"style" : "",
 									"text" : "You might want to use something like this..."
 								}
 
@@ -786,13 +761,14 @@
 									"patcher" : 									{
 										"fileversion" : 1,
 										"appversion" : 										{
-											"major" : 7,
+											"major" : 8,
 											"minor" : 3,
-											"revision" : 4,
+											"revision" : 3,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
 ,
+										"classnamespace" : "box",
 										"rect" : [ 59.0, 104.0, 640.0, 480.0 ],
 										"bglocked" : 0,
 										"openinpresentation" : 0,
@@ -820,6 +796,7 @@
 										"tags" : "",
 										"style" : "",
 										"subpatcher_template" : "",
+										"assistshowspatchername" : 0,
 										"boxes" : [ 											{
 												"box" : 												{
 													"fontname" : "Arial",
@@ -830,7 +807,6 @@
 													"numoutlets" : 1,
 													"outlettype" : [ "signal" ],
 													"patching_rect" : [ 50.0, 130.0, 186.0, 23.0 ],
-													"style" : "",
 													"text" : "-~"
 												}
 
@@ -845,7 +821,6 @@
 													"numoutlets" : 1,
 													"outlettype" : [ "signal" ],
 													"patching_rect" : [ 217.0, 100.0, 98.0, 23.0 ],
-													"style" : "",
 													"text" : "onepole~ 5. Hz"
 												}
 
@@ -859,8 +834,7 @@
 													"numinlets" : 0,
 													"numoutlets" : 1,
 													"outlettype" : [ "signal" ],
-													"patching_rect" : [ 127.5, 40.0, 30.0, 30.0 ],
-													"style" : ""
+													"patching_rect" : [ 127.5, 40.0, 30.0, 30.0 ]
 												}
 
 											}
@@ -872,8 +846,7 @@
 													"maxclass" : "outlet",
 													"numinlets" : 1,
 													"numoutlets" : 0,
-													"patching_rect" : [ 50.0, 213.0, 30.0, 30.0 ],
-													"style" : ""
+													"patching_rect" : [ 50.0, 213.0, 30.0, 30.0 ]
 												}
 
 											}
@@ -916,11 +889,9 @@
 										"description" : "",
 										"digest" : "",
 										"globalpatchername" : "",
-										"style" : "",
 										"tags" : ""
 									}
 ,
-									"style" : "",
 									"text" : "p remove_dc_offsets"
 								}
 
@@ -932,7 +903,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 194.0, 299.0, 240.0, 21.0 ],
-									"style" : "",
 									"text" : "or use Esc to reset view",
 									"textcolor" : [ 0.501961, 0.0, 0.0, 1.0 ]
 								}
@@ -946,7 +916,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 122.0, 299.0, 71.0, 23.0 ],
-									"style" : "",
 									"text" : "resetzoom"
 								}
 
@@ -960,8 +929,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 377.0, 261.991241, 393.0, 40.0 ],
-									"style" : "",
+									"patching_rect" : [ 377.0, 261.991241000000002, 393.0, 40.0 ],
 									"text" : "...and if you go even further, you'll notice that the line is actually discontinuous, and you can see the pieces one by one"
 								}
 
@@ -975,8 +943,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 377.0, 226.038589, 383.0, 40.0 ],
-									"style" : "",
+									"patching_rect" : [ 377.0, 226.038589000000002, 383.0, 40.0 ],
 									"text" : "...If you zoom fare enough, you'll start to see the boundaries between pieces having different lengths (in samples)"
 								}
 
@@ -989,8 +956,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 117.0, 269.536835, 254.0, 23.0 ],
-									"style" : "",
+									"patching_rect" : [ 117.0, 269.536834999999996, 254.0, 23.0 ],
 									"text" : "resetzoom, cursor 0., zoomby 8192 cursor"
 								}
 
@@ -1003,8 +969,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 117.0, 233.584213, 254.0, 23.0 ],
-									"style" : "",
+									"patching_rect" : [ 117.0, 233.584213000000005, 254.0, 23.0 ],
 									"text" : "resetzoom, cursor 0., zoomby 1024 cursor"
 								}
 
@@ -1016,7 +981,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 194.0, 318.0, 240.0, 21.0 ],
-									"style" : "",
 									"text" : "Tab to show the playhead in the domain",
 									"textcolor" : [ 0.501961, 0.0, 0.0, 1.0 ]
 								}
@@ -1030,7 +994,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 729.0, 492.5, 78.0, 23.0 ],
-									"style" : "",
 									"text" : "zoomby 0.5"
 								}
 
@@ -1043,7 +1006,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 729.0, 464.0, 67.0, 23.0 ],
-									"style" : "",
 									"text" : "zoomby 2"
 								}
 
@@ -1056,7 +1018,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 729.0, 523.0, 107.0, 23.0 ],
-									"style" : "",
 									"text" : "zoomby 2 cursor"
 								}
 
@@ -1069,7 +1030,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 721.0, 346.5, 153.0, 108.0 ],
-									"style" : "",
 									"text" : "Stop and click anywhere on the timeline to change piece.\nUse Cmd+mousewheel (mac) or Ctrl+mousewheel (win) to zoom in/out",
 									"textcolor" : [ 0.501961, 0.0, 0.0, 1.0 ]
 								}
@@ -1085,7 +1045,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 10.0, 109.0, 826.0, 36.0 ],
-									"style" : "",
 									"text" : "dada.music~ is a timeline which contain absolutely ALL music, organized by length. \nIt is essentially a mental experiment turned into Max object, a sort of proof of concept that exploration and invention are somehow related.",
 									"textcolor" : [ 0.501961, 0.501961, 0.501961, 1.0 ]
 								}
@@ -1099,8 +1058,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 236.0, 200.294739, 277.0, 25.0 ],
-									"style" : "",
+									"patching_rect" : [ 236.0, 200.294738999999993, 277.0, 25.0 ],
 									"text" : "Sync each new piece of music with a buffer"
 								}
 
@@ -1114,7 +1072,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 122.0, 171.0, 230.0, 25.0 ],
-									"style" : "",
 									"text" : "Play all music! (literally ALL music!)"
 								}
 
@@ -1128,8 +1085,7 @@
 									"numoutlets" : 6,
 									"outlettype" : [ "float", "float", "float", "float", "list", "" ],
 									"patching_rect" : [ 510.0, 546.0, 207.0, 81.0 ],
-									"setmode" : 3,
-									"style" : ""
+									"setmode" : 3
 								}
 
 							}
@@ -1141,7 +1097,6 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
 									"patching_rect" : [ 329.0, 605.0, 172.0, 23.0 ],
-									"style" : "",
 									"text" : "buffer~ thispieceofmusic 1 1"
 								}
 
@@ -1154,8 +1109,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 100.5, 200.294739, 128.0, 23.0 ],
-									"style" : "",
+									"patching_rect" : [ 100.5, 200.294738999999993, 128.0, 23.0 ],
 									"text" : "set thispieceofmusic"
 								}
 
@@ -1164,22 +1118,22 @@
 								"box" : 								{
 									"channels" : 1,
 									"id" : "obj-37",
+									"lastchannelcount" : 0,
 									"maxclass" : "live.gain~",
 									"numinlets" : 1,
 									"numoutlets" : 4,
 									"orientation" : 1,
 									"outlettype" : [ "signal", "", "float", "list" ],
 									"parameter_enable" : 1,
-									"patching_rect" : [ 17.0, 537.0, 171.0, 31.0 ],
-									"presentation_rect" : [ 0.0, 0.0, 50.0, 31.0 ],
+									"patching_rect" : [ 17.0, 537.0, 171.0, 30.0 ],
 									"saved_attribute_attributes" : 									{
 										"valueof" : 										{
+											"parameter_initial" : [ 0.0 ],
 											"parameter_longname" : "live.gain~",
+											"parameter_mmax" : 6.0,
+											"parameter_mmin" : -70.0,
 											"parameter_shortname" : "live.gain~",
 											"parameter_type" : 0,
-											"parameter_mmin" : -70.0,
-											"parameter_mmax" : 6.0,
-											"parameter_initial" : [ 0.0 ],
 											"parameter_unitstyle" : 4
 										}
 
@@ -1196,8 +1150,7 @@
 									"maxclass" : "ezdac~",
 									"numinlets" : 2,
 									"numoutlets" : 0,
-									"patching_rect" : [ 17.0, 605.0, 45.0, 45.0 ],
-									"style" : ""
+									"patching_rect" : [ 17.0, 605.0, 45.0, 45.0 ]
 								}
 
 							}
@@ -1210,7 +1163,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 81.0, 171.0, 35.0, 23.0 ],
-									"style" : "",
 									"text" : "stop"
 								}
 
@@ -1223,8 +1175,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 40.0, 171.887726, 34.0, 23.0 ],
-									"style" : "",
+									"patching_rect" : [ 40.0, 171.887725999999986, 34.0, 23.0 ],
 									"text" : "play"
 								}
 
@@ -1236,11 +1187,11 @@
 									"fontsize" : 13.0,
 									"id" : "obj-1",
 									"maxclass" : "dada.music~",
-									"numinlets" : 2,
+									"numinlets" : 1,
 									"numoutlets" : 3,
 									"outlettype" : [ "signal", "", "" ],
 									"patching_rect" : [ 17.0, 351.0, 700.0, 179.0 ],
-									"versionnumber" : 10000,
+									"versionnumber" : 20600,
 									"zoom" : 64.0
 								}
 
@@ -1277,7 +1228,6 @@
 									"parameter_enable" : 0,
 									"patching_rect" : [ 183.5, 617.5, 20.0, 20.0 ],
 									"rounded" : 60.0,
-									"style" : "",
 									"text" : "1",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
 								}
@@ -1297,9 +1247,8 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 357.0, 171.0, 20.0, 17.754387 ],
+									"patching_rect" : [ 357.0, 171.0, 20.0, 17.754387000000001 ],
 									"rounded" : 60.0,
-									"style" : "",
 									"text" : "2",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
 								}
@@ -1427,11 +1376,9 @@
 						"digest" : "",
 						"fontsize" : 13.0,
 						"globalpatchername" : "",
-						"style" : "",
 						"tags" : ""
 					}
 ,
-					"style" : "",
 					"text" : "p basic",
 					"varname" : "basic_tab"
 				}
@@ -1449,7 +1396,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 10.0, 10.0, 267.12735, 57.567627 ]
+					"patching_rect" : [ 10.0, 10.0, 267.127349999999979, 57.567627000000002 ]
 				}
 
 			}
@@ -1464,13 +1411,14 @@
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
-							"major" : 7,
+							"major" : 8,
 							"minor" : 3,
-							"revision" : 4,
+							"revision" : 3,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
+						"classnamespace" : "box",
 						"rect" : [ 0.0, 26.0, 881.0, 666.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
@@ -1499,6 +1447,7 @@
 						"style" : "",
 						"subpatcher_template" : "",
 						"showontab" : 1,
+						"assistshowspatchername" : 0,
 						"boxes" : [  ],
 						"lines" : [  ]
 					}
@@ -1509,11 +1458,9 @@
 						"digest" : "",
 						"fontsize" : 13.0,
 						"globalpatchername" : "",
-						"style" : "",
 						"tags" : ""
 					}
 ,
-					"style" : "",
 					"text" : "p ?",
 					"varname" : "q_tab"
 				}
@@ -1523,17 +1470,31 @@
 		"lines" : [  ],
 		"parameters" : 		{
 			"obj-2::obj-37" : [ "live.gain~", "live.gain~", 0 ],
-			"obj-3::obj-37" : [ "live.gain~[1]", "live.gain~", 0 ]
+			"obj-3::obj-37" : [ "live.gain~[1]", "live.gain~", 0 ],
+			"parameterbanks" : 			{
+				"0" : 				{
+					"index" : 0,
+					"name" : "",
+					"parameters" : [ "-", "-", "-", "-", "-", "-", "-", "-" ]
+				}
+
+			}
+,
+			"inherited_shortname" : 1
 		}
 ,
 		"dependency_cache" : [ 			{
-				"name" : "helpname.js",
+				"name" : "dada.music~.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "helpdetails.js",
 				"bootpath" : "C74:/help/resources",
 				"type" : "TEXT",
 				"implicit" : 1
 			}
 , 			{
-				"name" : "helpdetails.js",
+				"name" : "helpname.js",
 				"bootpath" : "C74:/help/resources",
 				"type" : "TEXT",
 				"implicit" : 1
@@ -1543,10 +1504,6 @@
 				"bootpath" : "C74:/help/resources",
 				"type" : "TEXT",
 				"implicit" : 1
-			}
-, 			{
-				"name" : "dada.music~.mxo",
-				"type" : "iLaX"
 			}
  ],
 		"autosave" : 0

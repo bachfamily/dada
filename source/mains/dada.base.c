@@ -2247,7 +2247,7 @@ t_xbase *xbase_new(t_symbol *name)
         b->d_db = NULL;
         b->d_name = name;
         b->magic = DADA_XBASE_MAGIC_GOOD;
-        b->d_force_store_lllls_as_text = force_store_lllls_as_text;
+        b->d_force_store_lllls_as_text = false;
         b->d_dirty = false;
         b->d_nodirty = true;
         b->table = (t_db_table *)bach_newptr(DADA_XBASE_MAX_TABLES * sizeof(t_db_table));

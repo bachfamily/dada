@@ -321,6 +321,21 @@
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
 		</attribute>
+		<attribute name="llllastext" get="1" set="1" type="int" size="1">
+			<digest>
+				Store lllls as Text
+			</digest>
+			<description>
+				Toggles the ability to store lllls as text in the database, so that they you can query them
+				(at the price of performance time).
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Settings" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Store lllls as Text" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
+			</attributelist>
+		</attribute>
 		<attribute name="name" get="1" set="1" type="symbol" size="1">
 			<digest>
 				Database Name

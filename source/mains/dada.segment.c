@@ -77,6 +77,8 @@ typedef struct _segment {
 	long				measure_segm_pattern[DADA_SEGMENT_MAX_MEASURE_PRESEGM_PATTERN];
     
     long                window_type;
+    long                graces_stay_with_next;
+    long                add_ties_while_cropping;
     
     char                use_tempo_markers_for_segmentation;
     char                copy_tempi_marker;
@@ -161,6 +163,17 @@ void C74_EXPORT ext_main(void *moduleRef)
 
 	CLASS_STICKY_ATTR(c,"category",0,"Settings");
 	
+    CLASS_ATTR_LONG(c, "graceswithnext", 0, t_segment, graces_stay_with_next);
+    CLASS_ATTR_STYLE_LABEL(c,"graceswithnext",0,"onoff","Grace Chords Stay With Next Segment");
+    CLASS_ATTR_BASIC(c, "graceswithnext", 0);
+    // @description If set, grace notes stay with the next segment, (unless they are at the very end of a measure),
+    // otherwise they stay with the previous one.
+
+    CLASS_ATTR_LONG(c, "addties", 0, t_segment, add_ties_while_cropping);
+    CLASS_ATTR_STYLE_LABEL(c,"addties",0,"onoff","Add Ties While Cropping");
+    CLASS_ATTR_BASIC(c, "addties", 0);
+    // @description If set, when a note is cropped, a tie is added.
+
 	CLASS_ATTR_CHAR(c,"algorithm",0, t_segment, algorithm);
 	CLASS_ATTR_STYLE_LABEL(c,"algorithm",0,"enumindex","Algorithm");
 	CLASS_ATTR_ENUMINDEX(c,"algorithm", 0, "Equation Markers Labels"); 
@@ -350,9 +363,11 @@ t_segment* segment_new(t_symbol *s, short argc, t_atom *argv)
 		x->segmentsize_lexpr = NULL;
         x->hopsize_lexpr = NULL;
 		x->features_custom_num = 0;
-		x->measure_segm_pattern_size = 1;
+		x->measure_segm_pattern_size = 0;
 		x->measure_segm_pattern[0] = 1;
         x->lambda_mode = 1;
+        x->graces_stay_with_next = 1;
+        x->add_ties_while_cropping = 1;
 		
 		object_attr_setsym(x, gensym("segmentsize"), gensym("none"));
         object_attr_setsym(x, gensym("hopsize"), gensym(""));
@@ -800,12 +815,21 @@ t_llll *segment_roll(t_segment *x, t_llll *roll, t_llll **meta)
         t_llll *result = llll_get();
         t_llllelem *elem, *first_nonheader_elem = get_first_nonheader_elem(roll);
         t_llll *header = llll_get();
-
+        t_llll *voicenames_ll = NULL;
+        
         if (meta)
             *meta = llll_get();
         
-        for (elem = roll->l_head; elem && elem != first_nonheader_elem; elem = elem->l_next)
-            llll_appendhatom_clone(header, &elem->l_hatom);
+        for (elem = roll->l_head; elem && elem != first_nonheader_elem; elem = elem->l_next) {
+            // should not clone
+            t_llll *templl = NULL;
+            if (hatom_gettype(&elem->l_hatom) == H_LLLL && (templl = hatom_getllll(&elem->l_hatom)) &&
+                templl->l_head && hatom_getsym(&templl->l_head->l_hatom) == _llllobj_sym_voicenames) {
+                voicenames_ll= templl;
+            } else {
+                llll_appendhatom_clone(header, &elem->l_hatom);
+            }
+        }
         
         long i = 1;
         for (; elem; elem = elem->l_next, i++)
@@ -813,6 +837,17 @@ t_llll *segment_roll(t_segment *x, t_llll *roll, t_llll **meta)
                 t_llll *this_ll = llll_clone(header);
                 t_llll *this_meta = NULL;
                 t_llll *this_result = NULL;
+                
+                if (this_ll && voicenames_ll) {
+                    t_llllelem *el = llll_getindex(voicenames_ll, i+1, I_STANDARD);
+                    if (el) {
+                        t_llll *temp = llll_get();
+                        llll_appendsym(temp, _llllobj_sym_voicenames);
+                        llll_appendhatom_clone(temp, &el->l_hatom);
+                        llll_appendllll(this_ll, temp);
+                    }
+                }
+                
                 llll_appendllll_clone(this_ll, hatom_getllll(&elem->l_hatom));
                 this_result = segment_roll_do(x, this_ll, &this_meta, i);
                 llll_chain(result, this_result);
@@ -828,11 +863,12 @@ t_llll *segment_roll(t_segment *x, t_llll *roll, t_llll **meta)
 }
 
 
-t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_llll *score, t_llll *result, t_llll **meta, long measure_offset, long *idx_offset, long voice_number)
+// if cut_points is NULL, they are calculated via segmentsize and hopsize
+t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_llll *score, t_llll *result, t_llll **meta, long measure_offset, long *idx_offset, long voice_number, t_llll *cut_points)
 {
-    char dont_segment = (x->segmentsize_as_sym == _llllobj_sym_empty_symbol || x->segmentsize_as_sym == _llllobj_sym_none);
+    char dont_segment = ((cut_points == NULL) && (x->segmentsize_as_sym == _llllobj_sym_empty_symbol || x->segmentsize_as_sym == _llllobj_sym_none));
 
-    if (!dont_segment && !x->segmentsize_lexpr)  {
+    if (!dont_segment && !x->segmentsize_lexpr && cut_points == NULL)  {
 		object_error((t_object *)x, "No valid segment size expression introduced");
 		return NULL;
 	}
@@ -855,7 +891,7 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
         if (meta) {
             t_llll *this_meta = llll_get();
             t_rational this_beat_phase = long2rat(0);
-            t_rational this_segm_size = dada_score_gettotsymduration(score);
+            t_rational this_segm_size = dada_score_get_totsymduration(score);
             t_rational this_div = long2rat(0);
             t_tempo *this_tempo = NULL;
             
@@ -878,9 +914,11 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
         
         
         // getting time signatures
-        t_llll *ts = dada_score_getts(score);
+        t_llll *ts = dada_score_get_ts(score);
         t_llll *divs = dada_score_getdivisions(score);
         
+        int cut_points_curr_idx = 0;
+        t_rational cut_points_curr_onset = long2rat(0);
         
         if (divs && divs->l_head && hatom_gettype(&divs->l_head->l_hatom) == H_LLLL) {
             
@@ -908,7 +946,7 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
             if (divs_wk->l_head && is_hatom_number(&divs_wk->l_head->l_hatom)) {
                 t_timepoint tp = build_timepoint(0, long2rat(0));
                 t_rational tp_global_sym_onset = long2rat(0);
-                t_rational global_sym_onset = long2rat(0), size_accum = long2rat(0);
+                t_rational global_sym_onset = long2rat(0), size_accum = long2rat(0), size_accum_till_barline = long2rat(0);
                 t_rational measure_sym_onset = long2rat(0);
                 long beat_num = 0;
                 double approx_error = 0;
@@ -927,48 +965,26 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                     
                     
                     // get segment size
-                    t_hatom *res = NULL;
-                    hatom_setlong(vars, 0);
-                    hatom_setlong(vars + 1, tp.measure_num + 1 + measure_offset);
-                    hatom_setrational(vars + 2, measure_sym_dur);
-                    hatom_setrational(vars + 3, div);
-                    hatom_setrational(vars + 4, div);
-                    hatom_setlong(vars + 5, 0);
-                    res = lexpr_eval(x->segmentsize_lexpr, vars);
-                    if (!res)  {
-                        object_error((t_object *)x, "Can't compute segment size");
-                        return NULL;
-                    }
-                    t_rational seg_size;
-                    switch (hatom_gettype(res)) {
-                        case H_LONG:
-                        case H_RAT:
-                            seg_size = hatom_getrational(res);
-                            break;
-                        case H_DOUBLE:
-                            seg_size = approx_double_with_rat_best_match(hatom_getdouble(res), 32, 0, &approx_error);
-                            break;
-                        default:
-                            seg_size = div;
-                            break;
-                    }
-                    bach_freeptr(res);
-                    
-                    if (rat_long_cmp(seg_size, 0) <= 0) {
-                        object_error((t_object *)x, "Non-positive segment size introduced. The division will be used instead.");
-                        seg_size = div;
-                    }
-                    
-                    
-                    // get hop size size
-                    t_rational hop_size = seg_size;
-                    if (x->hopsize_lexpr) {
+                    t_rational hop_size, seg_size;
+                    if (cut_points) { // markers are given
+                        t_rational cut_points_new_onset = cut_points_curr_onset;
+                        while (cut_points_new_onset == cut_points_curr_onset) {
+                            cut_points_curr_idx++;
+                            t_llllelem *el = llll_getindex(cut_points, cut_points_curr_idx, I_STANDARD);
+                            cut_points_new_onset = hatom_getrational(&el->l_hatom);
+                        }
+                        seg_size = cut_points_new_onset - cut_points_curr_onset;
+                        hop_size = seg_size;
+                        cut_points_curr_onset = cut_points_new_onset;
+                    } else {
+                        t_hatom *res = NULL;
                         hatom_setlong(vars, 0);
                         hatom_setlong(vars + 1, tp.measure_num + 1 + measure_offset);
                         hatom_setrational(vars + 2, measure_sym_dur);
                         hatom_setrational(vars + 3, div);
                         hatom_setrational(vars + 4, div);
-                        res = lexpr_eval(x->hopsize_lexpr, vars);
+                        hatom_setlong(vars + 5, 0);
+                        res = lexpr_eval(x->segmentsize_lexpr, vars);
                         if (!res)  {
                             object_error((t_object *)x, "Can't compute segment size");
                             return NULL;
@@ -976,22 +992,56 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                         switch (hatom_gettype(res)) {
                             case H_LONG:
                             case H_RAT:
-                                hop_size = hatom_getrational(res);
+                                seg_size = hatom_getrational(res);
                                 break;
                             case H_DOUBLE:
-                                hop_size = approx_double_with_rat_best_match(hatom_getdouble(res), 32, 0, &approx_error);
+                                seg_size = approx_double_with_rat_best_match(hatom_getdouble(res), 32, 0, &approx_error);
                                 break;
                             default:
-                                hop_size = div;
+                                seg_size = div;
                                 break;
                         }
                         bach_freeptr(res);
+                        
+                        if (rat_long_cmp(seg_size, 0) <= 0) {
+                            object_error((t_object *)x, "Non-positive segment size introduced. The division will be used instead.");
+                            seg_size = div;
+                        }
+                        
+                        
+                        // get hop size size
+                        hop_size = seg_size;
+                        if (x->hopsize_lexpr) {
+                            hatom_setlong(vars, 0);
+                            hatom_setlong(vars + 1, tp.measure_num + 1 + measure_offset);
+                            hatom_setrational(vars + 2, measure_sym_dur);
+                            hatom_setrational(vars + 3, div);
+                            hatom_setrational(vars + 4, div);
+                            res = lexpr_eval(x->hopsize_lexpr, vars);
+                            if (!res)  {
+                                object_error((t_object *)x, "Can't compute segment size");
+                                return NULL;
+                            }
+                            switch (hatom_gettype(res)) {
+                                case H_LONG:
+                                case H_RAT:
+                                    hop_size = hatom_getrational(res);
+                                    break;
+                                case H_DOUBLE:
+                                    hop_size = approx_double_with_rat_best_match(hatom_getdouble(res), 32, 0, &approx_error);
+                                    break;
+                                default:
+                                    hop_size = div;
+                                    break;
+                            }
+                            bach_freeptr(res);
+                        }
                     }
                     
                     
-                    llll_appendrat(segm_size, seg_size, 0, WHITENULL_llll);
-                    llll_appendrat(beat_phases, rat_long_sum(rat_rat_div(rat_rat_diff(tp.pt_in_measure, size_accum), div), beat_num), 0, WHITENULL_llll);
-                    llll_appendrat(divs_out, div, 0, WHITENULL_llll);
+                    llll_appendrat(segm_size, seg_size);
+                    llll_appendrat(beat_phases, rat_long_sum(rat_rat_div(rat_rat_diff(tp.pt_in_measure, rat_rat_diff(size_accum, size_accum_till_barline)), div), beat_num));
+                    llll_appendrat(divs_out, div);
                     
                     
                     // Computing timepoint end
@@ -1021,7 +1071,7 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                                 long cmp = rat_rat_cmp(temp_end, new_global_sym_onset_end);
                                 if (cmp < 0) {
                                     tp_end.pt_in_measure = rat_rat_sum(tp_end.pt_in_measure, this_size_end);
-                                    tp_global_sym_onset_end = rat_rat_sum(tp_global_sym_onset_end, this_size_end);
+                                    tp_global_sym_onset_end = rat_rat_sum(rat_rat_sum(tp_global_sym_onset_end, this_size_end), rat_rat_diff(size_accum_end, tp_global_sym_onset_end));
                                     size_accum_end = temp_end;
                                     // nothing to do
                                 } else if (cmp == 0) {
@@ -1033,7 +1083,7 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                                     break;
                                 } else if (cmp > 0) {
                                     // overflow
-                                    tp_end.pt_in_measure = rat_rat_sum(rat_rat_sum(tp_end.pt_in_measure, this_size_end), rat_rat_diff(size_accum_end, tp_global_sym_onset_end));
+                                    tp_end.pt_in_measure = rat_rat_sum(rat_rat_sum(tp_end.pt_in_measure, this_size_end), rat_rat_diff(size_accum_end, tp_global_sym_onset_end)); // tp_end.pt_in_measure + this_size_end
                                     tp_end.pt_in_measure = rat_rat_diff(tp_end.pt_in_measure, rat_rat_diff(temp_end, new_global_sym_onset_end));
                                     tp_global_sym_onset_end = new_global_sym_onset_end;
                                     break;
@@ -1067,6 +1117,7 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                         if (hatom_gettype(&elem->l_hatom) == H_OBJ) { // new measure
                             tp.measure_num ++;
                             beat_num = 0;
+                            size_accum_till_barline = size_accum;
                             measure_sym_onset = long2rat(0);
                             tp.pt_in_measure = long2rat(0);
                             ts_elem = ts_elem ? ts_elem->l_next : NULL;
@@ -1075,9 +1126,9 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                             t_rational this_size = hatom_getrational(&elem->l_hatom);
                             temp = rat_rat_sum(size_accum, this_size);
                             long cmp = rat_rat_cmp(temp, new_global_sym_onset);
-                            if (cmp < 0) {
+                            if (cmp < 0) { // division is still within the ending point of the segment
                                 tp.pt_in_measure = rat_rat_sum(tp.pt_in_measure, this_size);
-                                tp_global_sym_onset = rat_rat_sum(tp_global_sym_onset, this_size);
+                                tp_global_sym_onset = rat_rat_sum(rat_rat_sum(tp_global_sym_onset, this_size), rat_rat_diff(size_accum, tp_global_sym_onset));
                                 size_accum = temp;
                                 // nothing to do
                             } else if (cmp == 0) {
@@ -1090,7 +1141,7 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                                 size_accum = temp;
                                 break;
                             } else if (cmp > 0) {
-                                // overflow
+                                // division overflows with respect to ending point
                                 //                            tp.pt_in_measure = new_global_sym_onset; //rat_rat_sum(tp.pt_in_measure, rat_rat_diff(new_global_sym_onset, temp));
                                 tp.pt_in_measure = rat_rat_sum(rat_rat_sum(tp.pt_in_measure, this_size), rat_rat_diff(size_accum, tp_global_sym_onset));
                                 tp.pt_in_measure = rat_rat_diff(tp.pt_in_measure, rat_rat_diff(temp, new_global_sym_onset));
@@ -1113,6 +1164,7 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                     if (hatom_gettype(&elem->l_hatom) == H_OBJ) { // measure barline
                         tp.measure_num ++;
                         beat_num = 0;
+                        size_accum_till_barline = size_accum;
                         measure_sym_onset = long2rat(0);
                         tp.pt_in_measure = long2rat(0);
                         ts_elem = ts_elem ? ts_elem->l_next : NULL;
@@ -1161,14 +1213,14 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                         t_timepoint tp_diff_hop = timepoints_diff(next_tp_start, this_tp_start);
                         
                         t_llll *freeme1 = llll_clone(temp);
-                        right = dada_score_split(freeme1, tp_diff_hop, NULL, NULL, true);
-                        t_llll *freeme2 = dada_score_split(temp, tp_diff, &ts, &tempo, true);
+                        right = dada_score_split(freeme1, tp_diff_hop, NULL, NULL, true, x->graces_stay_with_next, x->add_ties_while_cropping);
+                        t_llll *freeme2 = dada_score_split(temp, tp_diff, &ts, &tempo, true, x->graces_stay_with_next, x->add_ties_while_cropping);
                         llll_free(freeme1);
                         llll_free(freeme2);
                     } else
-                        right = dada_score_split(temp, tp_diff, &ts, &tempo, true);
+                        right = dada_score_split(temp, tp_diff, &ts, &tempo, true, x->graces_stay_with_next, x->add_ties_while_cropping);
                 } else
-                    right = dada_score_split(temp, tp_diff, &ts, &tempo, true);
+                    right = dada_score_split(temp, tp_diff, &ts, &tempo, true, x->graces_stay_with_next, x->add_ties_while_cropping);
                 
                 //            post("---");
                 //            llll_print(temp, NULL, 0, 6, NULL);
@@ -1236,12 +1288,12 @@ t_llll *segment_score_standard(t_segment *x, t_llll *score, t_llll **meta, long 
         long idx_offset = 0;
         if (meta)
             *meta = llll_get();
-        segment_segment_presegmented_score_and_append_standard(x, score, res, meta, 0, &idx_offset, voice_number);
+        segment_segment_presegmented_score_and_append_standard(x, score, res, meta, 0, &idx_offset, voice_number, NULL);
         return res;
 
     } else {
         // first of all pre-segmenting by measure pattern
-        long num_measures = dada_score_getnummeas(score);
+        long num_measures = dada_score_get_nummeas(score);
         
         long i = 0, n = 0;
         long *splits = (long *)bach_newptr(num_measures * sizeof(long));
@@ -1266,7 +1318,7 @@ t_llll *segment_score_standard(t_segment *x, t_llll *score, t_llll **meta, long 
         long idx_offset = 0;
         for (elem = presegm_scores->l_head; elem && i < num_measures; elem = elem->l_next, i++) {
             if (hatom_gettype(&elem->l_hatom) == H_LLLL) {
-                segment_segment_presegmented_score_and_append_standard(x, hatom_getllll(&elem->l_hatom), res, meta, i < 0 ? 0 : splits[i], &idx_offset, voice_number);
+                segment_segment_presegmented_score_and_append_standard(x, hatom_getllll(&elem->l_hatom), res, meta, i < 0 ? 0 : splits[i], &idx_offset, voice_number, NULL);
             }
         }
         
@@ -1315,7 +1367,73 @@ t_llll *segment_score_labels(t_segment *x, t_llll *score, t_llll **meta)
 
 
 
+t_llll *segment_score_markers(t_segment *x, t_llll *score, t_llll **meta, long voice_number)
+{
+    t_llll *markers = dada_get_markers(score);
+    t_llll *measuresymdurs = dada_score_get_measuresymdurs(score);
+    t_llll *res = llll_get();
 
+    // building cumulative measure symdurs
+    t_llll *measuresymdurs_cumulative = llll_get();
+    for (t_llllelem *el = measuresymdurs->l_head; el; el = el->l_next) {
+        t_llll *measuresymdurs_voice = hatom_getllll(&el->l_hatom);
+        t_llll *measuresymdurs_cumulative_voice = llll_get();
+        t_rational cur = long2rat(0);
+        llll_appendrat(measuresymdurs_cumulative_voice, cur);
+        for (t_llllelem *el = measuresymdurs_voice->l_head; el; el = el->l_next) {
+            t_rational r = hatom_getrational(&el->l_hatom);
+            llll_appendrat(measuresymdurs_cumulative_voice, cur+r);
+        }
+        llll_appendllll(measuresymdurs_cumulative, measuresymdurs_cumulative_voice);
+    }
+
+//    llll_print(measuresymdurs_cumulative);
+    
+    if (measuresymdurs_cumulative && measuresymdurs_cumulative->l_head && markers) {
+        // getting cut_points from markers
+        t_llll *cut_points = llll_get();
+        
+        for (t_llllelem *el = markers->l_head; el; el = el->l_next) {
+            if (hatom_gettype(&el->l_hatom) == H_LLLL) {
+                t_llll *mk_llll = hatom_getllll(&el->l_hatom);
+                if (mk_llll && mk_llll->l_head) {
+                    t_llll *position = hatom_getllll(&mk_llll->l_head->l_hatom);
+                    if (position && position->l_size >= 3) {
+                        long voice_num = hatom_getlong(&position->l_head->l_hatom);
+                        long measure_num = hatom_getlong(&position->l_head->l_next->l_hatom);
+                        t_rational mk_onset = hatom_getrational(&position->l_head->l_next->l_next->l_hatom);
+                        
+                        t_llllelem *voice_el = llll_getindex(measuresymdurs_cumulative, voice_num, I_STANDARD);
+                        if (voice_el) {
+                            t_llll *voice_ll = hatom_getllll(&voice_el->l_hatom);
+                            if (voice_ll) {
+                                t_llllelem *measure_onset_el = llll_getindex(voice_ll, measure_num, I_STANDARD);
+                                if (measure_onset_el) {
+                                    t_rational measure_onset = measure_onset_el ? hatom_getrational(&measure_onset_el->l_hatom) : long2rat(0);
+                                    llll_appendrat(cut_points, measure_onset + mk_onset);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        long idx_offset = 0;
+        if (meta)
+            *meta = llll_get();
+        
+//        llll_print(cut_points);
+        
+        segment_segment_presegmented_score_and_append_standard(x, score, res, meta, 0, &idx_offset, voice_number, cut_points);
+    }
+    
+    
+    llll_free(measuresymdurs);
+    llll_free(markers);
+    
+    return res;
+}
 
 t_llll *segment_score_do(t_segment *x, t_llll *score, t_llll **meta, long voice_number)
 {
@@ -1324,6 +1442,9 @@ t_llll *segment_score_do(t_segment *x, t_llll *score, t_llll **meta, long voice_
 		case DADA_SEGMENTATION_ALGORITHM_EQUATION:
 			result = segment_score_standard(x, score, meta, voice_number);
 			break;
+        case DADA_SEGMENTATION_ALGORITHM_MARKERS:
+            result = segment_score_markers(x, score, meta, voice_number);
+            break;
 		default:
 			object_error((t_object *)x, "Can't use the defined segmentation algorithm for bach.score.");
 			break;
@@ -1338,12 +1459,21 @@ t_llll *segment_score(t_segment *x, t_llll *score, t_llll **meta)
         t_llll *result = llll_get();
         t_llllelem *elem, *first_nonheader_elem = get_first_nonheader_elem(score);
         t_llll *header = llll_get();
+        t_llll *voicenames_ll = NULL;
         
         if (meta)
             *meta = llll_get();
         
-        for (elem = score->l_head; elem && elem != first_nonheader_elem; elem = elem->l_next)
-            llll_appendhatom_clone(header, &elem->l_hatom);
+        for (elem = score->l_head; elem && elem != first_nonheader_elem; elem = elem->l_next) {
+            t_llll *templl = NULL;
+            if (hatom_gettype(&elem->l_hatom) == H_LLLL && (templl = hatom_getllll(&elem->l_hatom)) &&
+                templl->l_head && hatom_getsym(&templl->l_head->l_hatom) == _llllobj_sym_voicenames) {
+                // don't copy voicenames
+                voicenames_ll = templl;
+            } else {
+                llll_appendhatom_clone(header, &elem->l_hatom);
+            }
+        }
         
         // substitute 1 to all markers' voices
         for (t_llllelem *tmp_elem = header->l_head; tmp_elem; tmp_elem = tmp_elem->l_next) {
@@ -1371,6 +1501,17 @@ t_llll *segment_score(t_segment *x, t_llll *score, t_llll **meta)
                 t_llll *this_ll = llll_clone(header);
                 t_llll *this_meta = NULL;
                 t_llll *this_result = NULL;
+                
+                if (this_ll && voicenames_ll) {
+                    t_llllelem *el = llll_getindex(voicenames_ll, i+1, I_STANDARD);
+                    if (el) {
+                        t_llll *temp = llll_get();
+                        llll_appendsym(temp, _llllobj_sym_voicenames);
+                        llll_appendhatom_clone(temp, &el->l_hatom);
+                        llll_appendllll(this_ll, temp);
+                    }
+                }
+                
                 llll_appendllll_clone(this_ll, hatom_getllll(&elem->l_hatom));
                 this_result = segment_score_do(x, this_ll, &this_meta, i);
                 llll_chain(result, this_result);

@@ -2,7 +2,7 @@ LICENSE
 
 dada is distributed under the terms of the GNU General Public License version 3 (GPL-v3.0).
 
-The source code of bach can be obtained at the following URL:
+The source code of dada can be obtained at the following URL:
 https://github.com/bachfamily/dada
 
 dada includes:

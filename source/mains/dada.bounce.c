@@ -1689,7 +1689,7 @@ void paint_connected_component(t_bounce *x, t_jgraphics *g, t_rect rect, t_pt ce
 void repaint_played_elements(t_bounce *x, t_jgraphics *g, t_rect rect, t_pt center)
 {
     if (x->hit_edge >= 0) {
-        graph_paint_edge(dadaobj_cast(x), g, rect, center, &x->room_graph, change_alpha(x->b_ob.d_ob.m_play.play_color, x->b_ob.d_ob.m_play.play_color.alpha * 0.9), x->hit_edge, 0, 0, NULL, 4, false, NULL, false, NULL, false);
+        graph_paint_edge(dadaobj_cast(x), g, rect, center, &x->room_graph, change_alpha(x->b_ob.d_ob.m_play.play_color, x->b_ob.d_ob.m_play.play_color.alpha * 0.9), x->hit_edge, 0, 0, NULL, 4, false, NULL, false, NULL, false, 0);
     }
 }
 
@@ -1819,7 +1819,7 @@ void bounce_paint_graph(t_bounce *x, t_object *view, t_rect rect, t_pt center, t
 	if (g) {
 //        t_jfont *jf_label = jfont_create("Arial", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL, 11);
 		graph_paint(dadaobj_cast(x), g, rect, center, &x->room_graph, x->j_roomcolor, true, true,
-					x->room_vertex_size, x->room_vertex_size, NULL, x->room_edge_linewidth, 0, NULL, false, NULL, false);
+					x->room_vertex_size, x->room_vertex_size, NULL, x->room_edge_linewidth, 0, NULL, false, NULL, false, 0);
         
         if (view)
             jbox_end_layer((t_object *)x, view, gensym("room"));

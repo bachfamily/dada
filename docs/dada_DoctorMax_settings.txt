@@ -1,11 +1,11 @@
-/Users/danieleghisi/Documents/Max 7/Packages/dada/source/mains
-/Users/danieleghisi/Documents/Max 7/Packages/dada/source/abstractions
+/Users/danieleghisi/Documents/Max 8/Packages/dada/source/mains
+/Users/danieleghisi/Documents/Max 8/Packages/dada/source/abstractions
 
 
-/Users/danieleghisi/Documents/Max 7/Packages/bach/source/commons/dg/bach_doc_commons_dg.h
-/Users/danieleghisi/Documents/Max 7/Packages/bach/source/commons/aa/bach_doc_commons_aa.h
-/Users/danieleghisi/Documents/Max 7/Packages/dada/docs/refpages/dada_ref
-/Users/danieleghisi/Documents/Max 7/Packages/dada/init
+/Users/danieleghisi/Documents/Max 8/Packages/bach/source/commons/dg/bach_doc_commons_dg.h
+/Users/danieleghisi/Documents/Max 8/Packages/bach/source/commons/aa/bach_doc_commons_aa.h
+/Users/danieleghisi/Documents/Max 8/Packages/dada/docs/refpages/dada_ref
+/Users/danieleghisi/Documents/Max 8/Packages/dada/init
 1
 1
 1
@@ -22,14 +22,14 @@ dada
 1
 0
 0
-/Users/danieleghisi/Documents/Max 7/Packages/dada/source/commons/dada_doc_substitutions.h
-/Users/danieleghisi/Documents/Max 7/Packages/dada/interfaces
+/Users/danieleghisi/Documents/Max 8/Packages/dada/source/commons/dada_doc_substitutions.h
+/Users/danieleghisi/Documents/Max 8/Packages/dada/interfaces
 1
 dada math
 0
-/Users/danieleghisi/Documents/Max 7/Packages/dada/help
+/Users/danieleghisi/Documents/Max 8/Packages/dada/help
 0
 dada.help
-/Users/danieleghisi/Documents/Max 7/Packages/dada/help/dada.help.json
+/Users/danieleghisi/Documents/Max 8/Packages/dada/help/dada.help.json
 dada.help.home.maxpat, dada.help.search.maxpat, dada.help.searchtag.maxpat
-/Users/danieleghisi/Documents/Max 7/Packages/dada/source/commons/dada_doc_commons.h
+/Users/danieleghisi/Documents/Max 8/Packages/dada/source/commons/dada_doc_commons.h

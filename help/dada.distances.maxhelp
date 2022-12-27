@@ -3,8 +3,8 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 8,
-			"minor" : 0,
-			"revision" : 2,
+			"minor" : 5,
+			"revision" : 0,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -39,11 +39,12 @@
 		"subpatcher_template" : "",
 		"showrootpatcherontab" : 0,
 		"showontab" : 0,
+		"assistshowspatchername" : 0,
 		"boxes" : [ 			{
 				"box" : 				{
 					"fontname" : "Arial",
 					"fontsize" : 12.0,
-					"id" : "obj-15",
+					"id" : "obj-12",
 					"maxclass" : "newobj",
 					"numinlets" : 0,
 					"numoutlets" : 0,
@@ -51,8 +52,8 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 0,
-							"revision" : 2,
+							"minor" : 5,
+							"revision" : 0,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -86,6 +87,262 @@
 						"style" : "",
 						"subpatcher_template" : "",
 						"showontab" : 1,
+						"assistshowspatchername" : 0,
+						"boxes" : [ 							{
+								"box" : 								{
+									"id" : "obj-3",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 46.666655999999989, 162.5, 155.0, 23.0 ],
+									"presentation_linecount" : 2,
+									"text" : "contentfield name citie_id"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 13.0,
+									"id" : "obj-18",
+									"linecount" : 5,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 359.666655999999989, 162.5, 312.0, 79.0 ],
+									"text" : "The columns ID of a table is the table name (without the trailing \"s\", if any) joined with \"_id\". This is weird for irregular plurals and singular names ending with s, but that's the way it is, at least it is consistent. So, for the table named \"cities\", the ID field is \"citie_id\".",
+									"textcolor" : [ 0.5, 0.5, 0.5, 1.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"bubble" : 1,
+									"id" : "obj-17",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 213.666655999999989, 162.5, 143.0, 25.0 ],
+									"text" : "Output ID and name"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 13.0,
+									"id" : "obj-1",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 10.0, 71.625, 613.0, 21.0 ],
+									"text" : "The contentfield attribute sets one or more columns to be output when the points are hovered/clicked.",
+									"textcolor" : [ 0.5, 0.5, 0.5, 1.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-28",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 156.333333333333343, 527.5, 68.0, 23.0 ],
+									"saved_object_attributes" : 									{
+										"versionnumber" : 80001
+									}
+,
+									"text" : "bach.print"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"bubble" : 1,
+									"bubblepoint" : 0.0,
+									"bubbleside" : 2,
+									"id" : "obj-19",
+									"linecount" : 3,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 143.0, 203.0, 115.0, 69.0 ],
+									"text" : "then hover or click on the elements",
+									"textcolor" : [ 0.784314, 0.145098, 0.023529, 1.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-15",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 32.666655999999989, 137.5, 152.0, 23.0 ],
+									"text" : "contentfield name capital"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"bubble" : 1,
+									"id" : "obj-13",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 186.666655999999989, 137.5, 240.0, 25.0 ],
+									"text" : "Output name and whether it is capital"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"center" : [ 51.289499783890051, 183.386922320632607 ],
+									"contentfield" : [ "name", "citie_id" ],
+									"database" : "mydisthelpdb",
+									"distancetable" : "dists",
+									"fontface" : 0,
+									"fontname" : "Arial",
+									"id" : "obj-10",
+									"labelfield" : "name",
+									"maxclass" : "dada.distances",
+									"maxdistedge" : 800.0,
+									"numinlets" : 1,
+									"numoutlets" : 4,
+									"out" : "nnn",
+									"outlettype" : [ "", "", "", "bang" ],
+									"patching_rect" : [ 18.0, 263.0, 433.999969000000021, 259.0 ],
+									"query" : "SELECT * FROM cities",
+									"table" : "cities",
+									"versionnumber" : 20600,
+									"zoom" : 1.921767193311788
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-9",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 18.0, 114.0, 111.0, 23.0 ],
+									"text" : "contentfield name"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"border" : 0,
+									"filename" : "helpname.js",
+									"id" : "obj-2",
+									"ignoreclick" : 1,
+									"jsarguments" : [ "dada.cartesian" ],
+									"maxclass" : "jsui",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
+									"patching_rect" : [ 10.0, 10.0, 307.54400634765625, 57.599853515625 ]
+								}
+
+							}
+ ],
+						"lines" : [ 							{
+								"patchline" : 								{
+									"destination" : [ "obj-28", 0 ],
+									"source" : [ "obj-10", 1 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-10", 0 ],
+									"source" : [ "obj-15", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-10", 0 ],
+									"source" : [ "obj-3", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-10", 0 ],
+									"source" : [ "obj-9", 0 ]
+								}
+
+							}
+ ]
+					}
+,
+					"patching_rect" : [ 37.0, 155.0, 88.0, 22.0 ],
+					"saved_object_attributes" : 					{
+						"description" : "",
+						"digest" : "",
+						"fontsize" : 13.0,
+						"globalpatchername" : "",
+						"tags" : ""
+					}
+,
+					"text" : "p contentfield",
+					"varname" : "basic_tab[7]"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"fontname" : "Arial",
+					"fontsize" : 12.0,
+					"id" : "obj-15",
+					"maxclass" : "newobj",
+					"numinlets" : 0,
+					"numoutlets" : 0,
+					"patcher" : 					{
+						"fileversion" : 1,
+						"appversion" : 						{
+							"major" : 8,
+							"minor" : 5,
+							"revision" : 0,
+							"architecture" : "x64",
+							"modernui" : 1
+						}
+,
+						"classnamespace" : "box",
+						"rect" : [ 0.0, 26.0, 837.0, 666.0 ],
+						"bglocked" : 0,
+						"openinpresentation" : 0,
+						"default_fontsize" : 13.0,
+						"default_fontface" : 0,
+						"default_fontname" : "Arial",
+						"gridonopen" : 1,
+						"gridsize" : [ 5.0, 5.0 ],
+						"gridsnaponopen" : 1,
+						"objectsnaponopen" : 1,
+						"statusbarvisible" : 2,
+						"toolbarvisible" : 1,
+						"lefttoolbarpinned" : 0,
+						"toptoolbarpinned" : 0,
+						"righttoolbarpinned" : 0,
+						"bottomtoolbarpinned" : 0,
+						"toolbars_unpinned_last_save" : 0,
+						"tallnewobj" : 0,
+						"boxanimatetime" : 200,
+						"enablehscroll" : 1,
+						"enablevscroll" : 1,
+						"devicewidth" : 0.0,
+						"description" : "",
+						"digest" : "",
+						"tags" : "",
+						"style" : "",
+						"subpatcher_template" : "",
+						"showontab" : 1,
+						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
 								"box" : 								{
 									"bgmode" : 0,
@@ -95,6 +352,7 @@
 									"enablevscroll" : 0,
 									"id" : "obj-7",
 									"lockeddragscroll" : 0,
+									"lockedsize" : 0,
 									"maxclass" : "bpatcher",
 									"name" : "dada.commons.maxpat",
 									"numinlets" : 0,
@@ -109,7 +367,7 @@
 						"lines" : [  ]
 					}
 ,
-					"patching_rect" : [ 81.0, 217.0, 73.0, 22.0 ],
+					"patching_rect" : [ 105.060005187988281, 259.0, 73.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -135,8 +393,8 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 0,
-							"revision" : 2,
+							"minor" : 5,
+							"revision" : 0,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -170,6 +428,7 @@
 						"style" : "",
 						"subpatcher_template" : "",
 						"showontab" : 1,
+						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
 								"box" : 								{
 									"id" : "obj-23",
@@ -365,10 +624,12 @@
 							}
 , 							{
 								"box" : 								{
-									"center" : [ 51.289499999999997, 183.386921999999998 ],
+									"center" : [ 51.289499783889937, 183.386922320632607 ],
 									"contentfield" : [ "name" ],
 									"database" : "mydisthelpdb",
 									"distancetable" : "dists",
+									"fontface" : 0,
+									"fontname" : "Arial",
 									"id" : "obj-12",
 									"labelfield" : "name",
 									"maxclass" : "dada.distances",
@@ -380,8 +641,8 @@
 									"patching_rect" : [ 282.0, 318.0, 294.0, 263.0 ],
 									"query" : "SELECT * FROM cities",
 									"table" : "cities",
-									"versionnumber" : 10000,
-									"zoom" : 1.93087
+									"versionnumber" : 20600,
+									"zoom" : 1.930869913243118
 								}
 
 							}
@@ -397,7 +658,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 10.0, 10.0, 313.475463999999988, 57.567627000000002 ]
+									"patching_rect" : [ 10.0, 10.0, 313.448028564453125, 57.599853515625 ]
 								}
 
 							}
@@ -475,7 +736,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 35.0, 148.0, 135.0, 22.0 ],
+					"patching_rect" : [ 59.060005187988281, 190.0, 135.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -501,14 +762,14 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 0,
-							"revision" : 2,
+							"minor" : 5,
+							"revision" : 0,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 100.0, 126.0, 837.0, 666.0 ],
+						"rect" : [ 0.0, 26.0, 837.0, 666.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -536,6 +797,7 @@
 						"style" : "",
 						"subpatcher_template" : "",
 						"showontab" : 1,
+						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
 								"box" : 								{
 									"bubble" : 1,
@@ -544,7 +806,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 171.73773193359375, 115.0, 306.0, 25.0 ],
-									"presentation_linecount" : 2,
 									"text" : "First of all, toggle this on to comute uniform grids"
 								}
 
@@ -557,6 +818,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 30.571060180664062, 145.5, 150.0, 23.0 ]
 								}
 
@@ -582,6 +844,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 39.23773193359375, 184.0, 219.0, 23.0 ]
 								}
 
@@ -609,6 +872,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 60.73773193359375, 293.0, 231.0, 23.0 ]
 								}
 
@@ -800,6 +1064,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 19.73773193359375, 115.0, 150.0, 23.0 ]
 								}
 
@@ -812,6 +1077,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 60.73773193359375, 266.0, 176.0, 23.0 ]
 								}
 
@@ -822,6 +1088,8 @@
 									"contentfield" : [ "name", "capital" ],
 									"database" : "mydisthelpdb",
 									"distancetable" : "dists",
+									"fontface" : 0,
+									"fontname" : "Arial",
 									"id" : "obj-12",
 									"labelfield" : "name",
 									"maxclass" : "dada.distances",
@@ -834,7 +1102,7 @@
 									"query" : "SELECT * FROM cities",
 									"table" : "cities",
 									"uniform" : 1,
-									"versionnumber" : 10000,
+									"versionnumber" : 20600,
 									"zoom" : 1.930869913243118
 								}
 
@@ -981,7 +1249,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 58.0, 175.0, 92.0, 22.0 ],
+					"patching_rect" : [ 82.060005187988281, 217.0, 92.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -1007,8 +1275,8 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 0,
-							"revision" : 2,
+							"minor" : 5,
+							"revision" : 0,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -1042,6 +1310,7 @@
 						"style" : "",
 						"subpatcher_template" : "",
 						"showontab" : 1,
+						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
 								"box" : 								{
 									"id" : "obj-12",
@@ -1123,6 +1392,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 375.0, 256.0, 150.0, 23.0 ]
 								}
 
@@ -1347,10 +1617,12 @@
 							}
 , 							{
 								"box" : 								{
-									"center" : [ 51.289523000000003, 183.386953000000005 ],
+									"center" : [ 51.289499783890051, 183.386922320632607 ],
 									"contentfield" : [ "name" ],
 									"database" : "mydisthelpdb",
 									"distancetable" : "dists",
+									"fontface" : 0,
+									"fontname" : "Arial",
 									"id" : "obj-10",
 									"labelfield" : "name",
 									"maxclass" : "dada.distances",
@@ -1362,8 +1634,8 @@
 									"patching_rect" : [ 18.0, 293.0, 433.999969000000021, 259.0 ],
 									"query" : "SELECT * FROM cities",
 									"table" : "cities",
-									"versionnumber" : 10000,
-									"zoom" : 1.921767
+									"versionnumber" : 20600,
+									"zoom" : 1.921767193311788
 								}
 
 							}
@@ -1391,7 +1663,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 10.0, 10.0, 313.475463999999988, 57.567627000000002 ]
+									"patching_rect" : [ 10.0, 10.0, 313.448028564453125, 57.599853515625 ]
 								}
 
 							}
@@ -1543,14 +1815,14 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 0,
-							"revision" : 2,
+							"minor" : 5,
+							"revision" : 0,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 837.0, 666.0 ],
+						"rect" : [ 100.0, 126.0, 837.0, 666.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -1578,6 +1850,7 @@
 						"style" : "",
 						"subpatcher_template" : "",
 						"showontab" : 1,
+						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
 								"box" : 								{
 									"attr" : "showgrains",
@@ -1586,6 +1859,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 656.0, 489.0, 150.0, 23.0 ]
 								}
 
@@ -1598,6 +1872,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 656.0, 464.0, 150.0, 23.0 ]
 								}
 
@@ -1623,6 +1898,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 348.0, 151.0, 176.0, 23.0 ]
 								}
 
@@ -1839,6 +2115,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 362.0, 208.113646999999986, 176.0, 23.0 ]
 								}
 
@@ -1849,6 +2126,8 @@
 									"contentfield" : [ "name" ],
 									"database" : "mydisthelpdb",
 									"distancetable" : "dists",
+									"fontface" : 0,
+									"fontname" : "Arial",
 									"id" : "obj-12",
 									"labelfield" : "name",
 									"maxclass" : "dada.distances",
@@ -1860,7 +2139,7 @@
 									"patching_rect" : [ 348.0, 269.0, 294.0, 263.0 ],
 									"query" : "SELECT * FROM cities",
 									"table" : "cities",
-									"versionnumber" : 10000,
+									"versionnumber" : 20600,
 									"zoom" : 1.930869913243118
 								}
 
@@ -1876,8 +2155,8 @@
 										"fileversion" : 1,
 										"appversion" : 										{
 											"major" : 8,
-											"minor" : 0,
-											"revision" : 2,
+											"minor" : 5,
+											"revision" : 0,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -1910,6 +2189,7 @@
 										"tags" : "",
 										"style" : "",
 										"subpatcher_template" : "",
+										"assistshowspatchername" : 0,
 										"boxes" : [ 											{
 												"box" : 												{
 													"id" : "obj-16",
@@ -2467,7 +2747,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 10.0, 10.0, 233.140320000000003, 57.567627000000002 ]
+					"patching_rect" : [ 10.0, 10.0, 233.120010375976562, 57.599853515625 ]
 				}
 
 			}
@@ -2483,8 +2763,8 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 0,
-							"revision" : 2,
+							"minor" : 5,
+							"revision" : 0,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -2518,6 +2798,7 @@
 						"style" : "",
 						"subpatcher_template" : "",
 						"showontab" : 1,
+						"assistshowspatchername" : 0,
 						"boxes" : [  ],
 						"lines" : [  ]
 					}
@@ -2539,81 +2820,32 @@
  ],
 		"lines" : [  ],
 		"parameters" : 		{
-			"obj-15::obj-7::obj-8::obj-74" : [ "toggle", "toggle", 0 ],
-			"obj-15::obj-7::obj-8::obj-59" : [ "number", "number", 0 ],
-			"obj-15::obj-7::obj-8::obj-78" : [ "button[1]", "button[1]", 0 ],
 			"obj-15::obj-7::obj-8::obj-54" : [ "slider", "slider", 0 ],
-			"obj-15::obj-7::obj-8::obj-86" : [ "toggle[1]", "toggle[1]", 0 ],
-			"obj-15::obj-7::obj-8::obj-35" : [ "button", "button", 0 ],
+			"obj-15::obj-7::obj-8::obj-59" : [ "number", "number", 0 ],
 			"parameterbanks" : 			{
 
 			}
-
+,
+			"inherited_shortname" : 1
 		}
 ,
 		"dependency_cache" : [ 			{
-				"name" : "helpname.js",
-				"bootpath" : "C74:/help/resources",
-				"type" : "TEXT",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "helpdetails.js",
-				"bootpath" : "C74:/help/resources",
-				"type" : "TEXT",
-				"implicit" : 1
+				"name" : "bach.args.mxo",
+				"type" : "iLaX"
 			}
 , 			{
 				"name" : "bach.belong.maxpat",
-				"bootpath" : "~/Documents/Max 7/Packages/bach/patchers",
+				"bootpath" : "~/Documents/Max 8/Packages/bach/patchers",
 				"patcherrelativepath" : "../../bach/patchers",
 				"type" : "JSON",
 				"implicit" : 1
 			}
 , 			{
-				"name" : "bach.lookup.maxpat",
-				"bootpath" : "~/Documents/Max 7/Packages/bach/patchers",
-				"patcherrelativepath" : "../../bach/patchers",
-				"type" : "JSON",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "helpstarter.js",
-				"bootpath" : "C74:/help/resources",
-				"type" : "TEXT",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "bach.m2jitcellblock.maxpat",
-				"bootpath" : "~/Documents/Max 7/Packages/bach/patchers",
-				"patcherrelativepath" : "../../bach/patchers",
-				"type" : "JSON",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "dada.commons.maxpat",
-				"bootpath" : "~/Documents/Max 7/Packages/dada/help",
-				"patcherrelativepath" : ".",
-				"type" : "TEXT",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "mydadastuff.png",
-				"bootpath" : "/private/tmp",
-				"patcherrelativepath" : "../../../../../../../private/tmp",
-				"type" : "PNG",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "dada.base.mxo",
+				"name" : "bach.eq.mxo",
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "bach.iter.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "bach.mapelem.mxo",
+				"name" : "bach.expr.mxo",
 				"type" : "iLaX"
 			}
 , 			{
@@ -2621,27 +2853,33 @@
 				"type" : "iLaX"
 			}
 , 			{
+				"name" : "bach.iter.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.keys.mxo",
+				"type" : "iLaX"
+			}
+, 			{
 				"name" : "bach.length.mxo",
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "bach.eq.mxo",
-				"type" : "iLaX"
+				"name" : "bach.lookup.maxpat",
+				"bootpath" : "~/Documents/Max 8/Packages/bach/patchers",
+				"patcherrelativepath" : "../../bach/patchers",
+				"type" : "JSON",
+				"implicit" : 1
 			}
 , 			{
-				"name" : "bach.thin.mxo",
-				"type" : "iLaX"
+				"name" : "bach.m2jitcellblock.maxpat",
+				"bootpath" : "~/Documents/Max 8/Packages/bach/patchers",
+				"patcherrelativepath" : "../../bach/patchers",
+				"type" : "JSON",
+				"implicit" : 1
 			}
 , 			{
-				"name" : "bach.args.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "bach.portal.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "bach.reg.mxo",
+				"name" : "bach.mapelem.mxo",
 				"type" : "iLaX"
 			}
 , 			{
@@ -2649,7 +2887,7 @@
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "dada.distances.mxo",
+				"name" : "bach.portal.mxo",
 				"type" : "iLaX"
 			}
 , 			{
@@ -2661,19 +2899,15 @@
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "bach.keys.mxo",
+				"name" : "bach.reg.mxo",
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "bach.expr.mxo",
+				"name" : "bach.thin.mxo",
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "dada.bodies.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "dada.bounce.mxo",
+				"name" : "dada.base.mxo",
 				"type" : "iLaX"
 			}
 , 			{
@@ -2681,28 +2915,40 @@
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "dada.multibrot.mxo",
+				"name" : "dada.commons.grid.maxpat",
+				"bootpath" : "~/Documents/Max 8/Packages/dada/help",
+				"patcherrelativepath" : ".",
+				"type" : "JSON",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "dada.commons.maxpat",
+				"bootpath" : "~/Documents/Max 8/Packages/dada/help",
+				"patcherrelativepath" : ".",
+				"type" : "JSON",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "dada.distances.mxo",
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "mira.multitouch.mxo",
-				"type" : "iLaX"
+				"name" : "helpdetails.js",
+				"bootpath" : "C74:/help/resources",
+				"type" : "TEXT",
+				"implicit" : 1
 			}
 , 			{
-				"name" : "dada.platform.mxo",
-				"type" : "iLaX"
+				"name" : "helpname.js",
+				"bootpath" : "C74:/help/resources",
+				"type" : "TEXT",
+				"implicit" : 1
 			}
 , 			{
-				"name" : "bach.roll.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "bach.transcribe.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "bach.flat.mxo",
-				"type" : "iLaX"
+				"name" : "helpstarter.js",
+				"bootpath" : "C74:/help/resources",
+				"type" : "TEXT",
+				"implicit" : 1
 			}
  ],
 		"autosave" : 0

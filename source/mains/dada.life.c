@@ -552,14 +552,13 @@ void life_set_custom_rule(t_life *x, t_symbol *rule)
 	long size = strlen(rule->s_name) + 2000;
 	char *buf = (char *)bach_newptr(size * sizeof(char)); // buf + 100
 	
-	
 	snprintf_zero(buf, size, "%s \n"
 				  "typedef unsigned char t_cell; \n "
-				  "t_cell life_customstep_one(t_cell cell, int neighbors_size, t_cell **neighbors, int sum_neighbors, int nonzero_neighbors); \n"
-				  "t_cell life_customstep_one(t_cell cell, int neighbors_size, t_cell **neighbors, int sum_neighbors, int nonzero_neighbors) { \n"
+				  "extern \"C\" t_cell life_customstep_one(t_cell cell, int neighbors_size, t_cell **neighbors, int sum_neighbors, int nonzero_neighbors); \n"
+				  "extern \"C\" t_cell life_customstep_one(t_cell cell, int neighbors_size, t_cell **neighbors, int sum_neighbors, int nonzero_neighbors) { \n"
                   "%s \n"
 				  "}", dada_get_default_include(), rule->s_name);
-	
+
 	// recreate clang object
 	object_free(x->clang);
 	x->clang = (t_object *)object_new(CLASS_NOBOX, gensym("clang"), gensym("dadalife"));
@@ -592,9 +591,10 @@ void life_set_custom_rule(t_life *x, t_symbol *rule)
 	x->custom_rule = (life_custom_rule_fn)atom_getobj(&fun);
 	
 	// must check that there is code, otherwise there was a compile error
-	if (!x->custom_rule)
+    if (!x->custom_rule) {
 		object_error((t_object *)x, "Syntax error in custom rule!");
-	else {
+        object_method(x->clang, gensym("postlasterrors"), x);
+    } else {
 /*		// test rule
 		t_cell cell = 0;
 		int neighbors_size = 5;
@@ -2104,7 +2104,7 @@ void life_anything(t_life *x, t_symbol *msg, long ac, t_atom *av)
         else if (router == gensym("random")) {
             t_symbol *distribution = NULL;
             double density = x->default_random_density;
-            long append = 0;
+            t_atom_long append = 0;
             llll_parseargs((t_object *)x, parsed, "sdi", gensym("distribution"), &distribution, gensym("density"), &density, gensym("append"), &append);
             life_random(x, distribution == gensym("uniform") ? 0 : 1, density, append);
         
@@ -2422,7 +2422,7 @@ void life_paint_ext(t_life *x, t_object *view, t_dada_force_graphics *force_grap
 		t_pt text_pt = build_pt(x->b_ob.d_ob.m_interface.mousemove_pix.x + 7, x->b_ob.d_ob.m_interface.mousemove_pix.y - 7);  
 		snprintf_zero(buf, 100, "Cents %d\nVelocity %d", (long)round(x->n_world_metadata[x->hovered_idx].pitch_mc), (long)x->n_world_metadata[x->hovered_idx].velocity);
 		paint_rectangle(g, DADA_GREY_25, change_alpha(DADA_WHITE, 0.6), text_pt.x-2, text_pt.y-2 - h, w +4, h+4, 1);
-		write_text_simple(g, jf, DADA_GREY_25, buf, text_pt.x, text_pt.y - h, w + 4, h + 4);
+		write_text_standard(g, jf, DADA_GREY_25, buf, text_pt.x, text_pt.y - h, w + 4, h + 4);
 		jfont_destroy_debug(jf);
 	}
     

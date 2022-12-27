@@ -7,6 +7,7 @@ max oblist "dada objects" dada.nodes;
 max oblist "dada objects" dada.multibrot;
 max oblist "dada objects" dada.kaleido;
 max oblist "dada objects" dada.terrain~;
+max oblist "dada objects" dada.peanos~;
 max oblist "dada objects" dada.bodies;
 max oblist "dada objects" dada.distances;
 max oblist "dada objects" dada.life;

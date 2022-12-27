@@ -459,10 +459,9 @@ void C74_EXPORT ext_main(void *moduleRef)
     CLASS_ATTR_CHAR(c, "type", 0, t_terrain, terrain_type);
     CLASS_ATTR_STYLE_LABEL(c, "type", 0, "enumindex", "Terrain Type");
     CLASS_ATTR_ENUMINDEX(c,"type", 0, "Static Equation Buffer Wheel");
-    CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"type",0,"1");
+    CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"type",0,"0");
     CLASS_ATTR_BASIC(c, "type", 0);
-    // @description If non-zero, the input is interpreted as polar coordinates (radius, angle: default);
-    // otherwise as cartesian coordinates (x, y)
+    // @description Sets the terrain type: either a static equation, or a buffer wheel
 
     CLASS_ATTR_CHAR(c, "polar", 0, t_terrain, polar);
     CLASS_ATTR_STYLE_LABEL(c, "polar", 0, "onoff", "Polar Input");
@@ -664,8 +663,8 @@ void terrain_set_custom_wheelfunction(t_terrain *x, t_symbol *code)
     char *buf = (char *)bach_newptr(size * sizeof(char)); // buf + 100
     
     snprintf_zero(buf, size, "%s \n"
-                  "double terrain_custom_wheelfunction(double sample, double factor, double rho, double theta); \n"
-                  "double terrain_custom_wheelfunction(double sample, double factor, double rho, double theta) { \n"
+                  "extern \"C\" double terrain_custom_wheelfunction(double sample, double factor, double rho, double theta); \n"
+                  "extern \"C\" double terrain_custom_wheelfunction(double sample, double factor, double rho, double theta) { \n"
                   "%s \n"
                   "}", dada_get_default_include(), code->s_name);
     
@@ -740,8 +739,8 @@ void terrain_set_custom_staticfunction(t_terrain *x, t_symbol *code)
     long size = strlen(code->s_name) + 2000;
     char *buf = (char *)bach_newptr(size * sizeof(char)); // buf + 100
     snprintf_zero(buf, size, "%s \n"
-                  "double terrain_custom_staticfunction(double x, double y, double rho, double theta); \n"
-                  "double terrain_custom_staticfunction(double x, double y, double rho, double theta) { \n"
+                  "extern \"C\" double terrain_custom_staticfunction(double x, double y, double rho, double theta); \n"
+                  "extern \"C\" double terrain_custom_staticfunction(double x, double y, double rho, double theta) { \n"
                   "%s \n"
                   "}", dada_get_default_include(), code->s_name);
     
@@ -750,7 +749,8 @@ void terrain_set_custom_staticfunction(t_terrain *x, t_symbol *code)
     x->clang_static = (t_object *)object_new(CLASS_NOBOX, gensym("clang"), gensym("dadaterrain"));
     
     object_method(x->clang_static, gensym("include_standard_headers"));
-    
+    object_method(x->clang_static, gensym("include"), gensym("/usr/local/include"));
+
     // make a new string object (alternative to symbol that avoids post)
     string = (t_object *)object_new(CLASS_NOBOX, gensym("string"), buf);
     atom_setobj(&str, string);
@@ -767,9 +767,10 @@ void terrain_set_custom_staticfunction(t_terrain *x, t_symbol *code)
     x->terrain_static_fn = (terrain_static_fn)atom_getobj(&fun);
     
     // must check that there is code, otherwise there was a compile error
-    if (!x->terrain_static_fn)
+    if (!x->terrain_static_fn) {
         object_error((t_object *)x, "Syntax error in custom function!");
-    else {
+        object_method(x->clang_static, gensym("postlasterrors"), x);
+    } else {
         // test arccosine
         /*        for (long i = 0; i < 360; i++) {
          post("angle: %d°, result: %.2f", i, (x->terrain_wheel_fn)(deg2rad(i), 0., 0.));
@@ -1134,7 +1135,7 @@ void terrain_paint_buffers(t_terrain *x, t_object *view, t_rect *rect, t_dada_fo
                     jgraphics_rotate(gt, -rotation_angle);
                     
                     jfont_text_measure(jf, x->buffer_info[i].b_name ? x->buffer_info[i].b_name->s_name : "???", &text_width, &text_height);
-                    write_text_simple(gt, jf, color, x->buffer_info[i].b_name ? x->buffer_info[i].b_name->s_name : "???", ordinary ? pad : -text_width - pad, -text_height, width, height);
+                    write_text_standard(gt, jf, color, x->buffer_info[i].b_name ? x->buffer_info[i].b_name->s_name : "???", ordinary ? pad : -text_width - pad, -text_height, width, height);
 
                     jgraphics_rotate(gt, rotation_angle);
                     jgraphics_translate(gt, -center.x, -center.y);

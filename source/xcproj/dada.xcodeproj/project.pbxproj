@@ -13,7 +13,8 @@
 			buildPhases = (
 			);
 			dependencies = (
-				1E097C9A2358E154007C4DAA /* PBXTargetDependency */,
+				1E387DE527F8935D00EF6B7D /* PBXTargetDependency */,
+				1E387DE327F8935800EF6B7D /* PBXTargetDependency */,
 				1E2A754E1DC0041D00F5D685 /* PBXTargetDependency */,
 				1E4ECD3F1D4E2C3E002FEA2A /* PBXTargetDependency */,
 				1E5399191D43ED4300439855 /* PBXTargetDependency */,
@@ -40,12 +41,17 @@
 		1E045A2F1AEE91D600A1F2B9 /* dada.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */; };
 		1E045A331AEE91D600A1F2B9 /* lib_dada.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED9C9B1190D1224001973B8 /* lib_dada.a */; };
 		1E045A421AEE91F600A1F2B9 /* dada.base.c in Sources */ = {isa = PBXBuildFile; fileRef = 1E045A411AEE91F600A1F2B9 /* dada.base.c */; };
-		1E0E018F1B13671800F88916 /* dada.notation_spectral.c in Sources */ = {isa = PBXBuildFile; fileRef = 1E0E018D1B13671800F88916 /* dada.notation_spectral.c */; };
-		1E0E01901B13671800F88916 /* dada.notation_spectral.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E0E018E1B13671800F88916 /* dada.notation_spectral.h */; };
+		1E0E018F1B13671800F88916 /* dada.notation.spectral.c in Sources */ = {isa = PBXBuildFile; fileRef = 1E0E018D1B13671800F88916 /* dada.notation.spectral.c */; };
+		1E0E01901B13671800F88916 /* dada.notation.spectral.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E0E018E1B13671800F88916 /* dada.notation.spectral.h */; };
+		1E149F1B23F5D26800E525D5 /* dada.spectral.c in Sources */ = {isa = PBXBuildFile; fileRef = 1E149F1923F5D26800E525D5 /* dada.spectral.c */; };
+		1E149F1C23F5D26800E525D5 /* dada.spectral.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E149F1A23F5D26800E525D5 /* dada.spectral.h */; };
+		1E2205352545F15800512BBF /* dada.peanomath.c in Sources */ = {isa = PBXBuildFile; fileRef = 1E2205332545F15700512BBF /* dada.peanomath.c */; };
+		1E2205362545F15800512BBF /* dada.peanomath.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E2205342545F15800512BBF /* dada.peanomath.h */; };
 		1E2A3ACC1DBF55D40009CF52 /* dada.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */; };
 		1E2A3AD01DBF55D40009CF52 /* lib_dada.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED9C9B1190D1224001973B8 /* lib_dada.a */; };
 		1E2A3ADA1DBF55ED0009CF52 /* dada.distances.c in Sources */ = {isa = PBXBuildFile; fileRef = 1E2A3AD91DBF55ED0009CF52 /* dada.distances.c */; };
 		1E2A3ADE1DBF579E0009CF52 /* SimpleMatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E2A3ADD1DBF579E0009CF52 /* SimpleMatrix.h */; };
+		1E2D22E2254892D0003BEA10 /* dada.bandpassgaintable.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E2D22E1254892CF003BEA10 /* dada.bandpassgaintable.h */; };
 		1E36335E19D8297700D52726 /* lib_dada.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED9C9B1190D1224001973B8 /* lib_dada.a */; };
 		1E36337719D8299000D52726 /* dada.platform.c in Sources */ = {isa = PBXBuildFile; fileRef = 1E36337619D8299000D52726 /* dada.platform.c */; };
 		1E39065A1BE2DB8300009A7F /* lib_bach.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E3906591BE2DB8300009A7F /* lib_bach.a */; };
@@ -80,6 +86,10 @@
 		1E8914271EFDB967009EBADE /* dada.music~.c in Sources */ = {isa = PBXBuildFile; fileRef = 1E8914261EFDB967009EBADE /* dada.music~.c */; };
 		1E8CCB4C19B7E04E002D2CB0 /* lib_dada.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED9C9B1190D1224001973B8 /* lib_dada.a */; };
 		1E8CCB5E19B7E05D002D2CB0 /* dada.stage.c in Sources */ = {isa = PBXBuildFile; fileRef = 1E8CCB5D19B7E05D002D2CB0 /* dada.stage.c */; };
+		1EA0E52A2545DC6D00B549B7 /* dada.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */; };
+		1EA0E52E2545DC6D00B549B7 /* lib_dada.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED9C9B1190D1224001973B8 /* lib_dada.a */; };
+		1EA0E52F2545DC6D00B549B7 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91BE1033235925B000730199 /* MaxAudioAPI.framework */; };
+		1EA0E5392545DCAF00B549B7 /* dada.peanos~.c in Sources */ = {isa = PBXBuildFile; fileRef = 1EA0E5382545DCAF00B549B7 /* dada.peanos~.c */; };
 		1EA0FE6E1B36C55700A9AA55 /* dada.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */; };
 		1EA0FE721B36C55700A9AA55 /* lib_dada.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED9C9B1190D1224001973B8 /* lib_dada.a */; };
 		1EA0FE921B36C57400A9AA55 /* dada.graph.c in Sources */ = {isa = PBXBuildFile; fileRef = 1EA0FE911B36C57400A9AA55 /* dada.graph.c */; };
@@ -124,6 +134,17 @@
 		1ECA8C291A45B2FB001B9251 /* dada.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */; };
 		1ECA8C2A1A45B2FB001B9251 /* dada.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */; };
 		1ECA8C2B1A45B2FB001B9251 /* dada.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */; };
+		1ECC5AC323F5D04600D860C3 /* icon_block.png in Resources */ = {isa = PBXBuildFile; fileRef = 1ED646E31DAD4011003CA9B1 /* icon_block.png */; };
+		1ECC5AC423F5D04600D860C3 /* icon_coin.png in Resources */ = {isa = PBXBuildFile; fileRef = 1ED646E41DAD4011003CA9B1 /* icon_coin.png */; };
+		1ECC5AC523F5D04600D860C3 /* icon_gamechar.png in Resources */ = {isa = PBXBuildFile; fileRef = 1ED646E51DAD4011003CA9B1 /* icon_gamechar.png */; };
+		1ECC5AC623F5D04600D860C3 /* icon_level.png in Resources */ = {isa = PBXBuildFile; fileRef = 1ED646E61DAD4011003CA9B1 /* icon_level.png */; };
+		1ECC5AC723F5D04600D860C3 /* icon_portal.png in Resources */ = {isa = PBXBuildFile; fileRef = 1ED646E71DAD4011003CA9B1 /* icon_portal.png */; };
+		1ECC5AC823F5D04600D860C3 /* dada.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */; };
+		1ECC5AC923F5D04600D860C3 /* PressStart2P.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1ED0A6361DABD53E00BE2DE7 /* PressStart2P.ttf */; };
+		1ECC5ACD23F5D04600D860C3 /* lib_dada.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED9C9B1190D1224001973B8 /* lib_dada.a */; };
+		1ECC5ACE23F5D04600D860C3 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED0A6321DABCFCC00BE2DE7 /* ApplicationServices.framework */; };
+		1ECC5ACF23F5D04600D860C3 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED0A6301DABCFB100BE2DE7 /* CoreServices.framework */; };
+		1ECC5AD723F5D07C00D860C3 /* dada.rhythmogram.c in Sources */ = {isa = PBXBuildFile; fileRef = 1ECC5AD623F5D07C00D860C3 /* dada.rhythmogram.c */; };
 		1ED0A6311DABCFB100BE2DE7 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED0A6301DABCFB100BE2DE7 /* CoreServices.framework */; };
 		1ED0A6331DABCFCC00BE2DE7 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED0A6321DABCFCC00BE2DE7 /* ApplicationServices.framework */; };
 		1ED0A6371DABD54400BE2DE7 /* PressStart2P.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1ED0A6361DABD53E00BE2DE7 /* PressStart2P.ttf */; };
@@ -155,13 +176,6 @@
 			remoteGlobalIDString = 1E045A2A1AEE91D600A1F2B9;
 			remoteInfo = dada.base;
 		};
-		1E097C992358E154007C4DAA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 1E8914151EFDB906009EBADE;
-			remoteInfo = "dada.music~";
-		};
 		1E2A3AC91DBF55D40009CF52 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
@@ -189,6 +203,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 1E36335619D8297700D52726;
 			remoteInfo = dada.platform;
+		};
+		1E387DE227F8935800EF6B7D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1E8914151EFDB906009EBADE;
+			remoteInfo = "dada.music~";
+		};
+		1E387DE427F8935D00EF6B7D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1EA0E5252545DC6D00B549B7;
+			remoteInfo = "dada.peanos~";
 		};
 		1E434590197D2C04007DB98F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -344,6 +372,13 @@
 			remoteGlobalIDString = 1EE2A7561982FDEE00B335ED;
 			remoteInfo = dada.life;
 		};
+		1EA0E5272545DC6D00B549B7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1ED9C9B0190D1224001973B8;
+			remoteInfo = lib_dada;
+		};
 		1EA0FE6B1B36C55700A9AA55 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
@@ -372,6 +407,13 @@
 			remoteGlobalIDString = 1EA5950019767DA700D3BFFC;
 			remoteInfo = dada.surf;
 		};
+		1ECC5AC023F5D04600D860C3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1ED9C9B0190D1224001973B8;
+			remoteInfo = lib_dada;
+		};
 		1EE2A7581982FDEE00B335ED /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
@@ -391,11 +433,16 @@
 /* Begin PBXFileReference section */
 		1E045A381AEE91D600A1F2B9 /* dada.base.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dada.base.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E045A411AEE91F600A1F2B9 /* dada.base.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.base.c; path = ../mains/dada.base.c; sourceTree = SOURCE_ROOT; };
-		1E0E018D1B13671800F88916 /* dada.notation_spectral.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.notation_spectral.c; path = ../commons/dada.notation_spectral.c; sourceTree = SOURCE_ROOT; };
-		1E0E018E1B13671800F88916 /* dada.notation_spectral.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dada.notation_spectral.h; path = ../commons/dada.notation_spectral.h; sourceTree = SOURCE_ROOT; };
+		1E0E018D1B13671800F88916 /* dada.notation.spectral.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.notation.spectral.c; path = ../commons/dada.notation.spectral.c; sourceTree = SOURCE_ROOT; };
+		1E0E018E1B13671800F88916 /* dada.notation.spectral.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dada.notation.spectral.h; path = ../commons/dada.notation.spectral.h; sourceTree = SOURCE_ROOT; };
+		1E149F1923F5D26800E525D5 /* dada.spectral.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.spectral.c; path = ../commons/dada.spectral.c; sourceTree = "<group>"; };
+		1E149F1A23F5D26800E525D5 /* dada.spectral.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dada.spectral.h; path = ../commons/dada.spectral.h; sourceTree = "<group>"; };
+		1E2205332545F15700512BBF /* dada.peanomath.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.peanomath.c; path = ../commons/dada.peanomath.c; sourceTree = "<group>"; };
+		1E2205342545F15800512BBF /* dada.peanomath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dada.peanomath.h; path = ../commons/dada.peanomath.h; sourceTree = "<group>"; };
 		1E2A3AD51DBF55D40009CF52 /* dada.distances.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dada.distances.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E2A3AD91DBF55ED0009CF52 /* dada.distances.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.distances.c; path = ../mains/dada.distances.c; sourceTree = SOURCE_ROOT; };
 		1E2A3ADD1DBF579E0009CF52 /* SimpleMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimpleMatrix.h; path = ../lib/SimpleMatrix_v4.1/code/SimpleMatrix.h; sourceTree = "<group>"; };
+		1E2D22E1254892CF003BEA10 /* dada.bandpassgaintable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dada.bandpassgaintable.h; path = ../commons/dada.bandpassgaintable.h; sourceTree = "<group>"; };
 		1E36336319D8297700D52726 /* dada.platform.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dada.platform.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E36337619D8299000D52726 /* dada.platform.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.platform.c; path = ../mains/dada.platform.c; sourceTree = SOURCE_ROOT; };
 		1E3906591BE2DB8300009A7F /* lib_bach.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = lib_bach.a; path = ../../../bach/source/lib/lib_bach.a; sourceTree = "<group>"; };
@@ -423,6 +470,8 @@
 		1E8CCB5119B7E04E002D2CB0 /* dada.stage.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dada.stage.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E8CCB5D19B7E05D002D2CB0 /* dada.stage.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.stage.c; path = ../mains/dada.stage.c; sourceTree = SOURCE_ROOT; };
 		1E92FA271DBA369200E1C68E /* dada_doc_substitutions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = dada_doc_substitutions.h; path = ../commons/dada_doc_substitutions.h; sourceTree = SOURCE_ROOT; };
+		1EA0E5342545DC6D00B549B7 /* dada.peanos~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "dada.peanos~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1EA0E5382545DCAF00B549B7 /* dada.peanos~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "dada.peanos~.c"; path = "../mains/dada.peanos~.c"; sourceTree = "<group>"; };
 		1EA0FE771B36C55700A9AA55 /* dada.graph.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dada.graph.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		1EA0FE911B36C57400A9AA55 /* dada.graph.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; name = dada.graph.c; path = ../mains/dada.graph.c; sourceTree = SOURCE_ROOT; };
 		1EA5950D19767DA700D3BFFC /* dada.nodes.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dada.nodes.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -439,7 +488,7 @@
 		1ECA89891A45B2CF001B9251 /* dada.geometry.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.geometry.c; path = ../commons/dada.geometry.c; sourceTree = SOURCE_ROOT; };
 		1ECA898A1A45B2CF001B9251 /* dada.geometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dada.geometry.h; path = ../commons/dada.geometry.h; sourceTree = SOURCE_ROOT; };
 		1ECA898B1A45B2CF001B9251 /* dada.graphs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.graphs.c; path = ../commons/dada.graphs.c; sourceTree = SOURCE_ROOT; };
-		1ECA898C1A45B2CF001B9251 /* dada.graphs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = dada.graphs.h; path = ../commons/dada.graphs.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		1ECA898C1A45B2CF001B9251 /* dada.graphs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = dada.graphs.h; path = ../commons/dada.graphs.h; sourceTree = SOURCE_ROOT; };
 		1ECA898D1A45B2CF001B9251 /* dada.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dada.h; path = ../commons/dada.h; sourceTree = SOURCE_ROOT; };
 		1ECA898E1A45B2CF001B9251 /* dada.inspector.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.inspector.c; path = ../commons/dada.inspector.c; sourceTree = SOURCE_ROOT; };
 		1ECA898F1A45B2CF001B9251 /* dada.inspector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dada.inspector.h; path = ../commons/dada.inspector.h; sourceTree = SOURCE_ROOT; };
@@ -461,6 +510,8 @@
 		1ECA89A11A45B2CF001B9251 /* dada.undo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dada.undo.h; path = ../commons/dada.undo.h; sourceTree = SOURCE_ROOT; };
 		1ECA8C241A45B2FB001B9251 /* dada.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = dada.xcconfig; sourceTree = SOURCE_ROOT; };
 		1ECA8C2E1A45B30E001B9251 /* dada_lib.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = dada_lib.xcconfig; sourceTree = SOURCE_ROOT; };
+		1ECC5AD423F5D04600D860C3 /* dada.rhythmogram.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dada.rhythmogram.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
+		1ECC5AD623F5D07C00D860C3 /* dada.rhythmogram.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.rhythmogram.c; path = ../mains/dada.rhythmogram.c; sourceTree = "<group>"; };
 		1ED0A6301DABCFB100BE2DE7 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = ../../../../../System/Library/Frameworks/CoreServices.framework; sourceTree = "<group>"; };
 		1ED0A6321DABCFCC00BE2DE7 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = ../../../../../System/Library/Frameworks/ApplicationServices.framework; sourceTree = "<group>"; };
 		1ED0A6361DABD53E00BE2DE7 /* PressStart2P.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = PressStart2P.ttf; path = "../resources/codeman38_press-start-2p/PressStart2P.ttf"; sourceTree = "<group>"; };
@@ -474,7 +525,7 @@
 		1ED9C9B1190D1224001973B8 /* lib_dada.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = lib_dada.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1EDCC426196AE6F900638665 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 		1EDCC427196AE75A00638665 /* dada.kaleido.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.kaleido.c; path = ../mains/dada.kaleido.c; sourceTree = SOURCE_ROOT; };
-		1EDCC52D196AEC8B00638665 /* commonsyms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = commonsyms.c; path = "../../../max-sdk-7.3.3/source/c74support/max-includes/common/commonsyms.c"; sourceTree = SOURCE_ROOT; };
+		1EDCC52D196AEC8B00638665 /* commonsyms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = commonsyms.c; path = "../../../max-sdk/source/max-sdk-base/c74support/max-includes/common/commonsyms.c"; sourceTree = SOURCE_ROOT; };
 		1EE2A7631982FDEE00B335ED /* dada.life.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dada.life.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		1EE2A7801982FE0000B335ED /* dada.life.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dada.life.c; path = ../mains/dada.life.c; sourceTree = SOURCE_ROOT; };
 		91B76B9E233CD1AE00DC6B02 /* dada */ = {isa = PBXFileReference; lastKnownFileType = folder; name = dada; path = ../..; sourceTree = "<group>"; };
@@ -598,6 +649,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1EA0E52D2545DC6D00B549B7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1EA0E52E2545DC6D00B549B7 /* lib_dada.a in Frameworks */,
+				1EA0E52F2545DC6D00B549B7 /* MaxAudioAPI.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1EA0FE711B36C55700A9AA55 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -611,6 +671,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				1EA5950819767DA700D3BFFC /* lib_dada.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1ECC5ACC23F5D04600D860C3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1ECC5ACD23F5D04600D860C3 /* lib_dada.a in Frameworks */,
+				1ECC5ACE23F5D04600D860C3 /* ApplicationServices.framework in Frameworks */,
+				1ECC5ACF23F5D04600D860C3 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -670,6 +740,8 @@
 				1E4ECD391D4E1810002FEA2A /* dada.terrain~.mxo */,
 				1E2A3AD51DBF55D40009CF52 /* dada.distances.mxo */,
 				1E8914241EFDB906009EBADE /* dada.music~.mxo */,
+				1ECC5AD423F5D04600D860C3 /* dada.rhythmogram.mxo */,
+				1EA0E5342545DC6D00B549B7 /* dada.peanos~.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -677,6 +749,7 @@
 		1E8BFE2C190D7DB700396FEA /* mains */ = {
 			isa = PBXGroup;
 			children = (
+				1ECC5AD623F5D07C00D860C3 /* dada.rhythmogram.c */,
 				1E045A411AEE91F600A1F2B9 /* dada.base.c */,
 				1E53FB731BA0769700FF1F3D /* dada.bodies.c */,
 				1E5399161D43ED1C00439855 /* dada.boids.c */,
@@ -690,6 +763,7 @@
 				1E4B99EA1C39F25E0043EE55 /* dada.multibrot.c */,
 				1E8914261EFDB967009EBADE /* dada.music~.c */,
 				1EA5951D19767DD400D3BFFC /* dada.nodes.c */,
+				1EA0E5382545DCAF00B549B7 /* dada.peanos~.c */,
 				1E36337619D8299000D52726 /* dada.platform.c */,
 				1E7851261AF294C70079E361 /* dada.segment.c */,
 				1E8CCB5D19B7E05D002D2CB0 /* dada.stage.c */,
@@ -715,8 +789,10 @@
 				1ED363B81EB7C30D00B99266 /* dada.windows.h */,
 				1EAE109A1C271E9800EFA81C /* dada_doc_commons.h */,
 				1E92FA271DBA369200E1C68E /* dada_doc_substitutions.h */,
-				1E0E018D1B13671800F88916 /* dada.notation_spectral.c */,
-				1E0E018E1B13671800F88916 /* dada.notation_spectral.h */,
+				1E149F1923F5D26800E525D5 /* dada.spectral.c */,
+				1E149F1A23F5D26800E525D5 /* dada.spectral.h */,
+				1E0E018D1B13671800F88916 /* dada.notation.spectral.c */,
+				1E0E018E1B13671800F88916 /* dada.notation.spectral.h */,
 				1E6E12511AF3B7B000E91285 /* dada.db.c */,
 				1E6E12521AF3B7B000E91285 /* dada.db.h */,
 				1ECA89811A45B2CF001B9251 /* dada.commons.c */,
@@ -738,6 +814,9 @@
 				1ECA89911A45B2CF001B9251 /* dada.interface.h */,
 				1ECA89921A45B2CF001B9251 /* dada.items.c */,
 				1ECA89931A45B2CF001B9251 /* dada.items.h */,
+				1E2D22E1254892CF003BEA10 /* dada.bandpassgaintable.h */,
+				1E2205332545F15700512BBF /* dada.peanomath.c */,
+				1E2205342545F15800512BBF /* dada.peanomath.h */,
 				1ECA89941A45B2CF001B9251 /* dada.math.c */,
 				1ECA89951A45B2CF001B9251 /* dada.math.h */,
 				1ECA89961A45B2CF001B9251 /* dada.notation.c */,
@@ -896,6 +975,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1EA0E5282545DC6D00B549B7 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E2D22E2254892D0003BEA10 /* dada.bandpassgaintable.h in Headers */,
+				1E2205362545F15800512BBF /* dada.peanomath.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1EA0FE6C1B36C55700A9AA55 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -907,6 +995,14 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1ECC5AC123F5D04600D860C3 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E149F1C23F5D26800E525D5 /* dada.spectral.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -932,7 +1028,7 @@
 				1ECA89C01A45B2CF001B9251 /* dada.popupmenu.h in Headers */,
 				1ECA89C21A45B2CF001B9251 /* dada.undo.h in Headers */,
 				1E6E12541AF3B7B000E91285 /* dada.db.h in Headers */,
-				1E0E01901B13671800F88916 /* dada.notation_spectral.h in Headers */,
+				1E0E01901B13671800F88916 /* dada.notation.spectral.h in Headers */,
 				1ED363BA1EB7C30D00B99266 /* dada.windows.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1228,6 +1324,26 @@
 			productReference = 1E8CCB5119B7E04E002D2CB0 /* dada.stage.mxo */;
 			productType = "com.apple.product-type.bundle";
 		};
+		1EA0E5252545DC6D00B549B7 /* dada.peanos~ */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1EA0E5312545DC6D00B549B7 /* Build configuration list for PBXNativeTarget "dada.peanos~" */;
+			buildPhases = (
+				1EA0E5282545DC6D00B549B7 /* Headers */,
+				1EA0E5292545DC6D00B549B7 /* Resources */,
+				1EA0E52B2545DC6D00B549B7 /* Sources */,
+				1EA0E52D2545DC6D00B549B7 /* Frameworks */,
+				1EA0E5302545DC6D00B549B7 /* Rez */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1EA0E5262545DC6D00B549B7 /* PBXTargetDependency */,
+			);
+			name = "dada.peanos~";
+			productName = iterator;
+			productReference = 1EA0E5342545DC6D00B549B7 /* dada.peanos~.mxo */;
+			productType = "com.apple.product-type.bundle";
+		};
 		1EA0FE691B36C55700A9AA55 /* dada.graph */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1EA0FE741B36C55700A9AA55 /* Build configuration list for PBXNativeTarget "dada.graph" */;
@@ -1266,6 +1382,26 @@
 			name = dada.nodes;
 			productName = iterator;
 			productReference = 1EA5950D19767DA700D3BFFC /* dada.nodes.mxo */;
+			productType = "com.apple.product-type.bundle";
+		};
+		1ECC5ABE23F5D04600D860C3 /* dada.rhythmogram */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1ECC5AD123F5D04600D860C3 /* Build configuration list for PBXNativeTarget "dada.rhythmogram" */;
+			buildPhases = (
+				1ECC5AC123F5D04600D860C3 /* Headers */,
+				1ECC5AC223F5D04600D860C3 /* Resources */,
+				1ECC5ACA23F5D04600D860C3 /* Sources */,
+				1ECC5ACC23F5D04600D860C3 /* Frameworks */,
+				1ECC5AD023F5D04600D860C3 /* Rez */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1ECC5ABF23F5D04600D860C3 /* PBXTargetDependency */,
+			);
+			name = dada.rhythmogram;
+			productName = iterator;
+			productReference = 1ECC5AD423F5D04600D860C3 /* dada.rhythmogram.mxo */;
 			productType = "com.apple.product-type.bundle";
 		};
 		1ED9C9B0190D1224001973B8 /* lib_dada */ = {
@@ -1317,6 +1453,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 089C166AFE841209C02AAC07 /* iterator */;
@@ -1336,8 +1473,10 @@
 				1E53FCE4198FAE02006333EA /* dada.machines */,
 				1E4B99DA1C39F2410043EE55 /* dada.multibrot */,
 				1E8914151EFDB906009EBADE /* dada.music~ */,
+				1EA0E5252545DC6D00B549B7 /* dada.peanos~ */,
 				1EA5950019767DA700D3BFFC /* dada.nodes */,
 				1E36335619D8297700D52726 /* dada.platform */,
+				1ECC5ABE23F5D04600D860C3 /* dada.rhythmogram */,
 				1E7850FF1AF294220079E361 /* dada.segment */,
 				1E8CCB4419B7E04E002D2CB0 /* dada.stage */,
 				1E4ECD2A1D4E1810002FEA2A /* dada.terrain~ */,
@@ -1465,6 +1604,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1EA0E5292545DC6D00B549B7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1EA0E52A2545DC6D00B549B7 /* dada.xcconfig in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1EA0FE6D1B36C55700A9AA55 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1478,6 +1625,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				1ECA8C2B1A45B2FB001B9251 /* dada.xcconfig in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1ECC5AC223F5D04600D860C3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1ECC5AC323F5D04600D860C3 /* icon_block.png in Resources */,
+				1ECC5AC423F5D04600D860C3 /* icon_coin.png in Resources */,
+				1ECC5AC523F5D04600D860C3 /* icon_gamechar.png in Resources */,
+				1ECC5AC623F5D04600D860C3 /* icon_level.png in Resources */,
+				1ECC5AC723F5D04600D860C3 /* icon_portal.png in Resources */,
+				1ECC5AC823F5D04600D860C3 /* dada.xcconfig in Resources */,
+				1ECC5AC923F5D04600D860C3 /* PressStart2P.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1590,6 +1751,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1EA0E5302545DC6D00B549B7 /* Rez */ = {
+			isa = PBXRezBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1EA0FE731B36C55700A9AA55 /* Rez */ = {
 			isa = PBXRezBuildPhase;
 			buildActionMask = 2147483647;
@@ -1598,6 +1766,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		1EA5950919767DA700D3BFFC /* Rez */ = {
+			isa = PBXRezBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1ECC5AD023F5D04600D860C3 /* Rez */ = {
 			isa = PBXRezBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1726,6 +1901,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1EA0E52B2545DC6D00B549B7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E2205352545F15800512BBF /* dada.peanomath.c in Sources */,
+				1EA0E5392545DCAF00B549B7 /* dada.peanos~.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1EA0FE6F1B36C55700A9AA55 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1739,6 +1923,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				1EA5951E19767DD400D3BFFC /* dada.nodes.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1ECC5ACA23F5D04600D860C3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E149F1B23F5D26800E525D5 /* dada.spectral.c in Sources */,
+				1ECC5AD723F5D07C00D860C3 /* dada.rhythmogram.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1763,7 +1956,7 @@
 				1ECA89BF1A45B2CF001B9251 /* dada.popupmenu.c in Sources */,
 				1ECA89C11A45B2CF001B9251 /* dada.undo.c in Sources */,
 				1E6E12531AF3B7B000E91285 /* dada.db.c in Sources */,
-				1E0E018F1B13671800F88916 /* dada.notation_spectral.c in Sources */,
+				1E0E018F1B13671800F88916 /* dada.notation.spectral.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1788,11 +1981,6 @@
 			target = 1E045A2A1AEE91D600A1F2B9 /* dada.base */;
 			targetProxy = 1E045A431AEE91FD00A1F2B9 /* PBXContainerItemProxy */;
 		};
-		1E097C9A2358E154007C4DAA /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 1E8914151EFDB906009EBADE /* dada.music~ */;
-			targetProxy = 1E097C992358E154007C4DAA /* PBXContainerItemProxy */;
-		};
 		1E2A3AC81DBF55D40009CF52 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 1ED9C9B0190D1224001973B8 /* lib_dada */;
@@ -1812,6 +2000,16 @@
 			isa = PBXTargetDependency;
 			target = 1E36335619D8297700D52726 /* dada.platform */;
 			targetProxy = 1E3634E219D84FF500D52726 /* PBXContainerItemProxy */;
+		};
+		1E387DE327F8935800EF6B7D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1E8914151EFDB906009EBADE /* dada.music~ */;
+			targetProxy = 1E387DE227F8935800EF6B7D /* PBXContainerItemProxy */;
+		};
+		1E387DE527F8935D00EF6B7D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1EA0E5252545DC6D00B549B7 /* dada.peanos~ */;
+			targetProxy = 1E387DE427F8935D00EF6B7D /* PBXContainerItemProxy */;
 		};
 		1E43458F197D2C04007DB98F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1923,6 +2121,11 @@
 			target = 1EE2A7561982FDEE00B335ED /* dada.life */;
 			targetProxy = 1EA05B8619F3A65E009FB91D /* PBXContainerItemProxy */;
 		};
+		1EA0E5262545DC6D00B549B7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1ED9C9B0190D1224001973B8 /* lib_dada */;
+			targetProxy = 1EA0E5272545DC6D00B549B7 /* PBXContainerItemProxy */;
+		};
 		1EA0FE6A1B36C55700A9AA55 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 1ED9C9B0190D1224001973B8 /* lib_dada */;
@@ -1942,6 +2145,11 @@
 			isa = PBXTargetDependency;
 			target = 1EA5950019767DA700D3BFFC /* dada.nodes */;
 			targetProxy = 1EA595E21976903C00D3BFFC /* PBXContainerItemProxy */;
+		};
+		1ECC5ABF23F5D04600D860C3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1ED9C9B0190D1224001973B8 /* lib_dada */;
+			targetProxy = 1ECC5AC023F5D04600D860C3 /* PBXContainerItemProxy */;
 		};
 		1EE2A7571982FDEE00B335ED /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2466,7 +2674,6 @@
 					/usr/local/opt/mpfr/lib/libmpfr.a,
 					"$(C74_SYM_LINKER_FLAGS)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.bachproject.dada.music;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REZ_SEARCH_PATHS = "";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
@@ -2504,7 +2711,6 @@
 					/usr/local/opt/mpfr/lib/libmpfr.a,
 					"$(C74_SYM_LINKER_FLAGS)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.bachproject.dada.music;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REZ_SEARCH_PATHS = "";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
@@ -2549,6 +2755,81 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
+			};
+			name = Deployment;
+		};
+		1EA0E5322545DC6D00B549B7 /* Development */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
+				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_VERSION = "";
+				GENERATE_PKGINFO_FILE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"/usr/local/opt/gmp/include/**",
+					"/usr/local/opt/mpfr/include/**",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/usr/local/opt/gmp/lib/**",
+					"/usr/local/opt/mpfr/lib/**",
+				);
+				OTHER_CFLAGS = (
+					"-DU_HAVE_GCC_ATOMICS=0",
+					"-fvisibility=hidden",
+				);
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					/usr/local/opt/gmp/lib/libgmp.a,
+					/usr/local/opt/mpfr/lib/libmpfr.a,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REZ_SEARCH_PATHS = "";
+				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
+				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_STYLE = all;
+			};
+			name = Development;
+		};
+		1EA0E5332545DC6D00B549B7 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
+				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
+				GCC_VERSION = "";
+				GENERATE_PKGINFO_FILE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"/usr/local/opt/gmp/include/**",
+					"/usr/local/opt/mpfr/include/**",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/usr/local/opt/gmp/lib/**",
+					"/usr/local/opt/mpfr/lib/**",
+				);
+				OTHER_CFLAGS = (
+					"-DU_HAVE_GCC_ATOMICS=0",
+					"-fvisibility=hidden",
+				);
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					/usr/local/opt/gmp/lib/libgmp.a,
+					/usr/local/opt/mpfr/lib/libmpfr.a,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REZ_SEARCH_PATHS = "";
+				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
+				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_STYLE = all;
 			};
 			name = Deployment;
 		};
@@ -2622,6 +2903,45 @@
 			name = Development;
 		};
 		1EA5950C19767DA700D3BFFC /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */;
+			buildSettings = {
+				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
+				OTHER_CFLAGS = (
+					"-DU_HAVE_GCC_ATOMICS=0",
+					"-fvisibility=hidden",
+				);
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
+			};
+			name = Deployment;
+		};
+		1ECC5AD223F5D04600D860C3 /* Development */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */;
+			buildSettings = {
+				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = (
+					"-DU_HAVE_GCC_ATOMICS=0",
+					"-fvisibility=hidden",
+				);
+				OTHER_LDFLAGS = (
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
+			};
+			name = Development;
+		};
+		1ECC5AD323F5D04600D860C3 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1ECA8C241A45B2FB001B9251 /* dada.xcconfig */;
 			buildSettings = {
@@ -2768,27 +3088,27 @@
 		2FBBEAD008F335010078DB84 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				COPY_PHASE_STRIP = NO;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.bachproject.$(TARGET_NAME)";
-				PRODUCT_VERSION = 0.2.0;
+				PRODUCT_VERSION = 0.3;
 				SDKROOT = macosx;
+				VALID_ARCHS = "x86_64 arm64";
 			};
 			name = Development;
 		};
 		2FBBEAD108F335010078DB84 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.bachproject.$(TARGET_NAME)";
-				PRODUCT_VERSION = 0.2.0;
+				PRODUCT_VERSION = 0.3;
 				SDKROOT = macosx;
+				VALID_ARCHS = "x86_64 arm64";
 			};
 			name = Deployment;
 		};
@@ -2921,6 +3241,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
 		};
+		1EA0E5312545DC6D00B549B7 /* Build configuration list for PBXNativeTarget "dada.peanos~" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1EA0E5322545DC6D00B549B7 /* Development */,
+				1EA0E5332545DC6D00B549B7 /* Deployment */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
+		};
 		1EA0FE741B36C55700A9AA55 /* Build configuration list for PBXNativeTarget "dada.graph" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -2935,6 +3264,15 @@
 			buildConfigurations = (
 				1EA5950B19767DA700D3BFFC /* Development */,
 				1EA5950C19767DA700D3BFFC /* Deployment */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
+		};
+		1ECC5AD123F5D04600D860C3 /* Build configuration list for PBXNativeTarget "dada.rhythmogram" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1ECC5AD223F5D04600D860C3 /* Development */,
+				1ECC5AD323F5D04600D860C3 /* Deployment */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;

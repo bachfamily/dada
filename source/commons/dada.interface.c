@@ -758,11 +758,12 @@ void dadaobj_jbox_mt(t_dadaobj_jbox *x, t_symbol *s, long argc, t_atom *argv)
                     if (!state) {
                         // finger released
                         method mouseup = object_method_direct_getmethod((t_object *) orig_obj, gensym("mouseup"));
-                        if (mouseup) (mouseup)(orig_obj, firstview, pos, 0);
+                        if (mouseup) CALL_METHOD_SAFE(void, (t_object*, t_object*, t_pt, int), mouseup, orig_obj, firstview, pos, 0);
                     } else {
                         // finger dragged
                         method mousedrag = object_method_direct_getmethod((t_object *) orig_obj, gensym("mousedrag"));
-                        if (mousedrag) (mousedrag)(orig_obj, firstview, pos, 0);
+                        if (mousedrag) CALL_METHOD_SAFE(void, (t_object*, t_object*, t_pt, int), mousedrag, orig_obj, firstview, pos, 0);
+                        // (mousedrag)(orig_obj, firstview, pos, 0);
                     }
                 } else {
                     if (!state) {
@@ -770,7 +771,7 @@ void dadaobj_jbox_mt(t_dadaobj_jbox *x, t_symbol *s, long argc, t_atom *argv)
                     } else {
                         // finger pressed
                         method mousedown = object_method_direct_getmethod((t_object *) orig_obj, gensym("mousedown"));
-                        if (mousedown) (mousedown)(orig_obj, firstview, pos, 0);
+                        if (mousedown) CALL_METHOD_SAFE(void, (t_object*, t_object*, t_pt, int), mousedown, orig_obj, firstview, pos, 0); //(mousedown)(orig_obj, firstview, pos, 0);
                     }
                 }
             }
@@ -789,15 +790,19 @@ void dadaobj_jbox_mt(t_dadaobj_jbox *x, t_symbol *s, long argc, t_atom *argv)
                 if (mousewheel) {
                     if (r_ob->flags & DADAOBJ_CENTEROFFSETX) {
                         if (direction == gensym("left"))
-                            (mousewheel)(orig_obj, firstview, r_ob->m_mt.finger_pos[0], 0, -r_ob->m_geometry.last_used_view_width_pix / (10 * r_ob->m_zoom.zoom.x), 0.);
+                            CALL_METHOD_SAFE(void, (t_object*, t_object*, t_pt, long, double, double), mousewheel, orig_obj, firstview, r_ob->m_mt.finger_pos[0], 0, -r_ob->m_geometry.last_used_view_width_pix / (10 * r_ob->m_zoom.zoom.x), 0.);
+//                            (mousewheel)(orig_obj, firstview, r_ob->m_mt.finger_pos[0], 0, -r_ob->m_geometry.last_used_view_width_pix / (10 * r_ob->m_zoom.zoom.x), 0.);
                         else if (direction == gensym("right"))
-                            (mousewheel)(orig_obj, firstview, r_ob->m_mt.finger_pos[0], 0, r_ob->m_geometry.last_used_view_width_pix / (10 * r_ob->m_zoom.zoom.x), 0.);
+                            CALL_METHOD_SAFE(void, (t_object*, t_object*, t_pt, long, double, double), mousewheel, orig_obj, firstview, r_ob->m_mt.finger_pos[0], 0, r_ob->m_geometry.last_used_view_width_pix / (10 * r_ob->m_zoom.zoom.x), 0.);
+//                            (mousewheel)(orig_obj, firstview, r_ob->m_mt.finger_pos[0], 0, r_ob->m_geometry.last_used_view_width_pix / (10 * r_ob->m_zoom.zoom.x), 0.);
                     }
                     if (r_ob->flags & DADAOBJ_CENTEROFFSETY) {
                         if (direction == gensym("up"))
-                            (mousewheel)(orig_obj, firstview, r_ob->m_mt.finger_pos[0], 0, 0., -r_ob->m_geometry.last_used_view_height_pix / (10 * r_ob->m_zoom.zoom.x));
+                            CALL_METHOD_SAFE(void, (t_object*, t_object*, t_pt, long, double, double), mousewheel, orig_obj, firstview, r_ob->m_mt.finger_pos[0], 0, 0., -r_ob->m_geometry.last_used_view_height_pix / (10 * r_ob->m_zoom.zoom.x));
+//                            (mousewheel)(orig_obj, firstview, r_ob->m_mt.finger_pos[0], 0, 0., -r_ob->m_geometry.last_used_view_height_pix / (10 * r_ob->m_zoom.zoom.x));
                         else if (direction == gensym("down"))
-                            (mousewheel)(orig_obj, firstview, r_ob->m_mt.finger_pos[0], 0, 0., r_ob->m_geometry.last_used_view_height_pix / (10 * r_ob->m_zoom.zoom.x));
+                            CALL_METHOD_SAFE(void, (t_object*, t_object*, t_pt, long, double, double), mousewheel, orig_obj, firstview, r_ob->m_mt.finger_pos[0], 0, 0., r_ob->m_geometry.last_used_view_height_pix / (10 * r_ob->m_zoom.zoom.x));
+//                            (mousewheel)(orig_obj, firstview, r_ob->m_mt.finger_pos[0], 0, 0., r_ob->m_geometry.last_used_view_height_pix / (10 * r_ob->m_zoom.zoom.x));
                     }
                 }
             }
@@ -821,7 +826,10 @@ void dadaobj_jbox_mt(t_dadaobj_jbox *x, t_symbol *s, long argc, t_atom *argv)
             // tap = play/stop
         } else if (atom_gettype(argv) == A_SYM && atom_getsym(argv) == gensym("tap")) { //} && argc >= 3) { // tap <x> <y> <region> <device>
             method key = object_method_direct_getmethod((t_object *) orig_obj, gensym("key"));
-            if (key) (key)(orig_obj, firstview, (long)JKEY_SPACEBAR, 0, 32);
+            if (key)
+                CALL_METHOD_SAFE(void, (t_object*, t_object*, long, long, long), key, orig_obj, firstview, (long)JKEY_SPACEBAR, 0, 32);
+            
+//                (key)(orig_obj, firstview, (long)JKEY_SPACEBAR, 0, 32);
         }
     }
 }

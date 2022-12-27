@@ -420,7 +420,8 @@ void postprocess_for_dadaitem_class(t_dadaobj *r_ob, long class_id)
 char dadaitem_class_clear_free_fn(t_dadaobj *r_ob, t_dadaitem *item, void *data)
 {
 	long id = *(long *)data;
-	(r_ob->m_classes.di_class[id].free_fn)((t_dadaobj *)r_ob, item);
+    CALL_METHOD_SAFE(void, (t_dadaobj*, t_dadaitem*, void*), r_ob->m_classes.di_class[id].free_fn, (t_dadaobj *)r_ob, item, NULL);
+//	(r_ob->m_classes.di_class[id].free_fn)((t_dadaobj *)r_ob, item);
 	return 0;
 }
 
@@ -665,7 +666,8 @@ char dadaitem_delete(t_dadaobj *r_ob, e_dadaitem_types type, long item_idx, char
             
 			// free dada item
 			if (r_ob->m_classes.di_class[id].free_fn)
-				(r_ob->m_classes.di_class[id].free_fn)(r_ob, item);
+                CALL_METHOD_SAFE(void, (t_dadaobj*, t_dadaitem*, void*), r_ob->m_classes.di_class[id].free_fn, r_ob, item, NULL);
+//				(r_ob->m_classes.di_class[id].free_fn)(r_ob, item);
 
 			
 			// remove from selection and preselection
@@ -747,7 +749,8 @@ char dadaitem_delete_direct(t_dadaobj *r_ob, t_dadaitem *item, char flags)
             
             // free dada item
             if (r_ob->m_classes.di_class[id].free_fn)
-                (r_ob->m_classes.di_class[id].free_fn)(r_ob, item);
+                CALL_METHOD_SAFE(void, (t_dadaobj*, t_dadaitem*, void*), r_ob->m_classes.di_class[id].free_fn, r_ob, item, NULL);
+//                (r_ob->m_classes.di_class[id].free_fn)(r_ob, item);
             
             
             // remove from selection and preselection
@@ -1595,9 +1598,10 @@ t_dadaitem *dadaitem_from_identifier(t_dadaobj *r_ob, t_dadaitem_identifier *ide
 	long class_id = dadaitem_class_get_id(&r_ob->m_classes, type);
 	if (type < 0) {
 		// custom type
-		if (r_ob->m_classes.di_class[class_id].identifier_to_dadaitem_fn) 
-			return (t_dadaitem *)(r_ob->m_classes.di_class[class_id].identifier_to_dadaitem_fn)(r_ob->orig_obj, identifier);
-		else
+        if (r_ob->m_classes.di_class[class_id].identifier_to_dadaitem_fn) {
+            return CALL_METHOD_SAFE(t_dadaitem *, (t_object*, t_dadaitem_identifier*), r_ob->m_classes.di_class[class_id].identifier_to_dadaitem_fn, r_ob->orig_obj, identifier);
+//			return (t_dadaitem *)(r_ob->m_classes.di_class[class_id].identifier_to_dadaitem_fn)(r_ob->orig_obj, identifier);
+        } else
 			return NULL;
 	} else 
 		return dadaitem_class_get_nth_item(r_ob, class_id, identifier->idx);
@@ -1613,7 +1617,8 @@ t_dadaitem *dadaitem_from_type_and_idx(t_dadaobj *r_ob, e_dadaitem_types type, l
 			ident.flag = 0;
 			ident.idx = idx;
 			ident.type = type;
-			return (t_dadaitem *)(r_ob->m_classes.di_class[class_id].identifier_to_dadaitem_fn)(r_ob->orig_obj, &ident);
+            return CALL_METHOD_SAFE(t_dadaitem *, (t_object*, t_dadaitem_identifier*), r_ob->m_classes.di_class[class_id].identifier_to_dadaitem_fn, r_ob->orig_obj, &ident);
+//			return (t_dadaitem *)(r_ob->m_classes.di_class[class_id].identifier_to_dadaitem_fn)(r_ob->orig_obj, &ident);
 		} else
 			return NULL;
 	} else 
@@ -2242,7 +2247,7 @@ void dadaitem_set_from_llll(t_dadaobj *r_ob, t_dadaitem *item, t_llll *ll, long 
 		if (hatom_gettype(&elem->l_hatom) == H_LLLL) {
 			t_llll *ll = hatom_getllll(&elem->l_hatom);
 			if (ll->l_head && hatom_gettype(&ll->l_head->l_hatom) == H_SYM) {
-				t_bach_attribute *attr = get_bach_attribute(man, class_id, hatom_getsym(&ll->l_head->l_hatom));
+				t_bach_attribute *attr = bach_attribute_get(man, class_id, hatom_getsym(&ll->l_head->l_hatom));
 				if (attr && !(attr->flags & DADA_ATTRIBUTE_FLAG_DONTSET))
 					dadaitem_set_attr_from_llll(r_ob, item, attr, ll, true);
 			}
@@ -2268,7 +2273,7 @@ t_dadaitem *dadaitem_add_from_llll(t_dadaobj *r_ob, e_dadaitem_types type, t_lll
             if (hatom_gettype(&elem->l_hatom) == H_LLLL) {
                 t_llll *ll = hatom_getllll(&elem->l_hatom);
                 if (ll->l_head && hatom_gettype(&ll->l_head->l_hatom) == H_SYM) {
-                    t_bach_attribute *attr = get_bach_attribute(man, class_id, hatom_getsym(&ll->l_head->l_hatom));
+                    t_bach_attribute *attr = bach_attribute_get(man, class_id, hatom_getsym(&ll->l_head->l_hatom));
                     if (attr)
                         dadaitem_set_attr_from_llll(r_ob, item, attr, ll, true);
                 }
@@ -2484,10 +2489,10 @@ long dada_default_attr_inactive(t_object *ob, void *elem, t_bach_attribute *attr
 }
 
 
-t_bach_attribute *get_dada_attribute(t_dadaobj *r_ob, e_dadaitem_types elemtype, t_symbol *name)
+t_bach_attribute *dada_attribute_get(t_dadaobj *r_ob, e_dadaitem_types elemtype, t_symbol *name)
 {
 	long di_class_id = dadaitem_class_get_id(&r_ob->m_classes, elemtype);
-	return get_bach_attribute(r_ob->m_inspector.attr_manager, di_class_id, name);
+	return bach_attribute_get(r_ob->m_inspector.attr_manager, di_class_id, name);
 }
 
 

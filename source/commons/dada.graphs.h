@@ -34,7 +34,6 @@
 #define DADA_GRAPH_EDGE_DEFAULT_SELECTION_PAD 4
 #define DADA_GRAPH_VERTEX_DEFAULT_SELECTION_PAD 4
 
-#define DADA_GRAPH_ARROW_SIZE 7
 #define DADA_GRAPH_CURVE_AMOUNT 25
 
 #define DADA_GRAPH_MAX_VANILLABOX_INS 2
@@ -85,24 +84,24 @@ typedef enum _dada_graph_edge_retouch_modes
 
 typedef struct _pitchnvel
 {
-	double	pitch_mc;
-	long	velocity;
+	double	    pitch_mc;
+	t_atom_long	velocity;
 } t_pitchnvel;
 
 
 typedef struct _vanillabox
 {
     t_symbol *type;
-	long	 num_ins;
-	long	 num_outs;
+    t_atom_long	 num_ins;
+    t_atom_long	 num_outs;
 	t_llll	 *ins[DADA_GRAPH_MAX_VANILLABOX_INS];
 //	t_llll	 *outs[DADA_GRAPH_MAX_VANILLABOX_OUTS];
 } t_vanillabox;
 
 typedef struct _outinnum
 {
-	long	num_in;
-	long	num_out;
+	t_atom_long	num_in;
+    t_atom_long	num_out;
 } t_outinnum;
 
 
@@ -128,7 +127,7 @@ typedef struct _llllscore
 typedef union _dada_graph_metadata
 {
 	t_pitchnvel		m_pitchnvel;
-	long			m_long;
+	t_atom_long		m_long;
 	double			m_double;
 	t_vanillabox	m_vanillabox;
 	t_outinnum		m_outinnum;
@@ -212,11 +211,11 @@ void graph_assign_all_default_metadata(t_dada_graph *graph);
 void graph_paint_edge(t_dadaobj *r_ob, t_jgraphics *g, t_rect rect, t_pt center, t_dada_graph *graph,
 					  t_jrgba graph_color, long edge_index,
 					  double fixed_vertex_width, double fixed_vertex_height, vertex_to_properties_fn vertex_to_properties,
-					  double edge_width, char edge_retouch_mode, edge_to_properties_fn edge_to_properties, char paint_hover, t_jfont *jf_label, char show_arrows);
+					  double edge_width, char edge_retouch_mode, edge_to_properties_fn edge_to_properties, char paint_hover, t_jfont *jf_label, char show_arrows, double arrow_size);
 void graph_paint(t_dadaobj *r_ob, t_jgraphics *g, t_rect rect, t_pt center, t_dada_graph *graph,
 				 t_jrgba graph_color, char paint_vertices, char paint_edges, 
 				 double fixed_vertex_width, double fixed_vertex_height, vertex_to_properties_fn vertex_to_properties,
-				 double edge_width, char edge_retouch_mode, edge_to_properties_fn edge_to_properties, char paint_hover, t_jfont *jf_label, char show_arrows);
+				 double edge_width, char edge_retouch_mode, edge_to_properties_fn edge_to_properties, char paint_hover, t_jfont *jf_label, char show_arrows, double arrow_size);
 
 long graph_coord_to_vertex(t_dadaobj *r_ob, t_dada_graph *graph, t_pt coord, double vertex_size_in_coord, double tolerance);
 long graph_coord_to_edge(t_dadaobj *r_ob, t_dada_graph *graph, t_pt coord, double edge_width_in_coord, double tolerance);

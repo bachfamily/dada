@@ -379,7 +379,7 @@ long dada_score_crop_and_shift_markers_fn(t_llll *marker, e_notation_objects not
         this_tp.pt_in_measure = hatom_getrational(&mk_ll->l_head->l_next->l_next->l_hatom);
         
         if (from_tp.measure_num >= 0 && to_tp.measure_num >= 0) {
-            if (timepoints_compare(this_tp, from_tp) < 0 || timepoints_compare(this_tp, to_tp) >= 0)
+            if (timepoint_compare(this_tp, from_tp) < 0 || timepoint_compare(this_tp, to_tp) >= 0)
                 return 1;
             else {
                 // must shift timepoint, anyway
@@ -388,7 +388,7 @@ long dada_score_crop_and_shift_markers_fn(t_llll *marker, e_notation_objects not
                 hatom_setrational(&mk_ll->l_head->l_next->l_next->l_hatom, res_tp.pt_in_measure);
             }
         } else if (from_tp.measure_num >= 0 && to_tp.measure_num < 0) {
-            if (timepoints_compare(this_tp, from_tp) < 0)
+            if (timepoint_compare(this_tp, from_tp) < 0)
                 return 1;
             else {
                 // must shift timepoint, anyway
@@ -397,7 +397,7 @@ long dada_score_crop_and_shift_markers_fn(t_llll *marker, e_notation_objects not
                 hatom_setrational(&mk_ll->l_head->l_next->l_next->l_hatom, res_tp.pt_in_measure);
             }
         } else if (from_tp.measure_num < 0 && to_tp.measure_num >= 0) {
-            if (timepoints_compare(this_tp, to_tp) >= 0)
+            if (timepoint_compare(this_tp, to_tp) >= 0)
                 return 1;
         }
         
@@ -659,7 +659,7 @@ long dada_score_chord_applywin_fn(t_llll *gs, e_notation_objects notation_obj, v
 void dada_score_apply_window_on_velocities(t_llll *gs, e_dada_windows window_type, t_rational *tot_symduration)
 {
     long window_type_long = (long)window_type;
-    t_rational totdur = tot_symduration ? *tot_symduration : dada_score_gettotsymduration(gs);
+    t_rational totdur = tot_symduration ? *tot_symduration : dada_score_get_totsymduration(gs);
     dada_score_iterate_on_chords(gs, dada_score_chord_applywin_fn, k_NOTATION_OBJECT_ROLL, &window_type_long, &totdur, NULL);
 }
 
@@ -1326,6 +1326,7 @@ void dada_roll_stretch(t_llll *gs, double factor)
 ////// ******************* ///////
 
 
+// to do drop flags!
 void dada_score_iterate_on_measures(t_llll *gs, dada_gs_modif_fn modif_fn, e_notation_objects notation_obj, void *arg1, void *arg2, void *arg3)
 {
 	t_llllelem *voice, *meas, *next_meas;
@@ -1342,10 +1343,11 @@ void dada_score_iterate_on_measures(t_llll *gs, dada_gs_modif_fn modif_fn, e_not
             t_llll *measure_ll = hatom_getllll(&meas->l_hatom);
 			if (modif_fn(measure_ll, notation_obj, &idx, &symonset, arg1, arg2, arg3))
 				llll_destroyelem(meas);
-            symonset = rat_rat_sum(symonset, dada_measure_getsymdur(measure_ll));
+            symonset = rat_rat_sum(symonset, dada_measure_get_symdur(measure_ll));
 		}
 	}
 }
+
 
 
 void dada_score_iterate_on_chords(t_llll *gs, dada_gs_modif_fn modif_fn, e_notation_objects notation_obj, void *arg1, void *arg2, void *arg3)
@@ -1386,7 +1388,7 @@ void dada_score_iterate_on_chords(t_llll *gs, dada_gs_modif_fn modif_fn, e_notat
                     if (hatom_gettype(&ll->l_head->l_hatom) == H_SYM && hatom_getsym(&ll->l_head->l_hatom) == _llllobj_sym_leveltype) {
                         // nothing to do
                     } else if (hatom_gettype(&ll->l_head->l_hatom) == H_LLLL) {
-                        if (is_symbol_in_llll_first_level(ll, _llllobj_sym_g))
+                        if (is_llll_root_a_grace_level(ll))
                             in_grace_level++;
                         nextelem = ll->l_head;
                     } else if (is_hatom_number(&ll->l_head->l_hatom)) {
@@ -1401,7 +1403,7 @@ void dada_score_iterate_on_chords(t_llll *gs, dada_gs_modif_fn modif_fn, e_notat
                 if (!nextelem && parent->l_owner) {
                     while (!parent->l_owner->l_next && parent->l_owner->l_parent->l_owner) {
                         parent = parent->l_owner->l_parent;
-                        if (is_symbol_in_llll_first_level(parent, _llllobj_sym_g))
+                        if (is_llll_root_a_grace_level(parent))
                             in_grace_level--;
                     }
                     if (parent == measure_ll) // extremely important, otherwise we get to end ABOVE measure_ll (which is a measure belonging to some other llll, it's NOT cloned!)
@@ -1411,7 +1413,7 @@ void dada_score_iterate_on_chords(t_llll *gs, dada_gs_modif_fn modif_fn, e_notat
                 elem = nextelem;
             }
             
-            symonset_base = rat_rat_sum(symonset_base, dada_measure_getsymdur(measure_ll));
+            symonset_base = rat_rat_sum(symonset_base, dada_measure_get_symdur(measure_ll));
         }
     }
 }
@@ -1453,14 +1455,80 @@ void dada_score_measure_crop_handle_leveltype_and_tupletinfo(t_llll *ll)
     }
 }
 
+char is_llll_root_a_grace_level(t_llll *ll)
+{
+    if (is_symbol_in_llll_first_level(ll, _llllobj_sym_g))
+        return true;
+    return false;
+}
 
-long dada_score_measure_crop_tails_fn(t_llll *gs, e_notation_objects notation_obj, void *idx_param, void *onset, void *tail_pos, void *dummy2, void *dummy3)
+char is_llll_a_grace_level(t_llll *ll)
+{
+    t_llll *l = ll;
+    while (l) {
+        if (is_symbol_in_llll_first_level(l, _llllobj_sym_g))
+            return true;
+        if (l->l_head && l->l_size == 1 && hatom_gettype(&l->l_head->l_hatom) == H_LLLL) {
+            l = hatom_getllll(&l->l_head->l_hatom);
+        } else if (l->l_head && l->l_size == 2 && hatom_gettype(&l->l_head->l_hatom) == H_LLLL
+                   && hatom_gettype(&l->l_head->l_next->l_hatom) == H_LLLL) {
+            t_llll *inner_ll = hatom_getllll(&l->l_head->l_hatom);
+            if (inner_ll && inner_ll->l_head &&
+                hatom_gettype(&inner_ll->l_head->l_hatom) == H_SYM &&
+                hatom_getsym(&inner_ll->l_head->l_hatom) == _llllobj_sym_leveltype) {
+                l = hatom_getllll(&l->l_head->l_next->l_hatom);
+            } else {
+                break;
+            }
+        } else {
+            break;
+        }
+    }
+    return false;
+}
+
+char is_there_an_llll_grace_level_at_the_end(t_llll *ll)
+{
+    t_llll *l = ll;
+    while (l) {
+        if (is_llll_a_grace_level(l))
+            return true;
+        else if (l->l_tail && hatom_gettype(&l->l_tail->l_hatom) == H_LLLL)
+            l = hatom_getllll(&l->l_tail->l_hatom);
+        else
+            break;
+    }
+    return false;
+}
+
+
+char is_there_an_llll_grace_level_at_the_beginning(t_llll *ll)
+{
+    t_llll *l = ll;
+    while (l) {
+        if (is_llll_a_grace_level(l))
+            return true;
+        else if (l->l_head && l->l_size == 1 && hatom_gettype(&l->l_head->l_hatom) == H_LLLL) {
+            l = hatom_getllll(&l->l_head->l_hatom);
+        } else if (l->l_head && l->l_size == 2 && hatom_gettype(&l->l_head->l_hatom) == H_LLLL &&
+                   hatom_gettype(&l->l_head->l_next->l_hatom) == H_LLLL &&
+                   hatom_getllll(&l->l_head->l_hatom)->l_head && hatom_getsym(&(hatom_getllll(&l->l_head->l_hatom)->l_head)->l_hatom) == _llllobj_sym_leveltype) {
+                l = hatom_getllll(&l->l_head->l_next->l_hatom);
+        } else
+            break;
+    }
+    return false;
+}
+
+long dada_score_measure_crop_tails_fn(t_llll *gs, e_notation_objects notation_obj, void *idx_param, void *onset, void *tail_pos, void *graces_stay_with_next, void *add_ties_while_cropping)
 {
 	t_llllelem *measureinfo = gs->l_head;
 	t_timepoint tp = *(t_timepoint *)tail_pos;
 	t_timepoint idx = *(t_timepoint *)idx_param; 
-	t_rational measure_symdur = dada_measure_getsymdur(gs);
-	
+	t_rational measure_symdur = dada_measure_get_symdur(gs);
+    long grace_with_next = *((long *)graces_stay_with_next);
+    long ties_while_cropping = *((long *)add_ties_while_cropping);
+
 	if (idx.measure_num > tp.measure_num || (idx.measure_num == tp.measure_num && tp.pt_in_measure.r_num == 0)) 
 		return 1; // delete measure
 	
@@ -1478,7 +1546,36 @@ long dada_score_measure_crop_tails_fn(t_llll *gs, e_notation_objects notation_ob
 		nextelem = elem->l_next;
 		parent = elem->l_parent;
 		
-		if (rat_rat_cmp(symonset, tp.pt_in_measure) >= 0) {
+        char *buf = NULL;
+        char there_will_be_grace_at_the_beginning = false;
+        char single_grace_chord = false;
+        
+        // checking in_grace_level
+        if (hatom_gettype(&elem->l_hatom) == H_LLLL) {
+            t_llll *ll = hatom_getllll(&elem->l_hatom);
+            
+//            llll_to_text_buf(ll, &buf, 0, 0, 0, NULL);
+//            post("remove these lines above");
+            
+            if (hatom_gettype(&ll->l_head->l_hatom) == H_SYM && hatom_getsym(&ll->l_head->l_hatom) == _llllobj_sym_leveltype) {
+                // nothing to do
+            } else if (hatom_gettype(&ll->l_head->l_hatom) == H_LLLL) {
+                if (is_llll_root_a_grace_level(ll))
+                    in_grace_level++;
+                else if (is_there_an_llll_grace_level_at_the_beginning(ll))
+                    there_will_be_grace_at_the_beginning = true;
+            } else if (is_hatom_number(&ll->l_head->l_hatom)) {
+                t_rational this_symdur = rat_abs(hatom_getrational(&ll->l_head->l_hatom));
+                if (rat_long_cmp(this_symdur,0)==0)
+                    single_grace_chord = true;
+            }
+        }
+
+        long cmp = rat_rat_cmp(symonset, tp.pt_in_measure);
+		if (cmp > 0 ||
+            (cmp == 0 && ((!in_grace_level && !there_will_be_grace_at_the_beginning && !single_grace_chord) ||
+                          ((in_grace_level || there_will_be_grace_at_the_beginning || single_grace_chord) && grace_with_next && rat_rat_cmp(measure_symdur, symonset) != 0)))) {
+            
             if (hatom_gettype(&elem->l_hatom) == H_LLLL) {
                 t_llll *ll = hatom_getllll(&elem->l_hatom);
                 dada_score_measure_crop_handle_leveltype_and_tupletinfo(ll);
@@ -1491,8 +1588,6 @@ long dada_score_measure_crop_tails_fn(t_llll *gs, e_notation_objects notation_ob
 				if (hatom_gettype(&ll->l_head->l_hatom) == H_SYM && hatom_getsym(&ll->l_head->l_hatom) == _llllobj_sym_leveltype) {
 					// nothing to do
 				} else if (hatom_gettype(&ll->l_head->l_hatom) == H_LLLL) {
-                    if (is_symbol_in_llll_first_level(ll, _llllobj_sym_g))
-                        in_grace_level++;
 					nextelem = ll->l_head;
 //					nextelem = hatom_getllll(&ll->l_head->l_hatom)->l_head;
 				} else if (is_hatom_number(&ll->l_head->l_hatom)) {
@@ -1503,6 +1598,19 @@ long dada_score_measure_crop_tails_fn(t_llll *gs, e_notation_objects notation_ob
 					if (rat_rat_cmp(nextsymonset, tp.pt_in_measure) > 0) {
                         // crop
 						hatom_setrational(&ll->l_head->l_hatom, rat_long_prod(rat_rat_diff(tp.pt_in_measure, symonset), sign));
+                        if (ties_while_cropping && sign > 0) {
+                            // adding ties to notes
+                            for (t_llllelem *nel = ll->l_head->l_next; nel; nel = nel->l_next) {
+                                if (hatom_gettype(&nel->l_hatom) == H_LLLL) {
+                                    t_llll *nel_ll = hatom_getllll(&nel->l_hatom);
+                                    if (is_hatom_number(&nel_ll->l_head->l_hatom) || hatom_gettype(&nel_ll->l_head->l_hatom) == H_PITCH) {
+                                        // it's a note
+                                        if (nel_ll->l_head && nel_ll->l_head->l_next && nel_ll->l_head->l_next->l_next && hatom_gettype(&nel_ll->l_head->l_next->l_next->l_hatom) == H_LONG)
+                                            hatom_setlong(&nel_ll->l_head->l_next->l_next->l_hatom, 1);
+                                    }
+                                }
+                            }
+                        }
                         dada_score_measure_crop_handle_leveltype_and_tupletinfo(ll);
 					} // else: nothing to do
 					
@@ -1512,7 +1620,7 @@ long dada_score_measure_crop_tails_fn(t_llll *gs, e_notation_objects notation_ob
 		}
 		
 		if (!nextelem && parent->l_owner) {
-            if (is_symbol_in_llll_first_level(parent, _llllobj_sym_g))
+            if (is_llll_root_a_grace_level(parent))
                 in_grace_level--;
 			while (!parent->l_owner->l_next && parent->l_owner->l_parent->l_owner)
 				parent = parent->l_owner->l_parent;
@@ -1567,13 +1675,14 @@ long dada_score_measure_crop_tails_fn(t_llll *gs, e_notation_objects notation_ob
 
 
 
-long dada_score_measure_crop_heads_fn(t_llll *gs, e_notation_objects notation_obj, void *idx_param, void *onset, void *tail_pos, void *dummy2, void *dummy3)
+long dada_score_measure_crop_heads_fn(t_llll *gs, e_notation_objects notation_obj, void *idx_param, void *onset, void *tail_pos, void *graces_stay_with_next, void *dummy3)
 {
 	t_llllelem *measureinfo = gs->l_head;
 	t_timepoint tp = *(t_timepoint *)tail_pos;
 	t_timepoint idx = *(t_timepoint *)idx_param;
+    long grace_with_next = *((long *)graces_stay_with_next);
 	
-	t_rational measure_symdur = dada_measure_getsymdur(gs);
+	t_rational measure_symdur = dada_measure_get_symdur(gs);
 
 	if (idx.measure_num < tp.measure_num || (idx.measure_num == tp.measure_num && rat_rat_cmp(tp.pt_in_measure, measure_symdur) >= 0))
 		return 1; // delete measure
@@ -1599,13 +1708,14 @@ long dada_score_measure_crop_heads_fn(t_llll *gs, e_notation_objects notation_ob
 		if (hatom_gettype(&elem->l_hatom) == H_LLLL) {
 			t_llll *ll = hatom_getllll(&elem->l_hatom);
 			
-//			char *buf = NULL;
-//			llll_to_text_buf(ll, &buf, 0, 0, 0, NULL);
-			
+/*			char *buf = NULL;
+			llll_to_text_buf(ll, &buf, 0, 0, 0, NULL);
+            post("remove these lines above");
+*/
 			if (hatom_gettype(&ll->l_head->l_hatom) == H_SYM && hatom_getsym(&ll->l_head->l_hatom) == _llllobj_sym_leveltype) {
 				// nothing to do
 			} else if (hatom_gettype(&ll->l_head->l_hatom) == H_LLLL) {
-                if (is_symbol_in_llll_first_level(ll, _llllobj_sym_g))
+                if (is_llll_root_a_grace_level(ll))
                     in_grace_level++;
 				nextelem = ll->l_head;
 //				nextelem = hatom_getllll(&ll->l_head->l_hatom)->l_head;
@@ -1618,7 +1728,7 @@ long dada_score_measure_crop_heads_fn(t_llll *gs, e_notation_objects notation_ob
 			}
 		}
 		if (!nextelem && parent->l_owner) {
-            if (is_symbol_in_llll_first_level(parent, _llllobj_sym_g))
+            if (is_llll_root_a_grace_level(parent))
                 in_grace_level--;
 			while (!parent->l_owner->l_next && parent->l_owner->l_parent->l_owner)
 				parent = parent->l_owner->l_parent;
@@ -1634,6 +1744,7 @@ long dada_score_measure_crop_heads_fn(t_llll *gs, e_notation_objects notation_ob
 	
 	// And now working backwards!!
 	elem = gs->l_tail;
+    in_grace_level = 0;
 	t_rational symonsetbw = long2rat(0);
 	while (elem && elem != measureinfo) {
 		nextelem = elem->l_prev;
@@ -1643,8 +1754,36 @@ long dada_score_measure_crop_heads_fn(t_llll *gs, e_notation_objects notation_ob
 		llll_appendhatom_clone(templl, &elem->l_hatom, 0, WHITENULL_llll);
 		post(" >");
 		llll_print(templl, NULL, 0, 2, NULL);
-*/		
-		if (rat_rat_cmp(symonsetbw, target_pt_in_measure_bw) >= 0) {
+*/
+        long cmp = rat_rat_cmp(symonsetbw, target_pt_in_measure_bw);
+        char there_will_be_grace_at_the_end = false;
+        char single_grace_chord = false;
+        
+        char *buf = NULL;
+        
+        // updating in_grace_level
+        if (hatom_gettype(&elem->l_hatom) == H_LLLL) {
+            t_llll *ll = hatom_getllll(&elem->l_hatom);
+            
+//            llll_to_text_buf(ll, &buf, 0, 0, 0, NULL);
+//            post("remove these lines above");
+
+            if (hatom_gettype(&ll->l_head->l_hatom) == H_SYM && hatom_getsym(&ll->l_head->l_hatom) == _llllobj_sym_leveltype) {
+                // nothing to do
+            } else if (hatom_gettype(&ll->l_head->l_hatom) == H_LLLL) {
+                if (is_llll_root_a_grace_level(ll))
+                    in_grace_level++;
+                else if (is_there_an_llll_grace_level_at_the_end(ll))
+                    there_will_be_grace_at_the_end = true;
+            } else if (is_hatom_number(&ll->l_head->l_hatom)) {
+                t_rational this_symdur = rat_abs(hatom_getrational(&ll->l_head->l_hatom));
+                if (rat_long_cmp(this_symdur,0)==0)
+                    single_grace_chord = true;
+            }
+        }
+
+		if (cmp > 0 ||
+            (cmp == 0 && (!grace_with_next || (!in_grace_level && !there_will_be_grace_at_the_end && !single_grace_chord)))) {
 			if (hatom_gettype(&elem->l_hatom) == H_LLLL) {
 				t_llll *ll = hatom_getllll(&elem->l_hatom);
 				if (hatom_gettype(&ll->l_head->l_hatom) == H_SYM && hatom_getsym(&ll->l_head->l_hatom) == _llllobj_sym_leveltype) {
@@ -1657,27 +1796,33 @@ long dada_score_measure_crop_heads_fn(t_llll *gs, e_notation_objects notation_ob
 			
 			if (hatom_gettype(&elem->l_hatom) == H_LLLL) {
 				t_llll *ll = hatom_getllll(&elem->l_hatom);
+                
 				if (hatom_gettype(&ll->l_head->l_hatom) == H_SYM && hatom_getsym(&ll->l_head->l_hatom) == _llllobj_sym_leveltype) {
 					// nothing to do
 				} else if (hatom_gettype(&ll->l_head->l_hatom) == H_LLLL) {
-					nextelem = ll->l_tail;
-				} else if (is_hatom_number(&ll->l_head->l_hatom)) {
-					// process chord
-					t_rational this_symdur = rat_abs(hatom_getrational(&ll->l_head->l_hatom));
-					long sign = hatom_getrational(&ll->l_head->l_hatom).r_num >= 0 ? 1 : -1;
-					t_rational nextsymonsetbw = rat_rat_sum(symonsetbw, this_symdur);
-					if (rat_rat_cmp(nextsymonsetbw, target_pt_in_measure_bw) > 0) {
-                        // crop
-						hatom_setrational(&ll->l_head->l_hatom, rat_long_prod(rat_rat_diff(target_pt_in_measure_bw, symonsetbw), sign));
-                        dada_score_measure_crop_handle_leveltype_and_tupletinfo(ll);
-					} // else: nothing to do
-					
-					symonsetbw = nextsymonsetbw;
+//                    if (is_symbol_in_llll_first_level(ll, _llllobj_sym_g))
+//                        in_grace_level++;
+                    nextelem = ll->l_tail;
+                } else if (is_hatom_number(&ll->l_head->l_hatom)) {
+                    // process chord
+                    if (!in_grace_level) {
+                        t_rational this_symdur = rat_abs(hatom_getrational(&ll->l_head->l_hatom));
+                        long sign = hatom_getrational(&ll->l_head->l_hatom).r_num >= 0 ? 1 : -1;
+                        t_rational nextsymonsetbw = rat_rat_sum(symonsetbw, this_symdur);
+                        if (rat_rat_cmp(nextsymonsetbw, target_pt_in_measure_bw) > 0) {
+                            // crop
+                            hatom_setrational(&ll->l_head->l_hatom, rat_long_prod(rat_rat_diff(target_pt_in_measure_bw, symonsetbw), sign));
+                            dada_score_measure_crop_handle_leveltype_and_tupletinfo(ll);
+                        } // else: nothing to do
+                        symonsetbw = nextsymonsetbw;
+                    }
 				}
 			}
 		}
 		
 		if (!nextelem && parent->l_owner) {
+            if (is_llll_root_a_grace_level(parent))
+                in_grace_level--;
 			while (!parent->l_owner->l_prev && parent->l_owner->l_parent->l_owner)
 				parent = parent->l_owner->l_parent;
 			if (parent == gs) // extremely important, otherwise we get to end ABOVE gs (which is a measure belonging to some other llll, it's NOT cloned!)
@@ -1735,19 +1880,20 @@ long dada_score_measure_crop_heads_fn(t_llll *gs, e_notation_objects notation_ob
 
 
 // gs becomes its left part, returns right part
-t_llll *dada_score_split(t_llll *gs, t_timepoint split_pt, t_timesignature *splitpt_ts, t_tempo *splitpt_tempo, char copy_tempi)
+t_llll *dada_score_split(t_llll *gs, t_timepoint split_pt, t_timesignature *splitpt_ts, t_tempo *splitpt_tempo, char copy_tempi, long graces_stay_with_next, long add_ties_while_cropping)
 {
 	t_timepoint temp = split_pt;
+    long graces_with_next = graces_stay_with_next;
 	t_llll *right_part = llll_clone(gs);
 
 //    post("---");
 //	llll_print(gs, NULL, 0, 6, NULL);
 
-	dada_score_iterate_on_measures(right_part, dada_score_measure_crop_heads_fn, k_NOTATION_OBJECT_SCORE, &temp, NULL, NULL);
+	dada_score_iterate_on_measures(right_part, dada_score_measure_crop_heads_fn, k_NOTATION_OBJECT_SCORE, &temp, &graces_with_next, NULL);
 	
 //	llll_print(right_part, NULL, 0, 6, NULL);
 
-	dada_score_iterate_on_measures(gs, dada_score_measure_crop_tails_fn, k_NOTATION_OBJECT_SCORE, &temp, NULL, NULL);
+	dada_score_iterate_on_measures(gs, dada_score_measure_crop_tails_fn, k_NOTATION_OBJECT_SCORE, &temp, &graces_with_next, &add_ties_while_cropping);
 	
 //	llll_print(gs, NULL, 0, 6, NULL);
 //	post("---");
@@ -2032,7 +2178,7 @@ t_llll *dada_score_multisplit_measures(t_llll *gs, long num_splits, long *split_
 
 
 
-long dada_score_getnummeas(t_llll *gs)
+long dada_score_get_nummeas(t_llll *gs)
 {
 	t_llllelem *voice, *meas;
 	long num_meas = 0;
@@ -2054,7 +2200,7 @@ long dada_score_getnummeas(t_llll *gs)
 	return num_meas;
 }
 
-t_rational dada_measure_getsymdur(t_llll *gs)
+t_rational dada_measure_get_symdur(t_llll *gs)
 {
 	if (gs->l_head && hatom_gettype(&gs->l_head->l_hatom) == H_LLLL) {
 		t_llll *measureinfo_ll = hatom_getllll(&gs->l_head->l_hatom);
@@ -2068,7 +2214,7 @@ t_rational dada_measure_getsymdur(t_llll *gs)
 }
 
 
-t_rational dada_score_gettotsymduration(t_llll *gs)
+t_rational dada_score_get_totsymduration(t_llll *gs)
 {
     t_llllelem *voice, *meas;
     t_rational totsymdur = long2rat(0);
@@ -2082,7 +2228,7 @@ t_rational dada_score_gettotsymduration(t_llll *gs)
             if (hatom_gettype(&meas->l_hatom) != H_LLLL)
                 continue;
             
-            this_totsymdur = rat_rat_sum(this_totsymdur, dada_measure_getsymdur(hatom_getllll(&meas->l_hatom)));
+            this_totsymdur = rat_rat_sum(this_totsymdur, dada_measure_get_symdur(hatom_getllll(&meas->l_hatom)));
         }
         
         if (rat_rat_cmp(this_totsymdur, totsymdur) == 1)
@@ -2108,15 +2254,40 @@ long dada_score_measure_convert_to_ts_fn(t_llll *gs, e_notation_objects notation
 	return 1;
 }
 
+long dada_score_measure_get_symdur(t_llll *gs, e_notation_objects notation_obj, void *idx, void *onset, void *dummy, void *dummy2, void *dummy3)
+{
+    if (gs->l_head && hatom_gettype(&gs->l_head->l_hatom) == H_LLLL) {
+        t_llll *measureinfo_ll = hatom_getllll(&gs->l_head->l_hatom);
+        if (measureinfo_ll->l_head && hatom_gettype(&measureinfo_ll->l_head->l_hatom) == H_LLLL) {
+            t_llll *timesig = hatom_getllll(&measureinfo_ll->l_head->l_hatom);
+            t_timesignature ts = get_timesignature_from_llll(NULL, timesig);
+            hatom_change_to_rat_and_free(&gs->l_owner->l_hatom, genrat(ts.numerator, ts.denominator));
+            return 0;
+        }
+    }
+    
+    return 1;
+}
+
+
 
 
 //obtain llll with t_timesignature structures
-t_llll *dada_score_getts(t_llll *gs)
+t_llll *dada_score_get_ts(t_llll *gs)
 {
 	t_llll *ts = get_body(gs);
 	dada_score_iterate_on_measures(ts, dada_score_measure_convert_to_ts_fn, k_NOTATION_OBJECT_SCORE, NULL, NULL, NULL);
 
 	return ts;
+}
+
+//obtain llll with t_timesignature structures
+t_llll *dada_score_get_measuresymdurs(t_llll *gs)
+{
+    t_llll *ts = get_body(gs);
+    dada_score_iterate_on_measures(ts, dada_score_measure_get_symdur, k_NOTATION_OBJECT_SCORE, NULL, NULL, NULL);
+    
+    return ts;
 }
 
 

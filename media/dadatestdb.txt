@@ -9,6 +9,26 @@
 				[ wavenumber 32 ]
 				[ wavelength 2.1 ]
 			]
+			[
+				[ wave_id 2 ]
+				[ wavenumber 0 ]
+				[ wavelength 1.04 ]
+			]
+			[
+				[ wave_id 3 ]
+				[ wavenumber 0 ]
+				[ wavelength 1.14 ]
+			]
+			[
+				[ wave_id 4 ]
+				[ wavenumber 0 ]
+				[ wavelength 8.14 ]
+			]
+			[
+				[ wave_id 5 ]
+				[ wavenumber 0 ]
+				[ wavelength 128.14 ]
+			]
 		]
 	]
 	[

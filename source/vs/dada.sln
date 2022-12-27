@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27004.2009
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dada_lib", "vs_projects\dada_lib.vcxproj", "{DF55A42A-CBF8-4F3D-9BF4-E99E6219CD31}"
 EndProject
@@ -38,6 +38,10 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dada.stage", "vs_projects\dada.stage.vcxproj", "{B5B75D15-8E01-417F-945B-630556CC9F4E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dada.terrain~", "vs_projects\dada.terrain~.vcxproj", "{04FFDA4D-5393-42FC-8454-4C87DD7EDDB2}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dada.rhythmogram", "vs_projects\dada.rhythmogram.vcxproj", "{B43F76F9-4BEE-4BE3-9A80-0CCD76AEB95B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dada.peanos~", "vs_projects\dada.peanos~.vcxproj", "{AE5D92D6-6D29-4417-BF35-1BC0AE868279}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -152,10 +156,8 @@ Global
 		{CE3D085E-1333-493D-9872-0C107ACD41AA}.Release|x86.ActiveCfg = Release|Win32
 		{CE3D085E-1333-493D-9872-0C107ACD41AA}.Release|x86.Build.0 = Release|Win32
 		{F76B3B8C-0DA8-48BD-B3F3-E5CBA05737F7}.Debug|x64.ActiveCfg = Debug|x64
-		{F76B3B8C-0DA8-48BD-B3F3-E5CBA05737F7}.Debug|x64.Build.0 = Debug|x64
 		{F76B3B8C-0DA8-48BD-B3F3-E5CBA05737F7}.Debug|x86.ActiveCfg = Debug|Win32
 		{F76B3B8C-0DA8-48BD-B3F3-E5CBA05737F7}.Release|x64.ActiveCfg = Release|x64
-		{F76B3B8C-0DA8-48BD-B3F3-E5CBA05737F7}.Release|x64.Build.0 = Release|x64
 		{F76B3B8C-0DA8-48BD-B3F3-E5CBA05737F7}.Release|x86.ActiveCfg = Release|Win32
 		{BFBEBD21-2DB8-4926-9F3A-EC742753F46A}.Debug|x64.ActiveCfg = Debug|x64
 		{BFBEBD21-2DB8-4926-9F3A-EC742753F46A}.Debug|x64.Build.0 = Debug|x64
@@ -197,6 +199,20 @@ Global
 		{04FFDA4D-5393-42FC-8454-4C87DD7EDDB2}.Release|x64.Build.0 = Release|x64
 		{04FFDA4D-5393-42FC-8454-4C87DD7EDDB2}.Release|x86.ActiveCfg = Release|Win32
 		{04FFDA4D-5393-42FC-8454-4C87DD7EDDB2}.Release|x86.Build.0 = Release|Win32
+		{B43F76F9-4BEE-4BE3-9A80-0CCD76AEB95B}.Debug|x64.ActiveCfg = Debug|x64
+		{B43F76F9-4BEE-4BE3-9A80-0CCD76AEB95B}.Debug|x86.ActiveCfg = Debug|Win32
+		{B43F76F9-4BEE-4BE3-9A80-0CCD76AEB95B}.Debug|x86.Build.0 = Debug|Win32
+		{B43F76F9-4BEE-4BE3-9A80-0CCD76AEB95B}.Release|x64.ActiveCfg = Release|x64
+		{B43F76F9-4BEE-4BE3-9A80-0CCD76AEB95B}.Release|x86.ActiveCfg = Release|Win32
+		{B43F76F9-4BEE-4BE3-9A80-0CCD76AEB95B}.Release|x86.Build.0 = Release|Win32
+		{AE5D92D6-6D29-4417-BF35-1BC0AE868279}.Debug|x64.ActiveCfg = Debug|x64
+		{AE5D92D6-6D29-4417-BF35-1BC0AE868279}.Debug|x64.Build.0 = Debug|x64
+		{AE5D92D6-6D29-4417-BF35-1BC0AE868279}.Debug|x86.ActiveCfg = Debug|Win32
+		{AE5D92D6-6D29-4417-BF35-1BC0AE868279}.Debug|x86.Build.0 = Debug|Win32
+		{AE5D92D6-6D29-4417-BF35-1BC0AE868279}.Release|x64.ActiveCfg = Release|x64
+		{AE5D92D6-6D29-4417-BF35-1BC0AE868279}.Release|x64.Build.0 = Release|x64
+		{AE5D92D6-6D29-4417-BF35-1BC0AE868279}.Release|x86.ActiveCfg = Release|Win32
+		{AE5D92D6-6D29-4417-BF35-1BC0AE868279}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

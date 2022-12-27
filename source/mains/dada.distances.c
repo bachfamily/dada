@@ -114,9 +114,10 @@ typedef struct _distances
 	t_object	*d_dataview;	///< The dataview object
 	t_hashtab	*d_columns;		///< The dataview columns:  column name -> column index
 	t_object	*d_view;		///< The dbview object that we need to display in a dataview
-	t_symbol	*d_query;		///< Attribute
-	t_symbol	*d_where;		///< Attribute
-	t_symbol	*d_database;	///< Attribute
+	t_symbol	*d_query;		
+    long        d_where_ac;
+    t_atom      *d_where_av;
+	t_symbol	*d_database;
     
 	t_object	*d_db;			///< the actual database object
 
@@ -355,7 +356,8 @@ void C74_EXPORT ext_main(void *moduleRef)
 				  0L /* leave NULL!! */, A_GIMME, 0);
 	
 	c->c_flags |= CLASS_FLAG_NEWDICTIONARY;
-	jbox_initclass(c, 0);	// include textfield and Fonts attributes
+    jbox_initclass(c, JBOX_FONTATTR);    // include textfield and Fonts attributes
+//	jbox_initclass(c, 0);	// include textfield and Fonts attributes
 	//	jbox_initclass(c, 0);
 	
 	// paint & utilities
@@ -564,7 +566,6 @@ void C74_EXPORT ext_main(void *moduleRef)
 	CLASS_ATTR_DEFAULT(c, "presentation_rect", 0, "0 0 300 300");
 	// @exclude dada.distances
 	
-
 	CLASS_STICKY_ATTR(c,"category",0,"Color");
 	
 	CLASS_ATTR_RGBA(c, "legendcolor", 0, t_distances, j_legendcolor);
@@ -599,11 +600,11 @@ void C74_EXPORT ext_main(void *moduleRef)
 	CLASS_ATTR_INVISIBLE(c, "query", ATTR_GET_OPAQUE | ATTR_SET_OPAQUE);
 	// @exclude dada.distances
 	
-	CLASS_ATTR_SYM(c, "where", ATTR_SET_DEFER, t_distances, d_where);
-    CLASS_ATTR_STYLE_LABEL(c, "where", 0, "text", "Where Clause For Display Query"); 
-	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"where",0,"");
-    CLASS_ATTR_ACCESSORS(c,		"where",			NULL, distances_set_where);
-	// @description Sets the SQLite 'WHERE' clause to sieve displayed data.
+    CLASS_ATTR_ATOM_VARSIZE(c,"where", ATTR_SET_DEFER, t_distances, d_where_av, d_where_ac, 32500); // list limit is somewhere below 2^15, this should be a safe limit
+    CLASS_ATTR_STYLE_LABEL(c, "where", 0, "text", "Where Clause For Display Query");
+    CLASS_ATTR_ACCESSORS(c,        "where",            NULL, distances_set_where);
+    CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"where",0,"");
+    // @description Sets the SQLite 'WHERE' clause to sieve displayed data.
 
 	CLASS_ATTR_SYM(c,			"database",			ATTR_SET_DEFER_LOW,	t_distances, d_database);
 	CLASS_ATTR_ACCESSORS(c,		"database",			NULL, distances_set_database);
@@ -659,7 +660,7 @@ void C74_EXPORT ext_main(void *moduleRef)
 	
     CLASS_ATTR_SYM_VARSIZE(c, "contentfield", 0, t_distances, field_content, field_content_size, DADA_DISTANCES_MAX_CONTENTFIELDS);
     CLASS_ATTR_STYLE_LABEL(c, "contentfield", 0, "text", "Content Field(s)");
-	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"contentfield",0,"content");
+	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"contentfield",0,"none");
     CLASS_ATTR_BASIC(c, "contentfield", 0);
 	// @description Sets the name of the field or fields (columns) to be output
 	// when the grain is clicked or hovered (usually a score gathered syntax).
@@ -871,6 +872,8 @@ void C74_EXPORT ext_main(void *moduleRef)
     
     CLASS_STICKY_ATTR_CLEAR(c, "category");
 
+    CLASS_ATTR_DEFAULT(c, "fontsize", 0, "10");
+    
 	
 	class_register(CLASS_BOX, c); /* CLASS_NOBOX */
 	distances_class = c;
@@ -927,34 +930,39 @@ t_max_err distances_set_query(t_distances *x, void *attr, long argc, t_atom *arg
 
 t_max_err distances_set_where(t_distances *x, void *attr, long argc, t_atom *argv)
 {
-    if (!argc)
-        x->d_where = _llllobj_sym_empty_symbol;
-    else if (argc && argv && atom_gettype(argv) == A_SYM && atom_getsym(argv)) {
-        x->d_where = atom_getsym(argv);
+    if (!argc) {
+        x->d_where_ac = 0;
+    } else {
+        x->d_where_ac = argc;
+        for (long i = 0; i < MIN(32500, argc); i++)
+            x->d_where_av[i] = argv[i];
     }
     return MAX_ERR_NONE;
 }
 
 
 
+// this MUST be deferred_low, because if we have a [dada.base] with the same db name and a db3 binding in the patch,
+// and if it happens to be instantiated NEXT, the db_open(,NULL,) stuff will prevent the filenaming bond
+void distances_set_database_do(t_distances *x, t_symbol *msg, long argc, t_atom *argv)
+{
+    t_max_err err;
+    db_view_remove(x->d_db, &x->d_view);
+    db_close(&x->d_db);
+    
+    x->d_database = msg;
+    err = db_open(x->d_database, NULL, &x->d_db);
+    if (!err && x->d_db && x->d_query) {
+        x->db_ok = true;
+        defer_low(x, (method)view_create_deferred, NULL, 0, NULL);
+    }
+}
 
 t_max_err distances_set_database(t_distances *x, void *attr, long argc, t_atom *argv)
 {
-	t_max_err err;
-	
-	if (argc && argv && atom_gettype(argv) == A_SYM && atom_getsym(argv) && strlen(atom_getsym(argv)->s_name) > 0) {
-		db_view_remove(x->d_db, &x->d_view);
-		db_close(&x->d_db);
-		
-		x->d_database = atom_getsym(argv);
-		err = db_open(x->d_database, NULL, &x->d_db);
-		if (!err && x->d_db && x->d_query) {
-            x->db_ok = true;
-//			db_view_create(x->d_db, x->d_query->s_name, &x->d_view);
-//			object_attach_byptr_register(x, x->d_view, _sym_nobox);
-            defer_low(x, (method)view_create_deferred, NULL, 0, NULL);
-		}
-	}
+    if (argc && argv && atom_gettype(argv) == A_SYM && atom_getsym(argv) && strlen(atom_getsym(argv)->s_name) > 0) {
+        defer_low(x, (method) distances_set_database_do, atom_getsym(argv), 0, NULL);
+    }
 	return MAX_ERR_NONE;
 }
 
@@ -982,6 +990,9 @@ t_max_err distances_notify(t_distances *x, t_symbol *s, t_symbol *msg, void *sen
         }
         if (attr_name == gensym("memory")) {
             llll_clear(x->turtled_grain_history);
+        }
+        if (attr_name == _sym_fontname || attr_name == _sym_fontsize || attr_name == _sym_fontface) {
+            distances_iar(x);
         }
 		if (attr_name == _sym_table) {
 			char query[1024];
@@ -1107,6 +1118,7 @@ void distances_free(t_distances *x)
 	db_view_remove(x->d_db, &x->d_view);
 	db_close(&x->d_db);
     llll_free(x->scheduled_times);
+    sysmem_freeptr(x->d_where_av);
     llll_free(x->grains);
     llll_free(x->grains_grid);
     llll_free(x->turtled_grain_history);
@@ -1167,6 +1179,8 @@ void *distances_new(t_symbol *s, long argc, t_atom *argv)
 		x->curr_beat_ms = 1000;
         x->loop_clock = clock_new(x, (method)distances_loop_tick);
         x->turtled_grain_history = llll_get();
+        x->d_where_ac = 0;
+        x->d_where_av = (t_atom *)sysmem_newptr(32500 * sizeof(t_atom));
 
         graph_new(&x->graph, DADA_GRAPH_FLAG_SYMMETRIC, DADA_GRAPH_METADATA_OBJ, DADA_GRAPH_METADATA_DOUBLE, DADA_LINE_STRAIGHT);
  		
@@ -1888,12 +1902,14 @@ void build_grains(t_distances *x)
 	}
 	
     long colorfield_idx = 3;
-    char query[2048];
+    char query[DADA_QUERY_ALLOC_CHAR_SIZE];
+    long query_alloc = DADA_QUERY_ALLOC_CHAR_SIZE;
+
     
     
     /// OBTAINING MAXIMUM ID OF GRAINS
     long num_idxs = 0;
-    snprintf_zero(query, 2048, "SELECT MAX(%s) FROM %s", idname->s_name, tablename->s_name);
+    snprintf_zero(query, query_alloc, "SELECT MAX(%s) FROM %s", idname->s_name, tablename->s_name);
     if (db_query(x->d_db, &result, query) == MAX_ERR_NONE)
         num_idxs = db_result_double_local(result, 0, 0) + 1;
     object_free(result);
@@ -1901,9 +1917,14 @@ void build_grains(t_distances *x)
 
     /// OBTAINING IDs OF GRAINS TO BE DISPLAYED
     
-    snprintf_zero(query, 2048, "SELECT %s FROM %s", idname->s_name, tablename->s_name);
-    if (x->d_where && strlen(x->d_where->s_name) > 0)
-        snprintf_zero(query + strlen(query), 2048 - strlen(query), " WHERE %s", x->d_where->s_name);
+    snprintf_zero(query, query_alloc, "SELECT %s FROM %s", idname->s_name, tablename->s_name);
+    if (x->d_where_ac > 0) {
+        char *buf = NULL;
+        long size = 0;
+        atom_gettext(x->d_where_ac, x->d_where_av, &size, &buf, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE);
+        snprintf_zero(query + strlen(query), query_alloc - strlen(query), " WHERE %s", buf);
+        sysmem_freeptr(buf);
+    }
     
     err = db_query(x->d_db, &result, query);
     
@@ -2261,7 +2282,7 @@ void distances_paint_grains(t_distances *x, t_jgraphics *g, t_object *view, t_re
                  paint_dashed_line(g, gr->color, pt.x, pt.y, uniform_grid_pt.x, uniform_grid_pt.y, 0.5, 3);
                  */
                 if (x->paint_labels && gr->label)
-                    write_text_simple(g, jf_labels, DADA_GREY_25, gr->label->s_name, pt.x + gr->radius_px, pt.y + gr->radius_px, 200, 200);
+                    write_text_standard(g, jf_labels, DADA_GREY_25, gr->label->s_name, pt.x + gr->radius_px, pt.y + gr->radius_px, 200, 200);
                 
             }
         }
@@ -2318,6 +2339,8 @@ void rebuild_grains(t_distances *x, char preserve_turtle)
         dadaobj_cast(x)->m_zoom.must_autozoom = true;
     dadaobj_mutex_unlock(dadaobj_cast(x));
     llllobj_outlet_symbol_as_llll((t_object *)x, LLLL_OBJ_UI, 2, _sym_done);
+    
+    jbox_redraw((t_jbox *)x);
 }
 
 
@@ -2341,8 +2364,9 @@ void distances_paint_ext(t_distances *x, t_object *view, t_dada_force_graphics *
 	t_rect rect = force_graphics->rect;
 	t_pt center = force_graphics->center_pix;
 	t_jfont *jf = jfont_create_debug("Arial", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL, x->legend_text_size);
-    t_jfont *jf_labels = jfont_create_debug("Arial", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL, x->labels_text_size);
+    t_jfont *jf_labels = jfont_create_debug(jbox_get_fontname((t_object *)x)->s_name, (t_jgraphics_font_slant)jbox_get_font_slant((t_object *)x), (t_jgraphics_font_weight)jbox_get_font_weight((t_object *)x), jbox_get_fontsize((t_object *)x));
 
+    
     if (!x->db_ok) {
         dadaobj_paint_background(dadaobj_cast(x), g, &rect);
         write_text(g, jf, DADA_GREY_50, "(must set 'database', 'table' & 'distancetable' attributes)", 0, 0, rect.width, rect.height, JGRAPHICS_TEXT_JUSTIFICATION_CENTERED, true, true);
@@ -2547,6 +2571,23 @@ void show_bg_popup_menu(t_distances *x, t_object *patcherview, t_pt pt, long mod
 
 ////////// INTERFACE FUNCTIONS
 
+
+char xbase_is_attached_to_sql_file(t_xbase *b)
+{
+    if (b->d_filename && strlen(b->d_filename->s_name) > 0 && strcmp(b->d_filename->s_name + strlen(b->d_filename->s_name) - 4, ".db3") == 0)
+        return 1;
+    return 0;
+}
+
+
+
+char xbase_store_lllls_with_phonenumbers(t_xbase *b)
+{
+    if (xbase_is_attached_to_sql_file(b))
+        return 0;
+    return 1;
+}
+
 // returns the content field already cloned
 t_llll *get_grain_contentfield(t_distances *x, t_distances_grain *gr)
 {
@@ -2562,6 +2603,10 @@ t_llll *get_grain_contentfield(t_distances *x, t_distances_grain *gr)
         return out;
     
     for (f = 0; f < x->field_content_size; f++) {
+        
+        if (x->field_content[f] == _sym_none)
+            continue;
+        
         t_db_result	*result = NULL;
         snprintf_zero(query, 256, "SELECT %s FROM %s WHERE %s = %ld", x->field_content[f]->s_name, tablename->s_name, idname->s_name, gr->db_id);
         err = db_query(x->d_db, &result, query);
@@ -2595,11 +2640,19 @@ t_llll *get_grain_contentfield(t_distances *x, t_distances_grain *gr)
                     
                 default: // llll
                 {
-                    long phonenumber = db_result_long_local(result, 0, 0);
-                    t_llll *ll = llll_retrieve_from_phonenumber_and_retain(phonenumber);
-                    if (ll) {
-                        llll_chain_clone(this_out, ll);
-                        llll_release(ll);
+                    t_xbase *xbase = (t_xbase *)x->d_database->s_thing; // database already exists
+                    if (xbase_store_lllls_with_phonenumbers(xbase)) {
+                        long phonenumber = db_result_long_local(result, 0, 0);
+                        t_llll *ll = llll_retrieve_from_phonenumber_and_retain(phonenumber);
+                        if (ll) {
+                            llll_chain_clone(this_out, ll);
+                            llll_release(ll);
+                        }
+                    } else {
+                        char **record = db_result_firstrecord(result);
+                        t_llll *ll = llll_from_text_buf(record[0], false);
+                        llll_chain(this_out, ll);
+                        break;
                     }
                 }
                     break;

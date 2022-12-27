@@ -19,7 +19,7 @@
 #define DADA_XBASE_MAGIC_BAD 666
 
 
-#define DADA_QUERY_ALLOC_CHAR_SIZE (8192 * 4)
+#define DADA_QUERY_ALLOC_CHAR_SIZE (8192 * 4) // < basic query allocation chars
 
 
 typedef struct _db_table {
@@ -46,6 +46,7 @@ typedef struct _xbase {
     long        ref_count;
     
     t_symbol    *d_filename;
+    char        d_force_store_lllls_as_text;
     
     char        d_dirty;
     char        d_nodirty; // if toggled, won't set d_dirty flag

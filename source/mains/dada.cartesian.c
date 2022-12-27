@@ -61,7 +61,7 @@
 #include "dada.notation.h"
 
 #define DADA_CARTESIAN_INTERFACE_GRAIN_TOLERANCE 5
-#define DADA_CARTESIAN_MAX_CONTENTFIELDS 10
+#define DADA_CARTESIAN_MAX_CONTENTFIELDS 32
 #define DADA_CARTESIAN_MAX_CONVEXCOMB 32
 
 ////////////////////////// structures
@@ -110,9 +110,9 @@ typedef struct _cartesian
 	t_object	*d_dataview;	///< The dataview object
 	t_hashtab	*d_columns;		///< The dataview columns:  column name -> column index
 	t_object	*d_view;		///< The dbview object that we need to display in a dataview
-	t_symbol	*d_query;		///< Attribute
-	t_symbol	*d_where;		///< Attribute
-	t_symbol	*d_database;	///< Attribute
+	t_symbol	*d_query;
+	t_llll  	*d_where_llll;
+	t_symbol	*d_database;
     
 	t_object	*d_db;			///< the actual database object
 
@@ -247,7 +247,7 @@ void cartesian_initdataview(t_cartesian *x);
 
 t_max_err cartesian_set_query(t_cartesian *x, void *attr, long argc, t_atom *argv);
 t_max_err cartesian_set_database(t_cartesian *x, void *attr, long argc, t_atom *argv);
-t_max_err cartesian_set_where(t_cartesian *x, void *attr, long argc, t_atom *argv);
+t_max_err cartesian_setattr_where(t_cartesian *x, void *attr, long argc, t_atom *argv);
 
 t_llll *get_grain_contentfield(t_cartesian *x, t_cartesian_grain *gr);
 void output_grain_contentfield(t_cartesian *x, t_cartesian_grain *gr, t_symbol *router, char beat_sync);
@@ -269,6 +269,7 @@ void cartesian_end_preset(t_cartesian *x);
 */
 
 
+DEFINE_LLLL_ATTR_DEFAULT_GETTER(t_cartesian, d_where_llll, cartesian_getattr_where);
 
 //////////////////////// global class pointer variable
 static t_class *cartesian_class;
@@ -480,10 +481,13 @@ void C74_EXPORT ext_main(void *moduleRef)
 	// @method knn @digest Find nearest neighbors
 	// @description The <m>knn</m> message, followed by an integer <m>K</m> and an <m>llll</m> of the kind <b>[<m>x</m>, <m>y</m>]</b>,
 	// finds the <m>K</m> points which are nearest to the location (<m>x</m>, <m>y</m>), and outputs their content field(s) from the third outlet. <br />
+    // If an additional wrapped list of the kind <b>[<m>weight_x</m>, <m>weight_y</m>]</b> is given, then weights are applied to the knn (which
+    // is useful in the case of dimensions having quite different orders of magnitudes). <br />
     // If <m>relativeknn</m> is on, the coordinates are expected to be between 0 and 1, relative to the current domain and range
     // (caveat: more precisely, to the domain and range of the latest painted view of the object).
 	// @marg 0 @name number_of_neighbors @optional 0 @type int
 	// @marg 1 @name position @optional 0 @type llll
+    // @marg 2 @name weights @optional 1 @type llll
 	class_addmethod(c, (method)cartesian_anything,		"knn",		A_GIMME,	0);
 	
 
@@ -543,10 +547,10 @@ void C74_EXPORT ext_main(void *moduleRef)
 	CLASS_ATTR_INVISIBLE(c, "query", ATTR_GET_OPAQUE | ATTR_SET_OPAQUE);
 	// @exclude dada.cartesian
 	
-	CLASS_ATTR_SYM(c, "where", ATTR_SET_DEFER, t_cartesian, d_where);
-    CLASS_ATTR_STYLE_LABEL(c, "where", 0, "text", "Where Clause For Display Query"); 
+    CLASS_ATTR_LLLL(c,"where", ATTR_SET_DEFER, t_cartesian, d_where_llll, cartesian_getattr_where, cartesian_setattr_where);
+    CLASS_ATTR_STYLE_LABEL(c, "where", 0, "text", "Where Clause For Display Query");
+    CLASS_ATTR_BASIC(c, "where", 0);
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"where",0,"");
-    CLASS_ATTR_ACCESSORS(c,		"where",			NULL, cartesian_set_where);
 	// @description Sets the SQLite 'WHERE' clause to sieve displayed data.
 
 	CLASS_ATTR_SYM(c,			"database",			ATTR_SET_DEFER_LOW,	t_cartesian, d_database);
@@ -623,7 +627,7 @@ void C74_EXPORT ext_main(void *moduleRef)
 	
     CLASS_ATTR_SYM_VARSIZE(c, "contentfield", 0, t_cartesian, field_content, field_content_size, DADA_CARTESIAN_MAX_CONTENTFIELDS);
     CLASS_ATTR_STYLE_LABEL(c, "contentfield", 0, "text", "Content Field(s)");
-	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"contentfield",0,"content");
+	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"contentfield",0,"none");
     CLASS_ATTR_BASIC(c, "contentfield", 0);
 	// @description Sets the name of the field or fields (columns) to be output
 	// when the grain is clicked or hovered (usually a score gathered syntax).
@@ -788,35 +792,48 @@ t_max_err cartesian_set_query(t_cartesian *x, void *attr, long argc, t_atom *arg
 	return MAX_ERR_NONE;
 }
 
-t_max_err cartesian_set_where(t_cartesian *x, void *attr, long argc, t_atom *argv)
+
+
+t_max_err cartesian_setattr_where(t_cartesian *x, void *attr, long argc, t_atom *argv)
 {
-    if (!argc)
-        x->d_where = _llllobj_sym_empty_symbol;
-    else if (argc && argv && atom_gettype(argv) == A_SYM && atom_getsym(argv)) {
-        x->d_where = atom_getsym(argv);
+    t_llll *ll;
+    if ((ll = llllobj_parse_llll((t_object *) x, LLLL_OBJ_UI, _llllobj_sym_none, argc, argv, LLLL_PARSE_CLONE, LLLL_I_ALL))) {
+        t_llll *free_me;
+        dadaobj_mutex_lock(dadaobj_cast(x));
+        free_me = x->d_where_llll;
+        if (ll && ll->l_head)
+            llll_destroyelem(ll->l_head);
+        if (ll->l_size == 1 && hatom_getsym(&ll->l_head->l_hatom) == _llllobj_sym_null) // we treat the "null" case separately, this has to be parsed and not ignore.
+            llll_clear(ll);
+        x->d_where_llll = ll;
+        dadaobj_mutex_unlock(dadaobj_cast(x));
+        llll_free(free_me);
     }
     return MAX_ERR_NONE;
 }
 
 
 
+// this MUST be deferred_low, because if we have a [dada.base] with the same db name and a db3 binding in the patch,
+// and if it happens to be instantiated NEXT, the db_open(,NULL,) stuff will prevent the filenaming bond
+void cartesian_set_database_do(t_cartesian *x, t_symbol *msg, long argc, t_atom *argv)
+{
+    t_max_err err;
+    db_view_remove(x->d_db, &x->d_view);
+    db_close(&x->d_db);
+    
+    x->d_database = msg;
+    err = db_open(x->d_database, NULL, &x->d_db);
+    if (!err && x->d_db && x->d_query) {
+        x->db_ok = true;
+        defer_low(x, (method)view_create_deferred, NULL, 0, NULL);
+    }
+}
 
 t_max_err cartesian_set_database(t_cartesian *x, void *attr, long argc, t_atom *argv)
 {
-	t_max_err err;
-	
 	if (argc && argv && atom_gettype(argv) == A_SYM && atom_getsym(argv) && strlen(atom_getsym(argv)->s_name) > 0) {
-		db_view_remove(x->d_db, &x->d_view);
-		db_close(&x->d_db);
-		
-		x->d_database = atom_getsym(argv);
-		err = db_open(x->d_database, NULL, &x->d_db);
-		if (!err && x->d_db && x->d_query) {
-            x->db_ok = true;
-//			db_view_create(x->d_db, x->d_query->s_name, &x->d_view);
-//			object_attach_byptr_register(x, x->d_view, _sym_nobox);
-            defer_low(x, (method)view_create_deferred, NULL, 0, NULL);
-		}
+        defer_low(x, (method) cartesian_set_database_do, atom_getsym(argv), 0, NULL);
 	}
 	return MAX_ERR_NONE;
 }
@@ -953,6 +970,7 @@ void cartesian_free(t_cartesian *x)
 	db_view_remove(x->d_db, &x->d_view);
 	db_close(&x->d_db);
     llll_free(x->scheduled_times);
+    llll_free(x->d_where_llll);
     llll_free(x->grains);
     object_free(x->loop_clock);
 	dadaobj_jbox_free((t_dadaobj_jbox *)x); // jbox_free and llllobj_free are inside here
@@ -1009,6 +1027,7 @@ void *cartesian_new(t_symbol *s, long argc, t_atom *argv)
 		x->curr_beat_ms = 1000;
         x->loop_clock = clock_new(x, (method)cartesian_loop_tick);
         x->is_creating_new_obj = true;
+        x->d_where_llll = llll_get();
         
         for (long i = 0; i < DADA_CARTESIAN_MAX_CONVEXCOMB; i++)
             x->field_convexcomb_max[i] = 1.;
@@ -1183,9 +1202,13 @@ long sort_by_pt_distance_fn(void *data, t_llllelem *a, t_llllelem *b)
 {
 	t_cartesian_grain *a_gr = (t_cartesian_grain *)hatom_getobj(&a->l_hatom);
 	t_cartesian_grain *b_gr = (t_cartesian_grain *)hatom_getobj(&b->l_hatom);
-	t_pt coord = *((t_pt *)data);
-	
-	return (pt_pt_distance_squared(a_gr->coord, coord) <= pt_pt_distance_squared(b_gr->coord, coord));
+    t_pt coord = *((t_pt *)(((void **)data)[0]));
+    if (((void **)data)[1]) {
+        t_pt weights = *((t_pt *)(((void **)data)[1]));
+        return (pt_pt_distance_squared_weighted(a_gr->coord, coord, weights) <= pt_pt_distance_squared_weighted(b_gr->coord, coord, weights));
+    } else {
+        return (pt_pt_distance_squared(a_gr->coord, coord) <= pt_pt_distance_squared(b_gr->coord, coord));
+    }
 }
 
 long sort_by_pt_distance_relative_fn(void *data, t_llllelem *a, t_llllelem *b)
@@ -1193,33 +1216,43 @@ long sort_by_pt_distance_relative_fn(void *data, t_llllelem *a, t_llllelem *b)
     t_cartesian_grain *a_gr = (t_cartesian_grain *)hatom_getobj(&a->l_hatom);
     t_cartesian_grain *b_gr = (t_cartesian_grain *)hatom_getobj(&b->l_hatom);
     t_pt coord = *((t_pt *)(((void **)data)[0]));
-    t_rect relative_rect = *((t_rect *)(((void **)data)[1]));
+    t_pt weights = *((t_pt *)(((void **)data)[1]));
+    t_rect relative_rect = *((t_rect *)(((void **)data)[2]));
     
     t_pt a_pt = build_pt((a_gr->coord.x - relative_rect.x)/relative_rect.width, (a_gr->coord.y - relative_rect.y)/relative_rect.height);
     t_pt b_pt = build_pt((b_gr->coord.x - relative_rect.x)/relative_rect.width, (b_gr->coord.y - relative_rect.y)/relative_rect.height);
     
-    return (pt_pt_distance_squared(a_pt, coord) <= pt_pt_distance_squared(b_pt, coord));
+    if (((void **)data)[1]) {
+        t_pt weights = *((t_pt *)(((void **)data)[1]));
+        return (pt_pt_distance_squared_weighted(a_pt, coord, weights) <= pt_pt_distance_squared_weighted(b_pt, coord, weights));
+    } else {
+        return (pt_pt_distance_squared(a_pt, coord) <= pt_pt_distance_squared(b_pt, coord));
+    }
 }
 
 
 
-
-t_llll *cartesian_get_knn(t_cartesian *x, long num_neighbors, t_pt coord, t_cartesian_grain *but_not_this_grain, char coord_are_01)
+// This is not a true tree-based sublinear knn, just a linear search.
+// TO DO: improve it in the future, by making it a true O(logN) knn
+t_llll *cartesian_get_knn(t_cartesian *x, long num_neighbors, t_pt coord, t_pt *weights, t_cartesian_grain *but_not_this_grain, char coord_are_01)
 {
 	t_llllelem *elem;
 	long count;
 
 //	post("- coord: %ld, %ld", coord.x, coord.y);
 
+    void *data[3];
+    t_rect rect;
+    if (coord_are_01)
+        rect = build_rect(x->domain_min, x->range_min, x->domain_max - x->domain_min, x->range_max - x->range_min);
+    data[0] = &coord;
+    data[1] = weights;
+    data[2] = &rect;
+    
     if (coord_are_01) {
-        void *data[2];
-        t_rect rect = build_rect(x->domain_min, x->range_min, x->domain_max - x->domain_min, x->range_max - x->range_min);
-        data[0] = &coord;
-        data[1] = &rect;
-        
         llll_inplacesort(x->grains, (sort_fn) sort_by_pt_distance_relative_fn, data);
     } else
-        llll_inplacesort(x->grains, (sort_fn) sort_by_pt_distance_fn, &coord);
+        llll_inplacesort(x->grains, (sort_fn) sort_by_pt_distance_fn, data);
 	
 	t_llll *res = llll_get();
 	for (elem = x->grains->l_head, count = 0; elem && count < num_neighbors; elem = elem->l_next){
@@ -1232,11 +1265,11 @@ t_llll *cartesian_get_knn(t_cartesian *x, long num_neighbors, t_pt coord, t_cart
 	return res;
 }
 
-t_cartesian_grain *cartesian_get_1nn(t_cartesian *x, t_pt coord, t_cartesian_grain *but_not_this_grain, char coord_are_01)
+t_cartesian_grain *cartesian_get_1nn(t_cartesian *x, t_pt coord, t_pt *weights, t_cartesian_grain *but_not_this_grain, char coord_are_01)
 {
 	t_cartesian_grain *gr = NULL;
 	
-	t_llll *res = cartesian_get_knn(x, 1, coord, but_not_this_grain, coord_are_01);
+	t_llll *res = cartesian_get_knn(x, 1, coord, weights, but_not_this_grain, coord_are_01);
 	
 	if (res->l_head) 
 		gr = (t_cartesian_grain *)hatom_getobj(&res->l_head->l_hatom);
@@ -1296,8 +1329,14 @@ void cartesian_setturtle(t_cartesian *x, t_llll *args)
     dadaobj_mutex_lock(dadaobj_cast(x));
     if (hatom_gettype(&args->l_head->l_hatom) == H_LLLL) {
         // The grain can be the nearest grain to an (x y) value...
+        char has_weights = false;
+        t_pt weights;
+        if (args->l_head->l_next && hatom_gettype(&args->l_head->l_next->l_hatom) == H_LLLL) {
+            has_weights = true;
+            weights = llll_to_pt(hatom_getllll(&args->l_head->l_next->l_hatom));
+        }
         t_pt pt = llll_to_pt(hatom_getllll(&args->l_head->l_hatom));
-        x->turtled_grain = cartesian_get_1nn(x, pt, NULL, x->relative_turtling);
+        x->turtled_grain = cartesian_get_1nn(x, pt, has_weights ? &weights : NULL, NULL, x->relative_turtling);
     } else if (hatom_gettype(&args->l_head->l_hatom) == H_SYM) {
         // ... or the grain having a certain field set to a certain value
         char *  valuestr = NULL;
@@ -1323,7 +1362,15 @@ void cartesian_anything(t_cartesian *x, t_symbol *msg, long ac, t_atom *av)
         if (dadaobj_anything_handle_domain_or_range(dadaobj_cast(x), router, parsed, 2)) {
             // nothing to do!
         } else if (router == gensym("knn") && parsed->l_size >= 2 && hatom_gettype(&parsed->l_head->l_hatom) == H_LONG && hatom_gettype(&parsed->l_head->l_next->l_hatom) == H_LLLL) {
-            t_llll *grains_knn = cartesian_get_knn(x, hatom_getlong(&parsed->l_head->l_hatom), llll_to_pt(hatom_getllll(&parsed->l_head->l_next->l_hatom)), NULL, x->relative_knn);
+            long n = hatom_getlong(&parsed->l_head->l_hatom);
+            t_pt coord = llll_to_pt(hatom_getllll(&parsed->l_head->l_next->l_hatom));
+            char has_weights = false;
+            t_pt weights;
+            if (parsed->l_size >= 2 && hatom_gettype(&parsed->l_head->l_next->l_next->l_hatom) == H_LLLL) {
+                has_weights = true;
+                weights = llll_to_pt(hatom_getllll(&parsed->l_head->l_next->l_next->l_hatom));
+            }
+            t_llll *grains_knn = cartesian_get_knn(x, n, coord, has_weights ? &weights : NULL, NULL, x->relative_knn);
             t_llllelem *elem;
             t_llll *out = llll_get();
             for (elem = grains_knn->l_head; elem; elem = elem->l_next)  {
@@ -1362,7 +1409,13 @@ void cartesian_anything(t_cartesian *x, t_symbol *msg, long ac, t_atom *av)
             if (x->turtled_grain && x->relative_turtling) {
                 previous = build_pt((x->turtled_grain->coord.x - x->domain_min)/(x->domain_max - x->domain_min), (x->turtled_grain->coord.y - x->range_min)/(x->range_max - x->range_min));
             }
-            if ((x->turtled_grain = cartesian_get_1nn(x, pt_pt_sum(previous, delta), x->turtled_grain, x->relative_turtling)))
+            char has_weights = false;
+            t_pt weights;
+            if (parsed->l_head->l_next && hatom_gettype(&parsed->l_head->l_next->l_hatom) == H_LLLL) {
+                has_weights = true;
+                weights = llll_to_pt(hatom_getllll(&parsed->l_head->l_next->l_hatom));
+            }
+            if ((x->turtled_grain = cartesian_get_1nn(x, pt_pt_sum(previous, delta), has_weights ? &weights : NULL, x->turtled_grain, x->relative_turtling)))
                 output_grain_contentfield(x, x->turtled_grain, gensym("turtle"), x->beat_sync);
             jbox_redraw((t_jbox *)x);
         }
@@ -1633,9 +1686,17 @@ long build_grains(t_cartesian *x)
 	}
 	
     long colorfield_idx = 3;
-    char query[DADA_QUERY_ALLOC_CHAR_SIZE];
-    long query_alloc = DADA_QUERY_ALLOC_CHAR_SIZE;
     
+    char *query = NULL;
+    long query_alloc = DADA_QUERY_ALLOC_CHAR_SIZE;
+    char *where = NULL;
+
+    if (x->d_where_llll->l_size > 0) {
+        query_alloc += llll_to_text_buf(x->d_where_llll, &where, 0, BACH_DEFAULT_MAXDECIMALS, LLLL_T_NONE, LLLL_TE_NONE, LLLL_TB_NONE, NULL);
+    }
+    
+    query = (char *)sysmem_newptr(query_alloc * sizeof(char));
+
     if (x->mode == DADA_CARTESIAN_MODE_CARTESIAN) {
         snprintf_zero(query, query_alloc, "SELECT %s,%s,%s,%s,%s,%s,%s,%s,%s FROM %s",
                       idname->s_name, xfield->s_name, yfield->s_name, colorfield->s_name, sizefield->s_name, shapefield->s_name, bpmfield->s_name, phasefield->s_name, lengthfield->s_name, tablename->s_name);
@@ -1647,11 +1708,15 @@ long build_grains(t_cartesian *x)
         snprintf_zero(query + strlen(query), query_alloc - strlen(query), "%s,%s,%s,%s,%s,%s FROM %s", colorfield->s_name, sizefield->s_name, shapefield->s_name, bpmfield->s_name, phasefield->s_name, lengthfield->s_name, tablename->s_name);
         colorfield_idx = x->field_convexcomb_size+1;
     }
-    
-	if (x->d_where && strlen(x->d_where->s_name) > 0) 
-		snprintf_zero(query + strlen(query), query_alloc - strlen(query), " WHERE %s", x->d_where->s_name);
+
+    if (where) {
+        snprintf_zero(query + strlen(query), query_alloc - strlen(query), " WHERE %s", where);
+        sysmem_freeptr(where);
+    }
 
 	err = db_query(x->d_db, &result, query);
+    
+    sysmem_freeptr(query);
 	
 	
 	if (err)
@@ -1787,6 +1852,8 @@ void rebuild_grains(t_cartesian *x, char preserve_turtle)
     llll_appendsym(numgrains_ll, gensym("numgrains"));
     llll_appendlong(numgrains_ll, num_grains);
     llllobj_outlet_llll((t_object *)x, LLLL_OBJ_UI, 2, numgrains_ll);
+    
+    jbox_redraw((t_jbox *)x);
 }
 
 
@@ -1930,7 +1997,7 @@ void cartesian_paint_ext(t_cartesian *x, t_object *view, t_dada_force_graphics *
         
         for (i = 0; i < n; i++) {
             paint_square(g, &polycolor, &polycolor, verts[i], 2, 0);
-            write_text_simple(g, jf, polycolor, x->field_convexcomb[i] ? x->field_convexcomb[i]->s_name : "none", verts[i].x + 4, verts[i].y - 4, 200, 200);
+            write_text_standard(g, jf, polycolor, x->field_convexcomb[i] ? x->field_convexcomb[i]->s_name : "none", verts[i].x + 4, verts[i].y - 4, 200, 200);
         }
     }
     
@@ -2083,6 +2150,23 @@ void show_bg_popup_menu(t_cartesian *x, t_object *patcherview, t_pt pt, long mod
 
 ////////// INTERFACE FUNCTIONS
 
+
+char xbase_is_attached_to_sql_file(t_xbase *b)
+{
+    if (b->d_filename && strlen(b->d_filename->s_name) > 0 && strcmp(b->d_filename->s_name + strlen(b->d_filename->s_name) - 4, ".db3") == 0)
+        return 1;
+    return 0;
+}
+
+
+
+char xbase_store_lllls_with_phonenumbers(t_xbase *b)
+{
+    if (xbase_is_attached_to_sql_file(b))
+        return 0;
+    return 1;
+}
+
 // returns the content field already cloned
 t_llll *get_grain_contentfield(t_cartesian *x, t_cartesian_grain *gr)
 {
@@ -2095,6 +2179,10 @@ t_llll *get_grain_contentfield(t_cartesian *x, t_cartesian_grain *gr)
     t_llll *out = llll_get();
     
     for (f = 0; f < x->field_content_size; f++) {
+        
+        if (x->field_content[f] == _sym_none)
+            continue;
+
         t_db_result	*result = NULL;
         snprintf_zero(query, 8192, "SELECT %s FROM %s WHERE %s = %ld", x->field_content[f]->s_name, tablename->s_name, idname->s_name, gr->db_id);
         err = db_query(x->d_db, &result, query);
@@ -2128,11 +2216,19 @@ t_llll *get_grain_contentfield(t_cartesian *x, t_cartesian_grain *gr)
                     
                 default: // llll
                 {
-                    long phonenumber = db_result_long_local(result, 0, 0);
-                    t_llll *ll = llll_retrieve_from_phonenumber_and_retain(phonenumber);
-                    if (ll) {
-                        llll_chain_clone(this_out, ll);
-                        llll_release(ll);
+                    t_xbase *xbase = (t_xbase *)x->d_database->s_thing; // database already exists
+                    if (xbase_store_lllls_with_phonenumbers(xbase)) {
+                        long phonenumber = db_result_long_local(result, 0, 0);
+                        t_llll *ll = llll_retrieve_from_phonenumber_and_retain(phonenumber);
+                        if (ll) {
+                            llll_chain_clone(this_out, ll);
+                            llll_release(ll);
+                        }
+                    } else {
+                        char **record = db_result_firstrecord(result);
+                        t_llll *ll = llll_from_text_buf(record[0], false);
+                        llll_chain(this_out, ll);
+                        break;
                     }
                 }
                     break;

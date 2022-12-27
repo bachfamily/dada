@@ -332,68 +332,52 @@
 
 	<!--ATTRIBUTES-->
 	<attributelist>
-		<attribute name="axescolor" get="1" set="1" type="" size="1">
+		<attribute name="allowcentershift" get="1" set="1" type="" size="1">
 			<digest>
-				Axes Color
+				Allow Center Shifting
 			</digest>
 			<description>
-				Sets the color of the x and y axes.
+				Toggles the ability to allow the center to shift.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="1" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Allow Center Shifting" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
+			</attributelist>
+		</attribute>
+		<attribute name="allowzoom" get="1" set="1" type="" size="1">
+			<digest>
+				Allow Zoom
+			</digest>
+			<description>
+				Toggles the ability to allow zooming
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="1" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Allow Zoom" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
+			</attributelist>
+		</attribute>
+		<attribute name="bgcolor" get="1" set="1" type="" size="1">
+			<digest>
+				Background Color
+			</digest>
+			<description>
+				Sets the color of the background.
 			</description>
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Color" />
-				<attribute name="default" get="1" set="1" type="" size="1" value="0.4 0.4 0.4 1." />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Axes Color" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="1. 1. 1. 1." />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Background Color" />
 				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="rgba" />
-			</attributelist>
-		</attribute>
-		<attribute name="axeslabelscolor" get="1" set="1" type="" size="1">
-			<digest>
-				Axes Labels Color
-			</digest>
-			<description>
-				Sets the color of the x and y axes labels.
-			</description>
-			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Color" />
-				<attribute name="default" get="1" set="1" type="" size="1" value="0.4 0.4 0.4 1." />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Axes Labels Color" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="style" get="1" set="1" type="symbol" size="1" value="rgba" />
-			</attributelist>
-		</attribute>
-		<attribute name="axeslabelsfontsize" get="1" set="1" type="" size="1">
-			<digest>
-				Axes Labels Font Size
-			</digest>
-			<description>
-				Sets the size of the axes labels font.
-			</description>
-			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Axes And Grid" />
-				<attribute name="default" get="1" set="1" type="" size="1" value="10." />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Axes Labels Font Size" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
-			</attributelist>
-		</attribute>
-		<attribute name="bgimage" get="1" set="1" type="" size="1">
-			<digest>
-				Background Image
-			</digest>
-			<description>
-				Sets a background image texture, tiling the plane. Use "" or "none" to remove the image.
-			</description>
-			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Appearance" />
-				<attribute name="default" get="1" set="1" type="" size="1" value="none" />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Background Image" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
 			</attributelist>
 		</attribute>
 		<attribute name="border" get="1" set="1" type="int" size="1">
@@ -410,6 +394,22 @@
 				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="enumindex" />
+			</attributelist>
+		</attribute>
+		<attribute name="bordercolor" get="1" set="1" type="" size="1">
+			<digest>
+				Border Color
+			</digest>
+			<description>
+				Sets the color of the border.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Color" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="0. 0. 0. 1." />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Border Color" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="rgba" />
 			</attributelist>
 		</attribute>
 		<attribute name="born" get="1" set="1" type="int_array" size="0">
@@ -635,6 +635,22 @@
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
 			</attributelist>
 		</attribute>
+		<attribute name="center" get="1" set="1" type="" size="1">
+			<digest>
+				Center Coordinates
+			</digest>
+			<description>
+				Sets the coordinate of the center
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Appearance" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="0 0" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Center Coordinates" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
+			</attributelist>
+		</attribute>
 		<attribute name="cents" get="1" set="1" type="symbol" size="1">
 			<digest>
 				Cents Equation
@@ -677,21 +693,6 @@
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="enumindex" />
 			</attributelist>
 		</attribute>
-		<attribute name="continuousbang" get="1" set="1" type="" size="1">
-			<digest>
-				Continuously Output bang if Changed 
-			</digest>
-			<description>
-				Toggles the ability to send the changed bang continuously during mousedrag actions.
-			</description>
-			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
-				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Continuously Output bang if Changed " />
-				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
-			</attributelist>
-		</attribute>
 		<attribute name="customrule" get="1" set="1" type="int" size="1">
 			<digest>
 				Use Custom Rule
@@ -704,22 +705,6 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Settings" />
 				<attribute name="default" get="1" set="1" type="int" size="1" value="0" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Use Custom Rule" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
-			</attributelist>
-		</attribute>
-		<attribute name="embed" get="1" set="1" type="" size="1">
-			<digest>
-				Save Data With Patcher
-			</digest>
-			<description>
-				Toggles the ability to embed the state of the object within the patcher.
-			</description>
-			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
-				<attribute name="default" get="1" set="1" type="" size="1" value="1" />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Save Data With Patcher" />
 				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
@@ -741,82 +726,16 @@
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
 		</attribute>
-		<attribute name="gridcolor" get="1" set="1" type="" size="1">
+		<attribute name="jitmatrix" get="1" set="1" type="" size="1">
 			<digest>
-				Grid Color
+				Jitter Matrix Mirror
 			</digest>
 			<description>
-				Sets the grid color.
+				Sets the name of a jitter matrix to which the output should be mirrored.
 			</description>
 			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Color" />
-				<attribute name="default" get="1" set="1" type="" size="1" value="0. 0. 0. 0.1" />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Grid Color" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="style" get="1" set="1" type="symbol" size="1" value="rgba" />
-			</attributelist>
-		</attribute>
-		<attribute name="gridlabelscolor" get="1" set="1" type="" size="1">
-			<digest>
-				Grid Labels Color
-			</digest>
-			<description>
-				Sets the color of the grid labels.
-			</description>
-			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Color" />
-				<attribute name="default" get="1" set="1" type="" size="1" value="0.4 0.4 0.4 1." />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Grid Labels Color" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="style" get="1" set="1" type="symbol" size="1" value="rgba" />
-			</attributelist>
-		</attribute>
-		<attribute name="gridlabelsfontsize" get="1" set="1" type="" size="1">
-			<digest>
-				Grid Labels Font Size
-			</digest>
-			<description>
-				Sets the size of the grid labels font.
-			</description>
-			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Axes And Grid" />
-				<attribute name="default" get="1" set="1" type="" size="1" value="8." />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Grid Labels Font Size" />
-				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
-			</attributelist>
-		</attribute>
-		<attribute name="gridmode" get="1" set="1" type="" size="1">
-			<digest>
-				Grid Mode
-			</digest>
-			<description>
-				Sets the grid mode, either Fixed (0) or Automatic (1 = default). In Automatic mode the space between grid lines
-				is automatically adapted according to the level of zoom.
-			</description>
-			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Axes And Grid" />
-				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Grid Mode" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="style" get="1" set="1" type="symbol" size="1" value="enumindex" />
-			</attributelist>
-		</attribute>
-		<attribute name="gridstep" get="1" set="1" type="" size="1">
-			<digest>
-				Grid Size
-			</digest>
-			<description>
-				Sets the grid size, in coordinates (only useful if <m>gridmode</m> is set to 0 = Fixed)
-			</description>
-			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Axes And Grid" />
-				<attribute name="default" get="1" set="1" type="" size="1" value="10 10" />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Grid Size" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Jitter Matrix Mirror" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
 			</attributelist>
@@ -869,38 +788,6 @@
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
 			</attributelist>
 		</attribute>
-		<attribute name="maxundosteps" get="1" set="1" type="" size="1">
-			<digest>
-				Maximum Number Of Undo Steps
-			</digest>
-			<description>
-				Sets the maximum number of undo steps (0 being: no undo).
-			</description>
-			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
-				<attribute name="default" get="1" set="1" type="" size="1" value="50" />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Maximum Number Of Undo Steps" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
-			</attributelist>
-		</attribute>
-		<attribute name="messagebang" get="1" set="1" type="" size="1">
-			<digest>
-				Send bang Upon Messages
-			</digest>
-			<description>
-				Toggles the ability to send the changed bang also when changes happen via messages.
-			</description>
-			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
-				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Send bang Upon Messages" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
-			</attributelist>
-		</attribute>
 		<attribute name="minpitch" get="1" set="1" type="float" size="1">
 			<digest>
 				Minimum Pitch
@@ -918,6 +805,22 @@
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
 			</attributelist>
 		</attribute>
+		<attribute name="mousehover" get="1" set="1" type="" size="1">
+			<digest>
+				Allow Mouse Hovering
+			</digest>
+			<description>
+				Toggles mouse hovering capabilities.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="1" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Allow Mouse Hovering" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
+			</attributelist>
+		</attribute>
 		<attribute name="neighborhood" get="1" set="1" type="int" size="1">
 			<digest>
 				Neighborhood Range
@@ -933,6 +836,24 @@
 				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
+			</attributelist>
+		</attribute>
+		<attribute name="notify" get="1" set="1" type="" size="1">
+			<digest>
+				Send Notifications
+			</digest>
+			<description>
+				Toggles the ability to send notifications for interface activities (such as clicks, mousehovers, etc.).
+				Notifications are sent through the dedicated outlet. If the "Verbose" mode is set, whenever meaningful, the state
+				of the notified element will be also output.
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
+				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Send Notifications" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="enumindex" />
 			</attributelist>
 		</attribute>
 		<attribute name="notifypaint" get="1" set="1" type="" size="1">
@@ -998,38 +919,6 @@
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
 		</attribute>
-		<attribute name="playcolor" get="1" set="1" type="" size="1">
-			<digest>
-				Play Color
-			</digest>
-			<description>
-				Sets the playing color.
-			</description>
-			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Color" />
-				<attribute name="default" get="1" set="1" type="" size="1" value="0.34 0.87 0.20 1." />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Play Color" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="style" get="1" set="1" type="symbol" size="1" value="rgba" />
-			</attributelist>
-		</attribute>
-		<attribute name="playstep" get="1" set="1" type="" size="1">
-			<digest>
-				Play Step (ms)
-			</digest>
-			<description>
-				Sets the play step interval in milliseconds.
-			</description>
-			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
-				<attribute name="default" get="1" set="1" type="" size="1" value="50" />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Play Step (ms)" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
-			</attributelist>
-		</attribute>
 		<attribute name="randomdensity" get="1" set="1" type="float" size="1">
 			<digest>
 				Default Random Point Density
@@ -1063,65 +952,33 @@
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="enumindex" />
 			</attributelist>
 		</attribute>
-		<attribute name="showaxes" get="1" set="1" type="" size="1">
+		<attribute name="showborder" get="1" set="1" type="" size="1">
 			<digest>
-				Show Axes
+				Show Border
 			</digest>
 			<description>
-				Toggles the display of the x and y axes.
+				Sets the color of the border.
 			</description>
 			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Axes And Grid" />
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Appearance" />
 				<attribute name="default" get="1" set="1" type="" size="1" value="1" />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Show Axes" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Show Border" />
 				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
 		</attribute>
-		<attribute name="showaxeslabels" get="1" set="1" type="" size="1">
+		<attribute name="showfocus" get="1" set="1" type="int" size="1">
 			<digest>
-				Show Axes Labels
+				Show Focus
 			</digest>
 			<description>
-				Toggles the display of the x and y axes labels.
+				Toggles the ability to display a thicker border when the object has focus.
 			</description>
 			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Axes And Grid" />
-				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Show Axes Labels" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
-			</attributelist>
-		</attribute>
-		<attribute name="showgrid" get="1" set="1" type="" size="1">
-			<digest>
-				Show Grid
-			</digest>
-			<description>
-				Toggles the display of the grid.
-			</description>
-			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Axes And Grid" />
-				<attribute name="default" get="1" set="1" type="" size="1" value="1" />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Show Grid" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
-			</attributelist>
-		</attribute>
-		<attribute name="showgridlabels" get="1" set="1" type="" size="1">
-			<digest>
-				Show Grid Labels
-			</digest>
-			<description>
-				Toggles the display of the grid labels.
-			</description>
-			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Axes And Grid" />
-				<attribute name="default" get="1" set="1" type="" size="1" value="1" />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Show Grid Labels" />
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Appearance" />
+				<attribute name="default" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Show Focus" />
 				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
@@ -1199,21 +1056,6 @@
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
 			</attributelist>
 		</attribute>
-		<attribute name="snaptogrid" get="1" set="1" type="" size="1">
-			<digest>
-				Snap To Grid
-			</digest>
-			<description>
-				Toggles the ability to snap items to the grid.
-			</description>
-			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Axes And Grid" />
-				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Snap To Grid" />
-				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
-			</attributelist>
-		</attribute>
 		<attribute name="sprite" get="1" set="1" type="symbol" size="1">
 			<digest>
 				Sprite
@@ -1245,37 +1087,6 @@
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
 			</attributelist>
 		</attribute>
-		<attribute name="undobang" get="1" set="1" type="" size="1">
-			<digest>
-				Send bang Upon Undo
-			</digest>
-			<description>
-				Toggles the ability to send the changed bang also when changes happen via messages.
-			</description>
-			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
-				<attribute name="default" get="1" set="1" type="" size="1" value="1" />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Send bang Upon Undo" />
-				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
-			</attributelist>
-		</attribute>
-		<attribute name="undobeforeplay" get="1" set="1" type="" size="1">
-			<digest>
-				Save State For Undo Before Playing
-			</digest>
-			<description>
-				Toggles the ability to save the state for an undo step before playing
-			</description>
-			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
-				<attribute name="default" get="1" set="1" type="" size="1" value="1" />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Save State For Undo Before Playing" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
-			</attributelist>
-		</attribute>
 		<attribute name="velocity" get="1" set="1" type="symbol" size="1">
 			<digest>
 				Velocity Equation
@@ -1287,84 +1098,6 @@
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Settings" />
 				<attribute name="default" get="1" set="1" type="symbol" size="1" value="\" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Velocity Equation" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
-			</attributelist>
-		</attribute>
-		<attribute name="verboseundo" get="1" set="1" type="" size="1">
-			<digest>
-				Post Undo/Redo Steps
-			</digest>
-			<description>
-				Toggles the ability to post undo/redo steps in the Max window.
-			</description>
-			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Behavior" />
-				<attribute name="default" get="1" set="1" type="" size="1" value="0" />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Post Undo/Redo Steps" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
-			</attributelist>
-		</attribute>
-		<attribute name="vzoom" get="1" set="1" type="" size="1">
-			<digest>
-				Vertical Zoom %
-			</digest>
-			<description>
-				Sets the object vertical zoom percentage
-			</description>
-			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Appearance" />
-				<attribute name="default" get="1" set="1" type="" size="1" value="100" />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Vertical Zoom %" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
-			</attributelist>
-		</attribute>
-		<attribute name="xlabel" get="1" set="1" type="" size="1">
-			<digest>
-				X Axis Label
-			</digest>
-			<description>
-				Sets the label for the x axis.
-			</description>
-			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Axes And Grid" />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="X Axis Label" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
-			</attributelist>
-		</attribute>
-		<attribute name="ylabel" get="1" set="1" type="" size="1">
-			<digest>
-				Y Axis Label
-			</digest>
-			<description>
-				Sets the label for the y axis.
-			</description>
-			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Axes And Grid" />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Y Axis Label" />
-				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
-				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />
-			</attributelist>
-		</attribute>
-		<attribute name="zoom" get="1" set="1" type="" size="1">
-			<digest>
-				Zoom %
-			</digest>
-			<description>
-				Sets the object zoom percentage (or horizontal zoom, if the object is separately zoommable on horizontal and on vertical axis).
-			</description>
-			<attributelist>
-				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Appearance" />
-				<attribute name="default" get="1" set="1" type="" size="1" value="100" />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Zoom %" />
 				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="save" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="text" />

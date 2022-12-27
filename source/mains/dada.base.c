@@ -42,11 +42,17 @@
 #include "ext.h"
 #include "ext_obex.h"
 #include "ext_database.h"
+#include "ext_drag.h"
 #include "dada.db.h"
 #ifdef WIN_VERSION
 #include "io.h"
+#define strtok_r strtok_s
 #endif
+#include <string.h>
 
+#ifdef MAC_VERSION
+#include "unistd.h"
+#endif
 
 // Data Structures
 typedef struct _base {
@@ -58,6 +64,7 @@ typedef struct _base {
 	char		output_fieldnames;
     char        escape_single_quotes;
     char        convert_null_to_default;
+    char        force_store_lllls_as_text;
 
     t_symbol    *utility_sym;
     t_llll      *utility_ll;
@@ -66,7 +73,9 @@ typedef struct _base {
     
     t_object *m_editor;
     
-    char        read_only;
+    char        editor_dirty;
+    char        is_volatile;
+    char        is_readonly; ///< This is unsupported for now, due to the fact that db_open_ext() does not seem to be exposed properly from Max API
     char        creating_new_obj;
 } t_base;
 
@@ -83,15 +92,17 @@ void			base_query(t_base *x, t_symbol *msg, long ac, t_atom *av);
 void			base_anything(t_base *x, t_symbol *msg, long ac, t_atom *av);
 void			base_entry_create(t_base *x, t_symbol *msg, long ac, t_atom *av);
 void            base_entries_create_from_file(t_base *x, t_symbol *msg, long ac, t_atom *av);
+void            base_entries_create_from_csv(t_base *x, t_symbol *msg, long ac, t_atom *av);
 void			base_entry_destroy(t_base *x, t_symbol *tablename, long event_id);
 void			base_table_create(t_base *x, t_symbol *msg, long ac, t_atom *av);
 void			base_table_create_do(t_base *x, t_symbol *tablename, t_llll *specs);
 void			base_table_destroy(t_base *x, t_symbol *tablename);
 t_max_err		base_attr_name_set(t_base *x, void *attr, long argc, t_atom *argv);
 void			base_appendtodictionary(t_base *x, t_dictionary *d);
-void    base_dblclick(t_base *x);
-void    base_edclose(t_base *x, char **ht, long size);
-void  base_okclose(t_base *x, char *s, short *result);
+void            base_dblclick(t_base *x);
+void            base_wopen(t_base *x);
+void            base_edclose(t_base *x, char **ht, long size);
+void            base_okclose(t_base *x, char *s, short *result);
 //long    base_edsave(t_base *x, char **ht, long size);
 
 void            base_distanceentry_create(t_base *x, t_symbol *msg, long ac, t_atom *av);
@@ -125,6 +136,8 @@ void xbase_free_lllls(t_xbase *b);
 
 t_llll *xbase_db_query_from_llll(t_xbase *b, t_llll *query, char output_fieldnames);
 t_llll *xbase_db_get_table_header(t_xbase *b, long table_idx);
+long xbase_db_count_all_rows(t_xbase *b);
+long xbase_db_count_table_rows(t_xbase *b, long table_num);
 
 
 
@@ -135,6 +148,18 @@ static t_symbol	*ps_event = NULL;
 
 /**********************************************************************/
 // Class Definition and Life Cycle
+
+t_max_err base_setattr_llllastext(t_base *x, t_object *attr, long ac, t_atom *av)
+{
+    if (ac) {
+        if (x->xbase && ac) {
+            long v = (atom_getlong(av) != 0 ? 1 : 0);
+            x->xbase->d_force_store_lllls_as_text = v;
+            x->force_store_lllls_as_text = v;
+        }
+    }
+    return MAX_ERR_NONE;
+}
 
 void C74_EXPORT ext_main(void *moduleRef)
 {
@@ -189,12 +214,19 @@ void C74_EXPORT ext_main(void *moduleRef)
     
     
     // @method (doubleclick) @digest Edit database as text
-    // @description Doubleclicking on the object forces a text editor to open up, where the whole database can be edited directly in text form.
+    // @description Doubleclicking on the object opens a text editor, where the whole database can be edited directly in text form.
+    // To prevent unwanted long hangs, this is only true for small datasets: if you need to open large datasets in text form,
+    // please use the <m>wopen</m> message explicitly.
     class_addmethod(c, (method)base_dblclick,		"dblclick",		A_CANT, 0);
     class_addmethod(c, (method)base_edclose,		"edclose",		A_CANT, 0);
     class_addmethod(c, (method)base_okclose,        "okclose", A_CANT, 0);
 //    class_addmethod(c, (method)base_edsave,         "edsave", A_CANT, 0);
     
+
+    // @method wopen @digest Open text editor for database
+    // @description The <m>wopen</m> message will open a text editor for the database.
+    class_addmethod(c, (method)base_wopen,          "wopen",    0);
+
     // @method (drag) @digest Drag-and-drop database loading
     // @description The specified file is read from disk and the database it contains (as llll) is opened.
     class_addmethod(c, (method)base_acceptsdrag, "acceptsdrag_locked", A_CANT, 0);
@@ -295,11 +327,16 @@ void C74_EXPORT ext_main(void *moduleRef)
     class_addmethod(c, (method)base_entries_create_from_file,		"appendfromfile",		A_GIMME, 0);
 
     
+    
+    class_addmethod(c, (method)base_entries_create_from_csv,        "appendfromcsv",        A_GIMME, 0);
+
+    
 	// @method addtable @digest Add a table to the database
 	// @description An <m>addtable</m> message followed by a table name and some columns specifications 
 	// will add a table to the database having the given number and types of columns. 
 	// Column specification must be in the form <b>[<m>name1</m> <m>type1</m>] [<m>name2</m> <m>type2</m>]... </b>
-	// where each <m>name</m> is a symbol and each type is one of the symbols: "f" (float), "i" (integer), "s" (symbol), "r" (rational), "l" (llll).
+	// where each <m>name</m> is a symbol and each type is one of the symbols: "f" (float), "i" (integer),
+    // "s" (symbol), "r" (rational), "p" (pitch), "l" (llll).
 	// @marg 0 @name table_name @optional 0 @type symbol	
 	// @marg 1 @name columns @optional 0 @type llll
     // @example addtable towns [name s] [population i] @caption add a table named "towns" with two columns: name (symbol) and popuplation (integer)
@@ -331,10 +368,18 @@ void C74_EXPORT ext_main(void *moduleRef)
 
 	CLASS_STICKY_ATTR(c,"category",0,"Settings");
 	
-    CLASS_ATTR_CHAR(c,"readonly",0, t_base, read_only);
-    CLASS_ATTR_STYLE_LABEL(c,"readonly",0,"onoff","Read-Only Dataset File");
-    // @description Toggles the ability to only allow reading for a file-attached database.
+    CLASS_ATTR_CHAR(c,"volatile",0, t_base, is_volatile);
+    CLASS_ATTR_STYLE_LABEL(c,"volatile",0,"onoff","Volatile Dataset File");
+    // @description Toggles the ability to not commit any changes for a file-attached database.
+    // The database can be modified locally, but nothing will be saved to disk
+    // (unless explicitly forced by a <m>write</m> or <m>writetxt</m> message.
 
+//    CLASS_ATTR_CHAR(c,"readonly",0, t_base, is_readonly);
+//    CLASS_ATTR_STYLE_LABEL(c,"readonly",0,"onoff","Read-Only Dataset File");
+    // @exclude all //<<< UNSUPPORTED FOR NOW
+    // @description Toggles the ability to make the database read-only.
+
+    
     CLASS_ATTR_CHAR(c,"outputcolnames",0, t_base, output_fieldnames);
 	CLASS_ATTR_STYLE_LABEL(c,"outputcolnames",0,"onoff","Output Column Names");
 	// @description Toggles the ability to output the column names in query answers. Defaults to 1.
@@ -347,6 +392,12 @@ void C74_EXPORT ext_main(void *moduleRef)
     CLASS_ATTR_STYLE_LABEL(c,"nulltodefault",0,"onoff","Convert null lllls to Default Values");
     // @description Toggles the ability to convert null lllls to default values, for columns of type int, float and symbol.
     // Default is on. If you turn this off, the null lllls will result in NULL SQLite fields.
+
+    CLASS_ATTR_CHAR(c,"llllastext",0, t_base, force_store_lllls_as_text);
+    CLASS_ATTR_STYLE_LABEL(c,"llllastext",0,"onoff","Store lllls as Text");
+    CLASS_ATTR_ACCESSORS(c, "llllastext", (method)NULL, (method)base_setattr_llllastext);
+    // @description Toggles the ability to store lllls as text in the database, so that they you can query them
+    // (at the price of performance time).
 
     
 	CLASS_STICKY_ATTR_CLEAR(c, "category");
@@ -387,14 +438,14 @@ char filename_is_not_sql_file(t_symbol *s)
 }
 
 
-char xbase_attach_to_text_file(t_xbase *b)
+char xbase_is_attached_to_text_file(t_xbase *b)
 {
     if (filename_is_not_sql_file(b->d_filename))
         return 1;
     return 0;
 }
 
-char xbase_attach_to_sql_file(t_xbase *b)
+char xbase_is_attached_to_sql_file(t_xbase *b)
 {
     if (b->d_filename && strlen(b->d_filename->s_name) > 0 && strcmp(b->d_filename->s_name + strlen(b->d_filename->s_name) - 4, ".db3") == 0)
         return 1;
@@ -405,7 +456,7 @@ char xbase_attach_to_sql_file(t_xbase *b)
 
 char xbase_store_lllls_with_phonenumbers(t_xbase *b)
 {
-    if (xbase_attach_to_sql_file(b))
+    if (xbase_is_attached_to_sql_file(b) || b->d_force_store_lllls_as_text)
         return 0;
     return 1;
 }
@@ -428,15 +479,13 @@ void base_assist(t_base *x, void *b, long m, long a, char *s)
 long base_acceptsdrag(t_base *x, t_object *drag, t_object *view)
 {
     if (true) {
-        jdrag_box_add(drag, (t_object *)x, gensym("read"));
+        jdrag_object_add(drag, (t_object *)x, gensym("read"));
         return true;
     }
     return false;
 }
 
-
-// this lets us double-click on sphinx~ to open up the buffer~ it references
-void base_dblclick(t_base *x)
+void base_wopen(t_base *x)
 {
     if (!x->m_editor)
         x->m_editor = (t_object *)object_new(CLASS_NOBOX, gensym("jed"), (t_object *)x, 0);
@@ -445,11 +494,11 @@ void base_dblclick(t_base *x)
     
     char *buf = NULL;
     t_llll *ll = db_to_llll(x->xbase, true);
-
+    
     llll_to_text_buf_pretty(ll, &buf, 0, BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART, NULL);
-//    llll_to_text_buf_pretty(ll, &buf, 0, BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, 0, NULL);
-//    llll_to_text_buf(ll, &buf);
-
+    //    llll_to_text_buf_pretty(ll, &buf, 0, BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, 0, NULL);
+    //    llll_to_text_buf(ll, &buf);
+    
     void *rv = object_method(x->m_editor, gensym("settext"), buf, gensym("utf-8"));  // non-0 if the text was too long
     if (rv) {
         t_object *ed = x->m_editor;
@@ -461,15 +510,28 @@ void base_dblclick(t_base *x)
     llll_free(ll);
 }
 
+// this lets us double-click on sphinx~ to open up the buffer~ it references
+void base_dblclick(t_base *x)
+{
+    if (xbase_db_count_all_rows(x->xbase) > 10000) { /// < more than 10k entries would take a LONG time to deparse. one may use "wopen" then
+        object_warn((t_object *)x, "You have double clicked a dada.base containing more than 10000 entries: are you sure you want to deparse and show it in textual form?");
+        object_warn((t_object *)x, "   If yes, please use an explicit \"wopen\" message instead – this may take long!");
+        return;
+    }
+    
+    base_wopen(x);
+}
+
 void base_okclose(t_base *x, char *s, short *result)
 {
     *result = 3;
+    x->editor_dirty = true;
 }
 
 void base_edclose(t_base *x, char **ht, long size)
 {
     // do something with the text
-    if (ht) {
+    if (x->editor_dirty && !x->is_readonly && ht) {
         t_llll *ll = llll_from_text_buf(*ht, size > MAX_SYM_LENGTH);
         if (ll) {
             xbase_destroy_all_tables(x->xbase);
@@ -479,6 +541,7 @@ void base_edclose(t_base *x, char **ht, long size)
             object_error((t_object *)x, "Can't modify database: it is wrongly formatted");
     }
     x->m_editor = NULL;
+    x->editor_dirty = false;
 }
 
 
@@ -507,9 +570,9 @@ t_symbol *filename_to_metafilename(t_symbol *s)
 
 void base_appendtodictionary(t_base *x, t_dictionary *d)
 {
-    if (!x->read_only && x->xbase && x->xbase->d_dirty) {
+    if (!x->is_volatile && x->xbase && x->xbase->d_dirty) {
         
-        if (xbase_attach_to_text_file(x->xbase)) {
+        if (xbase_is_attached_to_text_file(x->xbase)) {
             t_llll *ll = db_to_llll(x->xbase, true);
             //        llll_print(ll, NULL, 0, 0, NULL);
             if (x->d_filetype == 1280068684) // 'LLLL': file was native
@@ -523,7 +586,7 @@ void base_appendtodictionary(t_base *x, t_dictionary *d)
         }
         
         if (!x->creating_new_obj) {
-            if (xbase_attach_to_sql_file(x->xbase)) {
+            if (xbase_is_attached_to_sql_file(x->xbase)) {
                 t_llll *ll = xbase_get_all_table_headers(x->xbase);
                 t_llll *arguments = llll_get();
                 llll_appendsym(arguments, filename_to_metafilename(x->xbase->d_filename));
@@ -550,6 +613,7 @@ t_base* base_new(t_symbol *s, short argc, t_atom *argv)
         x->escape_single_quotes = true;
 		x->d_filename = NULL;
 		x->d_filetype = 0;
+        x->force_store_lllls_as_text = false;
         x->m_editor = NULL;
         x->xbase = NULL;
 
@@ -576,32 +640,47 @@ t_base* base_new(t_symbol *s, short argc, t_atom *argv)
                         x->d_filename = dada_ezlocate_file(x->d_filename, &x->d_filetype);
                     } else
                         x->d_filename = located;
+                } else {
+                    // database is SQL
+/*                    t_symbol *located = dada_ezlocate_file(x->d_filename, &x->d_filetype);
+                    if (!located) { // create empty SQL file
+                        t_symbol *temp = symbol_unique();
+                        t_database *temp_db = NULL;
+                        t_max_err err = db_open(temp, x->d_filename->s_name, &temp_db);
+                        object_free(temp_db);
+                        x->d_filename = dada_ezlocate_file(x->d_filename, &x->d_filetype);
+                    } */
                 }
             }
 			
 			object_attr_setsym(x, _sym_name, dbname);
 		} else
             object_attr_setsym(x, _sym_name, symbol_unique());
-        
+
         if (x->xbase)
             x->xbase->d_nodirty = true;
         attr_args_process(x, argc, argv);
 		
-		if (xbase_attach_to_text_file(x->xbase))
+
+		if (xbase_is_attached_to_text_file(x->xbase))
 			base_read(x, x->xbase->d_filename);
         
+
         if (x->xbase)
             x->d_filename = x->xbase->d_filename;
         x->creating_new_obj = false;
         if (x->xbase)
             x->xbase->d_nodirty = false;
 	}
+    
 	return x;
 }
 
 
 void base_free(t_base *x)
 {
+    if (x->m_editor)
+        object_free_debug(x->m_editor);
     xbase_free(x->xbase);
 //	db_close(&x->d_db);
 //	bach_freeptr(x->table);
@@ -749,7 +828,8 @@ void xbase_entry_create_do(t_xbase *b, t_symbol *table_name, t_llllelem *specs_h
         long NAMES_ALLOC = STEP_SIZE, VALUES_ALLOC = STEP_SIZE;
         names = (char *)bach_newptr(NAMES_ALLOC * sizeof(char));
         values = (char *)bach_newptr(VALUES_ALLOC * sizeof(char));
-        names_size = NAMES_ALLOC; values_size = VALUES_ALLOC;
+        names_size = 1; values_size = 1;
+        // names_size = NAMES_ALLOC; values_size = VALUES_ALLOC; // why did we do this???
         
         long names_cur = 0, values_cur = 0;
 		names[0] = values[0] = 0;
@@ -760,123 +840,136 @@ void xbase_entry_create_do(t_xbase *b, t_symbol *table_name, t_llllelem *specs_h
 				if (ll && ll->l_head && (router_type == H_SYM || router_type == H_OBJ)) {
                     t_symbol *this_name = sym_or_obj_hatom_to_sym(&ll->l_head->l_hatom);
                     this_values_size = this_names_size = 0;
-					if (this_name && (!only_these_fields || is_symbol_in_llll_first_level(only_these_fields, this_name))) {
+                    if (this_name && (!only_these_fields || is_symbol_in_llll_first_level(only_these_fields, this_name))) {
                         long col_idx = colname_to_colidx(b, tableidx, this_name);
-                        char col_type = b->table[tableidx].column_type[col_idx];
-
-                        if (col_type == 'l' || ll->l_head->l_next || convert_null_to_default) {
-                            if (NAMES_ALLOC - names_size < SAFETY_SIZE) {
-                                NAMES_ALLOC += STEP_SIZE;
-                                names = (char *)bach_resizeptr(names, NAMES_ALLOC * sizeof(char));
-                            }
-                            if (VALUES_ALLOC - names_size < SAFETY_SIZE) {
-                                VALUES_ALLOC += STEP_SIZE;
-                                values = (char *)bach_resizeptr(values, VALUES_ALLOC * sizeof(char));
-                            }
-                            this_names_size = snprintf_zero(names + names_cur, NAMES_ALLOC - names_size, firstname ? "'%s'" : ", '%s'", this_name->s_name);
-                            names_cur += this_names_size;
-                            names_size += this_names_size;
+                        if (col_idx >= 0) {
+                            char col_type = b->table[tableidx].column_type[col_idx];
                             
-                            
-                            if (col_idx > -1) {
-                                switch (col_type) {
-                                    case 'i':
-                                        this_values_size = snprintf_zero(values + values_cur, VALUES_ALLOC - values_size, firstname ? "%ld" : ", %ld", ll->l_head->l_next ? (long)hatom_getlong(&ll->l_head->l_next->l_hatom) : 0);
-                                        break;
-                                    case 'f':
-                                        this_values_size = snprintf_zero(values + values_cur, VALUES_ALLOC - values_size, firstname ? "%f" : ", %f", ll->l_head->l_next ? hatom_getdouble(&ll->l_head->l_next->l_hatom) : 0);
-                                        break;
-                                    case 'r':
-                                    {
-                                        t_llll *temp_ll = llll_get();
-                                        char *buf = NULL;
-                                        llll_appendrat(temp_ll, ll->l_head->l_next ? hatom_getrational(&ll->l_head->l_next->l_hatom) : genrat(0,1), 0, WHITENULL_llll);
-                                        llll_to_text_buf(temp_ll, &buf, 0, BACH_DEFAULT_MAXDECIMALS, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART, NULL);
-                                        this_values_size = snprintf_zero(values + values_cur, VALUES_ALLOC - values_size, firstname ? "%s" : ", %s", buf);
-                                        bach_freeptr(buf);
-                                        llll_free(temp_ll);
-                                        break;
-                                    }
-                                    case 's':
-                                    {
-                                        char *text = NULL, *textcpy = NULL;
-                                        if (ll->l_head->l_next) {
-                                            if (hatom_gettype(&ll->l_head->l_next->l_hatom) == H_SYM) {
-                                                t_symbol *s = hatom_getsym(&ll->l_head->l_next->l_hatom);
-                                                text = s->s_name;
-                                            } else if (hatom_gettype(&ll->l_head->l_next->l_hatom) == H_OBJ) { // string as an H_OBJ, useful sometimes to avoid generating symbols
-                                                text = (char *)hatom_getobj(&ll->l_head->l_next->l_hatom);
+                            if (col_type == 'l' || ll->l_head->l_next || convert_null_to_default) {
+                                if (NAMES_ALLOC - names_size < SAFETY_SIZE) {
+                                    NAMES_ALLOC += STEP_SIZE;
+                                    names = (char *)bach_resizeptr(names, NAMES_ALLOC * sizeof(char));
+                                }
+                                if (VALUES_ALLOC - names_size < SAFETY_SIZE) {
+                                    VALUES_ALLOC += STEP_SIZE;
+                                    values = (char *)bach_resizeptr(values, VALUES_ALLOC * sizeof(char));
+                                }
+                                this_names_size = snprintf_zero(names + names_cur, NAMES_ALLOC - names_size, firstname ? "'%s'" : ", '%s'", this_name->s_name);
+                                names_cur += this_names_size;
+                                names_size += this_names_size;
+                                
+                                
+                                if (col_idx > -1) {
+                                    switch (col_type) {
+                                        case 'i':
+                                            this_values_size = snprintf_zero(values + values_cur, VALUES_ALLOC - values_size, firstname ? "%ld" : ", %ld", ll->l_head->l_next ? (long)hatom_getlong(&ll->l_head->l_next->l_hatom) : 0);
+                                            break;
+                                        case 'f':
+                                            this_values_size = snprintf_zero(values + values_cur, VALUES_ALLOC - values_size, firstname ? "%f" : ", %f", ll->l_head->l_next ? hatom_getdouble(&ll->l_head->l_next->l_hatom) : 0);
+                                            break;
+                                        case 'r':
+                                        {
+                                            t_llll *temp_ll = llll_get();
+                                            char *buf = NULL;
+                                            llll_appendrat(temp_ll, ll->l_head->l_next ? hatom_getrational(&ll->l_head->l_next->l_hatom) : genrat(0,1));
+                                            llll_to_text_buf(temp_ll, &buf, 0, BACH_DEFAULT_MAXDECIMALS, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART, NULL);
+                                            this_values_size = snprintf_zero(values + values_cur, VALUES_ALLOC - values_size, firstname ? "'%s'" : ", '%s'", buf);
+                                            bach_freeptr(buf);
+                                            llll_free(temp_ll);
+                                            break;
+                                        }
+                                        case 'p':
+                                        {
+                                            t_llll *temp_ll = llll_get();
+                                            char *buf = NULL;
+                                            llll_appendpitch(temp_ll, ll->l_head->l_next ? hatom_getpitch(&ll->l_head->l_next->l_hatom) : t_pitch(0));
+                                            llll_to_text_buf(temp_ll, &buf, 0, BACH_DEFAULT_MAXDECIMALS, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART, NULL);
+                                            this_values_size = snprintf_zero(values + values_cur, VALUES_ALLOC - values_size, firstname ? "'%s'" : ", '%s'", buf);
+                                            bach_freeptr(buf);
+                                            llll_free(temp_ll);
+                                            break;
+                                        }
+                                        case 's':
+                                        {
+                                            char *text = NULL, *textcpy = NULL;
+                                            if (ll->l_head->l_next) {
+                                                if (hatom_gettype(&ll->l_head->l_next->l_hatom) == H_SYM) {
+                                                    t_symbol *s = hatom_getsym(&ll->l_head->l_next->l_hatom);
+                                                    text = s->s_name;
+                                                } else if (hatom_gettype(&ll->l_head->l_next->l_hatom) == H_OBJ) { // string as an H_OBJ, useful sometimes to avoid generating symbols
+                                                    text = (char *)hatom_getobj(&ll->l_head->l_next->l_hatom);
+                                                }
                                             }
-                                        }
-                                        
-                                        char num_single_quotes = (escape_single_quotes && text ? get_num_single_quotes(text, strlen(text)) : 0);
-                                        char use_copy = false;
-                                        if (num_single_quotes > 0 && text) {
-                                            long size = strlen(text);
-                                            long newsize = (size + num_single_quotes + 10);
-                                            textcpy = (char *)bach_newptr(newsize * sizeof(char));
-                                            strncpy_zero(textcpy, text, size+1);
-                                            escape_single_quotes_do(textcpy, newsize);
-                                            use_copy = true;
-                                        }
-                                        
-                                        while ((use_copy && textcpy && values_size + (long)strlen(textcpy) + SAFETY_SIZE > VALUES_ALLOC) ||
-                                               (!use_copy && text && values_size + (long)strlen(text) + SAFETY_SIZE > VALUES_ALLOC)) {
-                                            VALUES_ALLOC += STEP_SIZE;
-                                            values = (char *)bach_resizeptr(values, VALUES_ALLOC * sizeof(char));
-                                        }
                                             
-                                        this_values_size = snprintf_zero(values + values_cur, VALUES_ALLOC - values_size, firstname ? "'%s'" : ", '%s'", use_copy ? (textcpy ? textcpy : "") : (text ? text : ""));
-                                        
-                                        if (num_single_quotes > 0 && text)
-                                            bach_freeptr(textcpy);
-                                        
-                                    }
-                                        break;
-                                        
-                                    case 'l':
-                                    {
-                                        t_llll *newll = llll_behead(llll_clone(ll));
-                                        if (!newll) newll = llll_get();
-                                        
-                                        // must convert H_OBJs element in the llll into symbols
-                                        llll_funall(newll, llll_obj_to_sym_fn, NULL, 1, -1, FUNALL_ONLY_PROCESS_ATOMS);
-                                        
-                                        if (xbase_store_lllls_with_phonenumbers(b)) {
-                                            this_values_size = snprintf_zero(values + values_cur, VALUES_ALLOC - values_size, firstname ? "%d" : ", %d", newll->l_phonenumber);
-                                            llll_appendobj(b->table[tableidx].lllls, newll, 0, WHITENULL_llll);
-                                        } else {
-                                            char *deparsed = NULL;
-                                            llll_to_text_buf(newll, &deparsed, 0, BACH_DEFAULT_MAXDECIMALS, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART, NULL);
+                                            char num_single_quotes = (escape_single_quotes && text ? get_num_single_quotes(text, strlen(text)) : 0);
+                                            char use_copy = false;
+                                            if (num_single_quotes > 0 && text) {
+                                                long size = strlen(text);
+                                                long newsize = (size + num_single_quotes + 10);
+                                                textcpy = (char *)bach_newptr(newsize * sizeof(char));
+                                                strncpy_zero(textcpy, text, size+1);
+                                                escape_single_quotes_do(textcpy, newsize);
+                                                use_copy = true;
+                                            }
                                             
-                                            while (deparsed && values_size + strlen(deparsed) + SAFETY_SIZE > VALUES_ALLOC) {
+                                            while ((use_copy && textcpy && values_size + (long)strlen(textcpy) + SAFETY_SIZE > VALUES_ALLOC) ||
+                                                   (!use_copy && text && values_size + (long)strlen(text) + SAFETY_SIZE > VALUES_ALLOC)) {
                                                 VALUES_ALLOC += STEP_SIZE;
                                                 values = (char *)bach_resizeptr(values, VALUES_ALLOC * sizeof(char));
                                             }
-
-                                            this_values_size = snprintf_zero(values + values_cur, VALUES_ALLOC - values_size, firstname ? "'%s'" : ", '%s'", deparsed);
-                                            bach_freeptr(deparsed);
+                                            
+                                            this_values_size = snprintf_zero(values + values_cur, VALUES_ALLOC - values_size, firstname ? "'%s'" : ", '%s'", use_copy ? (textcpy ? textcpy : "") : (text ? text : ""));
+                                            
+                                            if (num_single_quotes > 0 && text)
+                                                bach_freeptr(textcpy);
+                                            
                                         }
+                                            break;
+                                            
+                                        case 'l':
+                                        {
+                                            t_llll *newll = llll_behead(llll_clone(ll));
+                                            if (!newll) newll = llll_get();
+                                            
+                                            // must convert H_OBJs element in the llll into symbols
+                                            llll_funall(newll, llll_obj_to_sym_fn, NULL, 1, -1, FUNALL_ONLY_PROCESS_ATOMS);
+                                            
+                                            if (xbase_store_lllls_with_phonenumbers(b)) {
+                                                this_values_size = snprintf_zero(values + values_cur, VALUES_ALLOC - values_size, firstname ? "%d" : ", %d", newll->l_phonenumber);
+                                                llll_appendobj(b->table[tableidx].lllls, newll, 0, WHITENULL_llll);
+                                            } else {
+                                                char *deparsed = NULL;
+                                                llll_to_text_buf(newll, &deparsed, 0, BACH_DEFAULT_MAXDECIMALS, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART, NULL);
+                                                
+                                                while (deparsed && values_size + strlen(deparsed) + SAFETY_SIZE > VALUES_ALLOC) {
+                                                    VALUES_ALLOC += STEP_SIZE;
+                                                    values = (char *)bach_resizeptr(values, VALUES_ALLOC * sizeof(char));
+                                                }
+                                                
+                                                this_values_size = snprintf_zero(values + values_cur, VALUES_ALLOC - values_size, firstname ? "'%s'" : ", '%s'", deparsed);
+                                                bach_freeptr(deparsed);
+                                            }
+                                        }
+                                            break;
+                                            
+                                        default:
+                                            break;
                                     }
-                                        break;
-                                        
-                                    default:
-                                        break;
+                                } else {
+                                    // id field??
+                                    t_symbol *id_field_name = table_name_to_idname(table_name);
+                                    if (this_name == id_field_name)
+                                        this_values_size = snprintf_zero(values + values_cur, VALUES_ALLOC - values_size, firstname ? "%ld" : ", %ld", (long)hatom_getlong(&ll->l_head->l_next->l_hatom));
                                 }
-                            } else {
-                                // id field??
-                                t_symbol *id_field_name = table_name_to_idname(table_name);
-                                if (this_name == id_field_name) 
-                                    this_values_size = snprintf_zero(values + values_cur, VALUES_ALLOC - values_size, firstname ? "%ld" : ", %ld", (long)hatom_getlong(&ll->l_head->l_next->l_hatom));
+                                
+                                
+                                values_cur += this_values_size;
+                                values_size += this_values_size;
+                                
+                                firstname = false;
                             }
-                            
-                            
-                            values_cur += this_values_size;
-                            values_size += this_values_size;
-                            
-                            firstname = false;
                         }
-					}
+                    }
 				}
 			}
 		}
@@ -887,11 +980,20 @@ void xbase_entry_create_do(t_xbase *b, t_symbol *table_name, t_llllelem *specs_h
 //		if (db_query(b->d_db, NULL, "INSERT INTO %s ( %s ) VALUES ( %s )", table_name->s_name, names, values))
 //			xbase_error(b, "Error while creating entry");
 
-        char query_test[DADA_QUERY_ALLOC_CHAR_SIZE];
-        snprintf(query_test, DADA_QUERY_ALLOC_CHAR_SIZE, "INSERT INTO %s ( %s ) VALUES ( %s )", table_name->s_name, names, values);
-        if (db_query_direct(b->d_db, NULL, query_test))
-            xbase_error(b, "Error while creating entry");
-            
+        long querysize = strlen(names) + strlen(values) + strlen(table_name->s_name) + 256; // let's stay safe
+        if (querysize < DADA_QUERY_ALLOC_CHAR_SIZE) {
+            char query_test[DADA_QUERY_ALLOC_CHAR_SIZE];
+            snprintf(query_test, DADA_QUERY_ALLOC_CHAR_SIZE, "INSERT INTO %s ( %s ) VALUES ( %s )", table_name->s_name, names, values);
+            if (db_query_direct(b->d_db, NULL, query_test))
+                xbase_error(b, "Error while creating entry");
+        } else {
+            // need to allocate memory
+            char *query_test = (char *)bach_newptr(querysize * sizeof(char));
+            snprintf(query_test, querysize, "INSERT INTO %s ( %s ) VALUES ( %s )", table_name->s_name, names, values);
+            if (db_query_direct(b->d_db, NULL, query_test))
+                xbase_error(b, "Error while creating entry");
+            bach_freeptr(query_test);
+        }
         bach_freeptr(names);
         bach_freeptr(values);
         
@@ -1158,9 +1260,7 @@ void base_entries_create_from_file_do(t_base *x, t_symbol *table_name, t_symbol 
 
 void base_entries_create_from_file(t_base *x, t_symbol *msg, long ac, t_atom *av)
 {
-    //	long num_inlet = proxy_getinlet((t_object *)x);
-    
-    if (xbase_attach_to_sql_file(x->xbase))
+    if (xbase_is_attached_to_sql_file(x->xbase))
         db_transaction_start(x->xbase->d_db);
     
     t_llll *parsed = llllobj_parse_llll((t_object *) x, LLLL_OBJ_VANILLA, NULL, ac, av, LLLL_PARSE_RETAIN);
@@ -1175,10 +1275,190 @@ void base_entries_create_from_file(t_base *x, t_symbol *msg, long ac, t_atom *av
         llll_free(parsed);
     }
 
-    if (xbase_attach_to_sql_file(x->xbase))
+    if (xbase_is_attached_to_sql_file(x->xbase))
         db_transaction_end(x->xbase->d_db);
 }
 
+
+char* mystrsep(char** stringp, const char* delim)
+{
+    char* start = *stringp;
+    char* p;
+    
+    p = (start != NULL) ? strpbrk(start, delim) : NULL;
+    
+    if (p == NULL)
+    {
+        *stringp = NULL;
+    }
+    else
+    {
+        *p = '\0';
+        *stringp = p + 1;
+    }
+    
+    return start;
+}
+
+
+void base_entries_create_from_csv_do(t_object *x, t_symbol *s, long ac, t_atom *av)
+{
+    const long DADABASE_CSV_MAXCOLS = 8192;
+    const long DADABASE_CSV_MAXLINELENGTH = 8192*16;
+
+    t_base *b=(t_base *)x;
+    t_fourcc filetype;
+    t_symbol *filepath = dada_ezlocate_file(s, &filetype);
+    t_symbol *table = atom_getsym(av);
+    t_llll *fields = (t_llll *)atom_getobj(av+1);
+    t_llll *mapping = (t_llll *)atom_getobj(av+2);
+    t_llll *sticky = (t_llll *)atom_getobj(av+3);
+    t_symbol *separator_sym = atom_getsym(av+4);
+    const char *separator = (separator_sym && separator_sym->s_name && strlen(separator_sym->s_name) > 0 ? separator_sym->s_name : ",");
+
+    if (table == NULL) {
+        object_error(x, "Undefined table!");
+        return;
+    }
+
+    if (filepath == NULL) {
+        object_error(x, "Cannot locate file!");
+        return;
+    }
+    
+    FILE* filePointer;
+    char *buffer = sysmem_newptr(DADABASE_CSV_MAXLINELENGTH * sizeof(char));
+
+    filePointer = fopen(filepath->s_name, "r");
+    
+    long line = 0;
+    long tableidx = tablename_to_tableidx(b->xbase, table);
+    if (tableidx > -1) {
+        t_symbol **csvcols = (t_symbol **)sysmem_newptr(DADABASE_CSV_MAXCOLS * sizeof(t_symbol *));
+        char *csvcolstype = (char *)sysmem_newptr(DADABASE_CSV_MAXCOLS * sizeof(char));
+        while(fgets(buffer, DADABASE_CSV_MAXLINELENGTH, filePointer)) {
+            char *temp = sysmem_newptr(DADABASE_CSV_MAXLINELENGTH * sizeof(char));
+            char *tofree=temp;
+            strncpy_zero(temp, buffer, DADABASE_CSV_MAXLINELENGTH);
+            
+            if (strlen(temp) > 0) {
+                while (temp[strlen(temp)-1] == '\n' || temp[strlen(temp)-1] == '\r')
+                    temp[strlen(temp)-1] = 0;
+            }
+            
+            if (line == 0) { // header
+                char* token = strtok(temp, separator);
+                long numcsvcols = 0;
+                while (token && numcsvcols < DADABASE_CSV_MAXCOLS) {
+                    t_symbol *s = gensym(token);
+                    if (fields == NULL || is_symbol_in_llll_first_level(fields, s)) {
+                        // checking mapping
+                        if (mapping) {
+                            for (t_llllelem *el = mapping->l_head; el; el = el->l_next) {
+                                if (hatom_gettype(&el->l_hatom) == H_LLLL) {
+                                    t_llll *mll = hatom_getllll(&el->l_hatom);
+                                    if (mll && mll->l_size >= 2 && hatom_gettype(&mll->l_head->l_hatom) == H_SYM && hatom_getsym(&mll->l_head->l_hatom) == s)
+                                        s = hatom_getsym(&mll->l_head->l_next->l_hatom);
+                                }
+                            }
+                        }
+                        
+                        if (s) {
+                            long col_idx = colname_to_colidx(b->xbase, tableidx, s);
+                            if (col_idx > -1) {
+                                csvcols[numcsvcols] = s;
+                                csvcolstype[numcsvcols] = b->xbase->table[tableidx].column_type[col_idx];
+                            } else {
+                                csvcols[numcsvcols] = NULL;
+                                csvcolstype[numcsvcols] = 0;
+                            }
+                        } else {
+                            csvcols[numcsvcols] = NULL;
+                            csvcolstype[numcsvcols] = 0;
+                        }
+                    } else {
+                        csvcols[numcsvcols] = NULL;
+                        csvcolstype[numcsvcols] = 0;
+                    }
+                    token = strtok(NULL, separator);
+                    numcsvcols++;
+                }
+                
+            } else {
+                
+                t_llll *specs = sticky ? llll_clone(sticky) : llll_get();
+                char* token = mystrsep(&temp, separator);
+                long colnum = 0;
+                while (token && colnum < DADABASE_CSV_MAXCOLS) {
+                    if (csvcols[colnum] != NULL) {
+                        t_llll *these_specs = llll_get();
+                        llll_appendsym(these_specs, csvcols[colnum]);
+                        
+                        switch (csvcolstype[colnum]) {
+                            case 'i':
+                                llll_appendlong(these_specs, atol(token));
+                                break;
+                            case 'f':
+                                llll_appenddouble(these_specs, atof(token));
+                                break;
+                            default:
+                                llll_appendsym(these_specs, gensym(token));
+                                break;
+                        }
+                        llll_appendllll(specs, these_specs);
+                    }
+                    token = mystrsep(&temp, separator);
+                    colnum++;
+                }
+                
+                xbase_entry_create_do(b->xbase, table, specs->l_head, fields, b->escape_single_quotes, b->convert_null_to_default);
+                
+            }
+            
+            line++;
+            sysmem_freeptr(tofree);
+        }
+        
+        fclose(filePointer);
+        sysmem_freeptr(csvcols);
+        sysmem_freeptr(csvcolstype);
+        sysmem_freeptr(buffer);
+    }
+    
+    llll_free(fields);
+    llll_free(mapping);
+    llll_free(sticky);
+}
+
+void base_entries_create_from_csv(t_base *x, t_symbol *msg, long ac, t_atom *av)
+{
+    if (xbase_is_attached_to_sql_file(x->xbase))
+        db_transaction_start(x->xbase->d_db);
+    
+    t_llll *parsed = llllobj_parse_llll((t_object *) x, LLLL_OBJ_VANILLA, NULL, ac, av, LLLL_PARSE_RETAIN);
+    t_llll *fields = NULL;
+    t_llll *mapping = NULL;
+    t_llll *sticky = NULL;
+    t_symbol *separator_sym = gensym(",");
+    if (parsed) {
+        llll_parseargs_and_attrs(NULL, parsed, "llls", gensym("cols"), &fields, gensym("mapping"), &mapping, gensym("sticky"), &sticky, gensym("separator"), &separator_sym);
+        if (parsed && parsed->l_head && hatom_gettype(&parsed->l_head->l_hatom) == H_SYM) {
+            t_atom av[5];
+            t_symbol *sy = parsed->l_head->l_next && hatom_gettype(&parsed->l_head->l_next->l_hatom) == H_SYM ? hatom_getsym(&parsed->l_head->l_next->l_hatom) : NULL;
+            atom_setsym(av, hatom_getsym(&parsed->l_head->l_hatom));
+            atom_setobj(av+1, fields);
+            atom_setobj(av+2, mapping);
+            atom_setobj(av+3, sticky);
+            atom_setsym(av+4, separator_sym);
+
+            defer(x, (method)base_entries_create_from_csv_do, sy, 4, av); // will free all the fields, mapping and sticky lllls
+        }
+        llll_free(parsed);
+    }
+    
+    if (xbase_is_attached_to_sql_file(x->xbase))
+        db_transaction_end(x->xbase->d_db);
+}
 
 /*
 void base_entry_create(t_base *x, t_symbol *s, long argc, t_atom *argv)
@@ -1530,6 +1810,36 @@ void base_anything(t_base *x, t_symbol *msg, long ac, t_atom *av)
 }
 
 
+long xbase_db_count_table_rows(t_xbase *b, long table_num)
+{
+    char buf[2048];
+    t_symbol *table_name = b->table[table_num].name;
+    t_symbol *id_name = table_name_to_idname(table_name);
+    if (table_name && id_name) {
+        snprintf_zero(buf, 2048, "SELECT COUNT(%s) FROM %s", id_name->s_name, table_name->s_name);
+        
+        t_max_err    err = MAX_ERR_NONE;
+        t_db_result    *result = NULL;
+        err = db_query_direct(b->d_db, &result, buf);
+        if (err == MAX_ERR_NONE) {
+            long numrecords = db_result_numrecords(result);
+            if (numrecords >= 1) {
+                char **record = db_result_firstrecord(result);
+                return atol(record[0]);
+            }
+        }
+    }
+
+    return 0;
+}
+
+long xbase_db_count_all_rows(t_xbase *b)
+{
+    long count = 0;
+    for (long i = 0; i < b->num_tables; i++)
+        count += xbase_db_count_table_rows(b, i);
+    return count;
+}
 t_llll *xbase_db_query(t_xbase *b, char *buf, char output_fieldnames)
 {
 	t_max_err	err = MAX_ERR_NONE;
@@ -1576,13 +1886,30 @@ t_llll *xbase_db_query(t_xbase *b, char *buf, char output_fieldnames)
 		// retrieving field types
 		for (j = 0; j < numfields && j < DADA_XBASE_MAX_COLUMNS; j++) {
 			char *thisfieldname = db_result_fieldname_local(result, j);
-			fieldnames[j] = gensym(thisfieldname);
-			if (fieldnames[j] == table_name_to_idname(b->table[table_idx].name))
-				fieldtypes[j] = 'i';
-			else {
-				long fieldidx = colname_to_colidx(b, table_idx, fieldnames[j]);
-				fieldtypes[j] = (fieldidx >= 0 ? b->table[table_idx].column_type[fieldidx] : 0);
-			}
+            // handling MAX() MIN() COUNT()
+            fieldnames[j] = gensym(thisfieldname);
+            if (strncmp(thisfieldname, "MAX(", 4) == 0 || strncmp(thisfieldname, "MIN(", 4) == 0) {
+                char *temp = bach_newptr((1 + strlen(thisfieldname)) * sizeof(char));
+                sprintf(temp, "%s", thisfieldname+4);
+                temp[strlen(temp)-1] = 0;
+                t_symbol *temp_sym = gensym(temp);
+                if (temp_sym == table_name_to_idname(b->table[table_idx].name))
+                    fieldtypes[j] = 'i';
+                else {
+                    long fieldidx = colname_to_colidx(b, table_idx, temp_sym);
+                    fieldtypes[j] = (fieldidx >= 0 ? b->table[table_idx].column_type[fieldidx] : 0);
+                }
+                bach_freeptr(temp);
+            } else if (strncmp(thisfieldname, "COUNT(", 6) == 0) {
+                fieldtypes[j] = 'i';
+            } else {
+                if (fieldnames[j] == table_name_to_idname(b->table[table_idx].name))
+                    fieldtypes[j] = 'i';
+                else {
+                    long fieldidx = colname_to_colidx(b, table_idx, fieldnames[j]);
+                    fieldtypes[j] = (fieldidx >= 0 ? b->table[table_idx].column_type[fieldidx] : 0);
+                }
+            }
 		} 
 		
 		global = llll_get();
@@ -1616,6 +1943,17 @@ t_llll *xbase_db_query(t_xbase *b, char *buf, char output_fieldnames)
 						}
 						break;
 					}
+                    case 'p':
+                    {
+                        t_symbol *pitch_as_symbol = gensym(record[j]);
+                        if (pitch_as_symbol) {
+                            t_llll *temp = llll_from_text_buf(pitch_as_symbol->s_name, 0);
+                            if (temp && temp->l_head && hatom_gettype(&temp->l_head->l_hatom) == H_PITCH)
+                                llll_appendpitch(output_fieldnames ? this_field : this_record, hatom_getpitch(&temp->l_head->l_hatom));
+                            llll_free(temp);
+                        }
+                    }
+                        break;
 					case 's':
 						llll_appendsym(output_fieldnames ? this_field : this_record, gensym(record[j]));
 						break;
@@ -1632,14 +1970,14 @@ t_llll *xbase_db_query(t_xbase *b, char *buf, char output_fieldnames)
                                 llll_release(ll);
                         } else {
                             t_llll *record_ll = llll_from_text_buf(record[j], false);
-                            llll_appendllll(output_fieldnames ? this_field : this_record, record_ll);
+                            llll_chain(output_fieldnames ? this_field : this_record, record_ll);
                             break;
                         }
                     }
                         break;
 					default:
                         // might be another query such as MAX(...) MIN(...) COUNT(...) // TO DO: how do I automatically get the type???
-                        llll_appenddouble(output_fieldnames ? this_field : this_record, atol(record[j]));
+                        llll_appenddouble(output_fieldnames ? this_field : this_record, atof(record[j]));
                         break;
 				}
 				
@@ -1723,6 +2061,9 @@ const char *xbase_column_type_to_sqltype(t_xbase *b, char type)
 			case 'r':
 				return "VARCHAR(512)";
 				break;
+            case 'p':
+                return "VARCHAR(512)";
+                break;
 			case 's':
 				return "VARCHAR(512)";
 				break;
@@ -1782,28 +2123,32 @@ long file_exists(char *fname) {
     }
 }
 
-t_max_err rebuild_database(t_xbase *b)
+t_max_err rebuild_database(t_xbase *b, char readonly)
 {
 	long i, j;
 	t_max_err err = MAX_ERR_NONE;
 
 	
 	// close the old database (if needed) and open the new one
-    t_symbol *filename = b->d_filename; //dada_ezlocate_file(b->d_filename, NULL); // UNSUPPORTED FOR NOW
+    t_symbol *filename = b->d_filename;
     if (filename && strlen(filename->s_name) <= 0)
         filename = NULL;
-    if (xbase_attach_to_text_file(b)) // attached to textual file.
+    if (xbase_is_attached_to_text_file(b)) // attached to textual file.
         filename = NULL;
 	
-	xbase_free_lllls(b);
+    xbase_free_lllls(b);
 	db_close(&b->d_db);
 
     if (filename) {
         short outpath = 0;
         t_symbol *filename_resolved = dada_ezresolve_file(filename, &outpath);
-
-        db_open(b->d_name, filename_resolved->s_name, &b->d_db);
         
+// should be like this
+//        db_open_ext(b->d_name, filename_resolved->s_name, &b->d_db, readonly ? DB_OPEN_FLAGS_READONLY : DB_OPEN_FLAGS_NONE);
+// but the function db_open_ext() is not found in Max api, so read-only is unsupported by now
+        
+        t_max_err err = db_open(b->d_name, filename_resolved->s_name, &b->d_db);
+
         char metafile_found = false;
         t_symbol *metafile = filename_to_metafilename(filename_resolved);
         
@@ -1811,16 +2156,18 @@ t_max_err rebuild_database(t_xbase *b)
             metafile_found = true;
         
         if (metafile_found) {
-            // we recovere the tables
+            // we recover the tables
             llll_read((t_object *)b, metafile, (read_fn) xbase_set_header_from_llll);
         } else if (metafile) {
             // create metafile
-            t_llll *ll = xbase_get_all_table_headers(b);
-            t_llll *arguments = llll_get();
-            llll_appendsym(arguments, metafile);
-            llll_writetxt((t_object *)b, ll, arguments, BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART);
+            if (err == MAX_ERR_NONE) { // ...but only if the database opening was successful
+                t_llll *ll = xbase_get_all_table_headers(b);
+                t_llll *arguments = llll_get();
+                llll_appendsym(arguments, metafile);
+                llll_writetxt((t_object *)b, ll, arguments, BACH_DEFAULT_MAXDECIMALS, 0, "\t", -1, LLLL_T_NONE, LLLL_TE_SMART, LLLL_TB_SMART);
+            }
         } else {
-            error("No file attached!");
+            error("Something went wrong with database opening or creation.");
         }
 
     } else {
@@ -1900,6 +2247,7 @@ t_xbase *xbase_new(t_symbol *name)
         b->d_db = NULL;
         b->d_name = name;
         b->magic = DADA_XBASE_MAGIC_GOOD;
+        b->d_force_store_lllls_as_text = false;
         b->d_dirty = false;
         b->d_nodirty = true;
         b->table = (t_db_table *)bach_newptr(DADA_XBASE_MAX_TABLES * sizeof(t_db_table));
@@ -1943,15 +2291,15 @@ t_max_err base_attr_name_set(t_base *x, void *attr, long argc, t_atom *argv)
             x->d_name = symbol_unique();
             x->xbase = xbase_new(x->d_name);
             x->xbase->d_filename = x->d_filename;
-            rebuild_database(x->xbase);
+            rebuild_database(x->xbase, x->is_readonly);
         } else if (!x->xbase->d_filename && x->d_filename) {
             x->xbase->d_filename = x->d_filename;
-            rebuild_database(x->xbase);
+            rebuild_database(x->xbase, x->is_readonly);
         }
     } else {
         x->xbase = xbase_new(newname);
         x->xbase->d_filename = x->d_filename;
-        rebuild_database(x->xbase);
+        rebuild_database(x->xbase, x->is_readonly);
     }
     x->xbase->ref_count++;
     
@@ -2077,6 +2425,7 @@ t_llll *llll_parse_sym2objs(long ac, t_atom *av) // creates a new llll from a li
             char prev_thing_end;
             switch (*cursor) {
                 case '(':
+                case '[':
                     temp_llll = llll_get();
                     llll_appendllll(this_llll, temp_llll, 0, WHITENULL_llll);
                     llll_stack_push(stack, this_llll);
@@ -2085,6 +2434,7 @@ t_llll *llll_parse_sym2objs(long ac, t_atom *av) // creates a new llll from a li
                     break;
                     
                 case ')': // terminates a sub-list
+                case ']': // terminates a sub-list
                     temp_llll = (t_llll *) llll_stack_pop(stack);
                     if (!temp_llll)
                         goto llll_parse_err;
@@ -2126,7 +2476,7 @@ t_llll *llll_parse_sym2objs(long ac, t_atom *av) // creates a new llll from a li
                     // search for the end of this element, which is given by:
                     
                     while (*thing_end &&																// the string end, or
-                           (backtick || (*thing_end != '(' && *thing_end != ')')) &&					// a parenthesis, but only if we don't have backtick set
+                           (backtick || (*thing_end != '(' && *thing_end != ')' && *thing_end != '[' && *thing_end != ']')) &&					// a parenthesis, but only if we don't have backtick set
                            (!isspace(*thing_end) || (prev_thing_end == '\\' && ac < 0))) {	// a space, but only if it's not backslashed, or we're not in string mode
                         prev_thing_end = *thing_end;
                         thing_end ++;

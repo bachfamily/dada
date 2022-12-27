@@ -82,7 +82,9 @@
 				Edit database as text
 			</digest>
 			<description>
-				Doubleclicking on the object forces a text editor to open up, where the whole database can be edited directly in text form.
+				Doubleclicking on the object opens a text editor, where the whole database can be edited directly in text form.
+				To prevent unwanted long hangs, this is only true for small datasets: if you need to open large datasets in text form,
+				please use the <m>wopen</m> message explicitly.
 			</description>
 		</method>
 		<method name="(drag)">
@@ -171,7 +173,8 @@
 				An <m>addtable</m> message followed by a table name and some columns specifications
 				will add a table to the database having the given number and types of columns.
 				Column specification must be in the form <b>[<m>name1</m> <m>type1</m>] [<m>name2</m> <m>type2</m>]... </b>
-				where each <m>name</m> is a symbol and each type is one of the symbols: "f" (float), "i" (integer), "s" (symbol), "r" (rational), "l" (llll).
+				where each <m>name</m> is a symbol and each type is one of the symbols: "f" (float), "i" (integer),
+				"s" (symbol), "r" (rational), "p" (pitch), "l" (llll).
 			</description>
 		</method>
 		<method name="appendfromfile">
@@ -267,6 +270,15 @@
 				In order to have the correct syntax, the llll must be as the one written by <m>write</m> or <m>writetxt</m> messages.
 			</description>
 		</method>
+		<method name="wopen">
+			<arglist />
+			<digest>
+				Open text editor for database
+			</digest>
+			<description>
+				The <m>wopen</m> message will open a text editor for the database.
+			</description>
+		</method>
 		<method name="write">
 			<arg name="file" optional="1" type="symbol" />
 			<digest>
@@ -305,6 +317,21 @@
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Settings" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Escape Single Quotes" />
+				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
+			</attributelist>
+		</attribute>
+		<attribute name="llllastext" get="1" set="1" type="int" size="1">
+			<digest>
+				Store lllls as Text
+			</digest>
+			<description>
+				Toggles the ability to store lllls as text in the database, so that they you can query them
+				(at the price of performance time).
+			</description>
+			<attributelist>
+				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Settings" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Store lllls as Text" />
 				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
@@ -365,16 +392,16 @@
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>
 		</attribute>
-		<attribute name="readonly" get="1" set="1" type="int" size="1">
+		<attribute name="volatile" get="1" set="1" type="int" size="1">
 			<digest>
-				Read-Only Dataset File
+				Volatile Dataset File
 			</digest>
 			<description>
-				Toggles the ability to only allow reading for a file-attached database.
+				Toggles the ability to make the database read-only.
 			</description>
 			<attributelist>
 				<attribute name="category" get="1" set="1" type="symbol" size="1" value="Settings" />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Read-Only Dataset File" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Volatile Dataset File" />
 				<attribute name="paint" get="1" set="1" type="int" size="1" value="1" />
 				<attribute name="style" get="1" set="1" type="symbol" size="1" value="onoff" />
 			</attributelist>

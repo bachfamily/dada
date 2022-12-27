@@ -243,8 +243,9 @@ void dadaobj_jbox_setup(t_dadaobj_jbox *b_ob, long flags, t_pt zoom_static_addit
 }
 
 void dadaobj_pxjbox_setup(t_dadaobj_pxjbox *b_ob, long flags, t_pt zoom_static_additional,
-						long playout_outlet, long changebang_outlet, long notification_outlet, dada_paint_ext_fn paint_ext, invalidate_and_redraw_fn invalidate_and_redraw,
-						const char *tools, long stores, const char *outlets, ...)
+                          long playout_outlet, long changebang_outlet, long notification_outlet,
+                          dada_paint_ext_fn paint_ext, invalidate_and_redraw_fn invalidate_and_redraw,
+                          const char *tools, long stores, const char *outlets, ...)
 {
 	va_list args;
     va_start(args, outlets);
@@ -1145,7 +1146,7 @@ void dadaobj_class_init(t_class *c, e_llllobj_obj_types type, long flags)
     
     if (flags & DADAOBJ_EXPORTTOJITTER) {
         DADAOBJ_CLASS_ATTR_SYM_SUBSTRUCTURE(c,type,"jitmatrix",0, t_dadaobj, m_paint, t_paint_manager, jit_destination_matrix);
-        CLASS_ATTR_STYLE_LABEL(c,"jitmatrix",0,"text","");
+        CLASS_ATTR_STYLE_LABEL(c,"jitmatrix",0,"text","Jitter Matrix Mirror");
         CLASS_ATTR_DEFAULT_SAVE(c,"jitmatrix",0,"");
         CLASS_ATTR_CATEGORY(c, "jitmatrix", 0, "Behavior");
         // @description Sets the name of a jitter matrix to which the output should be mirrored.
@@ -1171,7 +1172,7 @@ void dadaobj_fileusage(t_object *x, void *w)
     atom_setsym(&a, gensym("fonts"));
     atomarray_appendatom(aa, &a);
 
-    fileusage_addpackage(w, "bach", (t_object*)aa);
+    fileusage_addpackage(w, "bach", aa);
 
     t_atomarray *aab = atomarray_new(0, NULL);
     atom_setsym(&a, gensym("externals"));
@@ -1181,7 +1182,7 @@ void dadaobj_fileusage(t_object *x, void *w)
     atom_setsym(&a, gensym("interfaces"));
     atomarray_appendatom(aab, &a);
     
-    fileusage_addpackage(w, "dada", (t_object*)aab);
+    fileusage_addpackage(w, "dada", aab);
 
     // fileusage takes ownership of aa and thus will take care of freeing it
 }
@@ -1344,7 +1345,9 @@ long dadaobj_parse_export_png_syntax(t_dadaobj *r_ob, t_object *view, t_llll *ll
         *filename = hatom_getsym(&ll->l_head->l_hatom);
         llll_behead(ll);
     }
-    llll_parseargs(r_ob->orig_obj, ll, "siddl", gensym("filename"), &filename, gensym("dpi"), &dpi, gensym("width"), &width, gensym("height"), &height, gensym("center"), &exportcenter_ll);
+    t_atom_long dpi_al = 72;
+    llll_parseargs(r_ob->orig_obj, ll, "siddl", gensym("filename"), &filename, gensym("dpi"), &dpi_al, gensym("width"), &width, gensym("height"), &height, gensym("center"), &exportcenter_ll);
+    *dpi = dpi_al;
     if (exportcenter_ll)
         *exportcenter = llll_to_pt(exportcenter_ll);
     
@@ -1995,7 +1998,7 @@ void dadaobj_jbox_exportimage_do(t_dadaobj_jbox *x, t_symbol *s, long ac, t_atom
     t_dadaobj *r_ob = &x->d_ob;
     char ok = true;
     double height = -1, width = -1; // x->d_ob.m_geometry.last_used_view_height_pix, width = x->d_ob.m_geometry.last_used_view_width_pix;
-    long dpi = 72;
+    t_atom_long dpi = 72;
     t_symbol *filename_sym = NULL, *type_sym = NULL;
     t_pt center = x->d_ob.m_zoom.center_offset, zoom = x->d_ob.m_zoom.zoom;
     t_llll *center_ll = NULL, *zoom_ll = NULL;

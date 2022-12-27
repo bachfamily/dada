@@ -11,10 +11,12 @@
 
 // Name & Version
 PRODUCT_NAME = $(PROJECT_NAME)
-PRODUCT_VERSION = 0.1.2
+ARCHS = x86_64 arm64
 
 // Paths
-C74SUPPORT = $(SRCROOT)/../../../max-sdk-7.3.3/source/c74support
+MAXSDK = $(SRCROOT)/../../../max-sdk
+C74SUPPORT = $(MAXSDK)/source/max-sdk-base/c74support
+// C74SUPPORT = $(SRCROOT)/../../../max-sdk-7.3.3/source/c74support
 HEADER_SEARCH_PATHS = "$(C74SUPPORT)/max-includes" "$(C74SUPPORT)/msp-includes" "$(C74SUPPORT)/jit-includes" "../../../bach/source/commons"
 FRAMEWORK_SEARCH_PATHS = "$(C74SUPPORT)/max-includes" "$(C74SUPPORT)/msp-includes" "$(C74SUPPORT)/jit-includes"
 DSTROOT = $(SRCROOT)/../lib ///Developer/SDKs/MaxSDK-6.1.4/dada/lib
@@ -23,7 +25,7 @@ INSTALL_PATH = /
 BACH_LIBRARY_SEARCH_PATH = $(SRCROOT)/../../../bach/source/lib/
 
 // Special Files
-GCC_PREFIX_HEADER = $(C74SUPPORT)/max-includes/macho-prefix.pch
+//GCC_PREFIX_HEADER = $(C74SUPPORT)/max-includes/macho-prefix.pch
 INFOPLIST_FILE = $(SRCROOT)/Info.plist
 
 

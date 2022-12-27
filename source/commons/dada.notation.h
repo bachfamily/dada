@@ -89,11 +89,14 @@ void dada_markers_delete_tempo_markers(t_llll *gs);
 void remove_all_marking_to_llll_lthings(t_llll *gs, e_notation_objects notation_obj);
 
 
-long dada_score_getnummeas(t_llll *gs);
-t_llll *dada_score_getts(t_llll *gs);
-t_rational dada_measure_getsymdur(t_llll *gs);
+long dada_score_get_nummeas(t_llll *gs);
+t_llll *dada_score_get_ts(t_llll *gs);
+t_llll *dada_score_get_measuresymdurs(t_llll *gs);
+
+
+t_rational dada_measure_get_symdur(t_llll *gs);
 t_llll *dada_score_getdivisions(t_llll *gs);
-t_rational dada_score_gettotsymduration(t_llll *gs);
+t_rational dada_score_get_totsymduration(t_llll *gs);
 
 // all returned tempi are allocated and need to be freed
 t_tempo *dada_measure_get_last_tempo(t_llll *gs);
@@ -104,10 +107,12 @@ t_tempo *dada_score_get_last_tempo(t_llll *gs);
 void dada_measure_add_starting_tempo(t_llll *gs, t_tempo *tempo);
 
 long dada_get_num_voices(t_llll *gs);
+char is_llll_a_grace_level(t_llll *ll);
+char is_llll_root_a_grace_level(t_llll *ll);
 
 
 t_llll *dada_score_multisplit_measures(t_llll *gs, long num_splits, long *split_measure_num, char copy_tempi);
-t_llll *dada_score_split(t_llll *gs, t_timepoint split_pt, t_timesignature *splitpt_ts, t_tempo *splitpt_tempo, char copy_tempi);
+t_llll *dada_score_split(t_llll *gs, t_timepoint split_pt, t_timesignature *splitpt_ts, t_tempo *splitpt_tempo, char copy_tempi, long graces_stay_with_next, long add_ties_while_cropping);
 void dada_score_apply_window_on_velocities(t_llll *gs, e_dada_windows window_type, t_rational *tot_symduration);
 
 #endif // _DADA_NOTATION_H

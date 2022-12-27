@@ -1517,7 +1517,7 @@ void nodes_paint_ext(t_nodes *x, t_object *view, t_dada_force_graphics *force_gr
 				double w_as_coord = w/x->b_ob.d_ob.m_zoom.zoom.x, h_as_coord = h/x->b_ob.d_ob.m_zoom.zoom.x;
 				x->nodes[i].node_rect = build_rect(x->nodes[i].coord.x - w_as_coord/2, x->nodes[i].coord.y - h_as_coord/2, w_as_coord, h_as_coord);
 
-				write_text_simple(g, jf, color1, buf, pix.x - w/2, pix.y - h/2, w + 20, h + 20);
+				write_text_standard(g, jf, color1, buf, pix.x - w/2, pix.y - h/2, w + 20, h + 20);
 				
 				bach_freeptr(buf);
 				jfont_destroy_debug(jf);

@@ -1,0 +1,60 @@
+v 0.3
+
+IMPORTANT: from dada 0.2.5, builds are 64-bit only, support M1 native architecture and require Max 8.2 or higher
+
+all objects: fixed potential instabilities (especially, but not only, on Windows) with message attributes
+
+*************************
+*** IMPORTANT CHANGES ***
+*************************
+
+These might break compatibility with older patches
+
+- dada.cartesian/dada.distances        the contentfield attribute now defaults to "none"
+
+***********************
+*** VERSION CHANGES ***
+***********************
+
+- dada.base: 	fixed bug causing unsuccessful file attach for db3 databases unless 
+			in the same folder of the patch; now db3 file can be anywhere
+		queries such as "SELECT MAX(...)" or "SELECT MIN(...)" 
+			now infer the output type from the column type
+                fixed bug causing floating point columns working as int ones in CSV import
+                Added @separator attribute for csv import
+                fixed bug causing potential crashes when editor of dada.base was open and object was freed
+
+- dada.segment  New @gracewithnext and @addties attributes
+                Fixed several issues with segmentation
+
+
+v 0.2.4
+
+*********************
+*** COMPATIBILITY ***
+*********************
+
+dada 0.2.3 or higher requires bach 0.8.1.
+
+
+*************************
+*** IMPORTANT CHANGES ***
+*************************
+
+These might break compatibility with older patches
+
+- dada.segment		the presegment attribute now defaults at 0. 
+				to revert to the previous behavior, set it explicitly to 1
+
+
+
+***********************
+*** VERSION CHANGES ***
+***********************
+
+- dada.peanos~: experimental undocumented object
+
+- dada.cartesian, dada.distances 
+	are now binded to datasets AFTER dada.base
+		so that if datasets are file-attached no issues arise
+	now lllls are properly output even when db is attached to DB3 sqlite 

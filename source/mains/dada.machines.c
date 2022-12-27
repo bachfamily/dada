@@ -121,12 +121,12 @@ typedef struct _machines_distrib
 
 typedef struct _machine_prototype
 {
-    long		type_id;
+    t_atom_long		type_id;
     t_symbol    *fullname;
     t_symbol    *name;
     t_symbol    *dispchar;
-    long        num_ins;
-    long        num_outs;
+    t_atom_long        num_ins;
+    t_atom_long        num_outs;
     method      fun;
 } t_machine_prototype;
 
@@ -158,7 +158,8 @@ typedef struct _machines
 	t_dada_graph		network_graph;	///< The graph representing the bouncing room
 	double				network_machine_size;
 	double				network_edge_linewidth;
-	
+    double              network_arrow_size;
+    
 	// display
 	char			show_network;
 	char			show_machines;
@@ -1087,7 +1088,11 @@ void C74_EXPORT ext_main(void *moduleRef)
 	CLASS_ATTR_DOUBLE(c, "edgewidth", 0, t_machines, network_edge_linewidth);
     CLASS_ATTR_STYLE_LABEL(c, "edgewidth", 0, "text", "Network Edge Line Width");
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"edgewidth",0,"1.5");
-	
+
+    CLASS_ATTR_DOUBLE(c, "arrowsize", 0, t_machines, network_arrow_size);
+    CLASS_ATTR_STYLE_LABEL(c, "arrowsize", 0, "text", "Network Arrow Size");
+    CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"arrowsize", 0, "7");
+
 	CLASS_ATTR_CHAR(c, "linestyle", 0, t_machines, line_style);
     CLASS_ATTR_STYLE_LABEL(c, "linestyle", 0, "enumindex", "Line Style");
 	CLASS_ATTR_ENUMINDEX(c,"linestyle", 0, "Straight Segmented Curve"); 
@@ -1519,9 +1524,10 @@ void machine_process_once(t_machines *x, long vertex_idx, t_llll **out)
     long type = label_to_machine(x, vb->type);
     long i;
     
-    if (type >= 0 && type < x->num_prototypes && x->prototype[type].fun)
-        (x->prototype[type].fun)(x, vb->num_ins, vb->ins, vb->num_outs, out);
-    else if (type >= x->num_standard_prototypes) {
+    if (type >= 0 && type < x->num_prototypes && x->prototype[type].fun) {
+        return CALL_METHOD_SAFE(void, (t_machines*, long, t_llll**, long, t_llll**), x->prototype[type].fun, x, vb->num_ins, vb->ins, vb->num_outs, out);
+//        (x->prototype[type].fun)(x, vb->num_ins, vb->ins, vb->num_outs, out);
+    } else if (type >= x->num_standard_prototypes) {
         // lambda processing
         
         // Storing a null default answer
@@ -1782,7 +1788,7 @@ void paint_hovered_elements1(t_machines *x, t_jgraphics *g, t_object *view, t_re
 			t_pt pix1_ok = node_pix_to_inlet_outlet_pix(x, center, pix1, x->network_graph.edges[i].data.m_outinnum.num_out, v1->data.m_vanillabox.num_outs, x->outlet_prototype_id, zoom);
 			t_pt pix2_ok = node_pix_to_inlet_outlet_pix(x, center, pix2, x->network_graph.edges[i].data.m_outinnum.num_in, v2->data.m_vanillabox.num_ins, x->inlet_prototype_id, zoom);
 			paint_line_advanced(g, change_alpha(x->j_networkcolor, 0.3), pix1_ok, pix2_ok, 
-								x->network_edge_linewidth + DADA_GRAPH_EDGE_DEFAULT_SELECTION_PAD, (e_dada_line_style) x->line_style, false, DADA_GRAPH_ARROW_SIZE, NULL, NULL, DADA_GRAPH_CURVE_AMOUNT * x->b_ob.d_ob.m_zoom.zoom.x);
+								x->network_edge_linewidth + DADA_GRAPH_EDGE_DEFAULT_SELECTION_PAD, (e_dada_line_style) x->line_style, false, x->network_arrow_size, NULL, NULL, DADA_GRAPH_CURVE_AMOUNT * x->b_ob.d_ob.m_zoom.zoom.x);
 		}
 			break;
 		case DADAITEM_TYPE_VERTEX:
@@ -1867,11 +1873,11 @@ void machines_paint_graph(t_machines *x, t_object *view, t_rect rect, t_pt cente
                 t_pt pix2_ok = node_pix_to_inlet_outlet_pix(x, center, pix2, graph->edges[i].data.m_outinnum.num_in, v2->data.m_vanillabox.num_ins, x->inlet_prototype_id, zoom);
                 
                 if (is_pt_in_rectangle(pix1_ok, rect_00) || is_pt_in_rectangle(pix2_ok, rect_00)) {
-                    paint_line_advanced(g, x->j_networkcolor, pix1_ok, pix2_ok,  x->network_edge_linewidth, graph->line_style, true, DADA_GRAPH_ARROW_SIZE * zoom, NULL, NULL, DADA_GRAPH_CURVE_AMOUNT * x->b_ob.d_ob.m_zoom.zoom.x);
+                    paint_line_advanced(g, x->j_networkcolor, pix1_ok, pix2_ok,  x->network_edge_linewidth, graph->line_style, true, x->network_arrow_size * zoom, NULL, NULL, DADA_GRAPH_CURVE_AMOUNT * x->b_ob.d_ob.m_zoom.zoom.x);
                     
                     if (DADA_MACHINES_DEBUG_IDS) { // debug IDs
                         snprintf_zero(buf, 100, "{%ld}", i);
-                        write_text_simple(g, jf, x->j_machinecolor, buf, 0.5*(pix1_ok.x + pix2_ok.x) + 2,
+                        write_text_standard(g, jf, x->j_machinecolor, buf, 0.5*(pix1_ok.x + pix2_ok.x) + 2,
                                           0.5 * (pix1_ok.y + pix2_ok.y), 300, 300);
                         
                     }
@@ -1904,7 +1910,7 @@ void machines_paint_graph(t_machines *x, t_object *view, t_rect rect, t_pt cente
                     
                     if (DADA_MACHINES_DEBUG_IDS) { // debug IDs
                         snprintf_zero(buf, 100, "<%ld>", i);
-                        write_text_simple(g, jf, x->j_machinecolor, buf, upperleft_corner.x+x->network_machine_size + 2,
+                        write_text_standard(g, jf, x->j_machinecolor, buf, upperleft_corner.x+x->network_machine_size + 2,
                                           upperleft_corner.y, 300, 300);
                         
                     }

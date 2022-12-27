@@ -147,6 +147,7 @@ char delete_dadapolygon_vertex(t_dadapolygon *poly, long idx, char min_number_of
 char move_dadapolygon_vertex(t_dadapolygon *poly, long idx, t_pt new_pt, char given_as_delta);
 void clone_shape(t_shape *giver, t_shape *cloned);
 
+double pt_pt_distance_squared_weighted(t_pt pt1, t_pt pt2, t_pt weight);
 
 t_rect get_rect_near_pt_inside_rect(t_pt pt, double width, double height, t_rect rect, t_pt delta, t_pt pad, t_pt *nearest_corner);
 

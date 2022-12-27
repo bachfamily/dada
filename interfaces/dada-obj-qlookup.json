@@ -201,6 +201,30 @@
       "dada.terrain.spiral~"
     ]
   },
+  "dada.peanos~": {
+    "digest": "The timbrotheque of Babel",
+    "module": "dada",
+    "category": [
+      "dada interfaces",
+      "dada audio"
+    ],
+    "keywords": [
+      "peanos~",
+      "Peano",
+      "timbre",
+      "music",
+      "babel",
+      "disco",
+      "discoteque",
+      "browse",
+      "combinatorics",
+      "exploration",
+      "static"
+    ],
+    "seealso": [
+      "dada.terrain~"
+    ]
+  },
   "dada.bodies": {
     "digest": "Music via gravitation",
     "module": "dada",

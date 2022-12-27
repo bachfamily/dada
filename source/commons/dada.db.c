@@ -113,7 +113,7 @@ long colname_to_coltype(t_xbase *b, t_symbol *tablename, t_symbol *colname)
         }
     }
     
-    return 0;
+    return 'i'; // useful for _ids columns
 }
 
 

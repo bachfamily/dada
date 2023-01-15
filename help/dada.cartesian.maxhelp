@@ -4,13 +4,13 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 5,
-			"revision" : 0,
+			"revision" : 2,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 309.0, 100.0, 776.0, 648.0 ],
+		"rect" : [ 100.0, 100.0, 776.0, 648.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -53,7 +53,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 5,
-							"revision" : 0,
+							"revision" : 2,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -98,7 +98,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 400.666655999999989, 137.5, 337.0, 50.0 ],
-									"presentation_linecount" : 2,
 									"text" : "The columns ID of a table is the table name (without the trailing \"s\", if any) joined with \"_id\". For instance, for the \"scores\" table, the ID field is \"score_id\"",
 									"textcolor" : [ 0.5, 0.5, 0.5, 1.0 ]
 								}
@@ -207,7 +206,7 @@
 									"showaxeslabels" : 1,
 									"sizefield" : "loudness",
 									"table" : "scores",
-									"versionnumber" : 20600,
+									"versionnumber" : 30000,
 									"vzoom" : 1.201201201201201,
 									"where" : [ "null" ],
 									"xfield" : "spread",
@@ -272,7 +271,6 @@
 					}
 ,
 					"patching_rect" : [ 38.0, 147.0, 88.0, 22.0 ],
-					"presentation_linecount" : 3,
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -299,7 +297,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 5,
-							"revision" : 0,
+							"revision" : 2,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -385,13 +383,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 5,
-							"revision" : 0,
+							"revision" : 2,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 776.0, 622.0 ],
+						"rect" : [ 100.0, 126.0, 776.0, 622.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -564,7 +562,7 @@
 									"patching_rect" : [ 401.0, 297.0, 300.0, 300.0 ],
 									"query" : "SELECT * FROM similarities",
 									"table" : "similarities",
-									"versionnumber" : 20600,
+									"versionnumber" : 30000,
 									"vzoom" : 1000.0,
 									"where" : [ "null" ],
 									"xfield" : "A",
@@ -890,7 +888,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 5,
-							"revision" : 0,
+							"revision" : 2,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -1113,6 +1111,7 @@
 									"beatsync" : 1,
 									"center" : [ -0.231723328750007, -92.832173997500007 ],
 									"colorfield" : "filename",
+									"contentfield" : [ "content" ],
 									"convexcombmax" : [ 1.0 ],
 									"convexcombmin" : [ 0.0 ],
 									"database" : "joplindb",
@@ -1128,7 +1127,7 @@
 									"patching_rect" : [ 30.0, 283.5, 300.0, 300.0 ],
 									"query" : "SELECT * FROM scores",
 									"table" : "scores",
-									"versionnumber" : 20600,
+									"versionnumber" : 30000,
 									"vzoom" : 179.847207899996164,
 									"where" : [ "null" ],
 									"xfield" : "tc5",
@@ -1171,7 +1170,7 @@
 									"pitcheditrange" : [ "null" ],
 									"stafflines" : [ 5 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"versionnumber" : 80106,
+									"versionnumber" : 80200,
 									"voicenames" : [ "[", "]" ],
 									"voicespacing" : [ 0.0, 17.0 ],
 									"zoom" : 151.679687999999999
@@ -1370,7 +1369,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 5,
-							"revision" : 0,
+							"revision" : 2,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -1553,7 +1552,7 @@
 									"pitcheditrange" : [ "null" ],
 									"stafflines" : [ 5, 5, 5 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"versionnumber" : 80106,
+									"versionnumber" : 80200,
 									"voicenames" : [ "[", "]", "[", "]", "[", "]" ],
 									"voicespacing" : [ 0.0, 17.0, 17.0, 17.0 ]
 								}
@@ -1703,7 +1702,7 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 5,
-											"revision" : 0,
+											"revision" : 2,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -1929,6 +1928,7 @@
 								"box" : 								{
 									"center" : [ -712.745347807499911, -5345.375 ],
 									"colorfield" : "tonalcentroid5th",
+									"contentfield" : [ "content" ],
 									"convexcombmax" : [ 1.0 ],
 									"convexcombmin" : [ 0.0 ],
 									"database" : "dbcartesianhelp",
@@ -1946,7 +1946,7 @@
 									"showgridlabels" : 0,
 									"sizefield" : "loudness",
 									"table" : "scores",
-									"versionnumber" : 20600,
+									"versionnumber" : 30000,
 									"vzoom" : 0.948090948090948,
 									"where" : [ "null" ],
 									"xfield" : "spread",
@@ -2214,7 +2214,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 5,
-							"revision" : 0,
+							"revision" : 2,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -2575,6 +2575,7 @@
 								"box" : 								{
 									"center" : [ -712.745347807499911, -5345.375 ],
 									"colorfield" : "tonalcentroid5th",
+									"contentfield" : [ "content" ],
 									"convexcombmax" : [ 1.0 ],
 									"convexcombmin" : [ 0.0 ],
 									"database" : "dbcartesianhelp",
@@ -2591,7 +2592,7 @@
 									"showaxeslabels" : 1,
 									"sizefield" : "loudness",
 									"table" : "scores",
-									"versionnumber" : 20600,
+									"versionnumber" : 30000,
 									"vzoom" : 1.201201201201201,
 									"where" : [ "null" ],
 									"xfield" : "spread",
@@ -2773,7 +2774,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 5,
-							"revision" : 0,
+							"revision" : 2,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -2980,7 +2981,7 @@
 									"showmeasurenumbers" : [ 1, 1 ],
 									"stafflines" : [ 5, 5 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"versionnumber" : 80106,
+									"versionnumber" : 80200,
 									"voicenames" : [ "[", "]", "[", "]" ],
 									"voicespacing" : [ -13.5, 26.0, 26.0 ],
 									"vzoom" : 60.0
@@ -3065,6 +3066,7 @@
 									"beatsync" : 1,
 									"bpmfield" : "bpm",
 									"center" : [ -11.473750000000001, -1.49625 ],
+									"contentfield" : [ "content" ],
 									"convexcombmax" : [ 1.0 ],
 									"convexcombmin" : [ 0.0 ],
 									"database" : "dbcartesianhelp2",
@@ -3080,12 +3082,12 @@
 									"phasefield" : "phase",
 									"query" : "SELECT * FROM scores",
 									"table" : "scores",
-									"versionnumber" : 20600,
-									"vzoom" : 937.263793999999962,
+									"versionnumber" : 30000,
+									"vzoom" : 937.263794406651527,
 									"where" : [ "null" ],
 									"xfield" : "measure",
 									"yfield" : "phase",
-									"zoom" : 257.423604000000012
+									"zoom" : 257.423604362379876
 								}
 
 							}
@@ -3113,7 +3115,7 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 5,
-											"revision" : 0,
+											"revision" : 2,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -3421,7 +3423,7 @@
 									"showmeasurenumbers" : [ 1, 1 ],
 									"stafflines" : [ 5, 5 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"versionnumber" : 80106,
+									"versionnumber" : 80200,
 									"voicenames" : [ "[", "]", "[", "]" ],
 									"voicespacing" : [ 0.0, 26.0, 26.0 ],
 									"vzoom" : 70.0,
@@ -3445,7 +3447,7 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 5,
-											"revision" : 0,
+											"revision" : 2,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -3964,7 +3966,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 5,
-							"revision" : 0,
+							"revision" : 2,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -4201,7 +4203,7 @@
 									"showmeasurenumbers" : [ 1, 1 ],
 									"stafflines" : [ 5, 5 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"versionnumber" : 80106,
+									"versionnumber" : 80200,
 									"voicenames" : [ "[", "]", "[", "]" ],
 									"voicespacing" : [ -13.5, 26.0, 26.0 ],
 									"vzoom" : 60.0,
@@ -4270,6 +4272,7 @@
 , 							{
 								"box" : 								{
 									"center" : [ -11.473750000000001, -1.49625 ],
+									"contentfield" : [ "content" ],
 									"convexcombmax" : [ 1.0 ],
 									"convexcombmin" : [ 0.0 ],
 									"database" : "bachinv",
@@ -4283,7 +4286,7 @@
 									"patching_rect" : [ 10.0, 187.0, 298.0, 155.0 ],
 									"query" : "SELECT * FROM scores",
 									"table" : "scores",
-									"versionnumber" : 20600,
+									"versionnumber" : 30000,
 									"vzoom" : 937.263794406651527,
 									"where" : [ "null" ],
 									"xfield" : "measure",
@@ -4472,13 +4475,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 5,
-							"revision" : 0,
+							"revision" : 2,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 309.0, 126.0, 776.0, 622.0 ],
+						"rect" : [ 0.0, 26.0, 776.0, 622.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -4508,6 +4511,21 @@
 						"showontab" : 1,
 						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
+								"box" : 								{
+									"id" : "obj-14",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 247.0, 564.0, 66.0, 23.0 ],
+									"saved_object_attributes" : 									{
+										"versionnumber" : 80200
+									}
+,
+									"text" : "bach.print"
+								}
+
+							}
+, 							{
 								"box" : 								{
 									"bubble" : 1,
 									"fontname" : "Arial",
@@ -4642,7 +4660,7 @@
 									"pitcheditrange" : [ "null" ],
 									"stafflines" : [ 5, 5, 5 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"versionnumber" : 80106,
+									"versionnumber" : 80200,
 									"voicenames" : [ "[", "]", "[", "]", "[", "]" ],
 									"voicespacing" : [ 0.0, 17.0, 17.0, 17.0 ],
 									"vzoom" : 50.0
@@ -4899,7 +4917,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 18.0, 121.0, 182.0, 23.0 ]
+									"patching_rect" : [ 18.0, 121.0, 207.0, 23.0 ]
 								}
 
 							}
@@ -4958,6 +4976,7 @@
 								"box" : 								{
 									"center" : [ -712.745347807499911, -5345.375 ],
 									"colorfield" : "tonalcentroid5th",
+									"contentfield" : [ "content" ],
 									"convexcombmax" : [ 1.0 ],
 									"convexcombmin" : [ 0.0 ],
 									"database" : "dbcartesianhelp",
@@ -4973,7 +4992,7 @@
 									"shapefield" : "filename",
 									"sizefield" : "loudness",
 									"table" : "scores",
-									"versionnumber" : 20600,
+									"versionnumber" : 30000,
 									"vzoom" : 1.362995648709935,
 									"where" : [ "null" ],
 									"xfield" : "spread",
@@ -5165,7 +5184,16 @@
 							}
 , 							{
 								"patchline" : 								{
+									"destination" : [ "obj-14", 0 ],
+									"order" : 1,
+									"source" : [ "obj-4", 1 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
 									"destination" : [ "obj-39", 0 ],
+									"order" : 0,
 									"source" : [ "obj-4", 1 ]
 								}
 
@@ -5244,7 +5272,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 5,
-							"revision" : 0,
+							"revision" : 2,
 							"architecture" : "x64",
 							"modernui" : 1
 						}

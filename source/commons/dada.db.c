@@ -117,3 +117,39 @@ long colname_to_coltype(t_xbase *b, t_symbol *tablename, t_symbol *colname)
 }
 
 
+
+
+
+
+
+
+char filename_is_not_sql_file(t_symbol *s)
+{
+    if (s && strlen(s->s_name) > 0 && strcmp(s->s_name + strlen(s->s_name) - 4, ".db3") != 0)
+        return 1;
+    return 0;
+}
+
+
+char xbase_is_attached_to_text_file(t_xbase *b)
+{
+    if (filename_is_not_sql_file(b->d_filename))
+        return 1;
+    return 0;
+}
+
+char xbase_is_attached_to_sql_file(t_xbase *b)
+{
+    if (b->d_filename && strlen(b->d_filename->s_name) > 0 && strcmp(b->d_filename->s_name + strlen(b->d_filename->s_name) - 4, ".db3") == 0)
+        return 1;
+    return 0;
+}
+
+
+
+char xbase_store_lllls_with_phonenumbers(t_xbase *b)
+{
+    if (xbase_is_attached_to_sql_file(b) || b->d_force_store_lllls_as_text)
+        return 0;
+    return 1;
+}

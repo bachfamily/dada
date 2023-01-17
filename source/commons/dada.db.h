@@ -67,5 +67,12 @@ long tablename_to_tableidx(t_xbase *b, t_symbol *s);
 long colname_to_colidx(t_xbase *b, long tableidx, t_symbol *s);
 long colname_to_coltype(t_xbase *b, t_symbol *tablename, t_symbol *colname);
 
+
+char filename_is_not_sql_file(t_symbol *s);
+char xbase_is_attached_to_text_file(t_xbase *b);
+char xbase_is_attached_to_sql_file(t_xbase *b);
+char xbase_store_lllls_with_phonenumbers(t_xbase *b);
+
+
 #endif // _DADA_DB_H_
 

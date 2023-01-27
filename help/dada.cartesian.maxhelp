@@ -206,7 +206,7 @@
 									"showaxeslabels" : 1,
 									"sizefield" : "loudness",
 									"table" : "scores",
-									"versionnumber" : 30000,
+									"versionnumber" : 30100,
 									"vzoom" : 1.201201201201201,
 									"where" : [ "null" ],
 									"xfield" : "spread",
@@ -389,7 +389,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 100.0, 126.0, 776.0, 622.0 ],
+						"rect" : [ 0.0, 26.0, 776.0, 622.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -562,7 +562,7 @@
 									"patching_rect" : [ 401.0, 297.0, 300.0, 300.0 ],
 									"query" : "SELECT * FROM similarities",
 									"table" : "similarities",
-									"versionnumber" : 30000,
+									"versionnumber" : 30100,
 									"vzoom" : 1000.0,
 									"where" : [ "null" ],
 									"xfield" : "A",
@@ -1127,7 +1127,7 @@
 									"patching_rect" : [ 30.0, 283.5, 300.0, 300.0 ],
 									"query" : "SELECT * FROM scores",
 									"table" : "scores",
-									"versionnumber" : 30000,
+									"versionnumber" : 30100,
 									"vzoom" : 179.847207899996164,
 									"where" : [ "null" ],
 									"xfield" : "tc5",
@@ -1946,8 +1946,8 @@
 									"showgridlabels" : 0,
 									"sizefield" : "loudness",
 									"table" : "scores",
-									"versionnumber" : 30000,
-									"vzoom" : 0.948090948090948,
+									"versionnumber" : 30100,
+									"vzoom" : 1.0,
 									"where" : [ "null" ],
 									"xfield" : "spread",
 									"yfield" : "centroid",
@@ -2592,7 +2592,7 @@
 									"showaxeslabels" : 1,
 									"sizefield" : "loudness",
 									"table" : "scores",
-									"versionnumber" : 30000,
+									"versionnumber" : 30100,
 									"vzoom" : 1.201201201201201,
 									"where" : [ "null" ],
 									"xfield" : "spread",
@@ -3082,7 +3082,7 @@
 									"phasefield" : "phase",
 									"query" : "SELECT * FROM scores",
 									"table" : "scores",
-									"versionnumber" : 30000,
+									"versionnumber" : 30100,
 									"vzoom" : 937.263794406651527,
 									"where" : [ "null" ],
 									"xfield" : "measure",
@@ -4286,7 +4286,7 @@
 									"patching_rect" : [ 10.0, 187.0, 298.0, 155.0 ],
 									"query" : "SELECT * FROM scores",
 									"table" : "scores",
-									"versionnumber" : 30000,
+									"versionnumber" : 30100,
 									"vzoom" : 937.263794406651527,
 									"where" : [ "null" ],
 									"xfield" : "measure",
@@ -4481,7 +4481,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 776.0, 622.0 ],
+						"rect" : [ 100.0, 126.0, 776.0, 622.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -4511,21 +4511,6 @@
 						"showontab" : 1,
 						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
-								"box" : 								{
-									"id" : "obj-14",
-									"maxclass" : "newobj",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 247.0, 564.0, 66.0, 23.0 ],
-									"saved_object_attributes" : 									{
-										"versionnumber" : 80200
-									}
-,
-									"text" : "bach.print"
-								}
-
-							}
-, 							{
 								"box" : 								{
 									"bubble" : 1,
 									"fontname" : "Arial",
@@ -4992,7 +4977,7 @@
 									"shapefield" : "filename",
 									"sizefield" : "loudness",
 									"table" : "scores",
-									"versionnumber" : 30000,
+									"versionnumber" : 30100,
 									"vzoom" : 1.362995648709935,
 									"where" : [ "null" ],
 									"xfield" : "spread",
@@ -5184,16 +5169,7 @@
 							}
 , 							{
 								"patchline" : 								{
-									"destination" : [ "obj-14", 0 ],
-									"order" : 1,
-									"source" : [ "obj-4", 1 ]
-								}
-
-							}
-, 							{
-								"patchline" : 								{
 									"destination" : [ "obj-39", 0 ],
-									"order" : 0,
 									"source" : [ "obj-4", 1 ]
 								}
 

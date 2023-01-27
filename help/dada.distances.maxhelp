@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 5,
-			"revision" : 0,
+			"revision" : 2,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -53,13 +53,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 5,
-							"revision" : 0,
+							"revision" : 2,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 837.0, 666.0 ],
+						"rect" : [ 100.0, 126.0, 837.0, 666.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -96,7 +96,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 46.666655999999989, 162.5, 155.0, 23.0 ],
-									"presentation_linecount" : 2,
 									"text" : "contentfield name citie_id"
 								}
 
@@ -200,7 +199,7 @@
 , 							{
 								"box" : 								{
 									"center" : [ 51.289499783890051, 183.386922320632607 ],
-									"contentfield" : [ "name", "citie_id" ],
+									"contentfield" : [ "name" ],
 									"database" : "mydisthelpdb",
 									"distancetable" : "dists",
 									"fontface" : 0,
@@ -216,7 +215,7 @@
 									"patching_rect" : [ 18.0, 263.0, 433.999969000000021, 259.0 ],
 									"query" : "SELECT * FROM cities",
 									"table" : "cities",
-									"versionnumber" : 20600,
+									"versionnumber" : 30100,
 									"zoom" : 1.921767193311788
 								}
 
@@ -308,7 +307,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 5,
-							"revision" : 0,
+							"revision" : 2,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -394,7 +393,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 5,
-							"revision" : 0,
+							"revision" : 2,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -641,7 +640,7 @@
 									"patching_rect" : [ 282.0, 318.0, 294.0, 263.0 ],
 									"query" : "SELECT * FROM cities",
 									"table" : "cities",
-									"versionnumber" : 20600,
+									"versionnumber" : 30100,
 									"zoom" : 1.930869913243118
 								}
 
@@ -763,7 +762,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 5,
-							"revision" : 0,
+							"revision" : 2,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -1102,7 +1101,7 @@
 									"query" : "SELECT * FROM cities",
 									"table" : "cities",
 									"uniform" : 1,
-									"versionnumber" : 20600,
+									"versionnumber" : 30100,
 									"zoom" : 1.930869913243118
 								}
 
@@ -1276,7 +1275,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 5,
-							"revision" : 0,
+							"revision" : 2,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -1634,7 +1633,7 @@
 									"patching_rect" : [ 18.0, 293.0, 433.999969000000021, 259.0 ],
 									"query" : "SELECT * FROM cities",
 									"table" : "cities",
-									"versionnumber" : 20600,
+									"versionnumber" : 30100,
 									"zoom" : 1.921767193311788
 								}
 
@@ -1816,13 +1815,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 5,
-							"revision" : 0,
+							"revision" : 2,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 100.0, 126.0, 837.0, 666.0 ],
+						"rect" : [ 0.0, 26.0, 837.0, 666.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -2139,7 +2138,7 @@
 									"patching_rect" : [ 348.0, 269.0, 294.0, 263.0 ],
 									"query" : "SELECT * FROM cities",
 									"table" : "cities",
-									"versionnumber" : 20600,
+									"versionnumber" : 30100,
 									"zoom" : 1.930869913243118
 								}
 
@@ -2156,7 +2155,7 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 5,
-											"revision" : 0,
+											"revision" : 2,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -2764,7 +2763,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 5,
-							"revision" : 0,
+							"revision" : 2,
 							"architecture" : "x64",
 							"modernui" : 1
 						}

@@ -1,3 +1,10 @@
+v 0.3.1
+
+- dada.cartesian: fixed help file
+
+- dada.base: fixed behavior of @llllastext
+
+
 v 0.3
 
 IMPORTANT: from dada 0.2.5, builds are 64-bit only, support M1 native architecture and require Max 8.2 or higher

@@ -3093,7 +3093,7 @@
 				COPY_PHASE_STRIP = NO;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.bachproject.$(TARGET_NAME)";
-				PRODUCT_VERSION = 0.3;
+				PRODUCT_VERSION = 0.3.1;
 				SDKROOT = macosx;
 				VALID_ARCHS = "x86_64 arm64";
 			};
@@ -3106,7 +3106,7 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.bachproject.$(TARGET_NAME)";
-				PRODUCT_VERSION = 0.3;
+				PRODUCT_VERSION = 0.3.1;
 				SDKROOT = macosx;
 				VALID_ARCHS = "x86_64 arm64";
 			};

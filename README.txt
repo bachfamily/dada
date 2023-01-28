@@ -27,7 +27,17 @@ The windows porting of **dada** has been carried out by Andrea Agostini.
 Install
 =======
 
-If you only need to use **dada**, you can download it from www.bachproject.net/dada and simply install it by putting it inside the Max Packages folder.
+If you only need to use **dada**, you can download it from the Package Manager. This is usually the latest stable release, but probably not the one with bleeding-edge features.
+
+If you downloaded it from our Patreon page or website (www.bachproject.net/dada) then you should simply install it by putting it inside the Max Packages folder.
+If you installed dada "by hand" on a Mac, chances are that you'll have to remove the quarantine manually as well. 
+The simplest way to do it is by going in the terminal and typing
+
+xattr -rd com.apple.quarantine ~/Documents/Max\ 8/Packages/dada/*
+
+or substitute the folder where the package is in, if it's a different one. 
+
+
 
 You can start by having a look at the dada.overview patcher inside the Extras menu in Max ("dada library" submenu). Every module has help files and reference sheets that document its behavior.
 

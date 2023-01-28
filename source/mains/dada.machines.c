@@ -121,12 +121,12 @@ typedef struct _machines_distrib
 
 typedef struct _machine_prototype
 {
-    long		type_id;
+    t_atom_long		type_id;
     t_symbol    *fullname;
     t_symbol    *name;
     t_symbol    *dispchar;
-    long        num_ins;
-    long        num_outs;
+    t_atom_long        num_ins;
+    t_atom_long        num_outs;
     method      fun;
 } t_machine_prototype;
 

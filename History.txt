@@ -1,7 +1,15 @@
+v 0.3.1
 
-v 0.2.5
+- dada.cartesian: fixed help file
+
+- dada.base: fixed behavior of @llllastext
+
+
+v 0.3
 
 IMPORTANT: from dada 0.2.5, builds are 64-bit only, support M1 native architecture and require Max 8.2 or higher
+
+all objects: fixed potential instabilities (especially, but not only, on Windows) with message attributes
 
 *************************
 *** IMPORTANT CHANGES ***
@@ -19,6 +27,12 @@ These might break compatibility with older patches
 			in the same folder of the patch; now db3 file can be anywhere
 		queries such as "SELECT MAX(...)" or "SELECT MIN(...)" 
 			now infer the output type from the column type
+                fixed bug causing floating point columns working as int ones in CSV import
+                Added @separator attribute for csv import
+                fixed bug causing potential crashes when editor of dada.base was open and object was freed
+
+- dada.segment  New @gracewithnext and @addties attributes
+                Fixed several issues with segmentation
 
 
 v 0.2.4

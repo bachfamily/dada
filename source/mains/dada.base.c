@@ -64,6 +64,7 @@ typedef struct _base {
 	char		output_fieldnames;
     char        escape_single_quotes;
     char        convert_null_to_default;
+    char        force_store_lllls_as_text;
 
     t_symbol    *utility_sym;
     t_llll      *utility_ll;
@@ -147,6 +148,18 @@ static t_symbol	*ps_event = NULL;
 
 /**********************************************************************/
 // Class Definition and Life Cycle
+
+t_max_err base_setattr_llllastext(t_base *x, t_object *attr, long ac, t_atom *av)
+{
+    if (ac) {
+        if (x->xbase && ac) {
+            long v = (atom_getlong(av) != 0 ? 1 : 0);
+            x->xbase->d_force_store_lllls_as_text = v;
+            x->force_store_lllls_as_text = v;
+        }
+    }
+    return MAX_ERR_NONE;
+}
 
 void C74_EXPORT ext_main(void *moduleRef)
 {
@@ -380,6 +393,12 @@ void C74_EXPORT ext_main(void *moduleRef)
     // @description Toggles the ability to convert null lllls to default values, for columns of type int, float and symbol.
     // Default is on. If you turn this off, the null lllls will result in NULL SQLite fields.
 
+    CLASS_ATTR_CHAR(c,"llllastext",0, t_base, force_store_lllls_as_text);
+    CLASS_ATTR_STYLE_LABEL(c,"llllastext",0,"onoff","Store lllls as Text");
+    CLASS_ATTR_ACCESSORS(c, "llllastext", (method)NULL, (method)base_setattr_llllastext);
+    // @description Toggles the ability to store lllls as text in the database, so that they you can query them
+    // (at the price of performance time).
+
     
 	CLASS_STICKY_ATTR_CLEAR(c, "category");
 
@@ -409,38 +428,6 @@ void C74_EXPORT ext_main(void *moduleRef)
 	return;
 }
 
-
-
-char filename_is_not_sql_file(t_symbol *s)
-{
-    if (s && strlen(s->s_name) > 0 && strcmp(s->s_name + strlen(s->s_name) - 4, ".db3") != 0)
-        return 1;
-    return 0;
-}
-
-
-char xbase_is_attached_to_text_file(t_xbase *b)
-{
-    if (filename_is_not_sql_file(b->d_filename))
-        return 1;
-    return 0;
-}
-
-char xbase_is_attached_to_sql_file(t_xbase *b)
-{
-    if (b->d_filename && strlen(b->d_filename->s_name) > 0 && strcmp(b->d_filename->s_name + strlen(b->d_filename->s_name) - 4, ".db3") == 0)
-        return 1;
-    return 0;
-}
-
-
-
-char xbase_store_lllls_with_phonenumbers(t_xbase *b)
-{
-    if (xbase_is_attached_to_sql_file(b))
-        return 0;
-    return 1;
-}
 
 void base_assist(t_base *x, void *b, long m, long a, char *s)
 {
@@ -488,7 +475,8 @@ void base_wopen(t_base *x)
     } else {
         object_attr_setsym(x->m_editor, gensym("title"), gensym("Database as llll"));
     }
-    llll_free(ll);}
+    llll_free(ll);
+}
 
 // this lets us double-click on sphinx~ to open up the buffer~ it references
 void base_dblclick(t_base *x)
@@ -593,6 +581,7 @@ t_base* base_new(t_symbol *s, short argc, t_atom *argv)
         x->escape_single_quotes = true;
 		x->d_filename = NULL;
 		x->d_filetype = 0;
+        x->force_store_lllls_as_text = false;
         x->m_editor = NULL;
         x->xbase = NULL;
 
@@ -658,6 +647,8 @@ t_base* base_new(t_symbol *s, short argc, t_atom *argv)
 
 void base_free(t_base *x)
 {
+    if (x->m_editor)
+        object_free_debug(x->m_editor);
     xbase_free(x->xbase);
 //	db_close(&x->d_db);
 //	bach_freeptr(x->table);
@@ -957,11 +948,20 @@ void xbase_entry_create_do(t_xbase *b, t_symbol *table_name, t_llllelem *specs_h
 //		if (db_query(b->d_db, NULL, "INSERT INTO %s ( %s ) VALUES ( %s )", table_name->s_name, names, values))
 //			xbase_error(b, "Error while creating entry");
 
-        char query_test[DADA_QUERY_ALLOC_CHAR_SIZE];
-        snprintf(query_test, DADA_QUERY_ALLOC_CHAR_SIZE, "INSERT INTO %s ( %s ) VALUES ( %s )", table_name->s_name, names, values);
-        if (db_query_direct(b->d_db, NULL, query_test))
-            xbase_error(b, "Error while creating entry");
-            
+        long querysize = strlen(names) + strlen(values) + strlen(table_name->s_name) + 256; // let's stay safe
+        if (querysize < DADA_QUERY_ALLOC_CHAR_SIZE) {
+            char query_test[DADA_QUERY_ALLOC_CHAR_SIZE];
+            snprintf(query_test, DADA_QUERY_ALLOC_CHAR_SIZE, "INSERT INTO %s ( %s ) VALUES ( %s )", table_name->s_name, names, values);
+            if (db_query_direct(b->d_db, NULL, query_test))
+                xbase_error(b, "Error while creating entry");
+        } else {
+            // need to allocate memory
+            char *query_test = (char *)bach_newptr(querysize * sizeof(char));
+            snprintf(query_test, querysize, "INSERT INTO %s ( %s ) VALUES ( %s )", table_name->s_name, names, values);
+            if (db_query_direct(b->d_db, NULL, query_test))
+                xbase_error(b, "Error while creating entry");
+            bach_freeptr(query_test);
+        }
         bach_freeptr(names);
         bach_freeptr(values);
         
@@ -1281,6 +1281,8 @@ void base_entries_create_from_csv_do(t_object *x, t_symbol *s, long ac, t_atom *
     t_llll *fields = (t_llll *)atom_getobj(av+1);
     t_llll *mapping = (t_llll *)atom_getobj(av+2);
     t_llll *sticky = (t_llll *)atom_getobj(av+3);
+    t_symbol *separator_sym = atom_getsym(av+4);
+    const char *separator = (separator_sym && separator_sym->s_name && strlen(separator_sym->s_name) > 0 ? separator_sym->s_name : ",");
 
     if (table == NULL) {
         object_error(x, "Undefined table!");
@@ -1313,7 +1315,7 @@ void base_entries_create_from_csv_do(t_object *x, t_symbol *s, long ac, t_atom *
             }
             
             if (line == 0) { // header
-                char* token = strtok(temp, ",");
+                char* token = strtok(temp, separator);
                 long numcsvcols = 0;
                 while (token && numcsvcols < DADABASE_CSV_MAXCOLS) {
                     t_symbol *s = gensym(token);
@@ -1346,14 +1348,14 @@ void base_entries_create_from_csv_do(t_object *x, t_symbol *s, long ac, t_atom *
                         csvcols[numcsvcols] = NULL;
                         csvcolstype[numcsvcols] = 0;
                     }
-                    token = strtok(NULL, ",");
+                    token = strtok(NULL, separator);
                     numcsvcols++;
                 }
                 
             } else {
                 
                 t_llll *specs = sticky ? llll_clone(sticky) : llll_get();
-                char* token = mystrsep(&temp, ",");
+                char* token = mystrsep(&temp, separator);
                 long colnum = 0;
                 while (token && colnum < DADABASE_CSV_MAXCOLS) {
                     if (csvcols[colnum] != NULL) {
@@ -1365,7 +1367,7 @@ void base_entries_create_from_csv_do(t_object *x, t_symbol *s, long ac, t_atom *
                                 llll_appendlong(these_specs, atol(token));
                                 break;
                             case 'f':
-                                llll_appendlong(these_specs, atof(token));
+                                llll_appenddouble(these_specs, atof(token));
                                 break;
                             default:
                                 llll_appendsym(these_specs, gensym(token));
@@ -1373,7 +1375,7 @@ void base_entries_create_from_csv_do(t_object *x, t_symbol *s, long ac, t_atom *
                         }
                         llll_appendllll(specs, these_specs);
                     }
-                    token = mystrsep(&temp, ",");
+                    token = mystrsep(&temp, separator);
                     colnum++;
                 }
                 
@@ -1405,17 +1407,19 @@ void base_entries_create_from_csv(t_base *x, t_symbol *msg, long ac, t_atom *av)
     t_llll *fields = NULL;
     t_llll *mapping = NULL;
     t_llll *sticky = NULL;
+    t_symbol *separator_sym = gensym(",");
     if (parsed) {
-        llll_parseargs_and_attrs(NULL, parsed, "lll", gensym("cols"), &fields, gensym("mapping"), &mapping, gensym("sticky"), &sticky);
+        llll_parseargs_and_attrs(NULL, parsed, "llls", gensym("cols"), &fields, gensym("mapping"), &mapping, gensym("sticky"), &sticky, gensym("separator"), &separator_sym);
         if (parsed && parsed->l_head && hatom_gettype(&parsed->l_head->l_hatom) == H_SYM) {
-            t_atom av[4];
+            t_atom av[5];
             t_symbol *sy = parsed->l_head->l_next && hatom_gettype(&parsed->l_head->l_next->l_hatom) == H_SYM ? hatom_getsym(&parsed->l_head->l_next->l_hatom) : NULL;
             atom_setsym(av, hatom_getsym(&parsed->l_head->l_hatom));
             atom_setobj(av+1, fields);
             atom_setobj(av+2, mapping);
             atom_setobj(av+3, sticky);
+            atom_setsym(av+4, separator_sym);
 
-            defer(x, (method)base_entries_create_from_csv_do, sy, 3, av); // will free all the fields, mapping and sticky lllls
+            defer(x, (method)base_entries_create_from_csv_do, sy, 4, av); // will free all the fields, mapping and sticky lllls
         }
         llll_free(parsed);
     }
@@ -2211,6 +2215,7 @@ t_xbase *xbase_new(t_symbol *name)
         b->d_db = NULL;
         b->d_name = name;
         b->magic = DADA_XBASE_MAGIC_GOOD;
+        b->d_force_store_lllls_as_text = false;
         b->d_dirty = false;
         b->d_nodirty = true;
         b->table = (t_db_table *)bach_newptr(DADA_XBASE_MAX_TABLES * sizeof(t_db_table));

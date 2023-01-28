@@ -19,13 +19,13 @@ void sphericalToCartesian(double *spherical, double *cartesian, long N);
 // somewhat internal version
 void sphericalToCartesianNoRadiusWithStep(double *spherical, double *cartesian, long N, int step);
 
-void ternaryDigitsToHyperCube(short *ternary_digits, long N, long precision, double *output_coord);
+void ternaryDigitsToHyperCube(short *ternary_digits, long N, double *output_coord, long precision);
 
 void unitIntervalToTernaryRepresentation(double input, long numdigits, short *ternary_digits);
 void unitIntervalToTernaryRepresentation(mpfr_t input, long numdigits, short *ternary_digits);
 
-void unitIntervalToHyperCube(double input, long N, long precision, double *output_coord);
-void unitIntervalToHyperCube(mpfr_t input, long N, long precision, double *output_coord);
+void unitIntervalToHyperCube(double input, long N, double *output_coord, long precision);
+void unitIntervalToHyperCube(mpfr_t input, long N, double *output_coord, long precision);
 
 #endif // _DADA_PEANOMATH_H_
 

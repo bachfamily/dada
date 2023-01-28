@@ -84,24 +84,24 @@ typedef enum _dada_graph_edge_retouch_modes
 
 typedef struct _pitchnvel
 {
-	double	pitch_mc;
-	long	velocity;
+	double	    pitch_mc;
+	t_atom_long	velocity;
 } t_pitchnvel;
 
 
 typedef struct _vanillabox
 {
     t_symbol *type;
-	long	 num_ins;
-	long	 num_outs;
+    t_atom_long	 num_ins;
+    t_atom_long	 num_outs;
 	t_llll	 *ins[DADA_GRAPH_MAX_VANILLABOX_INS];
 //	t_llll	 *outs[DADA_GRAPH_MAX_VANILLABOX_OUTS];
 } t_vanillabox;
 
 typedef struct _outinnum
 {
-	long	num_in;
-	long	num_out;
+	t_atom_long	num_in;
+    t_atom_long	num_out;
 } t_outinnum;
 
 
@@ -127,7 +127,7 @@ typedef struct _llllscore
 typedef union _dada_graph_metadata
 {
 	t_pitchnvel		m_pitchnvel;
-	long			m_long;
+	t_atom_long		m_long;
 	double			m_double;
 	t_vanillabox	m_vanillabox;
 	t_outinnum		m_outinnum;

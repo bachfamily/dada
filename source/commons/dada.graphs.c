@@ -310,7 +310,7 @@ void graph_from_llll(t_llll *graph_as_llll, t_dada_graph *graph, double node_wid
 							
                             graph->edges[i].flag = 0;
                             
-                            long passthrough = 0;
+                            t_atom_long passthrough = 0;
                             llll_parseargs(NULL, ll, "i", gensym("passthrough"), &passthrough);
                             if (passthrough)
                                 graph->edges[i].flag |= DADA_GRAPH_EDGE_FLAG_PASSTHROUGH;

@@ -2104,7 +2104,7 @@ void life_anything(t_life *x, t_symbol *msg, long ac, t_atom *av)
         else if (router == gensym("random")) {
             t_symbol *distribution = NULL;
             double density = x->default_random_density;
-            long append = 0;
+            t_atom_long append = 0;
             llll_parseargs((t_object *)x, parsed, "sdi", gensym("distribution"), &distribution, gensym("density"), &density, gensym("append"), &append);
             life_random(x, distribution == gensym("uniform") ? 0 : 1, density, append);
         

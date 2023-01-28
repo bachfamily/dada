@@ -1345,7 +1345,9 @@ long dadaobj_parse_export_png_syntax(t_dadaobj *r_ob, t_object *view, t_llll *ll
         *filename = hatom_getsym(&ll->l_head->l_hatom);
         llll_behead(ll);
     }
-    llll_parseargs(r_ob->orig_obj, ll, "siddl", gensym("filename"), &filename, gensym("dpi"), &dpi, gensym("width"), &width, gensym("height"), &height, gensym("center"), &exportcenter_ll);
+    t_atom_long dpi_al = 72;
+    llll_parseargs(r_ob->orig_obj, ll, "siddl", gensym("filename"), &filename, gensym("dpi"), &dpi_al, gensym("width"), &width, gensym("height"), &height, gensym("center"), &exportcenter_ll);
+    *dpi = dpi_al;
     if (exportcenter_ll)
         *exportcenter = llll_to_pt(exportcenter_ll);
     
@@ -1996,7 +1998,7 @@ void dadaobj_jbox_exportimage_do(t_dadaobj_jbox *x, t_symbol *s, long ac, t_atom
     t_dadaobj *r_ob = &x->d_ob;
     char ok = true;
     double height = -1, width = -1; // x->d_ob.m_geometry.last_used_view_height_pix, width = x->d_ob.m_geometry.last_used_view_width_pix;
-    long dpi = 72;
+    t_atom_long dpi = 72;
     t_symbol *filename_sym = NULL, *type_sym = NULL;
     t_pt center = x->d_ob.m_zoom.center_offset, zoom = x->d_ob.m_zoom.zoom;
     t_llll *center_ll = NULL, *zoom_ll = NULL;

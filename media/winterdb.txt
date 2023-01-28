@@ -86173,7 +86173,7 @@
 				[ tonalcentroidmin3rd 98.129761 ]
 			]
 			[
-				[ score_id 1564 ]
+				[ score_id 1562 ]
 				[ content
 					[ roll
 						[ 0 ]

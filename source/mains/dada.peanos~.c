@@ -1029,18 +1029,18 @@ void process_coords(t_peanos *x)
         // Amplitudes
         double sph[DADA_PEANOS_MAXPARTIALS+2];
         sph[0] = 1;
-        unitIntervalToHyperCube(x->coord_hp[0], N-1, precision, sph+1);
+        unitIntervalToHyperCube(x->coord_hp[0], N-1, sph+1, precision);
         for (long i = 1; i < N; i++)
             sph[i] *= PIOVERTWO;
         sphericalToCartesian(sph, model_amps, N);
         
         // Freqs
-        unitIntervalToHyperCube(x->coord_hp[1], N, precision, model_freqs);
+        unitIntervalToHyperCube(x->coord_hp[1], N, model_freqs, precision);
         for (long i = 0; i < N; i++)
             model_freqs[i] = (1 + i + model_freqs[i]);
         
         // Noisiness
-        unitIntervalToHyperCube(x->coord_hp[2], N, precision, model_noisinesses);
+        unitIntervalToHyperCube(x->coord_hp[2], N, model_noisinesses, precision);
 
     } else { // Model padded for continuity
         
@@ -1048,7 +1048,7 @@ void process_coords(t_peanos *x)
         long Npad = N+2;
         double sph[DADA_PEANOS_MAXPARTIALS+2+2], valpha[DADA_PEANOS_MAXPARTIALS+2+2];
         sph[0] = 1;
-        unitIntervalToHyperCube(x->coord_hp[0], N+1, precision, sph+1);
+        unitIntervalToHyperCube(x->coord_hp[0], N+1, sph+1, precision);
         for (long i = 1; i < N+2; i++)
             sph[i] *= PIOVERTWO;
         sphericalToCartesian(sph, valpha, N+2);
@@ -1076,25 +1076,25 @@ void process_coords(t_peanos *x)
         
         
         // Freqs
-        unitIntervalToHyperCube(x->coord_hp[1], N+2, precision, model_freqs);
+        unitIntervalToHyperCube(x->coord_hp[1], N+2, model_freqs, precision);
         for (long i = 0; i < N+1; i++)
             model_freqs[i] = (1 + i + model_freqs[i]);
         model_freqs[N+1] = model_freqs[N+1] * x->fzero;
         
         // Noisiness
-        unitIntervalToHyperCube(x->coord_hp[2], N+2, precision, model_noisinesses);
+        unitIntervalToHyperCube(x->coord_hp[2], N+2, model_noisinesses, precision);
     }
     
     if (x->use_modulations) {
         // Modulation
         double modul[DADA_PEANOS_MAXPARTIALS+2];
-        unitIntervalToHyperCube(x->coord_hp[3], Npad, precision, modul); // for EACH partial we allow a different modulation (!)
+        unitIntervalToHyperCube(x->coord_hp[3], Npad, modul, precision); // for EACH partial we allow a different modulation (!)
         for (long i = 0; i < Npad; i++) {
             // the modulation is itself a Peano value embedding:
             // rate (ampmod), rate (freqmod), amplitude (ampmod), amplitude (freqmod), interleaved spherical coords representing amplitude & phase of partials (ampmod & freqmod)
             double mod_sph[2*(2*(DADA_PEANOS_MAXPARTIALS+2)+2)];
             double mod_partials[DADA_PEANOS_MAXPARTIALS+2];
-            unitIntervalToHyperCube(modul[i], 2*(2*M+2), precision, mod_sph);
+            unitIntervalToHyperCube(modul[i], 2*(2*M+2), mod_sph, precision);
             for (long i = 4; i < 2*(2*M+2); i++)
                 mod_sph[i] *= PIOVERTWO;
             

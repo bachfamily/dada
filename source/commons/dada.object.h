@@ -506,20 +506,20 @@ typedef struct _geometry_manager
 typedef struct _zoom_manager
 {
 	// Zoom and offset
-	double			zoom_perc;				///< Zoom as percentage, 100 means: 1 pixel = 1 coord (up to the additional zoom factor)
-	double			zoom_y_perc;			///< Y Zoom as percentage (only used if X and Y zooms are uncorrelated)
-	t_pt			zoom_static_additional;	///< Additional static zoom factor (for each dada object, x and y components)
-	t_pt			zoom;					///< Zoom as ratio (x and y), 1. means 1 pixel = 1 coord. This is a resulting zoom of zoom_perc and zoom_static_additional
-	t_pt			center_offset;			///< Offset of the center
-	char			allow_zoom;				///< Allow interface zooming
-	char			allow_center_shifting;	///< Allow interface center shifting
+	double			zoom_perc;				    ///< Zoom as percentage, 100 means: 1 pixel = 1 coord (up to the additional zoom factor)
+	double			zoom_y_perc;			    ///< Y Zoom as percentage (only used if X and Y zooms are uncorrelated)
+	t_pt			zoom_static_additional;	    ///< Additional static zoom factor (for each dada object, x and y components)
+	t_pt			zoom;					    ///< Zoom as ratio (x and y), 1. means 1 pixel = 1 coord. This is a resulting zoom of zoom_perc and zoom_static_additional
+	t_pt			center_offset;			    ///< Offset of the center
+	char			allow_zoom;				    ///< Allow interface zooming
+	char			allow_center_shifting;	    ///< Allow interface center shifting
+    double          mousewheel_zoom_increment;  ///< Mousewheel increment (defaults to 0.01, increase for quicker zooming)
 	
-	t_pt			max_zoom_perc;			///< Maximum allowed zoom percentage
-	t_pt			min_zoom_perc;			///< Minimum allowed zoom percentage
-    
+	t_pt			max_zoom_perc;			    ///< Maximum allowed zoom percentage
+	t_pt			min_zoom_perc;			    ///< Minimum allowed zoom percentage
     
     // utility flag
-    char            must_autozoom;          ///< Must autozoom at next paint cycle
+    char            must_autozoom;              ///< Must autozoom at next paint cycle
 } t_zoom_manager;
 
 

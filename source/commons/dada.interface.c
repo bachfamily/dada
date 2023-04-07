@@ -197,7 +197,7 @@ char dadaobj_mousewheel(t_dadaobj *r_ob, t_object *view, t_pt pt, long modifiers
             
             t_pt coord = pix_to_coord_from_view(r_ob, view, pt);
             double zoom_perc = (r_ob->flags & DADAOBJ_SPLITXYZOOM && modifiers & eAltKey) ? r_ob->m_zoom.zoom_y_perc : r_ob->m_zoom.zoom_perc;
-            double new_zoom_perc = zoom_perc * exp(-y_inc * 0.01 * (modifiers & eShiftKey ? DADA_FINER_FROM_KEYBOARD : 1.));
+            double new_zoom_perc = zoom_perc * exp(-y_inc * r_ob->m_zoom.mousewheel_zoom_increment * (modifiers & eShiftKey ? DADA_FINER_FROM_KEYBOARD : 1.));
            
             if (r_ob->flags & DADAOBJ_SPLITXYZOOM && modifiers & eAltKey)
                 dadaobj_setvzoom(r_ob, new_zoom_perc);

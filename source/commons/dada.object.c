@@ -197,6 +197,7 @@ void dadaobj_setup(t_object *ob, t_dadaobj *r_ob, e_llllobj_obj_types llllobj_ty
 	}
 		
 	r_ob->m_zoom.zoom_perc = 100;
+    r_ob->m_zoom.mousewheel_zoom_increment = 0.01;
 	r_ob->m_zoom.zoom_static_additional = zoom_static_additional;
 	r_ob->m_zoom.zoom = zoom_static_additional;
 	r_ob->m_zoom.max_zoom_perc = build_pt(DADA_MAX_ZOOM_PERC, DADA_MAX_ZOOM_PERC); 
@@ -887,7 +888,14 @@ void dadaobj_class_init(t_class *c, e_llllobj_obj_types type, long flags)
 		CLASS_ATTR_CATEGORY(c, "allowzoom", 0, "Behavior");
 		// @description Toggles the ability to allow zooming
 		// @includeifflagged DADAOBJ_ZOOMX+DADAOBJ_ZOOMY
-	}
+
+        DADAOBJ_CLASS_ATTR_DOUBLE_SUBSTRUCTURE(c, type, "mousewheelzoomincrement", 0, t_dadaobj, m_zoom, t_zoom_manager, mousewheel_zoom_increment);
+        CLASS_ATTR_STYLE_LABEL(c, "mousewheelzoomincrement", 0, "text", "Mousewheel Zoom Increment");
+        CLASS_ATTR_DEFAULT_SAVE_PAINT(c,"mousewheelzoomincrement",0,"0.01");
+        CLASS_ATTR_CATEGORY(c, "mousewheelzoomincrement", 0, "Behavior");
+        // @description Sets an increment value while using mousewheel for zooming. Defaults to 0.01.
+        // @includeifflagged DADAOBJ_ZOOMX+DADAOBJ_ZOOMY
+    }
 	
 	if (flags & DADAOBJ_CENTEROFFSET) {
 		DADAOBJ_CLASS_ATTR_DOUBLE_ARRAY_SUBSTRUCTURE(c, type, "center", 0, t_dadaobj, m_zoom, t_zoom_manager, center_offset, 2);

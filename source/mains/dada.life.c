@@ -1472,7 +1472,7 @@ t_max_err life_setattr_cents(t_life *x, t_object *attr, long ac, t_atom *av)
 			build_cents_grid(x);
 		} else {
 			// explicit llll introduced
-			x->vels_eq_as_sym = gensym("custom");
+			x->cents_eq_as_sym = gensym("custom");
 			life_set_cents(x, parsed);
 			if (x->cents_lexpr)
 				lexpr_free(x->cents_lexpr);

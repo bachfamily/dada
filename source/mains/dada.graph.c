@@ -1622,7 +1622,7 @@ void uigraph_anything(t_uigraph *x, t_symbol *msg, long ac, t_atom *av)
                 
                 x->need_recompute_nodes_width_height = true;
                 
-                if (must_autoposition)
+                if (must_autoposition && x->network_graph.num_vertices > 0)
                     uigraph_autocoord_do(x);
                 
                 if (x->autozoom) {

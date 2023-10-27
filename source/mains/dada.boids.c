@@ -3077,7 +3077,7 @@ void boids_seqstep(t_boids *x)
                 }
             }
             
-            // limit speed
+            // limit speed (todo: min speed!)
             if (sw->max_speed > 0 && pt_norm(sw->speed[i].pt) > sw->max_speed)
                 sw->speed[i].pt = pt_number_prod(pt_normalize(sw->speed[i].pt), sw->max_speed);
 

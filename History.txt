@@ -1,3 +1,10 @@
+v 0.4
+
+- dada.graph    no longer crashes for graphs with no vertices
+
+- dada. life    fixed bug causing problems and instability with custom cents
+
+
 v 0.3.1
 
 - all objects: new @mousewheelzoomincrement attribute to handle zooming speed via mousewheel

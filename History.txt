@@ -2,7 +2,7 @@ v 0.4
 
 - dada.graph    no longer crashes for graphs with no vertices
 
-- dada. life    fixed bug causing problems and instability with custom cents
+- dada.life    fixed bug causing problems and instability with custom cents
 
 
 v 0.3.1

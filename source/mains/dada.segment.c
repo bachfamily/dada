@@ -942,7 +942,7 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                     llll_appendobj(divs_wk, WHITENULL, 0, WHITENULL_llll); // measure separator
                 }
             }
-            
+//            llll_print(divs_wk);
             if (divs_wk->l_head && is_hatom_number(&divs_wk->l_head->l_hatom)) {
                 t_timepoint tp = build_timepoint(0, long2rat(0));
                 t_rational tp_global_sym_onset = long2rat(0);
@@ -1142,9 +1142,12 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                                 break;
                             } else if (cmp > 0) {
                                 // division overflows with respect to ending point
-                                //                            tp.pt_in_measure = new_global_sym_onset; //rat_rat_sum(tp.pt_in_measure, rat_rat_diff(new_global_sym_onset, temp));
-                                tp.pt_in_measure = rat_rat_sum(rat_rat_sum(tp.pt_in_measure, this_size), rat_rat_diff(size_accum, tp_global_sym_onset));
-                                tp.pt_in_measure = rat_rat_diff(tp.pt_in_measure, rat_rat_diff(temp, new_global_sym_onset));
+                                tp.pt_in_measure = new_global_sym_onset; //rat_rat_sum(tp.pt_in_measure, rat_rat_diff(new_global_sym_onset, temp));
+                                // I don't know why I used the two lines here below, but they are problematic. I guess they are OK in some cases, and problematic in others.
+                                //tp.pt_in_measure = rat_rat_sum(rat_rat_sum(tp.pt_in_measure, this_size), rat_rat_diff(size_accum, tp_global_sym_onset));
+                                //tp.pt_in_measure = rat_rat_diff(tp.pt_in_measure, rat_rat_diff(temp, new_global_sym_onset));
+                                // BTW they may be condensed to
+                                //tp.pt_in_measure = tp.pt_in_measure + this_size + (size_accum - tp_global_sym_onset) - new_global_sym_onset;
                                 tp_global_sym_onset = new_global_sym_onset;
                                 break;
                             }

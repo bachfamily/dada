@@ -1134,7 +1134,9 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                             } else if (cmp == 0) {
                                 // precise cut
                                 //                            tp.pt_in_measure = temp;
-                                tp.pt_in_measure = rat_rat_sum(rat_rat_sum(tp.pt_in_measure, this_size), rat_rat_diff(size_accum, tp_global_sym_onset));
+                                tp.pt_in_measure = temp;
+                                // See below: why isn't this OK?
+                                // tp.pt_in_measure = rat_rat_sum(rat_rat_sum(tp.pt_in_measure, this_size), rat_rat_diff(size_accum, tp_global_sym_onset));
                                 tp_global_sym_onset = temp;
                                 elem = elem->l_next;
                                 beat_num++;

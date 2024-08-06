@@ -170,6 +170,7 @@ typedef enum _dadaitem_types
     DADAITEM_TYPE_PORTAL,				///< A "portal", as in platform games
     DADAITEM_TYPE_LEVEL,				///< A game level
 	
+    DADAITEM_TYPE_DUMMY = 1000,         ///< Only needed to create a valid range that includes 150 and 151, used as convenience numbers elsewhere
 	//	DADAITEM_TYPE_TESTER,				///< A generic tester
 } e_dadaitem_types;
 

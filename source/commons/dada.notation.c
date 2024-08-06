@@ -1829,6 +1829,9 @@ long dada_score_measure_crop_heads_fn(t_llll *gs, e_notation_objects notation_ob
 				break;
 			nextelem = parent->l_owner->l_prev;
 		}
+        
+        if (!nextelem->l_parent) // don't know why this should happen. @TODO: should look into it
+            break;
 		
 		elem = nextelem;
 	}

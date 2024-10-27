@@ -4,6 +4,7 @@ v 0.4
 
 - dada.life    fixed bug causing problems and instability with custom cents
 
+- dada.machines  fixed critical bug causing crashes
 
 v 0.3.1
 

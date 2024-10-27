@@ -933,7 +933,7 @@ void compute_label_for_arrownote(t_bodies *x, long body_id, long arrownote_id){
 		double height, width;
 		t_jfont *jf_notes = jfont_create("Arial", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL, 11);
 		t_rational screen_acc = long2rat(0);
-		mc_to_screen_approximations_do(x->tone_division, k_ACC_AUTO, x->body[body_id].arrownote[arrownote_id].midicents, &screen_mc, &screen_acc, NULL, NULL);
+        mc_to_display_approximation_ET_do(x->tone_division, k_ACC_AUTO, x->body[body_id].arrownote[arrownote_id].midicents, &screen_mc, &screen_acc, NULL, NULL);
 		midicents2notename(5, screen_mc, screen_acc, k_NOTE_NAMES_ANGLOSAXON, true, &notename);
 		jfont_text_measure(jf_notes, notename, &width, &height);
 		t_pt textpt = get_topleft_angle_for_writing_around_the_clock(build_pt(x->body[body_id].r_it.coord.x, x->body[body_id].r_it.coord.y),

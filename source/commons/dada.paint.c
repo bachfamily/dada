@@ -19,7 +19,7 @@ void ezpaint_note_with_staff(t_object *x, t_jgraphics *g, double midicents, e_ac
 	long screen_mc;
 	t_rational screen_acc;
 	double screen_acc_double;
-	mc_to_screen_approximations_do(tonedivision, accpref, midicents, &screen_mc, &screen_acc, NULL, NULL);
+    mc_to_display_approximation_ET_do(tonedivision, accpref, midicents, &screen_mc, &screen_acc, NULL, NULL);
 	screen_acc_double = rat2double(screen_acc);
 	
 	// 2. find suitable clef
@@ -62,7 +62,7 @@ void ezpaint_note_with_staff(t_object *x, t_jgraphics *g, double midicents, e_ac
 	
 	// 5. find note position
 	double note_y_pos = 0;
-	long scalepos = midicents_to_diatsteps_from_middleC(NULL, screen_mc), scalepos_min, scalepos_max;
+	long scalepos = midicents_to_diatsteps_from_middleC(NULL, screen_mc, NULL), scalepos_min, scalepos_max;
 	switch (clef) {
 		case k_CLEF_F:	note_y_pos = staff_topleft.y - (scalepos - (-2)) * step_size; break;
 		case k_CLEF_F8vb:	note_y_pos = staff_topleft.y - (scalepos - (-9)) * step_size; break;
@@ -85,6 +85,8 @@ void ezpaint_note_with_staff(t_object *x, t_jgraphics *g, double midicents, e_ac
 		
 		jfont_text_measure(jf_acc, accchar_utf, &w, &h);
 		
+        const double CONST_UX_ACC_SEPARATION_FROM_NOTE = 1.5;
+        
 		if (shift_note_for_accidentals)
 			note_x_pos += w + CONST_UX_ACC_SEPARATION_FROM_NOTE * fontzoom;
 		else
@@ -99,8 +101,8 @@ void ezpaint_note_with_staff(t_object *x, t_jgraphics *g, double midicents, e_ac
 	// 7. paint ledger lines
 	long mc_min, mc_max, temp;
 	get_staff_range_mc(clef, &mc_min, &mc_max);
-	scalepos_min = midicents_to_diatsteps_from_middleC(NULL, mc_min);
-	scalepos_max = midicents_to_diatsteps_from_middleC(NULL, mc_max);
+	scalepos_min = midicents_to_diatsteps_from_middleC(NULL, mc_min, NULL);
+	scalepos_max = midicents_to_diatsteps_from_middleC(NULL, mc_max, NULL);
 	temp = scalepos;
 	while (temp - scalepos_max >= 2) {
 		double ledgerline_y = staff_topleft.y - ((temp - scalepos_max) / 2) * (2 * step_size);

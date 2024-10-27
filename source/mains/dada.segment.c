@@ -995,7 +995,7 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                                 seg_size = hatom_getrational(res);
                                 break;
                             case H_DOUBLE:
-                                seg_size = approx_double_with_rat_best_match(hatom_getdouble(res), 32, 0, &approx_error);
+                                seg_size = approx_double_with_rat_up_to_maxden(hatom_getdouble(res), 32, 0, &approx_error, false);
                                 break;
                             default:
                                 seg_size = div;
@@ -1028,7 +1028,7 @@ t_llll *segment_segment_presegmented_score_and_append_standard(t_segment *x, t_l
                                     hop_size = hatom_getrational(res);
                                     break;
                                 case H_DOUBLE:
-                                    hop_size = approx_double_with_rat_best_match(hatom_getdouble(res), 32, 0, &approx_error);
+                                    hop_size = approx_double_with_rat_up_to_maxden(hatom_getdouble(res), 32, 0, &approx_error, false);
                                     break;
                                 default:
                                     hop_size = div;

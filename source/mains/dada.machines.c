@@ -38,6 +38,7 @@
 	Daniele Ghisi
 */
 
+#define MACHINES_CLONE_IN_OUT // < Without this, things go smoothly but there's no feedback possible
 
 #include "dada.interface.h"
 #include "dada.geometry.h"
@@ -197,6 +198,9 @@ void machines_float(t_machines *x, double num);
 void machines_anything(t_machines *x, t_symbol *msg, long ac, t_atom *av);
 void machines_bang(t_machines *x);
 
+void machines_llll_free(t_llll *ll);
+t_llll *machines_llll_clone_with_lthings(t_llll *ll);
+
 void set_prototypes_from_llll(t_machines *x, t_llll* proto_ll, char add_mode);
 t_llll *get_prototypes_as_llll(t_machines *x);
 
@@ -267,29 +271,46 @@ long add_machine_type(t_machines *x, t_symbol *fullname, t_symbol *name, t_symbo
 
 void machine_idle_fn(t_machines *x, long numins, t_llll **in, long numouts, t_llll **out)
 {
+#ifdef MACHINES_CLONE_IN_OUT
+    out[0] = machines_llll_clone_with_lthings(in[0]);
+#else
     out[0] = in[0];
+#endif
     if (!x->nonroll_data)
         dada_roll_prepend_roll_sym(out[0]);
 }
 
 void machine_inlet_fn(t_machines *x, long numins, t_llll **in, long numouts, t_llll **out)
 {
+#ifdef MACHINES_CLONE_IN_OUT
+    out[0] = machines_llll_clone_with_lthings(in[0]);
+#else
     out[0] = in[0];
+#endif
     if (!x->nonroll_data)
         dada_roll_prepend_roll_sym(out[0]);
 }
 
 void machine_outlet_fn(t_machines *x, long numins, t_llll **in, long numouts, t_llll **out)
 {
+#ifdef MACHINES_CLONE_IN_OUT
+    out[0] = machines_llll_clone_with_lthings(in[0]);
+#else
     out[0] = in[0];
+#endif
     if (!x->nonroll_data)
         dada_roll_prepend_roll_sym(out[0]);
 }
 
 void machine_swap_fn(t_machines *x, long numins, t_llll **in, long numouts, t_llll **out)
 {
+#ifdef MACHINES_CLONE_IN_OUT
+    out[0] = machines_llll_clone_with_lthings(in[1]);
+    out[1] = machines_llll_clone_with_lthings(in[0]);
+#else
     out[0] = in[1];
     out[1] = in[0];
+#endif
     if (!x->nonroll_data)
         dada_roll_prepend_roll_sym(out[0]);
 }
@@ -297,66 +318,104 @@ void machine_swap_fn(t_machines *x, long numins, t_llll **in, long numouts, t_ll
 
 void machine_transposeup_fn(t_machines *x, long numins, t_llll **in, long numouts, t_llll **out)
 {
-    dada_roll_transpose(in[0], x->transp);
+#ifdef MACHINES_CLONE_IN_OUT
+    out[0] = machines_llll_clone_with_lthings(in[0]);
+#else
     out[0] = in[0];
+#endif
+    dada_roll_transpose(out[0], x->transp);
     dada_roll_prepend_roll_sym(out[0]);
 }
 
 void machine_transposedown_fn(t_machines *x, long numins, t_llll **in, long numouts, t_llll **out)
 {
-    dada_roll_transpose(in[0], -x->transp);
+#ifdef MACHINES_CLONE_IN_OUT
+    out[0] = machines_llll_clone_with_lthings(in[0]);
+#else
     out[0] = in[0];
+#endif
+    dada_roll_transpose(out[0], -x->transp);
     dada_roll_prepend_roll_sym(out[0]);
 }
 
 void machine_shiftleft_fn(t_machines *x, long numins, t_llll **in, long numouts, t_llll **out)
 {
-    dada_roll_shift(in[0], -x->shift);
+#ifdef MACHINES_CLONE_IN_OUT
+    out[0] = machines_llll_clone_with_lthings(in[0]);
+#else
     out[0] = in[0];
+#endif
+    dada_roll_shift(out[0], -x->shift);
     dada_roll_prepend_roll_sym(out[0]);
 }
 
 void machine_shiftright_fn(t_machines *x, long numins, t_llll **in, long numouts, t_llll **out)
 {
-    dada_roll_shift(in[0], x->shift);
+#ifdef MACHINES_CLONE_IN_OUT
+    out[0] = machines_llll_clone_with_lthings(in[0]);
+#else
     out[0] = in[0];
+#endif
+    dada_roll_shift(out[0], x->shift);
     dada_roll_prepend_roll_sym(out[0]);
 }
 
 void machine_circularshiftleft_fn(t_machines *x, long numins, t_llll **in, long numouts, t_llll **out)
 {
-    dada_roll_circularshift(in[0], -x->shift);
+#ifdef MACHINES_CLONE_IN_OUT
+    out[0] = machines_llll_clone_with_lthings(in[0]);
+#else
     out[0] = in[0];
+#endif
+    dada_roll_circularshift(out[0], -x->shift);
     dada_roll_prepend_roll_sym(out[0]);
 }
 
 void machine_circularshiftright_fn(t_machines *x, long numins, t_llll **in, long numouts, t_llll **out)
 {
-    dada_roll_circularshift(in[0], x->shift);
+#ifdef MACHINES_CLONE_IN_OUT
+    out[0] = machines_llll_clone_with_lthings(in[0]);
+#else
     out[0] = in[0];
+#endif
+    dada_roll_circularshift(out[0], x->shift);
     dada_roll_prepend_roll_sym(out[0]);
 }
 
 
 void machine_invert_fn(t_machines *x, long numins, t_llll **in, long numouts, t_llll **out)
 {
-    dada_roll_invert(in[0], 6000);
+#ifdef MACHINES_CLONE_IN_OUT
+    out[0] = machines_llll_clone_with_lthings(in[0]);
+#else
     out[0] = in[0];
+#endif
+    dada_roll_invert(out[0], 6000);
     dada_roll_prepend_roll_sym(out[0]);
 }
 
 void machine_slice_fn(t_machines *x, long numins, t_llll **in, long numouts, t_llll **out)
 {
+#ifdef MACHINES_CLONE_IN_OUT
+    out[0] = machines_llll_clone_with_lthings(in[0]);
+    out[1] = dada_roll_slice(out[0], out[0]->l_thing.w_double / 2., true, true, false);
+#else
     out[1] = dada_roll_slice(in[0], in[0]->l_thing.w_double / 2., true, true, false);
     out[0] = in[0];
+#endif
     dada_roll_prepend_roll_sym(out[0]);
     dada_roll_prepend_roll_sym(out[1]);
 }
 
 void machine_split_fn(t_machines *x, long numins, t_llll **in, long numouts, t_llll **out)
 {
+#ifdef MACHINES_CLONE_IN_OUT
+    out[0] = machines_llll_clone_with_lthings(in[0]);
+    out[1] = dada_roll_split_preserve(out[0], out[0]->l_thing.w_double / 2., true, true, false);
+#else
     out[1] = dada_roll_split_preserve(in[0], in[0]->l_thing.w_double / 2., true, true, false);
     out[0] = in[0];
+#endif
     dada_roll_prepend_roll_sym(out[0]);
     dada_roll_prepend_roll_sym(out[1]);
 }
@@ -366,12 +425,25 @@ void machine_blend_fn(t_machines *x, long numins, t_llll **in, long numouts, t_l
     if (!in[0] && !in[1]) {
         out[0] = llll_get();
     } else if (!in[1]) {
+#ifdef MACHINES_CLONE_IN_OUT
+        out[0] = machines_llll_clone_with_lthings(in[0]);
+#else
         out[0] = in[0];
+#endif
     } else if (!in[0]) {
+#ifdef MACHINES_CLONE_IN_OUT
+        out[0] = machines_llll_clone_with_lthings(in[1]);
+#else
         out[0] = in[1];
+#endif
     } else {
+#ifdef MACHINES_CLONE_IN_OUT
+        out[0] = machines_llll_clone_with_lthings(in[0]);
+        dada_roll_blend(out[0], machines_llll_clone_with_lthings(in[1]), MAX(in[0]->l_thing.w_double, in[1]->l_thing.w_double) / 2., true);
+#else
         dada_roll_blend(in[0], in[1], MAX(in[0]->l_thing.w_double, in[1]->l_thing.w_double) / 2., true);
         out[0] = in[0];
+#endif
     }
     dada_roll_prepend_roll_sym(out[0]);
 }
@@ -382,12 +454,25 @@ void machine_join_fn(t_machines *x, long numins, t_llll **in, long numouts, t_ll
     if (!in[0] && !in[1]) {
         out[0] = llll_get();
     } else if (!in[1]) {
+#ifdef MACHINES_CLONE_IN_OUT
+        out[0] = machines_llll_clone_with_lthings(in[0]);
+#else
         out[0] = in[0];
+#endif
     } else if (!in[0]) {
+#ifdef MACHINES_CLONE_IN_OUT
+        out[0] = machines_llll_clone_with_lthings(in[1]);
+#else
         out[0] = in[1];
+#endif
     } else {
+#ifdef MACHINES_CLONE_IN_OUT
+        out[0] = machines_llll_clone_with_lthings(in[0]);
+        dada_roll_join(out[0], machines_llll_clone_with_lthings(in[1]));
+#else
         dada_roll_join(in[0], in[1]);
         out[0] = in[0];
+#endif
     }
     dada_roll_prepend_roll_sym(out[0]);
 }
@@ -397,34 +482,59 @@ void machine_mix_fn(t_machines *x, long numins, t_llll **in, long numouts, t_lll
     if (!in[0] && !in[1]) {
         out[0] = llll_get();
     } else if (!in[1]) {
+#ifdef MACHINES_CLONE_IN_OUT
+        out[0] = machines_llll_clone_with_lthings(in[0]);
+#else
         out[0] = in[0];
+#endif
     } else if (!in[0]) {
+#ifdef MACHINES_CLONE_IN_OUT
+        out[0] = machines_llll_clone_with_lthings(in[1]);
+#else
         out[0] = in[1];
+#endif
     } else {
+#ifdef MACHINES_CLONE_IN_OUT
+        out[0] = machines_llll_clone_with_lthings(in[0]);
+        dada_roll_mix(in[0], machines_llll_clone_with_lthings(in[1]));
+#else
         dada_roll_mix(in[0], in[1]);
         out[0] = in[0];
+#endif
     }
     dada_roll_prepend_roll_sym(out[0]);
 }
 
 void machine_retrograde_fn(t_machines *x, long numins, t_llll **in, long numouts, t_llll **out)
 {
-    dada_roll_retrograde(in[0], in[0]->l_thing.w_double);
+#ifdef MACHINES_CLONE_IN_OUT
+    out[0] = machines_llll_clone_with_lthings(in[0]);
+#else
     out[0] = in[0];
+#endif
+    dada_roll_retrograde(out[0], out[0]->l_thing.w_double);
     dada_roll_prepend_roll_sym(out[0]);
 }
 
 void machine_stretch_fn(t_machines *x, long numins, t_llll **in, long numouts, t_llll **out)
 {
-    dada_roll_stretch(in[0], x->stretch);
+#ifdef MACHINES_CLONE_IN_OUT
+    out[0] = machines_llll_clone_with_lthings(in[0]);
+#else
     out[0] = in[0];
+#endif
+    dada_roll_stretch(out[0], x->stretch);
     dada_roll_prepend_roll_sym(out[0]);
 }
 
 void machine_compress_fn(t_machines *x, long numins, t_llll **in, long numouts, t_llll **out)
 {
-    dada_roll_stretch(in[0], 1./x->stretch);
+#ifdef MACHINES_CLONE_IN_OUT
+    out[0] = machines_llll_clone_with_lthings(in[0]);
+#else
     out[0] = in[0];
+#endif
+    dada_roll_stretch(out[0], 1./x->stretch);
     dada_roll_prepend_roll_sym(out[0]);
 }
 
@@ -438,10 +548,18 @@ void machine_generatenote_fn(t_machines *x, long numins, t_llll **in, long numou
 void machine_pitchroute_fn(t_machines *x, long numins, t_llll **in, long numouts, t_llll **out)
 {
     if (dada_roll_get_average_pitch(in[0], true) <= 6000) {
+#ifdef MACHINES_CLONE_IN_OUT
+        out[0] = machines_llll_clone_with_lthings(in[0]);
+#else
         out[0] = in[0];
+#endif
         out[1] = dada_roll_gen_empty(dada_get_num_voices(in[0]));
     } else {
+#ifdef MACHINES_CLONE_IN_OUT
+        out[1] = machines_llll_clone_with_lthings(in[0]);
+#else
         out[1] = in[0];
+#endif
         out[0] = dada_roll_gen_empty(dada_get_num_voices(in[0]));
     }
     dada_roll_prepend_roll_sym(out[0]);
@@ -452,10 +570,18 @@ void machine_timeroute_fn(t_machines *x, long numins, t_llll **in, long numouts,
 {
     double t = dada_roll_get_average_timepos(in[0], true);
     if (t <= in[0]->l_thing.w_double / 2.) {
+#ifdef MACHINES_CLONE_IN_OUT
+        out[0] = machines_llll_clone_with_lthings(in[0]);
+#else
         out[0] = in[0];
+#endif
         out[1] = dada_roll_gen_empty(dada_get_num_voices(in[0]));
     } else {
+#ifdef MACHINES_CLONE_IN_OUT
+        out[1] = machines_llll_clone_with_lthings(in[0]);
+#else
         out[1] = in[0];
+#endif
         out[0] = dada_roll_gen_empty(dada_get_num_voices(in[0]));
     }
     dada_roll_prepend_roll_sym(out[0]);
@@ -466,9 +592,17 @@ void machine_timeroute_fn(t_machines *x, long numins, t_llll **in, long numouts,
 void machine_filterempty_fn(t_machines *x, long numins, t_llll **in, long numouts, t_llll **out)
 {
     if (dada_roll_get_num_chords(in[0])) {
+#ifdef MACHINES_CLONE_IN_OUT
+        out[0] = machines_llll_clone_with_lthings(in[0]);
+#else
         out[0] = in[0];
+#endif
     } else {
-        llll_free(in[0]);
+#ifdef MACHINES_CLONE_IN_OUT
+        // nothing to do
+#else
+        machines_llll_free(in[0]);
+#endif
         out[0] = NULL;
     }
 }
@@ -665,8 +799,8 @@ char delete_vertex(t_machines *x, long idx, char preserve_edges)
 			}
             llll_destroyelem(edgein_el);
 		}
-		llll_free(edgeout);
-		llll_free(edgein);
+		machines_llll_free(edgeout);
+		machines_llll_free(edgein);
 	}
 		
 	if (!graph_delete_vertex(&x->network_graph, idx, false)) {
@@ -1171,7 +1305,7 @@ void machines_jsave(t_machines *x, t_dictionary *d)
 			t_llll *data = machines_get_state(x);
 //            llll_check(data);
 			llll_store_in_dictionary(data, d, "machines_data", NULL);
-			llll_free(data);
+			machines_llll_free(data);
 		}
 	} 
 }		
@@ -1276,9 +1410,9 @@ void machines_free(t_machines *x)
 	long i, j;
 	for (i = 0; i < x->network_graph.num_vertices; i++) {
 		for (j = 0; j < DADA_GRAPH_MAX_VANILLABOX_INS; j++)
-			llll_free(x->network_graph.vertices[i].data.m_vanillabox.ins[j]);
+			machines_llll_free(x->network_graph.vertices[i].data.m_vanillabox.ins[j]);
 //		for (j = 0; j < DADA_GRAPH_MAX_VANILLABOX_OUTS; j++)
-//			llll_free(x->network_graph.vertices[i].data.m_vanillabox.outs[j]);
+//			machines_llll_free(x->network_graph.vertices[i].data.m_vanillabox.outs[j]);
 	}
 	
 	graph_free(&x->network_graph);
@@ -1366,7 +1500,7 @@ void *machines_new(t_symbol *s, long argc, t_atom *argv)
 		if ((llll_for_rebuild = llll_retrieve_from_dictionary(d, "machines_data"))) { // new method
 			llllobj_manage_dict_llll((t_object *)x, LLLL_OBJ_UI, llll_for_rebuild);
 			machines_set_state(x, llll_for_rebuild);
-			llll_free(llll_for_rebuild);
+			machines_llll_free(llll_for_rebuild);
 		}
 		
 		jbox_ready((t_jbox *)x);
@@ -1397,7 +1531,7 @@ void machines_dump(t_machines *x, char get_prototypes, char get_network)
 {	
 	t_llll *ll = machines_get_state_sel(x, get_prototypes, get_network);
 	llllobj_outlet_llll((t_object *)x, LLLL_OBJ_UI, 0, ll);
-	llll_free(ll);
+	machines_llll_free(ll);
  }
 
 void machines_bang(t_machines *x)
@@ -1498,15 +1632,16 @@ void machines_anything(t_machines *x, t_symbol *msg, long ac, t_atom *av)
                 }
                 
                 t_llll *ll = llllobj_get_store_contents((t_object *)x, LLLL_OBJ_UI, 0, true);
-                if (data == 1)
-                    llll_free(dada_sliceheader(ll));
-                else
+                if (data == 1) {
+                    machines_llll_free(dada_sliceheader(ll));
+                } else {
                     x->nonroll_data = true;
+                }
                 machines_network_process(x, ll);
             }
         }
         if (must_free)
-            llll_free(parsed);
+            machines_llll_free(parsed);
    
     } else if (inlet == x->num_machine_in) { // lambda inlet
         llllobj_parse_and_store((t_object *)x, LLLL_OBJ_UI, msg, ac, av, inlet);
@@ -1554,8 +1689,8 @@ void machine_process_once(t_machines *x, long vertex_idx, t_llll **out)
             }
         }
         
-        llll_free(answer1);
-        llll_free(ll_lambda);
+        machines_llll_free(answer1);
+        machines_llll_free(ll_lambda);
     }
 
     for (i = 0; i < vb->num_ins; i++)
@@ -1583,6 +1718,25 @@ long sort_edges_righttoleft_fn(void *data, t_llllelem *a, t_llllelem *b)
 		return (outnum_a >= outnum_b);
 }
 
+void machines_llll_free(t_llll *ll)
+{
+    llll_free(ll);
+}
+
+void machine_clean_vertices_inputs(t_machines *x)
+{
+    t_dada_graph *graph = &x->network_graph;
+    for (long i = 0; i < graph->num_vertices; i++) {
+        for (long j = 0; j < DADA_GRAPH_MAX_VANILLABOX_INS; j++) {
+            graph->vertices[i].data.m_vanillabox.ins[j] = NULL; // has already been freed!
+        }
+    }
+}
+
+t_llll *machines_llll_clone_with_lthings(t_llll *ll)
+{
+    return llll_clone_extended(ll, WHITENULL_llll, 0, copy_lthing_fn);
+}
 
 // use inlet_num < 0 and ll = NULL for generators
 void machines_network_process_node(t_machines *x, long vertex_idx, long inlet_num, t_llll *ll, e_machine_process flags)
@@ -1590,16 +1744,18 @@ void machines_network_process_node(t_machines *x, long vertex_idx, long inlet_nu
 	t_dada_graph *graph = &x->network_graph;
 	if (inlet_num < 0 || inlet_num < graph->vertices[vertex_idx].data.m_vanillabox.num_ins) {
 		if (inlet_num >= 0) {
-			llll_free(graph->vertices[vertex_idx].data.m_vanillabox.ins[inlet_num]);
-			graph->vertices[vertex_idx].data.m_vanillabox.ins[inlet_num] = ll;
+			machines_llll_free(graph->vertices[vertex_idx].data.m_vanillabox.ins[inlet_num]);
+            graph->vertices[vertex_idx].data.m_vanillabox.ins[inlet_num] = ll;
 		}
 		
 		if (inlet_num <= 0) { // trigger process
 			long i;
 			t_llll *out[DADA_GRAPH_MAX_VANILLABOX_OUTS];
+            for (long i = 0; i < DADA_GRAPH_MAX_VANILLABOX_OUTS; i++)
+                out[i] = NULL;
 
 			machine_process_once(x, vertex_idx, out);
-			
+            
 			long num_outs = graph->vertices[vertex_idx].data.m_vanillabox.num_outs;
 			
 			// retrieve edges going out
@@ -1622,7 +1778,7 @@ void machines_network_process_node(t_machines *x, long vertex_idx, long inlet_nu
                                 dada_roll_prepend_roll_sym(clone_out);
                             }
                             llllobj_outlet_llll((t_object *)x, LLLL_OBJ_UI, 0, clone_out);
-                            llll_free(clone_out);
+                            machines_llll_free(clone_out);
                         }
 					} else if (ion->num_out <= num_outs) {
                         if (out[ion->num_out])
@@ -1631,8 +1787,9 @@ void machines_network_process_node(t_machines *x, long vertex_idx, long inlet_nu
 				}
 			}
 			
-			for (i = 0; i < num_outs; i++) 
-				llll_free(out[i]);
+            for (i = 0; i < num_outs; i++) {
+                machines_llll_free(out[i]);
+            }
 		}
 	}
 }
@@ -1643,7 +1800,7 @@ void machines_network_process(t_machines *x, t_llll *ll)
 	long i;
 	ll->l_thing.w_double = x->length_for_generated_note = get_max_rhythm_length(ll);
 	
-	// 1. Processing generators (i.e. machines with no inlets) shooting in cold inlets 
+	// 1. Processing generators (i.e. machines with no inlets) shooting in cold inlets
 	for (i = 0; i < x->network_graph.num_vertices; i++) {
 		if (machine_to_num_ins(x, label_to_machine(x, x->network_graph.vertices[i].data.m_vanillabox.type)) == 0)
 			machines_network_process_node(x, i, -1, NULL, DADA_MACHINES_PROCESS_COLD);
@@ -1654,12 +1811,16 @@ void machines_network_process(t_machines *x, t_llll *ll)
 		if (machine_to_num_ins(x, label_to_machine(x, x->network_graph.vertices[i].data.m_vanillabox.type)) == 0)
 			machines_network_process_node(x, i, -1, NULL, DADA_MACHINES_PROCESS_HOT);
 	}
-	
+    
 	// 3. Processing Inlets
 	for (i = 0; i < x->network_graph.num_vertices; i++) {
 		if (x->network_graph.vertices[i].data.m_vanillabox.type == machine_to_name(x, x->inlet_prototype_id))
 			machines_network_process_node(x, i, 0, ll, DADA_MACHINES_PROCESS_ALL);
 	}
+
+#ifndef MACHINES_CLONE_IN_OUT
+    machine_clean_vertices_inputs(x);
+#endif
 }
 
 
@@ -2070,9 +2231,9 @@ void show_vertex_popup_menu(t_machines *x, t_object *patcherview, t_pt pt, long 
     
     display_popup_menu(dadaobj_cast(x), patcherview, structure_ll, functions_model_ll, NULL, checked_ll, NULL, NULL, 0);
     
-    llll_free(structure_ll);
-    llll_free(functions_model_ll);
-    llll_free(checked_ll);
+    machines_llll_free(structure_ll);
+    machines_llll_free(functions_model_ll);
+    machines_llll_free(checked_ll);
 }
 
 
@@ -2118,8 +2279,8 @@ void show_bg_popup_menu(t_machines *x, t_object *patcherview, t_pt pt, long modi
     
     display_popup_menu(dadaobj_cast(x), patcherview, structure_ll, functions_model_ll, NULL, NULL, NULL, NULL, 0);
     
-    llll_free(structure_ll);
-    llll_free(functions_model_ll);
+    machines_llll_free(structure_ll);
+    machines_llll_free(functions_model_ll);
 }
 
 

@@ -3695,7 +3695,7 @@ void kaleido_mouseup(t_kaleido *x, t_object *patcherview, t_pt pt, long modifier
 		return;
 	
 	if (x->b_ob.d_ob.m_interface.mousedown_item_identifier.type == DADA_KALEIDO_ELEMENT_SAMPLINGPOINT && x->b_ob.d_ob.m_tools.curr_tool == DADA_TOOL_CHANGE_PITCH) 
-		x->sampling_points[x->b_ob.d_ob.m_interface.mousedown_item_identifier.idx].pitch_mc = snap_to_microtonal_grid_do(x->sampling_points[x->b_ob.d_ob.m_interface.mousedown_item_identifier.idx].pitch_mc, x->tonedivision);
+		x->sampling_points[x->b_ob.d_ob.m_interface.mousedown_item_identifier.idx].pitch_mc = snap_to_microtonal_grid(x->sampling_points[x->b_ob.d_ob.m_interface.mousedown_item_identifier.idx].pitch_mc, x->tonedivision);
 	
 	x->b_ob.d_ob.m_interface.mousedown_item_identifier.type = DADA_KALEIDO_ELEMENT_NONE;
 	x->b_ob.d_ob.m_interface.mousedown_item_identifier.flag = 0;

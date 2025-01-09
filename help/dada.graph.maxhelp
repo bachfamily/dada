@@ -3,8 +3,8 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 8,
-			"minor" : 1,
-			"revision" : 11,
+			"minor" : 6,
+			"revision" : 1,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -52,8 +52,8 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 1,
-							"revision" : 11,
+							"minor" : 6,
+							"revision" : 1,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -97,6 +97,7 @@
 									"enablevscroll" : 0,
 									"id" : "obj-7",
 									"lockeddragscroll" : 0,
+									"lockedsize" : 0,
 									"maxclass" : "bpatcher",
 									"name" : "dada.commons.maxpat",
 									"numinlets" : 0,
@@ -137,8 +138,8 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 1,
-							"revision" : 11,
+							"minor" : 6,
+							"revision" : 1,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -207,6 +208,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 17.0, 96.0, 198.0, 23.0 ]
 								}
 
@@ -228,7 +230,7 @@
 									"tonedivision" : 4,
 									"uigraph_data_0000000000" : [ "graph", "[", "vertices", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 481586093, 3224486376, "_x_x_x_x_bach_float64_x_x_x_x_", 1140468436, 1073041203, "]", "[", "label", 6000, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 907097093, 1074941244, "_x_x_x_x_bach_float64_x_x_x_x_", 1296873965, 1076688770, "]", "[", "label", 6250, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 261683767, 1076524040, "_x_x_x_x_bach_float64_x_x_x_x_", 260309378, 3222583845, "]", "[", "label", 6500, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 3744936604, 3223606920, "_x_x_x_x_bach_float64_x_x_x_x_", 1442284378, 1077382329, "]", "[", "label", 6700, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 4272702186, 1078045448, "_x_x_x_x_bach_float64_x_x_x_x_", 4122343970, 3223072723, "]", "[", "label", 7200, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 2648448633, 1077849013, "_x_x_x_x_bach_float64_x_x_x_x_", 2252899325, 1077341980, "]", "[", "label", 6200, "]", "]", "]", "[", "edges", "[", 1, 2, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 2576980378, 1069128089, "]", "]", "[", 1, 4, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 2576980378, 1069128089, "]", "]", "[", 2, 3, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 2576980378, 1070176665, "]", "]", "[", 3, 5, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 1717986918, 1072064102, "]", "]", "[", 4, 2, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 2576980378, 1069128089, "]", "]", "[", 3, 6, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "]" ],
 									"uigraph_data_count" : [ 1 ],
-									"versionnumber" : 20300,
+									"versionnumber" : 30100,
 									"zoom" : 660.867879052782087
 								}
 
@@ -239,13 +241,13 @@
 									"filename" : "helpname.js",
 									"id" : "obj-2",
 									"ignoreclick" : 1,
-									"jsarguments" : [ "dada.bounce" ],
+									"jsarguments" : [ "dada.graph" ],
 									"maxclass" : "jsui",
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 10.0, 10.0, 273.27203369140625, 57.599853515625 ]
+									"patching_rect" : [ 10.0, 10.0, 237.39202880859375, 57.599853515625 ]
 								}
 
 							}
@@ -293,8 +295,8 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 1,
-							"revision" : 11,
+							"minor" : 6,
+							"revision" : 1,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -363,6 +365,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 340.0, 349.0, 222.0, 23.0 ],
 									"text_width" : 172.0
 								}
@@ -383,7 +386,7 @@
 									"patching_rect" : [ 340.0, 389.0, 199.0, 172.0 ],
 									"uigraph_data_0000000000" : [ "graph", "[", "vertices", "]", "[", "edges", "]" ],
 									"uigraph_data_count" : [ 1 ],
-									"versionnumber" : 20300,
+									"versionnumber" : 30100,
 									"zoom" : 237.316932000000008
 								}
 
@@ -506,7 +509,7 @@
 									"patching_rect" : [ 16.0, 137.0, 305.0, 270.0 ],
 									"uigraph_data_0000000000" : [ "graph", "[", "vertices", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 536870912, 3224486376, "_x_x_x_x_bach_float64_x_x_x_x_", 1073741824, 1073041203, "]", "[", "label", 6000, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 1073741824, 1075114471, "_x_x_x_x_bach_float64_x_x_x_x_", 1610612736, 1076871409, "]", "[", "label", 6200, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 3221225472, 1076592206, "_x_x_x_x_bach_float64_x_x_x_x_", 3758096384, 3222693986, "]", "[", "label", 6500, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 3221225472, 3223820961, "_x_x_x_x_bach_float64_x_x_x_x_", 2147483648, 1077666325, "]", "[", "label", 6700, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 3758096384, 1077260929, "_x_x_x_x_bach_float64_x_x_x_x_", 1073741824, 1077227243, "]", "[", "label", 12, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078045449, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3223072724, "]", "[", "label", 7200, "]", "]", "]", "[", "edges", "[", 1, 2, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 2684354560, 1069128089, "]", "]", "[", 1, 4, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 2684354560, 1069128089, "]", "]", "[", 2, 3, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 2684354560, 1070176665, "]", "]", "[", 3, 5, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 2684354560, 1071225241, "]", "]", "[", 3, 6, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 1610612736, 1072064102, "]", "]", "[", 4, 2, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 2684354560, 1069128089, "]", "]", "]" ],
 									"uigraph_data_count" : [ 1 ],
-									"versionnumber" : 20300,
+									"versionnumber" : 30100,
 									"zoom" : 493.510315999999989
 								}
 
@@ -517,13 +520,13 @@
 									"filename" : "helpname.js",
 									"id" : "obj-2",
 									"ignoreclick" : 1,
-									"jsarguments" : [ "dada.bounce" ],
+									"jsarguments" : [ "dada.graph" ],
 									"maxclass" : "jsui",
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 10.0, 10.0, 273.27203369140625, 57.599853515625 ]
+									"patching_rect" : [ 10.0, 10.0, 237.39202880859375, 57.599853515625 ]
 								}
 
 							}
@@ -622,8 +625,8 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 1,
-							"revision" : 11,
+							"minor" : 6,
+							"revision" : 1,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -678,6 +681,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 119.0, 163.0, 150.0, 23.0 ]
 								}
 
@@ -824,7 +828,7 @@
 									"showweights" : 1,
 									"uigraph_data_0000000000" : [ "graph", "[", "vertices", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 3221225472, 3224541981, "_x_x_x_x_bach_float64_x_x_x_x_", 1610612736, 1075866529, "]", "[", "label", 1, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1067794287, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3222976270, "]", "[", "label", 2, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 1610612736, 3224432813, "_x_x_x_x_bach_float64_x_x_x_x_", 1610612736, 1077522988, "]", "[", "label", 3, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 1610612736, 1077139698, "_x_x_x_x_bach_float64_x_x_x_x_", 3758096384, 3224633372, "]", "[", "label", 4, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 3758096384, 3222110042, "_x_x_x_x_bach_float64_x_x_x_x_", 3221225472, 1077349044, "]", "[", "label", 5, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 2684354560, 1074218512, "_x_x_x_x_bach_float64_x_x_x_x_", 1073741824, 1076132726, "]", "[", "label", 6, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 536870912, 1076797516, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1075852239, "]", "[", "label", 10, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 1610612736, 1077336979, "_x_x_x_x_bach_float64_x_x_x_x_", 1610612736, 3222270070, "]", "[", "label", 12, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 1610612736, 3219846422, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078165271, "]", "[", "label", 15, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 2684354560, 1078055138, "_x_x_x_x_bach_float64_x_x_x_x_", 2684354560, 3222840175, "]", "[", "label", 20, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 3758096384, 1077028598, "_x_x_x_x_bach_float64_x_x_x_x_", 1610612736, 1077483843, "]", "[", "label", 30, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 3758096384, 1078078895, "_x_x_x_x_bach_float64_x_x_x_x_", 2147483648, 1076234870, "]", "[", "label", 60, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 2147483648, 1078236085, "_x_x_x_x_bach_float64_x_x_x_x_", 2147483648, 1078184055, "]", "[", "label", 30, "]", "]", "]", "[", "edges", "[", 1, 2, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 1, 3, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 1, 5, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 2, 4, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 2, 6, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 2, 7, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 3, 6, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 3, 9, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 4, 8, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 4, 10, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 5, 7, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 5, 9, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 6, 8, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 6, 11, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 7, 10, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 7, 11, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 8, 12, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 9, 11, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 2576980377, 1071749529, "]", "]", "[", 10, 12, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 2684354560, 1068079513, "]", "]", "[", 11, 12, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 11, 13, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "]" ],
 									"uigraph_data_count" : [ 1 ],
-									"versionnumber" : 20300,
+									"versionnumber" : 30100,
 									"zoom" : 306.283524
 								}
 
@@ -835,13 +839,13 @@
 									"filename" : "helpname.js",
 									"id" : "obj-2",
 									"ignoreclick" : 1,
-									"jsarguments" : [ "dada.bounce" ],
+									"jsarguments" : [ "dada.graph" ],
 									"maxclass" : "jsui",
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 10.0, 10.0, 273.27203369140625, 57.599853515625 ]
+									"patching_rect" : [ 10.0, 10.0, 237.39202880859375, 57.599853515625 ]
 								}
 
 							}
@@ -950,8 +954,8 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 1,
-							"revision" : 11,
+							"minor" : 6,
+							"revision" : 1,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -994,6 +998,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 346.5, 350.0, 150.0, 23.0 ]
 								}
 
@@ -1006,6 +1011,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 346.5, 478.0, 150.0, 23.0 ]
 								}
 
@@ -1042,6 +1048,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 346.5, 385.0, 233.0, 23.0 ]
 								}
 
@@ -1107,6 +1114,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 346.5, 325.0, 150.0, 23.0 ]
 								}
 
@@ -1135,8 +1143,8 @@
 										"fileversion" : 1,
 										"appversion" : 										{
 											"major" : 8,
-											"minor" : 1,
-											"revision" : 11,
+											"minor" : 6,
+											"revision" : 1,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -1451,6 +1459,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 346.5, 429.0, 294.0, 23.0 ],
 									"text_width" : 164.0
 								}
@@ -1464,6 +1473,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 346.5, 294.0, 150.0, 23.0 ]
 								}
 
@@ -1476,6 +1486,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 346.5, 262.0, 228.0, 23.0 ]
 								}
 
@@ -1497,7 +1508,7 @@
 							}
 , 							{
 								"box" : 								{
-									"center" : [ -10.066656567106461, -9.270377176452381 ],
+									"center" : [ 0.340579829780928, -20.737894418978392 ],
 									"edgewidth" : 2.0,
 									"fontface" : 0,
 									"fontname" : "Arial",
@@ -1510,10 +1521,10 @@
 									"outlettype" : [ "", "", "bang" ],
 									"patching_rect" : [ 28.0, 244.0, 305.0, 270.0 ],
 									"showweights" : 1,
-									"uigraph_data_0000000000" : [ "graph", "[", "vertices", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 3434086368, 3224541981, "_x_x_x_x_bach_float64_x_x_x_x_", 1821121717, 1075866529, "]", "[", "label", 1, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 121214001, 1067794287, "_x_x_x_x_bach_float64_x_x_x_x_", 8407124, 3222976270, "]", "[", "label", 2, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 1722246889, 3224432813, "_x_x_x_x_bach_float64_x_x_x_x_", 1600676368, 1077522988, "]", "[", "label", 3, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 1729282842, 1077139698, "_x_x_x_x_bach_float64_x_x_x_x_", 3742540650, 3224633372, "]", "[", "label", 4, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 2623950116, 3222347077, "_x_x_x_x_bach_float64_x_x_x_x_", 3114912849, 1077329665, "]", "[", "label", 5, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 2530520537, 1074218512, "_x_x_x_x_bach_float64_x_x_x_x_", 844396499, 1076132726, "]", "[", "label", 6, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 768982721, 1076797516, "_x_x_x_x_bach_float64_x_x_x_x_", 235265958, 1075852239, "]", "[", "label", 10, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 1721360396, 1077336979, "_x_x_x_x_bach_float64_x_x_x_x_", 1540413892, 3222270070, "]", "[", "label", 12, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 75735662, 3220631788, "_x_x_x_x_bach_float64_x_x_x_x_", 2258081019, 1078155581, "]", "[", "label", 15, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 277459548, 1078045449, "_x_x_x_x_bach_float64_x_x_x_x_", 4005814715, 3223072723, "]", "[", "label", 20, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 3906124610, 1077028598, "_x_x_x_x_bach_float64_x_x_x_x_", 1511496376, 1077483843, "]", "[", "label", 30, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 2032737987, 1078101305, "_x_x_x_x_bach_float64_x_x_x_x_", 3392118997, 1076165490, "]", "[", "label", 60, "]", "]", "]", "[", "edges", "[", 1, 2, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 2576980378, 1069128089, "]", "]", "[", 1, 3, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 2576980378, 1069128089, "]", "]", "[", 1, 5, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 2576980378, 1070176665, "]", "]", "[", 2, 4, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 2576980378, 1071225241, "]", "]", "[", 2, 6, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 1717986918, 1072064102, "]", "]", "[", 2, 7, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 2576980378, 1069128089, "]", "]", "[", 3, 6, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 3, 9, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 4, 8, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 4, 10, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 5, 7, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 5, 9, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 6, 8, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 6, 11, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 7, 10, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 7, 11, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 8, 12, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 9, 11, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 2576980404, 1068079513, "]", "]", "[", 10, 12, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 11, 12, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "]" ],
+									"uigraph_data_0000000000" : [ "graph", "[", "vertices", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 538205241, 3225126337, "_x_x_x_x_bach_float64_x_x_x_x_", 1994177940, 1077802372, "]", "[", "label", 1, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 3071385563, 3222614431, "_x_x_x_x_bach_float64_x_x_x_x_", 2168306669, 1078153636, "]", "[", "label", 2, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 2986589630, 3225314931, "_x_x_x_x_bach_float64_x_x_x_x_", 1766198773, 1076440452, "]", "[", "label", 3, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 2309200962, 1076976774, "_x_x_x_x_bach_float64_x_x_x_x_", 4226817923, 1078390434, "]", "[", "label", 4, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 3596500488, 3224500551, "_x_x_x_x_bach_float64_x_x_x_x_", 4254482366, 1076389648, "]", "[", "label", 5, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 897215466, 3223001729, "_x_x_x_x_bach_float64_x_x_x_x_", 951428266, 1077236556, "]", "[", "label", 6, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 2377444961, 1075132878, "_x_x_x_x_bach_float64_x_x_x_x_", 4058653744, 1077173361, "]", "[", "label", 10, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 4079748035, 1076915695, "_x_x_x_x_bach_float64_x_x_x_x_", 3033165126, 1077759518, "]", "[", "label", 12, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 1674428618, 3224576842, "_x_x_x_x_bach_float64_x_x_x_x_", 4216745117, 3222340635, "]", "[", "label", 15, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 361716087, 1077736457, "_x_x_x_x_bach_float64_x_x_x_x_", 2965949907, 1077755909, "]", "[", "label", 20, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 4095036250, 1074640349, "_x_x_x_x_bach_float64_x_x_x_x_", 3966026743, 1074277937, "]", "[", "label", 30, "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 1739974353, 1077549502, "_x_x_x_x_bach_float64_x_x_x_x_", 1967153368, 1076338702, "]", "[", "label", 60, "]", "]", "]", "[", "edges", "[", 1, 2, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 2576980378, 1069128089, "]", "]", "[", 1, 3, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 2576980378, 1069128089, "]", "]", "[", 1, 5, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 2576980378, 1070176665, "]", "]", "[", 2, 4, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 2576980378, 1071225241, "]", "]", "[", 2, 6, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 1717986918, 1072064102, "]", "]", "[", 2, 7, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 2576980378, 1069128089, "]", "]", "[", 3, 6, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 3, 9, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 4, 8, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 4, 10, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 5, 7, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 5, 9, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 6, 8, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 6, 11, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 7, 10, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 7, 11, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 8, 12, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 9, 11, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 2576980404, 1068079513, "]", "]", "[", 10, 12, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "[", 11, 12, "[", "weight", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "]", "]" ],
 									"uigraph_data_count" : [ 1 ],
-									"versionnumber" : 20300,
-									"zoom" : 392.476699734246836
+									"versionnumber" : 30100,
+									"zoom" : 445.361840384671382
 								}
 
 							}
@@ -1678,8 +1689,8 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 1,
-							"revision" : 11,
+							"minor" : 6,
+							"revision" : 1,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -1745,82 +1756,168 @@
 		}
 ,
 		"dependency_cache" : [ 			{
-				"name" : "helpname.js",
-				"bootpath" : "C74:/help/resources",
-				"type" : "TEXT",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "helpdetails.js",
-				"bootpath" : "C74:/help/resources",
-				"type" : "TEXT",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "bach.divisors.maxpat",
-				"bootpath" : "~/Documents/Max 7/Packages/bach/patchers",
-				"patcherrelativepath" : "../../bach/patchers",
-				"type" : "JSON",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "bach.repeat.maxpat",
-				"bootpath" : "~/Documents/Max 7/Packages/bach/patchers",
-				"patcherrelativepath" : "../../bach/patchers",
-				"type" : "JSON",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "bach.reduce.maxpat",
-				"bootpath" : "~/Documents/Max 7/Packages/bach/patchers",
-				"patcherrelativepath" : "../../bach/patchers",
-				"type" : "JSON",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "bach.prepend.maxpat",
-				"bootpath" : "~/Documents/Max 7/Packages/bach/patchers",
-				"patcherrelativepath" : "../../bach/patchers",
-				"type" : "JSON",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "bach.times.maxpat",
-				"bootpath" : "~/Documents/Max 7/Packages/bach/patchers",
-				"patcherrelativepath" : "../../bach/patchers",
-				"type" : "JSON",
-				"implicit" : 1
+				"name" : "bach.args.mxo",
+				"type" : "iLaX"
 			}
 , 			{
 				"name" : "bach.belong.maxpat",
-				"bootpath" : "~/Documents/Max 7/Packages/bach/patchers",
+				"bootpath" : "~/Documents/Max 8/Packages/bach/patchers",
 				"patcherrelativepath" : "../../bach/patchers",
 				"type" : "JSON",
 				"implicit" : 1
+			}
+, 			{
+				"name" : "bach.collect.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.comb.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.divisors.maxpat",
+				"bootpath" : "~/Documents/Max 8/Packages/bach/patchers",
+				"patcherrelativepath" : "../../bach/patchers",
+				"type" : "JSON",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "bach.eq.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.expr.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.factorize.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.find.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.flat.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.intersection.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.iter.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.join.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.length.mxo",
+				"type" : "iLaX"
 			}
 , 			{
 				"name" : "bach.locate.maxpat",
-				"bootpath" : "~/Documents/Max 7/Packages/bach/patchers",
+				"bootpath" : "~/Documents/Max 8/Packages/bach/patchers",
 				"patcherrelativepath" : "../../bach/patchers",
 				"type" : "JSON",
 				"implicit" : 1
 			}
 , 			{
-				"name" : "helpstarter.js",
-				"bootpath" : "C74:/help/resources",
-				"type" : "TEXT",
+				"name" : "bach.mapelem.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.pack.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.pick.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.portal.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.poset.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.post.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.prepend.maxpat",
+				"bootpath" : "~/Documents/Max 8/Packages/bach/patchers",
+				"patcherrelativepath" : "../../bach/patchers",
+				"type" : "JSON",
 				"implicit" : 1
 			}
 , 			{
-				"name" : "dada.commons.maxpat",
-				"bootpath" : "~/Documents/Max 7/Packages/dada/help",
+				"name" : "bach.print.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.reduce.maxpat",
+				"bootpath" : "~/Documents/Max 8/Packages/bach/patchers",
+				"patcherrelativepath" : "../../bach/patchers",
+				"type" : "JSON",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "bach.reg.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.repeat.maxpat",
+				"bootpath" : "~/Documents/Max 8/Packages/bach/patchers",
+				"patcherrelativepath" : "../../bach/patchers",
+				"type" : "JSON",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "bach.slice.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.sort.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.thin.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.times.maxpat",
+				"bootpath" : "~/Documents/Max 8/Packages/bach/patchers",
+				"patcherrelativepath" : "../../bach/patchers",
+				"type" : "JSON",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "bach.wrap.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "dada.base.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "dada.cartesian.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "dada.commons.grid.maxpat",
+				"bootpath" : "~/Documents/Max 8/Packages/dada/help",
 				"patcherrelativepath" : ".",
 				"type" : "JSON",
 				"implicit" : 1
 			}
 , 			{
-				"name" : "dada.commons.grid.maxpat",
-				"bootpath" : "~/Documents/Max 7/Packages/dada/help",
+				"name" : "dada.commons.maxpat",
+				"bootpath" : "~/Documents/Max 8/Packages/dada/help",
 				"patcherrelativepath" : ".",
 				"type" : "JSON",
 				"implicit" : 1
@@ -1830,108 +1927,22 @@
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "bach.print.mxo",
-				"type" : "iLaX"
+				"name" : "helpdetails.js",
+				"bootpath" : "C74:/help/resources",
+				"type" : "TEXT",
+				"implicit" : 1
 			}
 , 			{
-				"name" : "bach.poset.mxo",
-				"type" : "iLaX"
+				"name" : "helpname.js",
+				"bootpath" : "C74:/help/resources",
+				"type" : "TEXT",
+				"implicit" : 1
 			}
 , 			{
-				"name" : "bach.factorize.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "bach.mapelem.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "bach.flat.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "bach.collect.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "bach.reg.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "bach.portal.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "bach.args.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "bach.pick.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "bach.comb.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "bach.thin.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "bach.iter.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "bach.slice.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "bach.join.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "bach.wrap.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "bach.expr.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "bach.sort.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "bach.intersection.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "bach.length.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "bach.eq.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "bach.pack.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "bach.find.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "bach.post.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "dada.cartesian.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "dada.base.mxo",
-				"type" : "iLaX"
+				"name" : "helpstarter.js",
+				"bootpath" : "C74:/help/resources",
+				"type" : "TEXT",
+				"implicit" : 1
 			}
  ],
 		"autosave" : 0

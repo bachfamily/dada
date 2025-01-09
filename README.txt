@@ -1,3 +1,4 @@
+
 ==================================================
 dada
 ==================================================
@@ -50,6 +51,9 @@ If you want to compile *dada*:
 * If you want to compile dada.music~ and dada.peanos~, you need to have the GNU `GMP <https://gmplib.org/>`_ and `MPFR <https://www.mpfr.org/>`_ libraries installed. On OSX, they are expected to be at /usr/local/opt/gmp and /usr/local/opt/mpfr respectively (modify the Xcode parameters if you have them elsewhere); if you install them with Homebrew, they should be in those places. On Windows, we use MPIR (https://www.mpir.org) instead of GMP, and Brian Gladman's Windows port of MPFR (https://github.com/BrianGladman/mpfr.git), which are expected to be installed in C:\Program Files\mpir and C:\Program Files\mpfr respectively. We recommend downloading the binaries from http://www.holoborodko.com/pavel/wp-content/plugins/download-monitor/download.php?id=5. For both libraries, the binaries most be located in lib\x86\Release.
 
 * If you want to compile dada.graph, you need to have the `Boost <https://www.boost.org/>`_ library (version 1.71 works properly; newer versions appear to have issues, at least on Windows). On OSX, it must be installed at /usr/local/opt/boost (modify the Xcode parameters if you have it elsewhere); if you install it with Homebrew, it should be in that place. On Windows, it must be installed at C:\Program Files\boost\boost_1_71_0. There is no need to build the Boost binaries.
+
+There's a recent issue with unary_function which requires to change manually line 132 of include/boost/container_hash/hash.hp, modifying "unary_function" to "__unary_function".
+In future boost versions perhaps this is no longer needed (it still is in boost 1_78).
 
 * On an Apple Silicon machine, things are more complicated. For installing the libraries you need to have two versions of Homebrew installed, respectively for the ARM64 and Intel architectures. The ARM64 is the default one, which you can install by running in the terminal the commands provided listed the Homebrew site home page. Once you've done this, you can run `brew install mpfr' and `brew install mpir' as usual.
   Once you've done this, you must install Homebrew for the Intel architecture. To do so, run `arch -x86_64 zsh' in a terminal. This will open a zsh session under Rosetta 2. Now you have to install Homebrew anew, but the x64 version will be installed in a different location: /usr/local/Homebrew/bin . If you just call the system-wide brew, the arm64 version will be called, so now you have to go in /usr/local/Homebrew/bin and run `./brew install mpfr' and `./brew install mpir'. This is also the time to install Boost: `./brew install boost' .

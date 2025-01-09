@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 463.0, 100.0, 894.0, 650.0 ],
+		"rect" : [ 100.0, 100.0, 894.0, 650.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -59,7 +59,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 463.0, 126.0, 894.0, 624.0 ],
+						"rect" : [ 100.0, 126.0, 894.0, 624.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -146,7 +146,6 @@
 							}
 , 							{
 								"box" : 								{
-									"automessage" : [ "dump", "body" ],
 									"bwcompatibility" : 7910,
 									"defaultnoteslots" : [ "null" ],
 									"fontface" : 0,
@@ -2036,7 +2035,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 10.0, 10.0, 315.299621999999999, 57.567627000000002 ]
+									"patching_rect" : [ 10.0, 10.0, 315.272003173828125, 57.599853515625 ]
 								}
 
 							}

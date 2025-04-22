@@ -1401,6 +1401,8 @@ void dada_score_iterate_on_chords(t_llll *gs, dada_gs_modif_fn modif_fn, e_notat
                     }
                 }
                 if (!nextelem && parent->l_owner) {
+                    if (parent == measure_ll) // extremely important, otherwise we get to end ABOVE measure_ll (which is a measure belonging to some other llll, it's NOT cloned!)
+                        break;
                     while (!parent->l_owner->l_next && parent->l_owner->l_parent->l_owner) {
                         parent = parent->l_owner->l_parent;
                         if (is_llll_root_a_grace_level(parent))
@@ -1622,6 +1624,8 @@ long dada_score_measure_crop_tails_fn(t_llll *gs, e_notation_objects notation_ob
 		if (!nextelem && parent->l_owner) {
             if (is_llll_root_a_grace_level(parent))
                 in_grace_level--;
+            if (parent == gs) // extremely important, otherwise we get to end ABOVE gs (which is a measure belonging to some other llll, it's NOT cloned!)
+                break;
 			while (!parent->l_owner->l_next && parent->l_owner->l_parent->l_owner)
 				parent = parent->l_owner->l_parent;
 			if (parent == gs) // extremely important, otherwise we get to end ABOVE gs (which is a measure belonging to some other llll, it's NOT cloned!)
@@ -1730,6 +1734,8 @@ long dada_score_measure_crop_heads_fn(t_llll *gs, e_notation_objects notation_ob
 		if (!nextelem && parent->l_owner) {
             if (is_llll_root_a_grace_level(parent))
                 in_grace_level--;
+            if (parent == gs) // extremely important, otherwise we get to end ABOVE gs (which is a measure belonging to some other llll, it's NOT cloned!)
+                break;
 			while (!parent->l_owner->l_next && parent->l_owner->l_parent->l_owner)
 				parent = parent->l_owner->l_parent;
 			if (parent == gs) // extremely important, otherwise we get to end ABOVE gs (which is a measure belonging to some other llll, it's NOT cloned!)
@@ -1823,6 +1829,8 @@ long dada_score_measure_crop_heads_fn(t_llll *gs, e_notation_objects notation_ob
 		if (!nextelem && parent->l_owner) {
             if (is_llll_root_a_grace_level(parent))
                 in_grace_level--;
+            if (parent == gs) // extremely important, otherwise we get to end ABOVE gs (which is a measure belonging to some other llll, it's NOT cloned!)
+                break;
 			while (!parent->l_owner->l_prev && parent->l_owner->l_parent->l_owner)
 				parent = parent->l_owner->l_parent;
 			if (parent == gs) // extremely important, otherwise we get to end ABOVE gs (which is a measure belonging to some other llll, it's NOT cloned!)
@@ -1889,17 +1897,17 @@ t_llll *dada_score_split(t_llll *gs, t_timepoint split_pt, t_timesignature *spli
     long graces_with_next = graces_stay_with_next;
 	t_llll *right_part = llll_clone(gs);
 
-//    post("---");
-//	llll_print(gs, NULL, 0, 6, NULL);
+    post("---");
+	llll_print(gs, NULL, 0, 6, NULL);
 
 	dada_score_iterate_on_measures(right_part, dada_score_measure_crop_heads_fn, k_NOTATION_OBJECT_SCORE, &temp, &graces_with_next, NULL);
 	
-//	llll_print(right_part, NULL, 0, 6, NULL);
+	llll_print(right_part, NULL, 0, 6, NULL);
 
 	dada_score_iterate_on_measures(gs, dada_score_measure_crop_tails_fn, k_NOTATION_OBJECT_SCORE, &temp, &graces_with_next, &add_ties_while_cropping);
 	
-//	llll_print(gs, NULL, 0, 6, NULL);
-//	post("---");
+	llll_print(gs, NULL, 0, 6, NULL);
+	post("---");
 	
 	// copying last tempi of gs to right_part
 	if (copy_tempi) {

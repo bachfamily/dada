@@ -1,10 +1,12 @@
 v 0.4
 
-- dada.graph    no longer crashes for graphs with no vertices
+- dada.graph        no longer crashes for graphs with no vertices
 
-- dada.life    fixed bug causing problems and instability with custom cents
+- dada.life         fixed bug causing problems and instability with custom cents
 
-- dada.machines  fixed critical bug causing crashes
+- dada.machines     fixed critical bug causing crashes
+
+- dada.segment      fixed bug that caused wrong segmentation when syntax wasn't perfect (especially in terms of item flags)
 
 v 0.3.1
 

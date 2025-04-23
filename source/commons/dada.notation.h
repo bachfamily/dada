@@ -77,21 +77,25 @@ t_llll *dada_sliceheader(t_llll *gs);
 
 void dada_roll_iterate_on_notes(t_llll *gs, dada_gs_modif_fn modif_fn, e_notation_objects notation_obj, void *arg1, void *arg2, void *arg3);
 void dada_roll_iterate_on_chords(t_llll *gs, dada_gs_modif_fn modif_fn, e_notation_objects notation_obj, void *arg1, void *arg2, void *arg3);
-void dada_score_iterate_on_measures(t_llll *gs, dada_gs_modif_fn modif_fn, e_notation_objects notation_obj, void *arg1, void *arg2, void *arg3);
+void dada_score_iterate_on_measures(t_llll *gs, dada_gs_modif_fn modif_fn, e_notation_objects notation_obj, void *arg1, void *arg2, void *arg3, bool delete_voice_flags = false);
 void dada_score_iterate_on_chords(t_llll *gs, dada_gs_modif_fn modif_fn, e_notation_objects notation_obj, void *arg1, void *arg2, void *arg3);
 
 void dada_iterate_on_markers(t_llll *gs, dada_gs_modif_fn modif_fn, e_notation_objects notation_obj, void *arg1, void *arg2, void *arg3);
 t_llll *dada_get_markers(t_llll *gs); // markers are cloned
+t_llll *dada_get_roll_regions(t_llll *gs);
+t_llll *dada_get_score_regions(t_llll *gs);
 t_tempo *dada_get_first_marker_tempo(t_llll *gs); // tempo is allocated
 double dada_get_first_marker_division_or_barline(t_llll *gs, char *is_division);
 void dada_markers_delete_tempo_markers(t_llll *gs);
 
 void remove_all_marking_to_llll_lthings(t_llll *gs, e_notation_objects notation_obj);
+double marker_elem_to_onset(t_llllelem *marker_el); // also works for regions
 
 
 long dada_score_get_nummeas(t_llll *gs);
 t_llll *dada_score_get_ts(t_llll *gs);
 t_llll *dada_score_get_measuresymdurs(t_llll *gs);
+t_llll *dada_score_get_measuresymdurs_cumulative(t_llll *gs);
 
 
 t_rational dada_measure_get_symdur(t_llll *gs);

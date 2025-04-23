@@ -7,6 +7,8 @@ v 0.4
 - dada.machines     fixed critical bug causing crashes
 
 - dada.segment      fixed bug that caused wrong segmentation when syntax wasn't perfect (especially in terms of item flags)
+                    fixed bug causing wrong segmentation with hop sizes and/or markers
+                    added capability to handle marker regions (new @algorithm type)
 
 v 0.3.1
 

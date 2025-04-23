@@ -59,7 +59,29 @@ void dada_roll_iterate_on_chords(t_llll *gs, dada_gs_modif_fn modif_fn, e_notati
 	}
 }
 
-
+double marker_elem_to_onset(t_llllelem *marker_el) // also works for regions, and returns the region beginning
+{
+    if (marker_el) {
+        if (hatom_gettype(&marker_el->l_hatom) == H_LLLL) {
+            t_llll *marker_ll = hatom_getllll(&marker_el->l_hatom);
+            if (marker_ll && marker_ll->l_head) {
+                if (is_hatom_number(&marker_ll->l_head->l_hatom)) {
+                    return hatom_getdouble(&marker_ll->l_head->l_hatom);
+                } else {
+                    if (hatom_gettype(&marker_ll->l_head->l_hatom) == H_LLLL) {
+                        t_llll *el_ll = hatom_getllll(&marker_ll->l_head->l_hatom);
+                        if (el_ll && el_ll->l_head && el_ll->l_head->l_next && hatom_gettype(&el_ll->l_head->l_hatom) == H_SYM && hatom_getsym(&el_ll->l_head->l_hatom) == _llllobj_sym_region) {
+                            if (is_hatom_number(&el_ll->l_head->l_next->l_hatom)) {
+                                return hatom_getdouble(&el_ll->l_head->l_next->l_hatom);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}
 
 void dada_iterate_on_markers(t_llll *gs, dada_gs_modif_fn modif_fn, e_notation_objects notation_obj, void *arg1, void *arg2, void *arg3)
 {
@@ -73,13 +95,13 @@ void dada_iterate_on_markers(t_llll *gs, dada_gs_modif_fn modif_fn, e_notation_o
 		if (hatom_getsym(&ll->l_head->l_hatom) == _llllobj_sym_markers) {
 			t_llllelem *mkel, *nextmkel;
 			long idx = 0;
-//            llll_print(ll);
+            llll_print(ll);
 			for (mkel = ll->l_head->l_next; mkel; mkel = nextmkel) {
 				nextmkel = mkel->l_next;
 				if (hatom_gettype(&mkel->l_hatom) != H_LLLL)
 					continue;
-                t_llll *marker_ll = hatom_getllll(&mkel->l_hatom);
-                double onset = marker_ll->l_head && is_hatom_number(&marker_ll->l_head->l_hatom) ? hatom_getdouble(&marker_ll->l_head->l_hatom) : 0.;
+//                t_llll *marker_ll = hatom_getllll(&mkel->l_hatom);
+                double onset = marker_elem_to_onset(mkel);
 				if (modif_fn(hatom_getllll(&mkel->l_hatom), notation_obj, &idx, &onset, arg1, arg2, arg3))
 					llll_destroyelem(mkel);
 				idx++;
@@ -131,6 +153,143 @@ t_llll *dada_get_markers(t_llll *gs)
 	llll_free(header);
     return markers ? markers : llll_get();
 }
+
+// gs = gathered syntax
+t_llll *dada_get_roll_regions(t_llll *gs)
+{
+    t_llll *header = get_header(gs, false);
+    t_llll *regions = llll_get();
+    double prev_begin = DBL_MAX, prev_end = DBL_MAX, prev_dur = DBL_MAX;
+    t_llllelem *elem, *prev_name = NULL;
+    for (elem = header->l_head; elem; elem = elem->l_next) {
+        if (hatom_gettype(&elem->l_hatom) == H_LLLL) {
+            t_llll *ll = hatom_getllll(&elem->l_hatom);
+            if (ll && ll->l_head && hatom_gettype(&ll->l_head->l_hatom) == H_SYM && hatom_getsym(&ll->l_head->l_hatom) == _llllobj_sym_markers) {
+                
+                for (t_llllelem *rel = ll->l_head->l_next; rel; rel = rel->l_next) {
+                    if (hatom_gettype(&rel->l_hatom) == H_LLLL) {
+                        t_llll *rel_ll = hatom_getllll(&rel->l_hatom);
+                        if (rel_ll && rel_ll->l_head && hatom_gettype(&rel_ll->l_head->l_hatom) == H_LLLL) {
+                            t_llll *extr_ll = hatom_getllll(&rel_ll->l_head->l_hatom);
+                            t_llllelem *this_name = rel_ll->l_head->l_next;
+                            if (extr_ll && extr_ll->l_head && extr_ll->l_size >= 3 && hatom_gettype(&extr_ll->l_head->l_hatom) == H_SYM &&
+                                hatom_getsym(&extr_ll->l_head->l_hatom) == _llllobj_sym_region) {
+                                t_llll *newregion = llll_get();
+                                double this_begin = hatom_getdouble(&extr_ll->l_head->l_next->l_hatom);
+                                double this_dur = is_hatom_number(&extr_ll->l_head->l_next->l_next->l_hatom) ? hatom_getdouble(&extr_ll->l_head->l_next->l_next->l_hatom) : DBL_MAX;
+                                double this_end = (this_dur == DBL_MAX) ? DBL_MAX : this_begin + this_dur;
+                                
+                                if (prev_begin != DBL_MAX) {
+                                    if (prev_end == DBL_MAX) {
+                                        prev_end = this_begin;
+                                        prev_dur = prev_end - prev_begin;
+                                    }
+                                    t_llll *reg = llll_get();
+                                    llll_appenddouble(reg, prev_begin);
+                                    llll_appenddouble(reg, prev_dur);
+                                    if (prev_name)
+                                        llll_appendhatom_clone(reg, &prev_name->l_hatom);
+                                    llll_appendllll(regions, reg);
+                                }
+                                
+                                prev_begin = this_begin;
+                                prev_end = this_end;
+                                prev_dur = this_dur;
+                                prev_name = this_name;
+                            }
+                        }
+                    }
+                }
+                
+                if (prev_begin != DBL_MAX) {
+                    if (prev_end == DBL_MAX) {
+                        prev_end = dada_roll_get_length(gs); //TODO: FOR SCORE
+                        prev_dur = prev_end - prev_begin;
+                    }
+                    t_llll *reg = llll_get();
+                    llll_appenddouble(reg, prev_begin);
+                    llll_appenddouble(reg, prev_dur);
+                    if (prev_name)
+                        llll_appendhatom_clone(reg, &prev_name->l_hatom);
+                    llll_appendllll(regions, reg);
+                }
+
+                break;
+            }
+        }
+    }
+    llll_free(header);
+    return regions;
+}
+
+// gs = gathered syntax
+t_llll *dada_get_score_regions(t_llll *gs) // only returns
+{
+    t_llll *header = get_header(gs, false);
+    t_llll *regions = llll_get();
+    double prev_begin = DBL_MAX, prev_end = DBL_MAX, prev_dur = DBL_MAX;
+    t_llllelem *elem, *prev_name = NULL;
+    for (elem = header->l_head; elem; elem = elem->l_next) {
+        if (hatom_gettype(&elem->l_hatom) == H_LLLL) {
+            t_llll *ll = hatom_getllll(&elem->l_hatom);
+            if (ll && ll->l_head && hatom_gettype(&ll->l_head->l_hatom) == H_SYM && hatom_getsym(&ll->l_head->l_hatom) == _llllobj_sym_markers) {
+                
+                for (t_llllelem *rel = ll->l_head->l_next; rel; rel = rel->l_next) {
+                    if (hatom_gettype(&rel->l_hatom) == H_LLLL) {
+                        t_llll *rel_ll = hatom_getllll(&rel->l_hatom);
+                        if (rel_ll && rel_ll->l_head && hatom_gettype(&rel_ll->l_head->l_hatom) == H_LLLL) {
+                            t_llll *extr_ll = hatom_getllll(&rel_ll->l_head->l_hatom);
+                            t_llllelem *this_name = rel_ll->l_head->l_next;
+                            if (extr_ll && extr_ll->l_head && extr_ll->l_size >= 3 && hatom_gettype(&extr_ll->l_head->l_hatom) == H_SYM &&
+                                hatom_getsym(&extr_ll->l_head->l_hatom) == _llllobj_sym_region) {
+                                t_llll *newregion = llll_get();
+                                double this_begin = hatom_getdouble(&extr_ll->l_head->l_next->l_hatom);
+                                double this_dur = is_hatom_number(&extr_ll->l_head->l_next->l_next->l_hatom) ? hatom_getdouble(&extr_ll->l_head->l_next->l_next->l_hatom) : DBL_MAX;
+                                double this_end = (this_dur == DBL_MAX) ? DBL_MAX : this_begin + this_dur;
+                                
+                                if (prev_begin != DBL_MAX) {
+                                    if (prev_end == DBL_MAX) {
+                                        prev_end = this_begin;
+                                        prev_dur = prev_end - prev_begin;
+                                    }
+                                    t_llll *reg = llll_get();
+                                    llll_appenddouble(reg, prev_begin);
+                                    llll_appenddouble(reg, prev_dur);
+                                    if (prev_name)
+                                        llll_appendhatom_clone(reg, &prev_name->l_hatom);
+                                    llll_appendllll(regions, reg);
+                                }
+                                
+                                prev_begin = this_begin;
+                                prev_end = this_end;
+                                prev_dur = this_dur;
+                                prev_name = this_name;
+                            }
+                        }
+                    }
+                }
+                
+                if (prev_begin != DBL_MAX) {
+                    if (prev_end == DBL_MAX) {
+                        prev_end = dada_roll_get_length(gs); //TODO: FOR SCORE
+                        prev_dur = prev_end - prev_begin;
+                    }
+                    t_llll *reg = llll_get();
+                    llll_appenddouble(reg, prev_begin);
+                    llll_appenddouble(reg, prev_dur);
+                    if (prev_name)
+                        llll_appendhatom_clone(reg, &prev_name->l_hatom);
+                    llll_appendllll(regions, reg);
+                }
+
+                break;
+            }
+        }
+    }
+    llll_free(header);
+    return regions;
+}
+
 
 
 void dada_markers_delete_tempo_markers(t_llll *gs)
@@ -311,30 +470,88 @@ long dada_roll_crop_markers_fn(t_llll *marker, e_notation_objects notation_obj, 
 	double from_val = *((double *)from);
 	double to_val = *((double *)to);
 //	char copy_tempi_val = *((char *)copy_tempi);
-	
+    t_llll *mk_ll = NULL, *nxt_mk_ll = NULL;
+    
 	if (marker && marker->l_head) {
-		double onset = hatom_getdouble(&marker->l_head->l_hatom); // the marker onset
-        if (keep_this_tempo && keep_this_tempo == marker->l_owner) {
-            hatom_setdouble(&marker->l_head->l_hatom, from_val);
-            return 0;
+        if (is_hatom_number(&marker->l_head->l_hatom)) {
+            double onset = hatom_getdouble(&marker->l_head->l_hatom); // the marker onset
+            if (keep_this_tempo && keep_this_tempo == marker->l_owner) {
+                hatom_setdouble(&marker->l_head->l_hatom, from_val);
+                return 0;
+            }
+            
+            /*		if (copy_tempi_val && marker->l_size >= 3 && hatom_gettype(&marker->l_head->l_next->l_next->l_hatom) == H_SYM && hatom_getsym(&marker->l_head->l_next->l_next->l_hatom) == _llllobj_sym_tempo) {
+             hatom_setdouble(&marker->l_head->l_hatom, from_val);
+             return 0;
+             }
+             */
+            
+            if (from_val >= 0 && to_val >= 0) {
+                if (onset < from_val || onset > to_val)
+                    return 1; // 1 = delete
+            } else if (from_val >= 0 && to_val < 0) {
+                if (onset < from_val)
+                    return 1;
+            } else if (from_val < 0 && to_val >= 0) {
+                if (onset > to_val)
+                    return 1;
+            }
+            
+        } else if (hatom_gettype(&marker->l_head->l_hatom) == H_LLLL && (mk_ll = hatom_getllll(&marker->l_head->l_hatom)) && mk_ll->l_size >= 3 && mk_ll->l_head && hatom_gettype(&mk_ll->l_head->l_hatom) == H_SYM && hatom_getsym(&mk_ll->l_head->l_hatom) == _llllobj_sym_region) {
+            double start = hatom_getdouble(&mk_ll->l_head->l_next->l_hatom);
+            double dur, end;
+            bool tillnext = false;
+            if (hatom_gettype(&mk_ll->l_head->l_next->l_next->l_hatom) == H_SYM && hatom_getsym(&mk_ll->l_head->l_next->l_next->l_hatom) == _llllobj_sym_tillnext) {
+                tillnext = true;
+                end = DBL_MAX;
+                if (marker->l_owner && marker->l_owner->l_next) {
+                    // let's take some effort to find next marker's onset
+                    t_llll *nextmarkerll = hatom_getllll(&marker->l_owner->l_next->l_hatom);
+                    if (nextmarkerll && nextmarkerll->l_head) {
+                        if (is_hatom_number(&nextmarkerll->l_head->l_hatom)) {
+                            end = hatom_getdouble(&nextmarkerll->l_head->l_hatom);
+                        } else if (hatom_gettype(&nextmarkerll->l_head->l_hatom) == H_LLLL && (nxt_mk_ll = hatom_getllll(&nextmarkerll->l_head->l_hatom)) && nxt_mk_ll->l_size >= 3 && nxt_mk_ll->l_head && hatom_gettype(&nxt_mk_ll->l_head->l_hatom) == H_SYM && hatom_getsym(&nxt_mk_ll->l_head->l_hatom) == _llllobj_sym_region) {
+                            end = hatom_getdouble(&nxt_mk_ll->l_head->l_next->l_hatom);
+                        }
+                    }
+                }
+                dur = end == DBL_MAX ? DBL_MAX : end - start;
+            } else  {
+                dur = hatom_getdouble(&mk_ll->l_head->l_next->l_next->l_hatom);
+                end = start + dur;
+            }
+         
+            if (from_val >= 0 && to_val >= 0) { // both defined
+                if ((start < from_val && end < from_val) || (start > to_val && end > to_val)) { // must delete
+                    return 1; // 1 = delete
+                } else if (start < from_val && end < to_val) { // must trim start
+                    hatom_setdouble(&mk_ll->l_head->l_next->l_hatom, from_val);
+                    if (!tillnext)
+                        hatom_setdouble(&mk_ll->l_head->l_next->l_next->l_hatom, end-from_val);
+                } else if (start > from_val && end > to_val) { // must trim duration
+                    hatom_setdouble(&mk_ll->l_head->l_next->l_next->l_hatom, to_val-start);
+                } else if (start < from_val && end > to_val) { // must trim both
+                    hatom_setdouble(&mk_ll->l_head->l_next->l_hatom, from_val);
+                    if (!tillnext)
+                        hatom_setdouble(&mk_ll->l_head->l_next->l_next->l_hatom, to_val-from_val);
+                }
+            } else if (from_val >= 0 && to_val < 0) { // only crop to the right of from_val
+                if (start < from_val && end < from_val) { // must delete
+                    return 1;
+                } else if (start < from_val && end >= from_val) { // must trim start
+                    hatom_setdouble(&mk_ll->l_head->l_next->l_hatom, from_val);
+                    if (!tillnext)
+                        hatom_setdouble(&mk_ll->l_head->l_next->l_next->l_hatom, dur - (from_val-start));
+                }
+            } else if (from_val < 0 && to_val >= 0) { // only crop to the left of to_val
+                if (start > to_val && end > to_val) { // must delete
+                    return 1;
+                } else if (start <= to_val && end > to_val) { // must trim end
+                    hatom_setdouble(&mk_ll->l_head->l_next->l_next->l_hatom, to_val-start);
+                }
+            }
+            
         }
-
-/*		if (copy_tempi_val && marker->l_size >= 3 && hatom_gettype(&marker->l_head->l_next->l_next->l_hatom) == H_SYM && hatom_getsym(&marker->l_head->l_next->l_next->l_hatom) == _llllobj_sym_tempo) {
-			hatom_setdouble(&marker->l_head->l_hatom, from_val);
-			return 0;
-		}
-*/
-        
-		if (from_val >= 0 && to_val >= 0) {
-			if (onset < from_val || onset > to_val)
-                return 1; // 1 = delete
-		} else if (from_val >= 0 && to_val < 0) {
-			if (onset < from_val)
-				return 1;
-		} else if (from_val < 0 && to_val >= 0) {
-			if (onset > to_val)
-				return 1;
-		}
         
 	}
 	return 0;
@@ -370,37 +587,113 @@ long dada_score_crop_and_shift_markers_fn(t_llll *marker, e_notation_objects not
             return 1; // we delete the milliseconds-attached markers, for now
         
         t_llll *mk_ll = hatom_getllll(&marker->l_head->l_hatom);
-        if (mk_ll->l_size < 3 || mk_ll->l_depth != 1)
-            return 1; // delete
         
-        t_timepoint this_tp;
-        this_tp.voice_num = hatom_getlong(&mk_ll->l_head->l_hatom) - 1;
-        this_tp.measure_num = hatom_getlong(&mk_ll->l_head->l_next->l_hatom) - 1;
-        this_tp.pt_in_measure = hatom_getrational(&mk_ll->l_head->l_next->l_next->l_hatom);
-        
-        if (from_tp.measure_num >= 0 && to_tp.measure_num >= 0) {
-            if (timepoint_compare(this_tp, from_tp) < 0 || timepoint_compare(this_tp, to_tp) >= 0)
-                return 1;
-            else {
-                // must shift timepoint, anyway
-                t_timepoint res_tp = timepoints_diff(this_tp, from_tp);
-                hatom_setlong(&mk_ll->l_head->l_next->l_hatom, res_tp.measure_num + 1);
-                hatom_setrational(&mk_ll->l_head->l_next->l_next->l_hatom, res_tp.pt_in_measure);
+        if (mk_ll->l_head && hatom_gettype(&mk_ll->l_head->l_hatom) == H_SYM && hatom_getsym(&mk_ll->l_head->l_hatom) == _llllobj_sym_region && mk_ll->l_size >= 3) {
+            
+            if (hatom_gettype(&mk_ll->l_head->l_next->l_hatom) != H_LLLL)
+                return 1; // we delete the milliseconds-attached regions, for now
+
+            // TODO: this is hard
+            /*
+            // this is a region marker
+            t_llll *mk_start_ll = hatom_getllll(&mk_ll->l_head->l_next->l_hatom);
+            t_llll *mk_end_ll = hatom_gettype(&mk_ll->l_head->l_next->l_next->l_hatom) == H_SYM ? NULL : hatom_getllll(&mk_ll->l_head->l_next->l_hatom);
+
+            t_timepoint this_tp_start;
+            this_tp_start.voice_num = hatom_getlong(&mk_start_ll->l_head->l_hatom) - 1;
+            this_tp_start.measure_num = hatom_getlong(&mk_start_ll->l_head->l_next->l_hatom) - 1;
+            this_tp_start.pt_in_measure = hatom_getrational(&mk_start_ll->l_head->l_next->l_next->l_hatom);
+
+            t_timepoint this_tp_end;
+            if (mk_end_ll) {
+                this_tp_end.voice_num = hatom_getlong(&mk_end_ll->l_head->l_hatom) - 1;
+                this_tp_end.measure_num = hatom_getlong(&mk_end_ll->l_head->l_next->l_hatom) - 1;
+                this_tp_end.pt_in_measure = hatom_getrational(&mk_end_ll->l_head->l_next->l_next->l_hatom);
             }
-        } else if (from_tp.measure_num >= 0 && to_tp.measure_num < 0) {
-            if (timepoint_compare(this_tp, from_tp) < 0)
-                return 1;
-            else {
-                // must shift timepoint, anyway
-                t_timepoint res_tp = timepoints_diff(this_tp, from_tp);
-                hatom_setlong(&mk_ll->l_head->l_next->l_hatom, res_tp.measure_num + 1);
-                hatom_setrational(&mk_ll->l_head->l_next->l_next->l_hatom, res_tp.pt_in_measure);
+             // TODO: what if end is tillnext ?
+            
+            if (from_tp.measure_num >= 0 && to_tp.measure_num >= 0) { // both defined
+                if ((timepoint_compare(this_tp_start, from_tp) < 0 && timepoint_compare(this_tp_end, from_tp) < 0) ||
+                    (timepoint_compare(this_tp_start, to_tp) >= 0 && timepoint_compare(this_tp_end, to_tp) >= 0)) { // must delete
+                    return 1;
+                } else {
+                    
+                } else if (start < from_val && end < to_val) { // must trim start
+                    hatom_setdouble(&mk_ll->l_head->l_next->l_hatom, from_val);
+                    if (!tillnext)
+                        hatom_setdouble(&mk_ll->l_head->l_next->l_next->l_hatom, end-from_val);
+                } else if (start > from_val && start > to_val) { // must trim duration
+                    hatom_setdouble(&mk_ll->l_head->l_next->l_next->l_hatom, to_val-start);
+                } else if (start < from_val && end > to_val) { // must trim both
+
+                    
+                    if (timepoint_compare(this_tp_start, from_tp) < 0 && timepoint_compare(this_tp_end, to_tp) <= 0) { // must trim start
+                        hatom_setlong(&mk_start_ll->l_head->l_next->l_hatom, from_tp.measure_num + 1);
+                        hatom_setrational(&mk_start_ll->l_head->l_next->l_next->l_hatom, from_tp.pt_in_measure);
+                    } else if (timepoint_compare(this_tp_start, from_tp) >= 0 && timepoint_compare(this_tp_end, to_tp) > 0) { // must trim end
+                        hatom_setlong(&mk_end_ll->l_head->l_next->l_hatom, to_tp.measure_num + 1);
+                        hatom_setrational(&mk_end_ll->l_head->l_next->l_next->l_hatom, to_tp.pt_in_measure);
+                    } else if (timepoint_compare(this_tp_start, from_tp) < 0 && timepoint_compare(this_tp_end, to_tp) <= 0) { // must trim both
+                        hatom_setlong(&mk_start_ll->l_head->l_next->l_hatom, from_tp.measure_num + 1);
+                        hatom_setrational(&mk_start_ll->l_head->l_next->l_next->l_hatom, from_tp.pt_in_measure);
+                    }
+
+                    // must shift timepoint, anyway
+                    t_timepoint res_tp = timepoints_diff(this_tp, from_tp);
+                    hatom_setlong(&mk_ll->l_head->l_next->l_hatom, res_tp.measure_num + 1);
+                    hatom_setrational(&mk_ll->l_head->l_next->l_next->l_hatom, res_tp.pt_in_measure);
+                }
+             */
+            
+            } else if (from_tp.measure_num >= 0 && to_tp.measure_num < 0) {
+                if (timepoint_compare(this_tp, from_tp) < 0)
+                    return 1;
+                else {
+                    // must shift timepoint, anyway
+                    t_timepoint res_tp = timepoints_diff(this_tp, from_tp);
+                    hatom_setlong(&mk_ll->l_head->l_next->l_hatom, res_tp.measure_num + 1);
+                    hatom_setrational(&mk_ll->l_head->l_next->l_next->l_hatom, res_tp.pt_in_measure);
+                }
+            } else if (from_tp.measure_num < 0 && to_tp.measure_num >= 0) {
+                if (timepoint_compare(this_tp, to_tp) >= 0)
+                    return 1;
             }
-        } else if (from_tp.measure_num < 0 && to_tp.measure_num >= 0) {
-            if (timepoint_compare(this_tp, to_tp) >= 0)
-                return 1;
+            
+            
+        } else {
+            
+            if (mk_ll->l_size < 3 || mk_ll->l_depth != 1)
+                return 1; // delete
+            
+            t_timepoint this_tp;
+            this_tp.voice_num = hatom_getlong(&mk_ll->l_head->l_hatom) - 1;
+            this_tp.measure_num = hatom_getlong(&mk_ll->l_head->l_next->l_hatom) - 1;
+            this_tp.pt_in_measure = hatom_getrational(&mk_ll->l_head->l_next->l_next->l_hatom);
+            
+            if (from_tp.measure_num >= 0 && to_tp.measure_num >= 0) {
+                if (timepoint_compare(this_tp, from_tp) < 0 || timepoint_compare(this_tp, to_tp) >= 0)
+                    return 1;
+                else {
+                    // must shift timepoint, anyway
+                    t_timepoint res_tp = timepoints_diff(this_tp, from_tp);
+                    hatom_setlong(&mk_ll->l_head->l_next->l_hatom, res_tp.measure_num + 1);
+                    hatom_setrational(&mk_ll->l_head->l_next->l_next->l_hatom, res_tp.pt_in_measure);
+                }
+            } else if (from_tp.measure_num >= 0 && to_tp.measure_num < 0) {
+                if (timepoint_compare(this_tp, from_tp) < 0)
+                    return 1;
+                else {
+                    // must shift timepoint, anyway
+                    t_timepoint res_tp = timepoints_diff(this_tp, from_tp);
+                    hatom_setlong(&mk_ll->l_head->l_next->l_hatom, res_tp.measure_num + 1);
+                    hatom_setrational(&mk_ll->l_head->l_next->l_next->l_hatom, res_tp.pt_in_measure);
+                }
+            } else if (from_tp.measure_num < 0 && to_tp.measure_num >= 0) {
+                if (timepoint_compare(this_tp, to_tp) >= 0)
+                    return 1;
+            }
+            
         }
-        
     }
     return 0;
 }
@@ -537,11 +830,18 @@ long dada_roll_chord_shift_fn(t_llll *gs, e_notation_objects notation_obj, void 
 
 long dada_roll_marker_shift_fn(t_llll *marker, e_notation_objects notation_obj, void *idx, void *onset, void *delta_onset_ms, void *dummy2, void *dummy3)
 {
-	if (marker && marker->l_head && is_hatom_number(&marker->l_head->l_hatom)) {
-		double this_onset = hatom_getdouble(&marker->l_head->l_hatom);
-		double new_onset = this_onset + *(double *)delta_onset_ms;
-		hatom_setdouble(&marker->l_head->l_hatom, new_onset);
-		return 0;
+    t_llll *mk_ll = NULL;
+	if (marker && marker->l_head) {
+        if (is_hatom_number(&marker->l_head->l_hatom)) {
+            double this_onset = hatom_getdouble(&marker->l_head->l_hatom);
+            double new_onset = this_onset + *(double *)delta_onset_ms;
+            hatom_setdouble(&marker->l_head->l_hatom, new_onset);
+            return 0;
+        } else if (hatom_gettype(&marker->l_head->l_hatom) == H_LLLL && (mk_ll = hatom_getllll(&marker->l_head->l_hatom)) && mk_ll->l_size >= 3 && mk_ll->l_head && hatom_gettype(&mk_ll->l_head->l_hatom) == H_SYM && hatom_getsym(&mk_ll->l_head->l_hatom) == _llllobj_sym_region) { // region marker
+            double start = hatom_getdouble(&mk_ll->l_head->l_next->l_hatom);
+            hatom_setdouble(&mk_ll->l_head->l_next->l_hatom, start + *(double *)delta_onset_ms);
+            return 0;
+        }
 	}
 	return 1;
 }
@@ -1327,7 +1627,7 @@ void dada_roll_stretch(t_llll *gs, double factor)
 
 
 // to do drop flags!
-void dada_score_iterate_on_measures(t_llll *gs, dada_gs_modif_fn modif_fn, e_notation_objects notation_obj, void *arg1, void *arg2, void *arg3)
+void dada_score_iterate_on_measures(t_llll *gs, dada_gs_modif_fn modif_fn, e_notation_objects notation_obj, void *arg1, void *arg2, void *arg3, bool delete_voice_flags)
 {
 	t_llllelem *voice, *meas, *next_meas;
 	t_timepoint idx = build_timepoint_with_voice(0, long2rat(0), 0);
@@ -1338,8 +1638,12 @@ void dada_score_iterate_on_measures(t_llll *gs, dada_gs_modif_fn modif_fn, e_not
 		idx.measure_num = 0;
 		for (meas = hatom_getllll(&voice->l_hatom)->l_head; meas; meas = next_meas, idx.measure_num++) {
 			next_meas = meas->l_next;
-			if (hatom_gettype(&meas->l_hatom) != H_LLLL)
-				continue;
+            if (hatom_gettype(&meas->l_hatom) != H_LLLL) {
+                if (delete_voice_flags) {
+                    llll_destroyelem(meas);
+                }
+                continue;
+            }
             t_llll *measure_ll = hatom_getllll(&meas->l_hatom);
 			if (modif_fn(measure_ll, notation_obj, &idx, &symonset, arg1, arg2, arg3))
 				llll_destroyelem(meas);
@@ -1897,17 +2201,17 @@ t_llll *dada_score_split(t_llll *gs, t_timepoint split_pt, t_timesignature *spli
     long graces_with_next = graces_stay_with_next;
 	t_llll *right_part = llll_clone(gs);
 
-    post("---");
-	llll_print(gs, NULL, 0, 6, NULL);
+//    post("---");
+//	llll_print(gs, NULL, 0, 6, NULL);
 
 	dada_score_iterate_on_measures(right_part, dada_score_measure_crop_heads_fn, k_NOTATION_OBJECT_SCORE, &temp, &graces_with_next, NULL);
 	
-	llll_print(right_part, NULL, 0, 6, NULL);
+//	llll_print(right_part, NULL, 0, 6, NULL);
 
 	dada_score_iterate_on_measures(gs, dada_score_measure_crop_tails_fn, k_NOTATION_OBJECT_SCORE, &temp, &graces_with_next, &add_ties_while_cropping);
 	
-	llll_print(gs, NULL, 0, 6, NULL);
-	post("---");
+//	llll_print(gs, NULL, 0, 6, NULL);
+//	post("---");
 	
 	// copying last tempi of gs to right_part
 	if (copy_tempi) {
@@ -2287,7 +2591,7 @@ long dada_score_measure_get_symdur(t_llll *gs, e_notation_objects notation_obj, 
 t_llll *dada_score_get_ts(t_llll *gs)
 {
 	t_llll *ts = get_body(gs);
-	dada_score_iterate_on_measures(ts, dada_score_measure_convert_to_ts_fn, k_NOTATION_OBJECT_SCORE, NULL, NULL, NULL);
+	dada_score_iterate_on_measures(ts, dada_score_measure_convert_to_ts_fn, k_NOTATION_OBJECT_SCORE, NULL, NULL, NULL, true);
 
 	return ts;
 }
@@ -2296,9 +2600,31 @@ t_llll *dada_score_get_ts(t_llll *gs)
 t_llll *dada_score_get_measuresymdurs(t_llll *gs)
 {
     t_llll *ts = get_body(gs);
-    dada_score_iterate_on_measures(ts, dada_score_measure_get_symdur, k_NOTATION_OBJECT_SCORE, NULL, NULL, NULL);
+    dada_score_iterate_on_measures(ts, dada_score_measure_get_symdur, k_NOTATION_OBJECT_SCORE, NULL, NULL, NULL, true);
     
     return ts;
+}
+
+t_llll *dada_score_get_measuresymdurs_cumulative(t_llll *gs)
+{
+    // building cumulative measure symdurs
+    t_llll *measuresymdurs = dada_score_get_measuresymdurs(gs);
+    t_llll *measuresymdurs_cumulative = llll_get();
+    for (t_llllelem *el = measuresymdurs->l_head; el; el = el->l_next) {
+        t_llll *measuresymdurs_voice = hatom_getllll(&el->l_hatom);
+        t_llll *measuresymdurs_cumulative_voice = llll_get();
+        t_rational cur = long2rat(0);
+        llll_appendrat(measuresymdurs_cumulative_voice, cur);
+        for (t_llllelem *el = measuresymdurs_voice->l_head; el; el = el->l_next) {
+            t_rational r = hatom_getrational(&el->l_hatom);
+            cur = cur + r;
+            llll_appendrat(measuresymdurs_cumulative_voice, cur);
+        }
+        llll_appendllll(measuresymdurs_cumulative, measuresymdurs_cumulative_voice);
+    }
+
+    llll_free(measuresymdurs);
+    return measuresymdurs_cumulative;
 }
 
 

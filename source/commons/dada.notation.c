@@ -593,8 +593,11 @@ long dada_score_crop_and_shift_markers_fn(t_llll *marker, e_notation_objects not
             if (hatom_gettype(&mk_ll->l_head->l_next->l_hatom) != H_LLLL)
                 return 1; // we delete the milliseconds-attached regions, for now
 
-            // TODO: this is hard
+            // TODO: this is hard unsupported for now
+            return 1; // delete score-region markers for now
+            
             /*
+            
             // this is a region marker
             t_llll *mk_start_ll = hatom_getllll(&mk_ll->l_head->l_next->l_hatom);
             t_llll *mk_end_ll = hatom_gettype(&mk_ll->l_head->l_next->l_next->l_hatom) == H_SYM ? NULL : hatom_getllll(&mk_ll->l_head->l_next->l_hatom);
@@ -616,12 +619,14 @@ long dada_score_crop_and_shift_markers_fn(t_llll *marker, e_notation_objects not
                 if ((timepoint_compare(this_tp_start, from_tp) < 0 && timepoint_compare(this_tp_end, from_tp) < 0) ||
                     (timepoint_compare(this_tp_start, to_tp) >= 0 && timepoint_compare(this_tp_end, to_tp) >= 0)) { // must delete
                     return 1;
-                } else {
+                } else if (timepoint_compare(this_tp_start, from_tp) < 0 && timepoint_compare(this_tp_end, to_tp) < 0) { // must trim start
+
+                    // must shift timepoint, anyway
+                    t_timepoint res_tp = timepoints_diff(this_tp_start, from_tp);
+                    hatom_setlong(&mk_start_ll->l_head->l_next->l_hatom, res_tp.measure_num + 1);
+                    hatom_setrational(&mk_start_ll->l_head->l_next->l_next->l_hatom, res_tp.pt_in_measure);
+
                     
-                } else if (start < from_val && end < to_val) { // must trim start
-                    hatom_setdouble(&mk_ll->l_head->l_next->l_hatom, from_val);
-                    if (!tillnext)
-                        hatom_setdouble(&mk_ll->l_head->l_next->l_next->l_hatom, end-from_val);
                 } else if (start > from_val && start > to_val) { // must trim duration
                     hatom_setdouble(&mk_ll->l_head->l_next->l_next->l_hatom, to_val-start);
                 } else if (start < from_val && end > to_val) { // must trim both
@@ -643,7 +648,6 @@ long dada_score_crop_and_shift_markers_fn(t_llll *marker, e_notation_objects not
                     hatom_setlong(&mk_ll->l_head->l_next->l_hatom, res_tp.measure_num + 1);
                     hatom_setrational(&mk_ll->l_head->l_next->l_next->l_hatom, res_tp.pt_in_measure);
                 }
-             */
             
             } else if (from_tp.measure_num >= 0 && to_tp.measure_num < 0) {
                 if (timepoint_compare(this_tp, from_tp) < 0)
@@ -658,6 +662,7 @@ long dada_score_crop_and_shift_markers_fn(t_llll *marker, e_notation_objects not
                 if (timepoint_compare(this_tp, to_tp) >= 0)
                     return 1;
             }
+             */
             
             
         } else {

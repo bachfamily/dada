@@ -2,41 +2,16 @@
 	"patcher" : 	{
 		"fileversion" : 1,
 		"appversion" : 		{
-			"major" : 8,
+			"major" : 9,
 			"minor" : 0,
-			"revision" : 5,
+			"revision" : 7,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 45.0, 79.0, 884.0, 664.0 ],
-		"bglocked" : 0,
-		"openinpresentation" : 0,
-		"default_fontsize" : 12.0,
-		"default_fontface" : 0,
-		"default_fontname" : "Arial",
-		"gridonopen" : 1,
+		"rect" : [ 134.0, 172.0, 884.0, 664.0 ],
 		"gridsize" : [ 5.0, 5.0 ],
-		"gridsnaponopen" : 1,
-		"objectsnaponopen" : 1,
-		"statusbarvisible" : 2,
-		"toolbarvisible" : 1,
-		"lefttoolbarpinned" : 0,
-		"toptoolbarpinned" : 0,
-		"righttoolbarpinned" : 0,
-		"bottomtoolbarpinned" : 0,
-		"toolbars_unpinned_last_save" : 0,
-		"tallnewobj" : 0,
-		"boxanimatetime" : 200,
-		"enablehscroll" : 1,
-		"enablevscroll" : 1,
-		"devicewidth" : 0.0,
-		"description" : "",
-		"digest" : "",
-		"tags" : "",
-		"style" : "",
-		"subpatcher_template" : "",
 		"showrootpatcherontab" : 0,
 		"showontab" : 0,
 		"boxes" : [ 			{
@@ -50,41 +25,17 @@
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
-							"major" : 8,
+							"major" : 9,
 							"minor" : 0,
-							"revision" : 5,
+							"revision" : 7,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 884.0, 638.0 ],
-						"bglocked" : 0,
-						"openinpresentation" : 0,
+						"rect" : [ 134.0, 198.0, 884.0, 638.0 ],
 						"default_fontsize" : 13.0,
-						"default_fontface" : 0,
-						"default_fontname" : "Arial",
-						"gridonopen" : 1,
 						"gridsize" : [ 5.0, 5.0 ],
-						"gridsnaponopen" : 1,
-						"objectsnaponopen" : 1,
-						"statusbarvisible" : 2,
-						"toolbarvisible" : 1,
-						"lefttoolbarpinned" : 0,
-						"toptoolbarpinned" : 0,
-						"righttoolbarpinned" : 0,
-						"bottomtoolbarpinned" : 0,
-						"toolbars_unpinned_last_save" : 0,
-						"tallnewobj" : 0,
-						"boxanimatetime" : 200,
-						"enablehscroll" : 1,
-						"enablevscroll" : 1,
-						"devicewidth" : 0.0,
-						"description" : "",
-						"digest" : "",
-						"tags" : "",
-						"style" : "",
-						"subpatcher_template" : "",
 						"showontab" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
@@ -95,6 +46,7 @@
 									"enablevscroll" : 0,
 									"id" : "obj-7",
 									"lockeddragscroll" : 0,
+									"lockedsize" : 0,
 									"maxclass" : "bpatcher",
 									"name" : "dada.commons.maxpat",
 									"numinlets" : 0,
@@ -111,11 +63,7 @@
 ,
 					"patching_rect" : [ 142.0, 367.0, 73.0, 22.0 ],
 					"saved_object_attributes" : 					{
-						"description" : "",
-						"digest" : "",
-						"fontsize" : 13.0,
-						"globalpatchername" : "",
-						"tags" : ""
+						"fontsize" : 13.0
 					}
 ,
 					"text" : "p commons",
@@ -134,41 +82,17 @@
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
-							"major" : 8,
+							"major" : 9,
 							"minor" : 0,
-							"revision" : 5,
+							"revision" : 7,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
 						"rect" : [ 0.0, 26.0, 884.0, 638.0 ],
-						"bglocked" : 0,
-						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
-						"default_fontface" : 0,
-						"default_fontname" : "Arial",
-						"gridonopen" : 1,
 						"gridsize" : [ 5.0, 5.0 ],
-						"gridsnaponopen" : 1,
-						"objectsnaponopen" : 1,
-						"statusbarvisible" : 2,
-						"toolbarvisible" : 1,
-						"lefttoolbarpinned" : 0,
-						"toptoolbarpinned" : 0,
-						"righttoolbarpinned" : 0,
-						"bottomtoolbarpinned" : 0,
-						"toolbars_unpinned_last_save" : 0,
-						"tallnewobj" : 0,
-						"boxanimatetime" : 200,
-						"enablehscroll" : 1,
-						"enablevscroll" : 1,
-						"devicewidth" : 0.0,
-						"description" : "",
-						"digest" : "",
-						"tags" : "",
-						"style" : "",
-						"subpatcher_template" : "",
 						"showontab" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
@@ -321,6 +245,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 52.0, 245.0, 150.0, 23.0 ]
 								}
 
@@ -333,6 +258,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 214.5, 245.0, 195.0, 23.0 ],
 									"text_width" : 139.5
 								}
@@ -581,7 +507,7 @@
 									"out" : "nnnn",
 									"outlettype" : [ "", "", "", "", "bang" ],
 									"patching_rect" : [ 10.0, 280.0, 471.0, 307.0 ],
-									"versionnumber" : 10200,
+									"versionnumber" : 40000,
 									"whole_bodies_data_0000000000" : [ "bodies", "[", "stars", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "[", "density", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1065646817, "]", "[", "radius", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1077149696, "]", "[", "notes", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086198784, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072243195, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086325760, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073291771, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073928572, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086408960, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074340347, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074752122, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086408960, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074977148, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1075183035, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086325760, "]", "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "]", "[", "planets", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3226812194, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1079112887, "]", "[", "speed", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1079114092, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3222910677, "]", "[", "acc", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078003189, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3229273966, "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1071309127, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1070679982, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1068792545, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "]" ],
 									"whole_bodies_data_count" : [ 1 ],
 									"zoom" : 124.451387999999994
@@ -600,7 +526,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 10.0, 10.0, 256.446395999999993, 57.567627000000002 ]
+									"patching_rect" : [ 10.0, 10.0, 256.42401123046875, 57.599853515625 ]
 								}
 
 							}
@@ -729,11 +655,7 @@
 ,
 					"patching_rect" : [ 40.0, 158.0, 115.0, 22.0 ],
 					"saved_object_attributes" : 					{
-						"description" : "",
-						"digest" : "",
-						"fontsize" : 13.0,
-						"globalpatchername" : "",
-						"tags" : ""
+						"fontsize" : 13.0
 					}
 ,
 					"text" : "p \"basic messages\"",
@@ -752,41 +674,17 @@
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
-							"major" : 8,
+							"major" : 9,
 							"minor" : 0,
-							"revision" : 5,
+							"revision" : 7,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
 						"rect" : [ 0.0, 26.0, 884.0, 638.0 ],
-						"bglocked" : 0,
-						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
-						"default_fontface" : 0,
-						"default_fontname" : "Arial",
-						"gridonopen" : 1,
 						"gridsize" : [ 5.0, 5.0 ],
-						"gridsnaponopen" : 1,
-						"objectsnaponopen" : 1,
-						"statusbarvisible" : 2,
-						"toolbarvisible" : 1,
-						"lefttoolbarpinned" : 0,
-						"toptoolbarpinned" : 0,
-						"righttoolbarpinned" : 0,
-						"bottomtoolbarpinned" : 0,
-						"toolbars_unpinned_last_save" : 0,
-						"tallnewobj" : 0,
-						"boxanimatetime" : 200,
-						"enablehscroll" : 1,
-						"enablevscroll" : 1,
-						"devicewidth" : 0.0,
-						"description" : "",
-						"digest" : "",
-						"tags" : "",
-						"style" : "",
-						"subpatcher_template" : "",
 						"showontab" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
@@ -796,6 +694,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 408.0, 331.0, 150.0, 23.0 ]
 								}
 
@@ -821,6 +720,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 355.0, 546.0, 203.0, 23.0 ],
 									"text_width" : 135.0
 								}
@@ -834,6 +734,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 355.0, 470.0, 150.0, 23.0 ]
 								}
 
@@ -859,6 +760,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 355.0, 441.0, 150.0, 23.0 ]
 								}
 
@@ -897,6 +799,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 388.0, 297.0, 150.0, 23.0 ]
 								}
 
@@ -909,6 +812,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 365.5, 261.0, 150.0, 23.0 ]
 								}
 
@@ -921,6 +825,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 348.0, 227.0, 185.0, 23.0 ],
 									"text_width" : 125.0
 								}
@@ -934,6 +839,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 288.5, 159.0, 262.0, 23.0 ]
 								}
 
@@ -946,6 +852,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 322.0, 193.0, 267.0, 23.0 ],
 									"text_width" : 141.0
 								}
@@ -959,6 +866,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 10.0, 109.0, 239.0, 23.0 ]
 								}
 
@@ -973,7 +881,7 @@
 									"outlettype" : [ "", "", "", "", "bang" ],
 									"patching_rect" : [ 28.0, 348.0, 280.0, 271.0 ],
 									"shownotes" : 1,
-									"versionnumber" : 10200,
+									"versionnumber" : 40000,
 									"whole_bodies_data_0000000000" : [ "bodies", "[", "stars", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "[", "density", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1065646817, "]", "[", "radius", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1077149696, "]", "[", "notes", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086198784, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072243195, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086325760, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073291771, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073928572, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086408960, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074340347, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074752122, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086408960, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074977148, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1075183035, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086325760, "]", "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "]", "[", "planets", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078853632, "]", "[", "speed", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080566304, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 2147483648, "]", "[", "acc", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1071309127, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1070679982, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1068792545, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "]" ],
 									"whole_bodies_data_count" : [ 1 ]
 								}
@@ -1071,11 +979,7 @@
 ,
 					"patching_rect" : [ 130.0, 334.0, 58.0, 22.0 ],
 					"saved_object_attributes" : 					{
-						"description" : "",
-						"digest" : "",
-						"fontsize" : 13.0,
-						"globalpatchername" : "",
-						"tags" : ""
+						"fontsize" : 13.0
 					}
 ,
 					"text" : "p display",
@@ -1094,41 +998,17 @@
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
-							"major" : 8,
+							"major" : 9,
 							"minor" : 0,
-							"revision" : 5,
+							"revision" : 7,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
 						"rect" : [ 0.0, 26.0, 884.0, 638.0 ],
-						"bglocked" : 0,
-						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
-						"default_fontface" : 0,
-						"default_fontname" : "Arial",
-						"gridonopen" : 1,
 						"gridsize" : [ 5.0, 5.0 ],
-						"gridsnaponopen" : 1,
-						"objectsnaponopen" : 1,
-						"statusbarvisible" : 2,
-						"toolbarvisible" : 1,
-						"lefttoolbarpinned" : 0,
-						"toptoolbarpinned" : 0,
-						"righttoolbarpinned" : 0,
-						"bottomtoolbarpinned" : 0,
-						"toolbars_unpinned_last_save" : 0,
-						"tallnewobj" : 0,
-						"boxanimatetime" : 200,
-						"enablehscroll" : 1,
-						"enablevscroll" : 1,
-						"devicewidth" : 0.0,
-						"description" : "",
-						"digest" : "",
-						"tags" : "",
-						"style" : "",
-						"subpatcher_template" : "",
 						"showontab" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
@@ -1248,6 +1128,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 268.5, 208.0, 202.0, 23.0 ],
 									"text_width" : 136.0
 								}
@@ -1290,7 +1171,7 @@
 									"out" : "nnnn",
 									"outlettype" : [ "", "", "", "", "bang" ],
 									"patching_rect" : [ 10.0, 244.0, 470.0, 351.0 ],
-									"versionnumber" : 10200,
+									"versionnumber" : 40000,
 									"whole_bodies_data_0000000000" : [ "bodies", "[", "stars", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "[", "density", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1065646817, "]", "[", "radius", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1077149696, "]", "[", "notes", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086198784, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072243195, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086325760, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073291771, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073928572, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086408960, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074340347, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074752122, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086408960, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074977148, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1075183035, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086325760, "]", "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "]", "[", "planets", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3227588785, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3224748068, "]", "[", "speed", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3226630485, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080456464, "]", "[", "acc", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1082226041, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080908114, "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1071309127, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1070679982, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1068792545, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "]" ],
 									"whole_bodies_data_count" : [ 1 ],
 									"zoom" : 116.604022999999998
@@ -1361,11 +1242,7 @@
 ,
 					"patching_rect" : [ 57.0, 193.0, 107.0, 22.0 ],
 					"saved_object_attributes" : 					{
-						"description" : "",
-						"digest" : "",
-						"fontsize" : 13.0,
-						"globalpatchername" : "",
-						"tags" : ""
+						"fontsize" : 13.0
 					}
 ,
 					"text" : "p \"circular motion\"",
@@ -1384,41 +1261,17 @@
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
-							"major" : 8,
+							"major" : 9,
 							"minor" : 0,
-							"revision" : 5,
+							"revision" : 7,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
 						"rect" : [ 0.0, 26.0, 884.0, 638.0 ],
-						"bglocked" : 0,
-						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
-						"default_fontface" : 0,
-						"default_fontname" : "Arial",
-						"gridonopen" : 1,
 						"gridsize" : [ 5.0, 5.0 ],
-						"gridsnaponopen" : 1,
-						"objectsnaponopen" : 1,
-						"statusbarvisible" : 2,
-						"toolbarvisible" : 1,
-						"lefttoolbarpinned" : 0,
-						"toptoolbarpinned" : 0,
-						"righttoolbarpinned" : 0,
-						"bottomtoolbarpinned" : 0,
-						"toolbars_unpinned_last_save" : 0,
-						"tallnewobj" : 0,
-						"boxanimatetime" : 200,
-						"enablehscroll" : 1,
-						"enablevscroll" : 1,
-						"devicewidth" : 0.0,
-						"description" : "",
-						"digest" : "",
-						"tags" : "",
-						"style" : "",
-						"subpatcher_template" : "",
 						"showontab" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
@@ -1584,6 +1437,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 587.0, 53.5, 195.0, 23.0 ]
 								}
 
@@ -1707,6 +1561,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 19.0, 91.0, 150.0, 23.0 ]
 								}
 
@@ -1719,6 +1574,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 130.553604000000007, 198.0, 150.0, 23.0 ]
 								}
 
@@ -1731,6 +1587,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 80.0, 140.0, 150.0, 23.0 ]
 								}
 
@@ -1745,7 +1602,7 @@
 									"out" : "nnnn",
 									"outlettype" : [ "", "", "", "", "bang" ],
 									"patching_rect" : [ 80.0, 253.0, 441.0, 349.0 ],
-									"versionnumber" : 10200,
+									"versionnumber" : 40000,
 									"whole_bodies_data_0000000000" : [ "bodies", "[", "stars", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "]", "[", "density", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1065646817, "]", "[", "radius", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1077149696, "]", "[", "notes", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086198784, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072243195, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086325760, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073291771, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073928572, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086408960, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074340347, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074752122, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086408960, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074977148, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1075183035, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086325760, "]", "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "]", "[", "planets", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3223669658, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080631262, "]", "[", "speed", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1079660636, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1075275834, "]", "[", "acc", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074375742, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3226177125, "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1071309127, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1070679982, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1068792545, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "]" ],
 									"whole_bodies_data_count" : [ 1 ],
 									"zoom" : 30.467317999999999
@@ -1859,11 +1716,7 @@
 ,
 					"patching_rect" : [ 114.0, 306.0, 152.0, 22.0 ],
 					"saved_object_attributes" : 					{
-						"description" : "",
-						"digest" : "",
-						"fontsize" : 13.0,
-						"globalpatchername" : "",
-						"tags" : ""
+						"fontsize" : 13.0
 					}
 ,
 					"text" : "p \"playback and velocities\"",
@@ -1882,41 +1735,17 @@
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
-							"major" : 8,
+							"major" : 9,
 							"minor" : 0,
-							"revision" : 5,
+							"revision" : 7,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
 						"rect" : [ 0.0, 26.0, 884.0, 638.0 ],
-						"bglocked" : 0,
-						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
-						"default_fontface" : 0,
-						"default_fontname" : "Arial",
-						"gridonopen" : 1,
 						"gridsize" : [ 5.0, 5.0 ],
-						"gridsnaponopen" : 1,
-						"objectsnaponopen" : 1,
-						"statusbarvisible" : 2,
-						"toolbarvisible" : 1,
-						"lefttoolbarpinned" : 0,
-						"toptoolbarpinned" : 0,
-						"righttoolbarpinned" : 0,
-						"bottomtoolbarpinned" : 0,
-						"toolbars_unpinned_last_save" : 0,
-						"tallnewobj" : 0,
-						"boxanimatetime" : 200,
-						"enablehscroll" : 1,
-						"enablevscroll" : 1,
-						"devicewidth" : 0.0,
-						"description" : "",
-						"digest" : "",
-						"tags" : "",
-						"style" : "",
-						"subpatcher_template" : "",
 						"showontab" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
@@ -2048,6 +1877,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 574.0, 271.0, 190.0, 23.0 ],
 									"text_width" : 127.0
 								}
@@ -2099,7 +1929,7 @@
 									"out" : "nnnn",
 									"outlettype" : [ "", "", "", "", "bang" ],
 									"patching_rect" : [ 449.0, 307.0, 394.0, 305.0 ],
-									"versionnumber" : 10200,
+									"versionnumber" : 40000,
 									"whole_bodies_data_0000000000" : [ "bodies", "[", "stars", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3225680557, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3221340769, "]", "[", "density", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1065646817, "]", "[", "radius", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1076777080, "]", "[", "notes", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086198784, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072243195, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086325760, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073291771, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073928572, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086408960, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074340347, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074752122, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086408960, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074977148, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1075183035, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086325760, "]", "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1079630262, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1076241351, "]", "[", "density", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1065646817, "]", "[", "radius", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1076847140, "]", "[", "notes", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086198784, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072243195, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086325760, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073291771, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073928572, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086408960, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074340347, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074752122, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086408960, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074977148, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1075183035, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086325760, "]", "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1067743969, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1070889697, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1067743969, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3228138524, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1076711156, "]", "[", "density", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1065646817, "]", "[", "radius", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1076644038, "]", "[", "notes", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086198784, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072243195, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086325760, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073291771, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073928572, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086408960, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074340347, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074752122, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086408960, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074977148, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1075183035, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086325760, "]", "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1068079513, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1071896330, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072420618, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3228454485, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080605564, "]", "[", "density", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1065646817, "]", "[", "radius", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1076847140, "]", "[", "notes", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086198784, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072243195, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086325760, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073291771, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073928572, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086408960, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074340347, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074752122, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086408960, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074977148, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1075183035, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086325760, "]", "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072294789, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072588390, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080474138, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1081278156, "]", "[", "density", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1065646817, "]", "[", "radius", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1076056472, "]", "[", "notes", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086198784, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072243195, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086325760, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073291771, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073928572, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086408960, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074340347, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074752122, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086408960, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074977148, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1075183035, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086325760, "]", "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1070973583, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1069925007, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1069925007, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1081360549, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1079953501, "]", "[", "density", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1065646817, "]", "[", "radius", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1075971687, "]", "[", "notes", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086198784, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072243195, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086325760, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073291771, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073928572, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086408960, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074340347, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074752122, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086408960, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074977148, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1075183035, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086325760, "]", "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080937633, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3227213161, "]", "[", "density", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1065646817, "]", "[", "radius", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1076847140, "]", "[", "notes", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086198784, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072243195, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086325760, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073291771, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073928572, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086408960, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074340347, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074752122, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086408960, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074977148, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1075183035, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086325760, "]", "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1067743969, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1070889697, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1067743969, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "]", "[", "planets", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080116072, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1079026173, "]", "[", "speed", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073991220, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1081093216, "]", "[", "acc", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3231369925, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3231949046, "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1071309127, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1070679982, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1068792545, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3226247706, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3226675484, "]", "[", "speed", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1079040656, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3228002912, "]", "[", "acc", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1081910051, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1082629421, "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072441589, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1071309127, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1067743969, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3225540849, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080156464, "]", "[", "speed", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3225657292, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3227914687, "]", "[", "acc", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1083562940, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3231416002, "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072001187, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1071518842, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1071099412, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078087608, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1079687223, "]", "[", "speed", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078758239, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3227828419, "]", "[", "acc", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1079547034, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1082382100, "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1071875358, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072168960, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1071225241, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "]" ],
 									"whole_bodies_data_count" : [ 1 ]
 								}
@@ -2175,7 +2005,7 @@
 									"out" : "nnnn",
 									"outlettype" : [ "", "", "", "", "bang" ],
 									"patching_rect" : [ 15.0, 307.0, 394.0, 305.0 ],
-									"versionnumber" : 10200,
+									"versionnumber" : 40000,
 									"whole_bodies_data_0000000000" : [ "bodies", "[", "stars", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3224637859, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1077921431, "]", "[", "density", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1065646817, "]", "[", "radius", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1076056472, "]", "[", "notes", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072243195, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086325760, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073644776, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086408960, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074340347, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1075183035, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086325760, "]", "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1079132626, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1076397909, "]", "[", "density", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1065646817, "]", "[", "radius", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1075098766, "]", "[", "notes", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1071883149, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086233088, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073291771, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086309888, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074321009, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086362112, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074797795, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086309888, "]", "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1067743969, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1070889697, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1067743969, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "]", "[", "planets", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3220513085, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1079715804, "]", "[", "speed", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080729840, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3226715962, "]", "[", "acc", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1079366945, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3228649450, "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1071309127, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1070679982, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1068792545, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "]" ],
 									"whole_bodies_data_count" : [ 1 ],
 									"zoom" : 208.603892000000002
@@ -2313,11 +2143,7 @@
 ,
 					"patching_rect" : [ 96.0, 266.0, 139.0, 22.0 ],
 					"saved_object_attributes" : 					{
-						"description" : "",
-						"digest" : "",
-						"fontsize" : 13.0,
-						"globalpatchername" : "",
-						"tags" : ""
+						"fontsize" : 13.0
 					}
 ,
 					"text" : "p \"autozoom and follow\"",
@@ -2336,41 +2162,17 @@
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
-							"major" : 8,
+							"major" : 9,
 							"minor" : 0,
-							"revision" : 5,
+							"revision" : 7,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 45.0, 105.0, 884.0, 638.0 ],
-						"bglocked" : 0,
-						"openinpresentation" : 0,
+						"rect" : [ 0.0, 26.0, 884.0, 638.0 ],
 						"default_fontsize" : 13.0,
-						"default_fontface" : 0,
-						"default_fontname" : "Arial",
-						"gridonopen" : 1,
 						"gridsize" : [ 5.0, 5.0 ],
-						"gridsnaponopen" : 1,
-						"objectsnaponopen" : 1,
-						"statusbarvisible" : 2,
-						"toolbarvisible" : 1,
-						"lefttoolbarpinned" : 0,
-						"toptoolbarpinned" : 0,
-						"righttoolbarpinned" : 0,
-						"bottomtoolbarpinned" : 0,
-						"toolbars_unpinned_last_save" : 0,
-						"tallnewobj" : 0,
-						"boxanimatetime" : 200,
-						"enablehscroll" : 1,
-						"enablevscroll" : 1,
-						"devicewidth" : 0.0,
-						"description" : "",
-						"digest" : "",
-						"tags" : "",
-						"style" : "",
-						"subpatcher_template" : "",
 						"showontab" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
@@ -2410,6 +2212,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 499.5, 564.0, 150.0, 23.0 ]
 								}
 
@@ -2422,6 +2225,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 499.5, 516.0, 251.0, 23.0 ],
 									"text_width" : 117.5
 								}
@@ -2609,8 +2413,8 @@
 									"id" : "obj-10",
 									"maxclass" : "preset",
 									"numinlets" : 1,
-									"numoutlets" : 4,
-									"outlettype" : [ "preset", "int", "preset", "int" ],
+									"numoutlets" : 5,
+									"outlettype" : [ "preset", "int", "preset", "int", "" ],
 									"patching_rect" : [ 112.0, 350.0, 17.0, 18.0 ],
 									"preset_data" : [ 										{
 											"number" : 1,
@@ -2684,7 +2488,7 @@
 									"outlettype" : [ "", "", "", "", "bang" ],
 									"patching_rect" : [ 24.0, 384.0, 471.0, 246.0 ],
 									"showspeed" : 2,
-									"versionnumber" : 10200,
+									"versionnumber" : 40000,
 									"whole_bodies_data_0000000000" : [ "bodies", "[", "stars", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3225671294, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3225711922, "]", "[", "density", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1065646817, "]", "[", "radius", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1077149696, "]", "[", "notes", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086198784, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072243195, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086325760, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073291771, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073928572, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086408960, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074340347, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074752122, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086408960, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074977148, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1075183035, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086325760, "]", "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080366054, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1077984506, "]", "[", "density", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1065646817, "]", "[", "radius", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1076296021, "]", "[", "notes", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086261760, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072243195, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086357248, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073291771, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086395648, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073928572, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086440448, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074340347, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086395648, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074752122, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086440448, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074977148, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086395648, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1075183035, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086357248, "]", "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1067743969, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1070889697, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1067743969, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3228042685, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078106390, "]", "[", "density", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1065646817, "]", "[", "radius", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1076847140, "]", "[", "notes", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1085974528, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072243195, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086102528, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073291771, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086179328, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073928572, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086268928, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074340347, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086179328, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074752122, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086268928, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074977148, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086179328, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1075183035, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086102528, "]", "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1068079513, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1071896330, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072420618, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "]", "[", "planets", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3225681920, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078198272, "]", "[", "speed", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080136484, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3227620132, "]", "[", "acc", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3224872754, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3230387403, "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072441589, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1071309127, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1067743969, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 2, "]", "[", "flags", "]", "]", "]" ],
 									"whole_bodies_data_count" : [ 1 ],
 									"zoom" : 80.653836999999996
@@ -2778,11 +2582,7 @@
 ,
 					"patching_rect" : [ 75.0, 230.0, 39.0, 22.0 ],
 					"saved_object_attributes" : 					{
-						"description" : "",
-						"digest" : "",
-						"fontsize" : 13.0,
-						"globalpatchername" : "",
-						"tags" : ""
+						"fontsize" : 13.0
 					}
 ,
 					"text" : "p law",
@@ -2801,41 +2601,17 @@
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
-							"major" : 8,
+							"major" : 9,
 							"minor" : 0,
-							"revision" : 5,
+							"revision" : 7,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
 						"rect" : [ 0.0, 26.0, 884.0, 638.0 ],
-						"bglocked" : 0,
-						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
-						"default_fontface" : 0,
-						"default_fontname" : "Arial",
-						"gridonopen" : 1,
 						"gridsize" : [ 5.0, 5.0 ],
-						"gridsnaponopen" : 1,
-						"objectsnaponopen" : 1,
-						"statusbarvisible" : 2,
-						"toolbarvisible" : 1,
-						"lefttoolbarpinned" : 0,
-						"toptoolbarpinned" : 0,
-						"righttoolbarpinned" : 0,
-						"bottomtoolbarpinned" : 0,
-						"toolbars_unpinned_last_save" : 0,
-						"tallnewobj" : 0,
-						"boxanimatetime" : 200,
-						"enablehscroll" : 1,
-						"enablevscroll" : 1,
-						"devicewidth" : 0.0,
-						"description" : "",
-						"digest" : "",
-						"tags" : "",
-						"style" : "",
-						"subpatcher_template" : "",
 						"showontab" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
@@ -2921,6 +2697,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 10.0, 77.0, 150.0, 23.0 ]
 								}
 
@@ -2959,7 +2736,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 486.0, 81.0, 409.0, 224.0 ],
 									"text" : "Click+drag to move elements; add Alt key to duplicate them.\n\nCmd+click (mac) or Ctrl+click (win) on the background to create a body. Add Alt key to create a particle.\n\nUse Cmd+click (mac) or Ctrl+click (win) to delete bodies, particles, or bodies' arrow notes.\n \nUse contextual menu (right click or two finger taps) to perform basic actions on bodies, particles, or in general (click on the background).\n\nShift+click on some point inside a body to add an arrownote.\n\nCtrl+Shift (mac) or Shift+Ctrl+Shift (win) on a body and drag up/down to change its density",
-									"textcolor" : [ 0.501961, 0.0, 0.0, 1.0 ]
+									"textcolor" : [ 1.0, 0.0, 0.0, 1.0 ]
 								}
 
 							}
@@ -2972,7 +2749,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 486.0, 327.567627000000016, 406.0, 282.0 ],
 									"text" : "Key-mapped tools (hold down key while them mouse is on the appropriate element, and the pointer will changed to desired tool):\n\nS: scale (particles velocity, or increase/decrease body radius)\nR: rotate (particles velocity or body arrow notes: use it on the whole body to rotate all notes at once, use it on a singles notes to rotate them individually)\nN: change element pitch (bodies or arrow notes)\nQ: change color (body or particle)\n\nScroll the mouse to move the region\nCmd+Scroll (mac) or Ctrl+Scroll (win) to change zoom\nEsc to re-center\nTab to autozoom\n\nCmd+Z (mac) or Ctrl+Z (win) to undo\nCmd+Shift+Z (mac) or Ctrl+Y (win) to redo\n\n",
-									"textcolor" : [ 0.501961, 0.0, 0.0, 1.0 ]
+									"textcolor" : [ 1.0, 0.0, 0.0, 1.0 ]
 								}
 
 							}
@@ -2987,7 +2764,7 @@
 									"outlettype" : [ "", "", "", "", "bang" ],
 									"patching_rect" : [ 10.0, 108.0, 469.0, 400.0 ],
 									"showdensity" : 1,
-									"versionnumber" : 10200,
+									"versionnumber" : 40000,
 									"whole_bodies_data_0000000000" : [ "bodies", "[", "stars", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3223084927, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3219432075, "]", "[", "density", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1065646817, "]", "[", "radius", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1077149696, "]", "[", "notes", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086198784, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072243195, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086325760, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073291771, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073928572, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086408960, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074340347, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074752122, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086408960, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074977148, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1075183035, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086325760, "]", "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "]", "[", "planets", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3222454130, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1078825331, "]", "[", "speed", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080594642, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1076930304, "]", "[", "acc", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3222444273, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3229855558, "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1071309127, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1070679982, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1068792545, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "]" ],
 									"whole_bodies_data_count" : [ 1 ],
 									"zoom" : 155.076754999999991
@@ -3006,7 +2783,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 10.0, 10.0, 256.446395999999993, 57.567627000000002 ]
+									"patching_rect" : [ 10.0, 10.0, 256.42401123046875, 57.599853515625 ]
 								}
 
 							}
@@ -3065,11 +2842,7 @@
 ,
 					"patching_rect" : [ 27.0, 123.0, 67.0, 22.0 ],
 					"saved_object_attributes" : 					{
-						"description" : "",
-						"digest" : "",
-						"fontsize" : 13.0,
-						"globalpatchername" : "",
-						"tags" : ""
+						"fontsize" : 13.0
 					}
 ,
 					"text" : "p interface",
@@ -3107,41 +2880,17 @@
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
-							"major" : 8,
+							"major" : 9,
 							"minor" : 0,
-							"revision" : 5,
+							"revision" : 7,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
 						"rect" : [ 0.0, 26.0, 884.0, 638.0 ],
-						"bglocked" : 0,
-						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
-						"default_fontface" : 0,
-						"default_fontname" : "Arial",
-						"gridonopen" : 1,
 						"gridsize" : [ 5.0, 5.0 ],
-						"gridsnaponopen" : 1,
-						"objectsnaponopen" : 1,
-						"statusbarvisible" : 2,
-						"toolbarvisible" : 1,
-						"lefttoolbarpinned" : 0,
-						"toptoolbarpinned" : 0,
-						"righttoolbarpinned" : 0,
-						"bottomtoolbarpinned" : 0,
-						"toolbars_unpinned_last_save" : 0,
-						"tallnewobj" : 0,
-						"boxanimatetime" : 200,
-						"enablehscroll" : 1,
-						"enablevscroll" : 1,
-						"devicewidth" : 0.0,
-						"description" : "",
-						"digest" : "",
-						"tags" : "",
-						"style" : "",
-						"subpatcher_template" : "",
 						"showontab" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
@@ -3151,6 +2900,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 559.0, 141.0, 226.0, 23.0 ]
 								}
 
@@ -3193,6 +2943,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 559.0, 170.0, 150.0, 23.0 ]
 								}
 
@@ -3205,6 +2956,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 12.0, 126.0, 150.0, 23.0 ]
 								}
 
@@ -3217,6 +2969,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 384.0, 166.0, 150.0, 23.0 ]
 								}
 
@@ -3229,6 +2982,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 384.0, 141.0, 150.0, 23.0 ]
 								}
 
@@ -3298,7 +3052,7 @@
 									"showdensity" : 1,
 									"showgrid" : 0,
 									"tonedivision" : 4,
-									"versionnumber" : 10200,
+									"versionnumber" : 40000,
 									"whole_bodies_data_0000000000" : [ "bodies", "[", "stars", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1079574528, "]", "[", "density", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1069102781, "]", "[", "radius", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1077629472, "]", "[", "notes", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086198784, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072243194, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086325760, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073291771, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073928572, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086408960, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074340347, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074752121, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086408960, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074977148, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086364160, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1075183035, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086325760, "]", "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3229401088, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3228270592, "]", "[", "density", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1070209629, "]", "[", "radius", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1077989731, "]", "[", "notes", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086011392, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072243194, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086289920, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073291771, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086134784, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073928572, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086345984, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074340347, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086291456, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074752121, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086135296, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074977148, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086285312, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1075183035, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086128640, "]", "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1067743969, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1070889696, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1067743969, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1081999360, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3228106752, "]", "[", "density", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1068660004, "]", "[", "radius", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1077825656, "]", "[", "notes", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1085917696, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072243194, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086068736, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073291771, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086193152, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073928572, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086326784, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074340347, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086200832, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074752121, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086326784, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074977148, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086203904, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1075183035, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086071808, "]", "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1068079512, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1071896330, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072420618, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3229401088, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080295424, "]", "[", "density", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1065221123, "]", "[", "radius", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1076847138, "]", "[", "notes", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086011392, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072243194, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086289920, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073291771, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086134784, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073928572, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086345984, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074340347, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086291456, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074752121, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086135296, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074977148, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086285312, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1075183035, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086128640, "]", "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072294789, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072588390, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1079902208, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3228270592, "]", "[", "density", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1065900764, "]", "[", "radius", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1075971686, "]", "[", "notes", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086011392, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072243194, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086289920, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073291771, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086134784, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073928572, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086345984, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074340347, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086291456, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074752121, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086135296, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074977148, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086285312, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1075183035, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086128640, "]", "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1070973583, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1069925007, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1069925007, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1082310656, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080623104, "]", "[", "density", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1065646815, "]", "[", "radius", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1075798562, "]", "[", "notes", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086011392, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072243194, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086289920, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073291771, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086134784, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1073928572, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086345984, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074340347, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086291456, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074752121, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086135296, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1074977148, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086285312, "]", "[", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1075183035, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1086128640, "]", "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072567418, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1071650280, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "]", "[", "planets", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 0, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1080560659, "]", "[", "speed", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1082678558, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 2147483648, "]", "[", "acc", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1083642791, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3230997250, "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1071309127, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1070679981, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1068792544, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3228718239, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3227785477, "]", "[", "speed", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1081551529, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3230682627, "]", "[", "acc", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3231529202, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1083071297, "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072441588, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1071309127, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1067743969, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "[", "[", "coord", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1082237127, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3226913752, "]", "[", "speed", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1082104158, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3229117397, "]", "[", "acc", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3231065123, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 3231246759, "]", "[", "color", "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072001187, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1071518842, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1071099412, "_x_x_x_x_bach_float64_x_x_x_x_", 0, 1072693248, "]", "[", "channel", 1, "]", "[", "flags", "]", "]", "]" ],
 									"whole_bodies_data_count" : [ 1 ],
 									"zoom" : 52.076318999999998
@@ -3390,11 +3144,7 @@
 ,
 					"patching_rect" : [ 10.0, 85.0, 50.0, 22.0 ],
 					"saved_object_attributes" : 					{
-						"description" : "",
-						"digest" : "",
-						"fontsize" : 13.0,
-						"globalpatchername" : "",
-						"tags" : ""
+						"fontsize" : 13.0
 					}
 ,
 					"text" : "p basic",
@@ -3429,41 +3179,17 @@
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
-							"major" : 8,
+							"major" : 9,
 							"minor" : 0,
-							"revision" : 5,
+							"revision" : 7,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
 						"rect" : [ 0.0, 26.0, 884.0, 638.0 ],
-						"bglocked" : 0,
-						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
-						"default_fontface" : 0,
-						"default_fontname" : "Arial",
-						"gridonopen" : 1,
 						"gridsize" : [ 5.0, 5.0 ],
-						"gridsnaponopen" : 1,
-						"objectsnaponopen" : 1,
-						"statusbarvisible" : 2,
-						"toolbarvisible" : 1,
-						"lefttoolbarpinned" : 0,
-						"toptoolbarpinned" : 0,
-						"righttoolbarpinned" : 0,
-						"bottomtoolbarpinned" : 0,
-						"toolbars_unpinned_last_save" : 0,
-						"tallnewobj" : 0,
-						"boxanimatetime" : 200,
-						"enablehscroll" : 1,
-						"enablevscroll" : 1,
-						"devicewidth" : 0.0,
-						"description" : "",
-						"digest" : "",
-						"tags" : "",
-						"style" : "",
-						"subpatcher_template" : "",
 						"showontab" : 1,
 						"boxes" : [  ],
 						"lines" : [  ]
@@ -3471,11 +3197,7 @@
 ,
 					"patching_rect" : [ 205.0, 205.0, 50.0, 22.0 ],
 					"saved_object_attributes" : 					{
-						"description" : "",
-						"digest" : "",
-						"fontsize" : 13.0,
-						"globalpatchername" : "",
-						"tags" : ""
+						"fontsize" : 13.0
 					}
 ,
 					"text" : "p ?",
@@ -3485,72 +3207,34 @@
 			}
  ],
 		"lines" : [  ],
+		"parameters" : 		{
+			"obj-15::obj-7::obj-8::obj-54" : [ "slider", "slider", 0 ],
+			"obj-15::obj-7::obj-8::obj-59" : [ "number", "number", 0 ],
+			"parameterbanks" : 			{
+				"0" : 				{
+					"index" : 0,
+					"name" : "",
+					"parameters" : [ "-", "-", "-", "-", "-", "-", "-", "-" ]
+				}
+
+			}
+,
+			"inherited_shortname" : 1
+		}
+,
 		"dependency_cache" : [ 			{
-				"name" : "helpname.js",
-				"bootpath" : "C74:/help/resources",
-				"type" : "TEXT",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "helpdetails.js",
-				"bootpath" : "C74:/help/resources",
-				"type" : "TEXT",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "bach.ezmidiplay.maxpat",
-				"bootpath" : "~/Documents/Max 7/Packages/bach/patchers",
-				"patcherrelativepath" : "../../bach/patchers",
-				"type" : "JSON",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "bach.gcd.maxpat",
-				"bootpath" : "~/Documents/Max 7/Packages/bach/patchers",
-				"patcherrelativepath" : "../../bach/patchers",
-				"type" : "JSON",
-				"implicit" : 1
-			}
-, 			{
 				"name" : "bach.approx.maxpat",
-				"bootpath" : "~/Documents/Max 7/Packages/bach/patchers",
+				"bootpath" : "~/Documents/Max 8/Packages/bach/patchers",
 				"patcherrelativepath" : "../../bach/patchers",
 				"type" : "JSON",
 				"implicit" : 1
 			}
 , 			{
-				"name" : "bach.filter.maxpat",
-				"bootpath" : "~/Documents/Max 7/Packages/bach/patchers",
-				"patcherrelativepath" : "../../bach/patchers",
-				"type" : "JSON",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "helpstarter.js",
-				"bootpath" : "C74:/help/resources",
-				"type" : "TEXT",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "dada.commons.maxpat",
-				"bootpath" : "~/Documents/Max 7/Packages/dada/help",
-				"patcherrelativepath" : ".",
-				"type" : "JSON",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "dada.commons.graphic.maxpat",
-				"bootpath" : "~/Documents/Max 7/Packages/dada/help",
-				"patcherrelativepath" : ".",
-				"type" : "JSON",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "dada.bodies.mxo",
+				"name" : "bach.args.mxo",
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "bach.playkeys.mxo",
+				"name" : "bach.eq.mxo",
 				"type" : "iLaX"
 			}
 , 			{
@@ -3558,40 +3242,29 @@
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "bach.length.mxo",
-				"type" : "iLaX"
+				"name" : "bach.ezmidiplay.maxpat",
+				"bootpath" : "~/Documents/Max 8/Packages/bach/patchers",
+				"patcherrelativepath" : "../../bach/patchers",
+				"type" : "JSON",
+				"implicit" : 1
 			}
 , 			{
-				"name" : "bach.iter.mxo",
-				"type" : "iLaX"
+				"name" : "bach.filter.maxpat",
+				"bootpath" : "~/Documents/Max 8/Packages/bach/patchers",
+				"patcherrelativepath" : "../../bach/patchers",
+				"type" : "JSON",
+				"implicit" : 1
 			}
 , 			{
 				"name" : "bach.flat.mxo",
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "bach.pick.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "bach.args.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "bach.reg.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "bach.print.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "bach.keys.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "bach.portal.mxo",
-				"type" : "iLaX"
+				"name" : "bach.gcd.maxpat",
+				"bootpath" : "~/Documents/Max 8/Packages/bach/patchers",
+				"patcherrelativepath" : "../../bach/patchers",
+				"type" : "JSON",
+				"implicit" : 1
 			}
 , 			{
 				"name" : "bach.gt.mxo",
@@ -3602,11 +3275,19 @@
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "bach.neq.mxo",
+				"name" : "bach.iter.mxo",
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "bach.eq.mxo",
+				"name" : "bach.keys.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.length.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.neq.mxo",
 				"type" : "iLaX"
 			}
 , 			{
@@ -3614,11 +3295,35 @@
 				"type" : "iLaX"
 			}
 , 			{
+				"name" : "bach.pick.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.playkeys.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.portal.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.print.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "bach.reg.mxo",
+				"type" : "iLaX"
+			}
+, 			{
 				"name" : "bach.slice.mxo",
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "dada.bounce.mxo",
+				"name" : "dada.base.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "dada.bodies.mxo",
 				"type" : "iLaX"
 			}
 , 			{
@@ -3626,8 +3331,36 @@
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "dada.base.mxo",
-				"type" : "iLaX"
+				"name" : "dada.commons.grid.maxpat",
+				"bootpath" : "~/Documents/Max 8/Packages/dada/help",
+				"patcherrelativepath" : ".",
+				"type" : "JSON",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "dada.commons.maxpat",
+				"bootpath" : "~/Documents/Max 8/Packages/dada/help",
+				"patcherrelativepath" : ".",
+				"type" : "JSON",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "helpdetails.js",
+				"bootpath" : "C74:/help/resources",
+				"type" : "TEXT",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "helpname.js",
+				"bootpath" : "C74:/help/resources",
+				"type" : "TEXT",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "helpstarter.js",
+				"bootpath" : "C74:/help/resources",
+				"type" : "TEXT",
+				"implicit" : 1
 			}
  ],
 		"autosave" : 0

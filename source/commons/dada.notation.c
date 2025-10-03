@@ -95,7 +95,7 @@ void dada_iterate_on_markers(t_llll *gs, dada_gs_modif_fn modif_fn, e_notation_o
 		if (hatom_getsym(&ll->l_head->l_hatom) == _llllobj_sym_markers) {
 			t_llllelem *mkel, *nextmkel;
 			long idx = 0;
-            llll_print(ll);
+//            llll_print(ll);
 			for (mkel = ll->l_head->l_next; mkel; mkel = nextmkel) {
 				nextmkel = mkel->l_next;
 				if (hatom_gettype(&mkel->l_hatom) != H_LLLL)

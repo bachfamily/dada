@@ -1532,7 +1532,7 @@ t_llll *segment_score_markers(t_segment *x, t_llll *score, t_llll **meta, long v
         if (meta)
             *meta = llll_get();
         
-        llll_print(cut_points);
+//        llll_print(cut_points);
         
         segment_segment_presegmented_score_and_append_standard(x, score, res, meta, 0, &idx_offset, voice_number, cut_points, true);
     }
@@ -1604,7 +1604,7 @@ t_llll *segment_score_regions(t_segment *x, t_llll *score, t_llll **meta, long v
         if (meta)
             *meta = llll_get();
         
-        llll_print(cut_points);
+//        llll_print(cut_points);
         
         segment_segment_presegmented_score_and_append_standard(x, score, res, meta, 0, &idx_offset, voice_number, cut_points, true);
     }

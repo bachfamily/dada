@@ -284,6 +284,9 @@ t_pt distances_get_grain_coord(t_distances *x, t_distances_grain *gr);
 
 void distances_set_turtledgrain(t_distances *x, t_distances_grain *gr);
 
+void distances_reset(t_distances *x);
+
+
 /* void distances_jsave(t_distances *x, t_dictionary *d);
 void distances_preset(t_distances *x);
 void distances_begin_preset(t_distances *x, t_symbol *s, long argc, t_atom *argv);
@@ -413,6 +416,11 @@ void C74_EXPORT ext_main(void *moduleRef)
 	class_addmethod(c, (method)distances_bang,			"bang",			0);
 
         
+    // @method reset @digest Reset
+    // @description Return to a state with no dataset and no table defined.
+    class_addmethod(c, (method)distances_reset,            "reset",            0);
+        
+    
 	// @method dump @digest Output content of all grains
 	// @description Outputs from the first outlet an llll containing the content field of all the grains.
 	class_addmethod(c, (method)distances_dump,		"dump",		A_GIMME,	0);
@@ -951,6 +959,7 @@ void distances_set_database_do(t_distances *x, t_symbol *msg, long argc, t_atom 
     db_close(&x->d_db);
     
     x->d_database = msg;
+    x->db_ok = false;
     err = db_open(x->d_database, NULL, &x->d_db);
     if (!err && x->d_db && x->d_query) {
         x->db_ok = true;
@@ -962,6 +971,10 @@ t_max_err distances_set_database(t_distances *x, void *attr, long argc, t_atom *
 {
     if (argc && argv && atom_gettype(argv) == A_SYM && atom_getsym(argv) && strlen(atom_getsym(argv)->s_name) > 0) {
         defer_low(x, (method) distances_set_database_do, atom_getsym(argv), 0, NULL);
+    } else {
+        x->db_ok = false;
+        x->d_database = gensym("");
+        x->d_db = NULL;
     }
 	return MAX_ERR_NONE;
 }
@@ -1124,6 +1137,16 @@ void distances_free(t_distances *x)
     llll_free(x->turtled_grain_history);
     object_free(x->loop_clock);
 	dadaobj_jbox_free((t_dadaobj_jbox *)x); // jbox_free and llllobj_free are inside here
+}
+
+
+void distances_reset(t_distances *x)
+{
+    x->db_ok = false;
+    x->d_database = gensym("");
+    x->d_db = NULL;
+    x->tablename = gensym("");
+    jbox_redraw((t_jbox *)x);
 }
 
 

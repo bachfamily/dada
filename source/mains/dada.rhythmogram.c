@@ -3540,7 +3540,7 @@ void rotate_onsets_and_force_add_div(t_rhythmogram *x, t_tsd_config *cfg, long m
 		fl = llll_clone(cfg->onsets_ms);
 		llll_flatten(fl, 0, 0); // fl is: a b c d e f g h i j k l
 		llll_rot(fl, 0, 1, meas_shift); // fl is: c d e f g h i j k l a b 
-		llll_reshape(fl, cfg->onsets_ms, NULL); // fl is: (c d e) (f g h i j) (k l a b) 
+		llll_reshape_new(fl, cfg->onsets_ms); // fl is: (c d e) (f g h i j) (k l a b) 
 		
 		// handling last llll
 		if (fl->l_tail && hatom_gettype(&fl->l_tail->l_hatom) == H_LLLL)

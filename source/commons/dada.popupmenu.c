@@ -304,7 +304,7 @@ char ezdisplay_popup_menu_for_dadaitem(t_dadaobj *r_ob, t_object *view, t_dadait
 		llll_appendobj(pointers_to_functions_ll, this_fn ? (void *)this_fn : (void *)idle_popup_fn, 0, WHITENULL_llll);
 	}
 	
-	llll_reshape(pointers_to_functions_ll, functions_model_ll, NULL);
+	llll_reshape_new(pointers_to_functions_ll, functions_model_ll, NULL);
 	
 	r_ob->m_popup_menu.curr_popup_item = item;
 	

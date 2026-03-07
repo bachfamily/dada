@@ -264,9 +264,10 @@ void cartesian_begin_preset(t_cartesian *x, t_symbol *s, long argc, t_atom *argv
 void cartesian_restore_preset(t_cartesian *x, t_symbol *s, long argc, t_atom *argv);
 void cartesian_end_preset(t_cartesian *x);
 
- void cartesian_clear(t_cartesian *x, char also_outside_world);
  void cartesian_undo_postprocess(t_cartesian *x);
 */
+
+void cartesian_reset(t_cartesian *x);
 
 
 DEFINE_LLLL_ATTR_DEFAULT_GETTER(t_cartesian, d_where_llll, cartesian_getattr_where);
@@ -391,6 +392,10 @@ void C74_EXPORT ext_main(void *moduleRef)
 	// @description Output the sampling information regarding the sampling points set via the <m>sample</m> message.
 	class_addmethod(c, (method)cartesian_bang,			"bang",			0);
 
+    // @method reset @digest Reset
+    // @description Return to a state with no dataset and no table defined.
+    class_addmethod(c, (method)cartesian_reset,            "reset",            0);
+    
         
 	// @method dump @digest Output content of all grains
 	// @description Outputs from the first outlet an llll containing the content field of all the grains.
@@ -823,6 +828,7 @@ void cartesian_set_database_do(t_cartesian *x, t_symbol *msg, long argc, t_atom 
     db_close(&x->d_db);
     
     x->d_database = msg;
+    x->db_ok = false;
     err = db_open(x->d_database, NULL, &x->d_db);
     if (!err && x->d_db && x->d_query) {
         x->db_ok = true;
@@ -834,7 +840,11 @@ t_max_err cartesian_set_database(t_cartesian *x, void *attr, long argc, t_atom *
 {
 	if (argc && argv && atom_gettype(argv) == A_SYM && atom_getsym(argv) && strlen(atom_getsym(argv)->s_name) > 0) {
         defer_low(x, (method) cartesian_set_database_do, atom_getsym(argv), 0, NULL);
-	}
+    } else {
+        x->d_database = gensym("");
+        x->db_ok = false;
+        x->d_db = NULL;
+    }
 	return MAX_ERR_NONE;
 }
 
@@ -1187,8 +1197,12 @@ void cartesian_bang(t_cartesian *x)
 	} */
 }
 
-void cartesian_clear(t_cartesian *x, char also_outside_current_world)
-{	
+void cartesian_reset(t_cartesian *x)
+{
+    x->db_ok = false;
+    x->d_database = gensym("");
+    x->d_db = NULL;
+    x->tablename = gensym("");
 	jbox_redraw((t_jbox *)x);
 }
 

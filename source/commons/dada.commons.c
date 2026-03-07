@@ -88,7 +88,7 @@ void llll_reshape_scalarmode(t_llll **ll, t_llll *model)
 	list[0] = model;
 	list[1] = *ll;
 	llll_iter(2, list, -1, 0, 1, 0, 2, 0, NULL, (iter_datafn) shaper_iter_fn, out_ll, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-	llll_reshape(out_ll, model, NULL);
+    llll_reshape_new(out_ll, model);
 	llll_free(*ll);
 	*ll = out_ll;
 }

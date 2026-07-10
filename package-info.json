@@ -1,7 +1,7 @@
 {
 	"name" : "dada",
 	"displayname" : "",
-	"version" : "0.3.1",
+	"version" : "0.8.9",
 	"author" : "Daniele Ghisi",
 	"authors" : [  ],
 	"description" : "dada: computer-aided composition and score generation for experimental, non-standard musical practices and research. IMPORTANT: requires you have installed the packages bach v0.8.2 and cage v0.7 or higher.",

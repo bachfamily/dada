@@ -1,0 +1,6 @@
+	[ colpisordi
+		[ buffer s ]
+		[ spectralcentroid f ]
+		[ spectralspread f ]
+		[ loudness f ]
+	]
